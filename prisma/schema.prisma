@@ -1,0 +1,666 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+  // Habilita suporte a schemas do Postgres e Joins otimizados
+  // previewFeatures = ["relationJoins", "fullTextSearchPostgres"]
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["identity", "catalog", "crm", "projects", "financial", "integrations", "audit"]
+}
+
+// =========================================================================
+// 1. SCHEMA: IDENTITY (Autenticação, Usuários e Organizações/Tenants)
+// =========================================================================
+
+enum Role {
+  OWNER
+  TENANT_ADMIN
+  TENANT_MEMBER
+  TENANT_OBSERVER
+
+  @@schema("identity")
+}
+
+enum IndustryType {
+  SOFTWARE_HOUSE // Seu foco atual
+  MARKETING_AGENCY
+  ARCHITECTURE_FIRM
+  LEGAL
+  CONSULTING_GENERAL
+
+  @@schema("identity")
+}
+
+/// A "Empresa" ou "Tenant" que utiliza o sistema.
+/// Permite que o software seja SaaS (Multi-tenancy).
+model Organization {
+  id   String  @id @default(cuid())
+  name String  @db.VarChar(255)
+  slug String  @unique @db.VarChar(50) /// Ex: 'zofia-labs' (usado em URLs)
+  cnpj String? @db.VarChar(20)
+
+  industry IndustryType @default(SOFTWARE_HOUSE)
+  settings Json?        @db.JsonB
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relacionamentos de isolamento de dados
+  users                 User[]
+  clients               Client[]
+  projects              Project[]
+  serviceTypes          ServiceType[]
+  templates             DocumentTemplate[]
+  invoices              Invoice[]
+  availableIntegrations OrganizationIntegration[]
+  serviceCategories     ServiceCategory[]
+
+  @@map("organizations")
+  @@schema("identity")
+}
+
+/// Usuários do sistema. Podem pertencer a uma organização.
+model User {
+  id             String       @id @default(cuid())
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  name          String?   @db.VarChar(255)
+  email         String    @unique @db.VarChar(255)
+  emailVerified DateTime? @map("email_verified")
+  passwordHash  String?   @map("password_hash")
+  image         String?   @db.Text
+  role          Role      @default(TENANT_MEMBER)
+
+  // Relacionamentos NextAuth
+  accounts Account[]
+  sessions Session[]
+
+  // Auditoria
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Ações realizadas pelo usuário
+  createdProposals Proposal[]
+  createdProjects  Project[]
+  loginHistories   LoginHistory[]
+  projectNotes     ProjectNote[]
+  auditLogs        AuditLog[]
+
+  @@map("users")
+  @@schema("identity")
+}
+
+/// Contas vinculadas (OAuth)
+model Account {
+  userId            String
+  type              String  @db.VarChar(50)
+  provider          String  @db.VarChar(50)
+  providerAccountId String  @map("provider_account_id") @db.VarChar(100)
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String? @db.VarChar(50)
+  scope             String? @db.Text
+  id_token          String? @db.Text
+  session_state     String? @db.VarChar(100)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+  @@map("accounts")
+  @@schema("identity")
+}
+
+model LoginHistory {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  ipAddress String?
+  userAgent String? // Ex: "Mozilla/5.0 (Macintosh...)"
+  device    String? // Opcional: Se você processar o userAgent depois (ex: "iPhone 13")
+  city      String? // Opcional: Se usar geolocalização por IP
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@schema("identity")
+}
+
+model Session {
+  sessionToken String   @unique @db.VarChar(255)
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("sessions")
+  @@schema("identity")
+}
+
+model VerificationToken {
+  identifier String   @db.VarChar(255)
+  token      String   @db.VarChar(255)
+  expires    DateTime
+
+  @@id([identifier, token])
+  @@map("verification_tokens")
+  @@schema("identity")
+}
+
+// =========================================================================
+// 2. SCHEMA: CATALOG (Configurações e Serviços da Organização)
+// =========================================================================
+
+model ServiceCategory {
+  id             String       @id @default(cuid())
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  name        String  @db.VarChar(100) // Ex: Desenvolvimento de Software
+  description String? @db.Text
+
+  taxCode String? @map("tax_code") @db.VarChar(20)
+
+  deletedAt DateTime?
+
+  serviceTypes ServiceType[]
+
+  @@map("service_categories")
+  @@schema("catalog")
+}
+
+model ServiceType {
+  id             String       @id @default(cuid())
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // Vinculação com a Categoria
+  categoryId String          @map("category_id")
+  category   ServiceCategory @relation(fields: [categoryId], references: [id])
+
+  name        String   @db.VarChar(150)
+  description String?  @db.Text
+  basePrice   Decimal? @map("base_price") @db.Decimal(10, 2)
+  active      Boolean  @default(true)
+
+  proposals       ProposalItem[]
+  projectServices ProjectServices[]
+
+  @@map("service_types")
+  @@schema("catalog")
+}
+
+enum TemplateType {
+  CONTRACT
+  PROPOSAL
+  DELIVERY_TERM
+  OTHER
+
+  @@schema("catalog")
+}
+
+/// Modelos de documentos HTML/Markdown
+model DocumentTemplate {
+  id             String       @id @default(cuid())
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  title     String       @db.VarChar(150)
+  content   Json         @db.JsonB
+  type      TemplateType
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@map("document_templates")
+  @@schema("catalog")
+}
+
+// =========================================================================
+// 3. SCHEMA: CRM (Comercial)
+// =========================================================================
+
+/// Carteira de Clientes da Organização
+model Client {
+  id             String       @id @default(cuid())
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  companyName String  @map("company_name") @db.VarChar(200)
+  tradeName   String  @map("trade_name") @db.VarChar(200)
+  cnpj        String  @db.VarChar(18)
+  email       String  @db.VarChar(255)
+  phone       String  @db.VarChar(20)
+  address     String? @db.Text
+
+  projects  Project[]
+  proposals Proposal[]
+  invoices  Invoice[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  // Um cliente deve ser único POR organização (duas empresas diferentes podem ter o mesmo cliente)
+  @@unique([organizationId, cnpj])
+  @@map("clients")
+  @@schema("crm")
+}
+
+enum ProposalStatus {
+  DRAFT
+  SENT
+  ACCEPTED
+  REJECTED
+
+  @@schema("crm")
+}
+
+model Proposal {
+  id String @id @default(cuid())
+  // Proposta não precisa de link direto com Org pois herda do Cliente, 
+  // mas para queries rápidas pode ser útil. Vamos manter via Cliente para normalização.
+
+  clientId   String         @map("client_id")
+  client     Client         @relation(fields: [clientId], references: [id])
+  status     ProposalStatus @default(DRAFT)
+  totalValue Decimal        @map("total_value") @db.Decimal(10, 2)
+  validUntil DateTime?      @map("valid_until")
+
+  createdBy String @map("created_by")
+  user      User   @relation(fields: [createdBy], references: [id])
+
+  items ProposalItem[]
+
+  generatedProjectId String?  @unique @map("generated_project_id")
+  project            Project? @relation(fields: [generatedProjectId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@map("proposals")
+  @@schema("crm")
+}
+
+model ProposalItem {
+  id         String   @id @default(cuid())
+  proposalId String   @map("proposal_id")
+  proposal   Proposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+
+  serviceTypeId String      @map("service_type_id")
+  serviceType   ServiceType @relation(fields: [serviceTypeId], references: [id])
+
+  description String? @db.Text
+  price       Decimal @db.Decimal(10, 2)
+
+  @@map("proposal_items")
+  @@schema("crm")
+}
+
+// =========================================================================
+// 4. SCHEMA: PROJECTS (Core do Sistema)
+// =========================================================================
+
+enum ProjectStatus {
+  DRAFT // MANUAL
+  TECH_ANALYSIS // MANUAL
+  PROPOSAL // MANUAL
+  PROPOSAL_GENERATED // SISTEMA OU SE INCLUIR DOCUMENTO DE PROPOSTA
+  WAITING_SIGNATURE // SISTEMA OU SE INCLUIR DOCUMENTO DE CONTRATO
+  WAITING_DOWN_PAYMENT // SISTEMA OU INFORMAR DADOS DO PAGAMENTO
+  PLANNED // MANUAL
+  IN_PROGRESS // MANUAL
+  REVIEW // MANUAL
+  ON_HOLD // MANUAL
+  DELIVERED // MANUAL
+  FINAL_PAYMENT // MANUAL
+  COMPLETED //SISTEMA OU INFORMAR DADOS DO PAGAMENTO
+  CANCELLED // MANUAL
+  MAINTENANCE // MANUAL
+
+  @@schema("projects")
+}
+
+model Project {
+  id             String       @id @default(cuid())
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  name        String  @db.VarChar(200)
+  description String? @db.Text
+
+  clientId String @map("client_id")
+  client   Client @relation(fields: [clientId], references: [id])
+
+  status        ProjectStatus
+  startDate     DateTime?     @map("start_date")
+  endDate       DateTime?     @map("end_date")
+  repositoryUrl String?       @map("repository_url") @db.VarChar(500)
+
+  budget   Decimal   @db.Decimal(10, 2)
+  invoices Invoice[]
+
+  notes   ProjectNote[]
+  sprints Sprint[]
+  backlog BacklogItem[]
+
+  createdBy String @map("created_by")
+  user      User   @relation(fields: [createdBy], references: [id])
+
+  proposal Proposal?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  integrations     ProjectIntegration[]
+  projectServices  ProjectServices[]
+  projectDocuments ProjectDocuments[]
+
+  @@map("projects")
+  @@schema("projects")
+}
+
+model ProjectDocuments {
+  id String @id @default(cuid())
+
+  project Project @relation(fields: [projectId], references: [id])
+
+  name      String   @default("Attachment")
+  extension String   @default("pdf")
+  createdAt DateTime @default(now())
+
+  documentUrlReference String @map("document_url_reference")
+  projectId            String
+
+  @@map("projects_documents")
+  @@schema("projects")
+}
+
+model ProjectServices {
+  project       Project     @relation(fields: [projectId], references: [id])
+  serviceType   ServiceType @relation(fields: [serviceTypeId], references: [id])
+  projectId     String
+  serviceTypeId String
+
+  @@id([projectId, serviceTypeId])
+  @@map("projects_services")
+  @@schema("projects")
+}
+
+model ProjectNote {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  projectId String  @map("project_id")
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@map("project_notes")
+  @@schema("projects")
+}
+
+model Sprint {
+  id        String  @id @default(cuid())
+  projectId String  @map("project_id")
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  name      String   @db.VarChar(100)
+  startDate DateTime @map("start_date")
+  endDate   DateTime @map("end_date")
+
+  // Status financeiro/gerencial (Zofia manda)
+  status String @default("OPEN")
+
+  // Métricas de Execução (Vêm do Taiga)
+  totalPoints       Int?     @default(0) @map("total_points")
+  completedPoints   Int?     @default(0) @map("completed_points")
+  completionPercent Decimal? @default(0) @map("completion_percent") @db.Decimal(5, 2) // 0 a 100.00
+
+  // O Vínculo Mágico
+  externalId  String?   @map("external_id") @db.VarChar(100) // ID do Milestone no Taiga
+  externalUrl String?   @map("external_url") // Link direto pro board
+  lastSyncAt  DateTime? @map("last_sync_at") // Quando foi a última atualização?
+
+  // Configuração Específica da Integração deste Projeto
+  // Ex: { "taigaProjectId": 542, "syncEnabled": true, "webhookSecret": "xyz" }
+  // Avalie no schema de integrações
+  //integrationSettings Json? @map("integration_settings") @db.JsonB
+
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  backlogItems BacklogItem[]
+
+  @@map("sprints")
+  @@schema("projects")
+}
+
+model BacklogItem {
+  id     String @id @default(cuid())
+  title  String @db.VarChar(255)
+  status String @default("TODO") @db.VarChar(20)
+
+  projectId String  @map("project_id")
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  sprintId String?
+  sprint   Sprint? @relation(fields: [sprintId], references: [id])
+
+  points     Int?    @default(0) // Story Points ou Horas
+  priority   String? @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
+  assigneeId String? @map("assignee_id") // Quem vai fazer (User)
+
+  externalLink String? @map("external_link") // Link pro card no Jira/Taiga original
+
+  @@map("backlog_items")
+  @@schema("projects")
+}
+
+// =========================================================================
+// 5. SCHEMA: FINANCIAL (Financeiro & Jobs AWS)
+// =========================================================================
+
+enum FinancialStatus {
+  PENDING
+  PAID
+  OVERDUE
+  CANCELLED
+
+  @@schema("financial")
+}
+
+model Invoice {
+  id             String       @id @default(cuid())
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  projectId String  @map("project_id")
+  project   Project @relation(fields: [projectId], references: [id])
+
+  clientId String @map("client_id")
+  client   Client @relation(fields: [clientId], references: [id])
+
+  amount  Decimal         @db.Decimal(10, 2)
+  dueDate DateTime        @map("due_date")
+  status  FinancialStatus @default(PENDING)
+
+  description String  @db.VarChar(255)
+  nfseNumber  String? @map("nfse_number") @db.VarChar(50)
+  nfseLink    String? @map("nfse_link") @db.VarChar(500)
+
+  createdAt DateTime @default(now())
+
+  @@map("invoices")
+  @@schema("financial")
+}
+
+enum JobType {
+  EMIT_NFSE
+  GENERATE_CONTRACT_PDF
+  SEND_EMAIL_REMINDER
+
+  @@schema("financial")
+}
+
+enum JobStatus {
+  QUEUED
+  PROCESSING
+  COMPLETED
+  FAILED
+
+  @@schema("financial")
+}
+
+// =========================================================================
+// 6. SCHEMA: INTEGRATIONS (Configurações de Integrações)
+// =========================================================================
+
+/// Nível 1: Catálogo Global (O que o seu software suporta)
+/// Ex: { name: "GitHub", slug: "github", logo: "..." }
+model IntegrationType {
+  id   String  @id @default(cuid())
+  name String  @db.VarChar(100)
+  slug String  @unique @db.VarChar(50) /// Identificador único no código
+  logo String? @db.Text
+
+  description String? @db.Text
+
+  // Relações
+  organizationConfig OrganizationIntegration[]
+  projectConfig      ProjectIntegration[]
+
+  @@map("integration_types")
+  @@schema("integrations")
+}
+
+enum IntegrationStatus {
+  HEALTHY
+  WARNNING
+  ERROR
+
+  @@schema("integrations")
+}
+
+/// Nível 2: Disponibilidade da Organização (O que o cliente ativou)
+/// Aqui ficam credenciais GLOBAIS da empresa (ex: Token do Slack da Empresa)
+model OrganizationIntegration {
+  id             String       @id @default(cuid())
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  integrationTypeId String          @map("integration_type_id")
+  integrationType   IntegrationType @relation(fields: [integrationTypeId], references: [id])
+
+  lastHealthCheck DateTime?
+  healthStatus    IntegrationStatus? // "healthy", "warning", "error"
+  lastError       String?
+  errorCount      Int                @default(0)
+
+  enabled Boolean @default(true)
+
+  /// Configurações gerais da organização (API Keys, Client Secrets)
+  /// CUIDADO: Campos sensíveis devem ser encriptados antes de salvar aqui
+  config Json? @db.JsonB
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Garante que a organização só tenha 1 configuração para cada tipo de integração
+  @@unique([organizationId, integrationTypeId])
+  @@map("organization_integrations")
+  @@schema("integrations")
+}
+
+/// Nível 3: Uso no Projeto (A instância real)
+/// Ex: Projeto X usa GitHub (IntegrationType) com o Repo URL Y (Config)
+model ProjectIntegration {
+  id        String  @id @default(cuid())
+  projectId String  @map("project_id")
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  integrationTypeId String          @map("integration_type_id")
+  integrationType   IntegrationType @relation(fields: [integrationTypeId], references: [id])
+
+  /// Configuração específica deste projeto
+  /// Ex: { "repoUrl": "...", "channelId": "...", "webhookUrl": "..." }
+  config Json? @db.JsonB
+
+  enabled Boolean @default(true)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("project_integrations")
+  @@schema("integrations")
+}
+
+// =========================================================================
+// 7. SCHEMA: AUDIT (Auditorias)
+// =========================================================================
+
+model AuditLog {
+  idString String @id @default(cuid())
+
+  entityType String
+  entityId   String
+
+  action String
+
+  changes Json?
+
+  metadata Json?
+
+  userId String? @map("user_id")
+  user   User?   @relation(fields: [userId], references: [id])
+
+  timestamp DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([userId])
+  @@index([timestamp])
+  @@map("audit_logs")
+  @@schema("audit")
+}
+
+// =========================================================================
+// 7. SCHEMA: SUBSCRIPTIONS (Planos e Billing)
+// =========================================================================
+
+// enum PlanType {
+//   FREE
+//   STARTER
+//   PROFESSIONAL
+//   ENTERPRISE
+// }
+
+// model Subscription {
+//   id String @id
+//   organizationId String
+//   plan PlanType
+//   status String // active, canceled, past_due
+//   currentPeriodStart DateTime
+//   currentPeriodEnd DateTime
+//   cancelAtPeriodEnd Boolean
+
+//   // Stripe/Pagar.me IDs
+//   stripeSubscriptionId String?
+//   stripeCustomerId String?
+// }
+
+// model UsageMetric {
+//   id String @id
+//   organizationId String
+//   metric String // "projects", "users", "api_calls"
+//   value Int
+//   period DateTime // Mês de referência
+// }

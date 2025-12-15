@@ -1,0 +1,197 @@
+{
+  "meta": {
+    "tagline": "Building the future with you",
+    "description": "A company delivers cutting-edge solutions in Web Development, DevOps, Cloud Infrastructure, and Technology Consulting."
+  },
+  "header": {
+    "theme": "Change the color theme of the website",
+    "logoutButton": "Logout",
+    "loginDialog": {
+      "button": "Entrar",
+      "title": "Login",
+      "description": "Faça seu login e comece a interagir comigo em meus posts.",
+      "providers": {
+        "github": "Entrar com GitHub",
+        "gitlab": "Entrar com GitLab",
+        "google": "Entrar com Google",
+        "loading": "Entrando..."
+      },
+      "terms": "Ao entrar, você concorda com os",
+      "termsLink": "termos de uso"
+    }
+  },
+  "languages": {
+    "pt": "Português (PT)",
+    "en": "English (EN)"
+  },
+  "userProfile": {
+    "title": "Perfil de Usuário",
+    "myProfile": "Meu Perfil",
+    "description": "Gerencie suas informações pessoais e configurações de conta",
+
+    "roles": {
+      "admin": "ADMIN"
+    },
+
+    "infoCards": {
+      "memberSince": "Membro desde",
+      "emailVerified": "Email Verificado",
+      "notVerified": "Não verificado",
+      "newsletter": "Newsletter",
+      "subscribed": "Inscrito",
+      "notSubscribed": "Não inscrito"
+    },
+
+    "connectedAccounts": {
+      "title": "Contas Conectadas",
+      "connectedOn": "Conectado em",
+      "noAccounts": "Nenhuma conta vinculada",
+      "noAccountsDesc": "Conecte suas redes sociais para facilitar o login."
+    },
+
+    "security": {
+      "title": "Security",
+      "passwordSet": "Login Password",
+      "noPassword": "Password not set",
+      "lastChanged": "Last changed: {date}",
+      "authViaSocial": "You are using social login. Create a password for direct access.",
+      "changePassword": "Change Password",
+      "createPassword": "Create Password"
+    },
+
+    "activeSessions": {
+      "title": "Sessões Ativas",
+      "noSessionsTitle": "Nenhuma sessão ativa",
+      "noSessionsDescription": "Usuário não possui nenhuma sessão ativa",
+      "currentSession": "Sessão Atual",
+      "active": "Ativa",
+      "token": "Token:",
+      "createdAt": "Criada em:",
+      "expiresAt": "Expira em:",
+      "close": "Encerrar sessão"
+    },
+
+    "footer": {
+      "userId": "ID do Usuário:",
+      "lastUpdate": "Última atualização:"
+    },
+
+    "placeholders": {
+      "user": "Usuário",
+      "notAvailable": "N/A"
+    },
+
+    "LoginHistory": {
+      "title": "Login History",
+      "footerNote": "Showing the last 10 access logs for security purposes."
+    },
+
+    "errors": {
+      "mustBeLoggedIn": "Usuário tem que estar logado para consultar os próprios dados",
+      "unauthorizedAccess": "Apenas o próprio usuário ou o Administrador pode ter acesso a dados de usuário",
+      "userNotFound": "User not found"
+    }
+  },
+  "organization": {
+    "title": "Organização",
+    "noOrgTitle": "Sem organização",
+    "noOrgDesc": "Você ainda não está vinculado a nenhuma empresa.",
+    "createOrg": "Criar Organização",
+    "statusActive": "Verificada",
+    "manage": "Gerenciar",
+    "industryLabel": "Indústria",
+    "memberSince": "Fundada em"
+  },
+  "footer": {
+    "navTitle": "Quick Links",
+    "legalTitle": "Legal & Privacy",
+    "contactTitle": "Contact & Info",
+    "terms": "Terms of Use",
+    "policy": "Privacy Policy",
+    "rights": "All rights reserved.",
+    "madeWith": "Made with",
+    "andMuch": "and lots of",
+    "coffee": "coffee",
+    "howWeWork": "How We Work",
+    "serviceCatalog": "Service Catalog",
+    "moreInformation": "More Information"
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "The page you are looking for does not exist or has been moved.",
+    "home": "Back to Home",
+    "back": "Go Back",
+    "help": "If you believe this is an error, please contact us."
+  },
+  "auth": {
+    "login": "Sign In",
+    "loginDescription": "Login with your credentials do begin",
+    "email": "Email",
+    "password": "Password",
+    "loginButton": "Sign In",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign Up",
+    "loginSuccess": "Welcome back!",
+    "loginError": "Invalid credentials",
+    "loginWithProviders": {
+      "button": "Sign In",
+      "title": "Login",
+      "description": "Sign in and start interacting with me on my posts.",
+      "providers": {
+        "github": "Sign in with GitHub",
+        "gitlab": "Sign in with GitLab",
+        "google": "Sign in with Google",
+        "loading": "Signing in..."
+      },
+      "terms": "By signing in, you agree to the",
+      "termsLink": "terms of use"
+    }
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "overview": "Overview",
+    "description": "Monitor your projects and team performance",
+    "projects": "Projects",
+    "stats": {
+      "totalProjects": "Total Projects",
+      "activeProjects": "Active Projects",
+      "completedProjects": "Completed",
+      "clientSatisfaction": "Client Satisfaction"
+    },
+    "chart": {
+      "projectPerMonth": {
+        "title": "Projects per Month",
+        "description": "Total projects completed each month"
+      },
+      "projectGrowthTrend": {
+        "title": "Growth Trend",
+        "description": "Project growth over time"
+      }
+    },
+    "projectHistory": "Project History",
+    "projectName": "Project Name",
+    "status": "Status",
+    "completionDate": "Completion Date",
+    "client": "Client",
+    "statuses": {
+      "completed": "Completed",
+      "inProgress": "In Progress",
+      "planning": "Planning"
+    },
+    "logout": "Logout"
+  },
+  "components": {
+    "dropzone": {
+      "dragHere": "Arraste o arquivo aqui",
+      "orClickToSelect": "ou clique para selecionar do seu dispositivo",
+      "allowedExtensions": "Extensões permitidas",
+      "anyType": "qualquer tipo"
+    }
+  },
+  "project": {
+    "notes": {
+      "posted": "Postado {timeAgo}",
+      "edited": "Post editado {timeAgo}"
+    }
+  }
+}
