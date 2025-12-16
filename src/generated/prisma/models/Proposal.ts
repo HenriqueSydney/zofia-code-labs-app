@@ -41,8 +41,13 @@ export type ProposalMinAggregateOutputType = {
   totalValue: runtime.Decimal | null
   validUntil: Date | null
   createdBy: string | null
+  sourceType: $Enums.ProposalSource | null
+  templateId: string | null
+  fileKey: string | null
+  fileUrl: string | null
   generatedProjectId: string | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type ProposalMaxAggregateOutputType = {
@@ -52,8 +57,13 @@ export type ProposalMaxAggregateOutputType = {
   totalValue: runtime.Decimal | null
   validUntil: Date | null
   createdBy: string | null
+  sourceType: $Enums.ProposalSource | null
+  templateId: string | null
+  fileKey: string | null
+  fileUrl: string | null
   generatedProjectId: string | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type ProposalCountAggregateOutputType = {
@@ -63,8 +73,13 @@ export type ProposalCountAggregateOutputType = {
   totalValue: number
   validUntil: number
   createdBy: number
+  sourceType: number
+  templateId: number
+  fileKey: number
+  fileUrl: number
   generatedProjectId: number
   createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -84,8 +99,13 @@ export type ProposalMinAggregateInputType = {
   totalValue?: true
   validUntil?: true
   createdBy?: true
+  sourceType?: true
+  templateId?: true
+  fileKey?: true
+  fileUrl?: true
   generatedProjectId?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type ProposalMaxAggregateInputType = {
@@ -95,8 +115,13 @@ export type ProposalMaxAggregateInputType = {
   totalValue?: true
   validUntil?: true
   createdBy?: true
+  sourceType?: true
+  templateId?: true
+  fileKey?: true
+  fileUrl?: true
   generatedProjectId?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type ProposalCountAggregateInputType = {
@@ -106,8 +131,13 @@ export type ProposalCountAggregateInputType = {
   totalValue?: true
   validUntil?: true
   createdBy?: true
+  sourceType?: true
+  templateId?: true
+  fileKey?: true
+  fileUrl?: true
   generatedProjectId?: true
   createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -204,8 +234,13 @@ export type ProposalGroupByOutputType = {
   totalValue: runtime.Decimal
   validUntil: Date | null
   createdBy: string
+  sourceType: $Enums.ProposalSource
+  templateId: string | null
+  fileKey: string | null
+  fileUrl: string | null
   generatedProjectId: string | null
   createdAt: Date
+  updatedAt: Date
   _count: ProposalCountAggregateOutputType | null
   _avg: ProposalAvgAggregateOutputType | null
   _sum: ProposalSumAggregateOutputType | null
@@ -238,10 +273,16 @@ export type ProposalWhereInput = {
   totalValue?: Prisma.DecimalFilter<"Proposal"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.DateTimeNullableFilter<"Proposal"> | Date | string | null
   createdBy?: Prisma.StringFilter<"Proposal"> | string
+  sourceType?: Prisma.EnumProposalSourceFilter<"Proposal"> | $Enums.ProposalSource
+  templateId?: Prisma.StringNullableFilter<"Proposal"> | string | null
+  fileKey?: Prisma.StringNullableFilter<"Proposal"> | string | null
+  fileUrl?: Prisma.StringNullableFilter<"Proposal"> | string | null
   generatedProjectId?: Prisma.StringNullableFilter<"Proposal"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Proposal"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Proposal"> | Date | string
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  template?: Prisma.XOR<Prisma.ProposalTemplateNullableScalarRelationFilter, Prisma.ProposalTemplateWhereInput> | null
   items?: Prisma.ProposalItemListRelationFilter
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
 }
@@ -253,10 +294,16 @@ export type ProposalOrderByWithRelationInput = {
   totalValue?: Prisma.SortOrder
   validUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   createdBy?: Prisma.SortOrder
+  sourceType?: Prisma.SortOrder
+  templateId?: Prisma.SortOrderInput | Prisma.SortOrder
+  fileKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   generatedProjectId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   client?: Prisma.ClientOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
+  template?: Prisma.ProposalTemplateOrderByWithRelationInput
   items?: Prisma.ProposalItemOrderByRelationAggregateInput
   project?: Prisma.ProjectOrderByWithRelationInput
 }
@@ -272,9 +319,15 @@ export type ProposalWhereUniqueInput = Prisma.AtLeast<{
   totalValue?: Prisma.DecimalFilter<"Proposal"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.DateTimeNullableFilter<"Proposal"> | Date | string | null
   createdBy?: Prisma.StringFilter<"Proposal"> | string
+  sourceType?: Prisma.EnumProposalSourceFilter<"Proposal"> | $Enums.ProposalSource
+  templateId?: Prisma.StringNullableFilter<"Proposal"> | string | null
+  fileKey?: Prisma.StringNullableFilter<"Proposal"> | string | null
+  fileUrl?: Prisma.StringNullableFilter<"Proposal"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Proposal"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Proposal"> | Date | string
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  template?: Prisma.XOR<Prisma.ProposalTemplateNullableScalarRelationFilter, Prisma.ProposalTemplateWhereInput> | null
   items?: Prisma.ProposalItemListRelationFilter
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
 }, "id" | "generatedProjectId">
@@ -286,8 +339,13 @@ export type ProposalOrderByWithAggregationInput = {
   totalValue?: Prisma.SortOrder
   validUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   createdBy?: Prisma.SortOrder
+  sourceType?: Prisma.SortOrder
+  templateId?: Prisma.SortOrderInput | Prisma.SortOrder
+  fileKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   generatedProjectId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.ProposalCountOrderByAggregateInput
   _avg?: Prisma.ProposalAvgOrderByAggregateInput
   _max?: Prisma.ProposalMaxOrderByAggregateInput
@@ -305,8 +363,13 @@ export type ProposalScalarWhereWithAggregatesInput = {
   totalValue?: Prisma.DecimalWithAggregatesFilter<"Proposal"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"Proposal"> | Date | string | null
   createdBy?: Prisma.StringWithAggregatesFilter<"Proposal"> | string
+  sourceType?: Prisma.EnumProposalSourceWithAggregatesFilter<"Proposal"> | $Enums.ProposalSource
+  templateId?: Prisma.StringNullableWithAggregatesFilter<"Proposal"> | string | null
+  fileKey?: Prisma.StringNullableWithAggregatesFilter<"Proposal"> | string | null
+  fileUrl?: Prisma.StringNullableWithAggregatesFilter<"Proposal"> | string | null
   generatedProjectId?: Prisma.StringNullableWithAggregatesFilter<"Proposal"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Proposal"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Proposal"> | Date | string
 }
 
 export type ProposalCreateInput = {
@@ -314,9 +377,14 @@ export type ProposalCreateInput = {
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
+  sourceType?: $Enums.ProposalSource
+  fileKey?: string | null
+  fileUrl?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   client: Prisma.ClientCreateNestedOneWithoutProposalsInput
   user: Prisma.UserCreateNestedOneWithoutCreatedProposalsInput
+  template?: Prisma.ProposalTemplateCreateNestedOneWithoutProposalsInput
   items?: Prisma.ProposalItemCreateNestedManyWithoutProposalInput
   project?: Prisma.ProjectCreateNestedOneWithoutProposalInput
 }
@@ -328,8 +396,13 @@ export type ProposalUncheckedCreateInput = {
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   createdBy: string
+  sourceType?: $Enums.ProposalSource
+  templateId?: string | null
+  fileKey?: string | null
+  fileUrl?: string | null
   generatedProjectId?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   items?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutProposalInput
 }
 
@@ -338,9 +411,14 @@ export type ProposalUpdateInput = {
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneRequiredWithoutProposalsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCreatedProposalsNestedInput
+  template?: Prisma.ProposalTemplateUpdateOneWithoutProposalsNestedInput
   items?: Prisma.ProposalItemUpdateManyWithoutProposalNestedInput
   project?: Prisma.ProjectUpdateOneWithoutProposalNestedInput
 }
@@ -352,8 +430,13 @@ export type ProposalUncheckedUpdateInput = {
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedProjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
 }
 
@@ -364,8 +447,13 @@ export type ProposalCreateManyInput = {
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   createdBy: string
+  sourceType?: $Enums.ProposalSource
+  templateId?: string | null
+  fileKey?: string | null
+  fileUrl?: string | null
   generatedProjectId?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ProposalUpdateManyMutationInput = {
@@ -373,7 +461,11 @@ export type ProposalUpdateManyMutationInput = {
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ProposalUncheckedUpdateManyInput = {
@@ -383,8 +475,13 @@ export type ProposalUncheckedUpdateManyInput = {
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedProjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ProposalListRelationFilter = {
@@ -404,8 +501,13 @@ export type ProposalCountOrderByAggregateInput = {
   totalValue?: Prisma.SortOrder
   validUntil?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
+  sourceType?: Prisma.SortOrder
+  templateId?: Prisma.SortOrder
+  fileKey?: Prisma.SortOrder
+  fileUrl?: Prisma.SortOrder
   generatedProjectId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ProposalAvgOrderByAggregateInput = {
@@ -419,8 +521,13 @@ export type ProposalMaxOrderByAggregateInput = {
   totalValue?: Prisma.SortOrder
   validUntil?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
+  sourceType?: Prisma.SortOrder
+  templateId?: Prisma.SortOrder
+  fileKey?: Prisma.SortOrder
+  fileUrl?: Prisma.SortOrder
   generatedProjectId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ProposalMinOrderByAggregateInput = {
@@ -430,8 +537,13 @@ export type ProposalMinOrderByAggregateInput = {
   totalValue?: Prisma.SortOrder
   validUntil?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
+  sourceType?: Prisma.SortOrder
+  templateId?: Prisma.SortOrder
+  fileKey?: Prisma.SortOrder
+  fileUrl?: Prisma.SortOrder
   generatedProjectId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ProposalSumOrderByAggregateInput = {
@@ -544,6 +656,52 @@ export type DecimalFieldUpdateOperationsInput = {
   divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
+export type EnumProposalSourceFieldUpdateOperationsInput = {
+  set?: $Enums.ProposalSource
+}
+
+export type ProposalCreateNestedManyWithoutTemplateInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutTemplateInput, Prisma.ProposalUncheckedCreateWithoutTemplateInput> | Prisma.ProposalCreateWithoutTemplateInput[] | Prisma.ProposalUncheckedCreateWithoutTemplateInput[]
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutTemplateInput | Prisma.ProposalCreateOrConnectWithoutTemplateInput[]
+  createMany?: Prisma.ProposalCreateManyTemplateInputEnvelope
+  connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+}
+
+export type ProposalUncheckedCreateNestedManyWithoutTemplateInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutTemplateInput, Prisma.ProposalUncheckedCreateWithoutTemplateInput> | Prisma.ProposalCreateWithoutTemplateInput[] | Prisma.ProposalUncheckedCreateWithoutTemplateInput[]
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutTemplateInput | Prisma.ProposalCreateOrConnectWithoutTemplateInput[]
+  createMany?: Prisma.ProposalCreateManyTemplateInputEnvelope
+  connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+}
+
+export type ProposalUpdateManyWithoutTemplateNestedInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutTemplateInput, Prisma.ProposalUncheckedCreateWithoutTemplateInput> | Prisma.ProposalCreateWithoutTemplateInput[] | Prisma.ProposalUncheckedCreateWithoutTemplateInput[]
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutTemplateInput | Prisma.ProposalCreateOrConnectWithoutTemplateInput[]
+  upsert?: Prisma.ProposalUpsertWithWhereUniqueWithoutTemplateInput | Prisma.ProposalUpsertWithWhereUniqueWithoutTemplateInput[]
+  createMany?: Prisma.ProposalCreateManyTemplateInputEnvelope
+  set?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  disconnect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  delete?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  update?: Prisma.ProposalUpdateWithWhereUniqueWithoutTemplateInput | Prisma.ProposalUpdateWithWhereUniqueWithoutTemplateInput[]
+  updateMany?: Prisma.ProposalUpdateManyWithWhereWithoutTemplateInput | Prisma.ProposalUpdateManyWithWhereWithoutTemplateInput[]
+  deleteMany?: Prisma.ProposalScalarWhereInput | Prisma.ProposalScalarWhereInput[]
+}
+
+export type ProposalUncheckedUpdateManyWithoutTemplateNestedInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutTemplateInput, Prisma.ProposalUncheckedCreateWithoutTemplateInput> | Prisma.ProposalCreateWithoutTemplateInput[] | Prisma.ProposalUncheckedCreateWithoutTemplateInput[]
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutTemplateInput | Prisma.ProposalCreateOrConnectWithoutTemplateInput[]
+  upsert?: Prisma.ProposalUpsertWithWhereUniqueWithoutTemplateInput | Prisma.ProposalUpsertWithWhereUniqueWithoutTemplateInput[]
+  createMany?: Prisma.ProposalCreateManyTemplateInputEnvelope
+  set?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  disconnect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  delete?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  update?: Prisma.ProposalUpdateWithWhereUniqueWithoutTemplateInput | Prisma.ProposalUpdateWithWhereUniqueWithoutTemplateInput[]
+  updateMany?: Prisma.ProposalUpdateManyWithWhereWithoutTemplateInput | Prisma.ProposalUpdateManyWithWhereWithoutTemplateInput[]
+  deleteMany?: Prisma.ProposalScalarWhereInput | Prisma.ProposalScalarWhereInput[]
+}
+
 export type ProposalCreateNestedOneWithoutItemsInput = {
   create?: Prisma.XOR<Prisma.ProposalCreateWithoutItemsInput, Prisma.ProposalUncheckedCreateWithoutItemsInput>
   connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutItemsInput
@@ -595,8 +753,13 @@ export type ProposalCreateWithoutUserInput = {
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
+  sourceType?: $Enums.ProposalSource
+  fileKey?: string | null
+  fileUrl?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   client: Prisma.ClientCreateNestedOneWithoutProposalsInput
+  template?: Prisma.ProposalTemplateCreateNestedOneWithoutProposalsInput
   items?: Prisma.ProposalItemCreateNestedManyWithoutProposalInput
   project?: Prisma.ProjectCreateNestedOneWithoutProposalInput
 }
@@ -607,8 +770,13 @@ export type ProposalUncheckedCreateWithoutUserInput = {
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
+  sourceType?: $Enums.ProposalSource
+  templateId?: string | null
+  fileKey?: string | null
+  fileUrl?: string | null
   generatedProjectId?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   items?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutProposalInput
 }
 
@@ -648,8 +816,13 @@ export type ProposalScalarWhereInput = {
   totalValue?: Prisma.DecimalFilter<"Proposal"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.DateTimeNullableFilter<"Proposal"> | Date | string | null
   createdBy?: Prisma.StringFilter<"Proposal"> | string
+  sourceType?: Prisma.EnumProposalSourceFilter<"Proposal"> | $Enums.ProposalSource
+  templateId?: Prisma.StringNullableFilter<"Proposal"> | string | null
+  fileKey?: Prisma.StringNullableFilter<"Proposal"> | string | null
+  fileUrl?: Prisma.StringNullableFilter<"Proposal"> | string | null
   generatedProjectId?: Prisma.StringNullableFilter<"Proposal"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Proposal"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Proposal"> | Date | string
 }
 
 export type ProposalCreateWithoutClientInput = {
@@ -657,8 +830,13 @@ export type ProposalCreateWithoutClientInput = {
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
+  sourceType?: $Enums.ProposalSource
+  fileKey?: string | null
+  fileUrl?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCreatedProposalsInput
+  template?: Prisma.ProposalTemplateCreateNestedOneWithoutProposalsInput
   items?: Prisma.ProposalItemCreateNestedManyWithoutProposalInput
   project?: Prisma.ProjectCreateNestedOneWithoutProposalInput
 }
@@ -669,8 +847,13 @@ export type ProposalUncheckedCreateWithoutClientInput = {
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   createdBy: string
+  sourceType?: $Enums.ProposalSource
+  templateId?: string | null
+  fileKey?: string | null
+  fileUrl?: string | null
   generatedProjectId?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   items?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutProposalInput
 }
 
@@ -700,14 +883,77 @@ export type ProposalUpdateManyWithWhereWithoutClientInput = {
   data: Prisma.XOR<Prisma.ProposalUpdateManyMutationInput, Prisma.ProposalUncheckedUpdateManyWithoutClientInput>
 }
 
+export type ProposalCreateWithoutTemplateInput = {
+  id?: string
+  status?: $Enums.ProposalStatus
+  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Date | string | null
+  sourceType?: $Enums.ProposalSource
+  fileKey?: string | null
+  fileUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  client: Prisma.ClientCreateNestedOneWithoutProposalsInput
+  user: Prisma.UserCreateNestedOneWithoutCreatedProposalsInput
+  items?: Prisma.ProposalItemCreateNestedManyWithoutProposalInput
+  project?: Prisma.ProjectCreateNestedOneWithoutProposalInput
+}
+
+export type ProposalUncheckedCreateWithoutTemplateInput = {
+  id?: string
+  clientId: string
+  status?: $Enums.ProposalStatus
+  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Date | string | null
+  createdBy: string
+  sourceType?: $Enums.ProposalSource
+  fileKey?: string | null
+  fileUrl?: string | null
+  generatedProjectId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutProposalInput
+}
+
+export type ProposalCreateOrConnectWithoutTemplateInput = {
+  where: Prisma.ProposalWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProposalCreateWithoutTemplateInput, Prisma.ProposalUncheckedCreateWithoutTemplateInput>
+}
+
+export type ProposalCreateManyTemplateInputEnvelope = {
+  data: Prisma.ProposalCreateManyTemplateInput | Prisma.ProposalCreateManyTemplateInput[]
+  skipDuplicates?: boolean
+}
+
+export type ProposalUpsertWithWhereUniqueWithoutTemplateInput = {
+  where: Prisma.ProposalWhereUniqueInput
+  update: Prisma.XOR<Prisma.ProposalUpdateWithoutTemplateInput, Prisma.ProposalUncheckedUpdateWithoutTemplateInput>
+  create: Prisma.XOR<Prisma.ProposalCreateWithoutTemplateInput, Prisma.ProposalUncheckedCreateWithoutTemplateInput>
+}
+
+export type ProposalUpdateWithWhereUniqueWithoutTemplateInput = {
+  where: Prisma.ProposalWhereUniqueInput
+  data: Prisma.XOR<Prisma.ProposalUpdateWithoutTemplateInput, Prisma.ProposalUncheckedUpdateWithoutTemplateInput>
+}
+
+export type ProposalUpdateManyWithWhereWithoutTemplateInput = {
+  where: Prisma.ProposalScalarWhereInput
+  data: Prisma.XOR<Prisma.ProposalUpdateManyMutationInput, Prisma.ProposalUncheckedUpdateManyWithoutTemplateInput>
+}
+
 export type ProposalCreateWithoutItemsInput = {
   id?: string
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
+  sourceType?: $Enums.ProposalSource
+  fileKey?: string | null
+  fileUrl?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   client: Prisma.ClientCreateNestedOneWithoutProposalsInput
   user: Prisma.UserCreateNestedOneWithoutCreatedProposalsInput
+  template?: Prisma.ProposalTemplateCreateNestedOneWithoutProposalsInput
   project?: Prisma.ProjectCreateNestedOneWithoutProposalInput
 }
 
@@ -718,8 +964,13 @@ export type ProposalUncheckedCreateWithoutItemsInput = {
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   createdBy: string
+  sourceType?: $Enums.ProposalSource
+  templateId?: string | null
+  fileKey?: string | null
+  fileUrl?: string | null
   generatedProjectId?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ProposalCreateOrConnectWithoutItemsInput = {
@@ -743,9 +994,14 @@ export type ProposalUpdateWithoutItemsInput = {
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneRequiredWithoutProposalsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCreatedProposalsNestedInput
+  template?: Prisma.ProposalTemplateUpdateOneWithoutProposalsNestedInput
   project?: Prisma.ProjectUpdateOneWithoutProposalNestedInput
 }
 
@@ -756,8 +1012,13 @@ export type ProposalUncheckedUpdateWithoutItemsInput = {
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedProjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ProposalCreateWithoutProjectInput = {
@@ -765,9 +1026,14 @@ export type ProposalCreateWithoutProjectInput = {
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
+  sourceType?: $Enums.ProposalSource
+  fileKey?: string | null
+  fileUrl?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   client: Prisma.ClientCreateNestedOneWithoutProposalsInput
   user: Prisma.UserCreateNestedOneWithoutCreatedProposalsInput
+  template?: Prisma.ProposalTemplateCreateNestedOneWithoutProposalsInput
   items?: Prisma.ProposalItemCreateNestedManyWithoutProposalInput
 }
 
@@ -778,7 +1044,12 @@ export type ProposalUncheckedCreateWithoutProjectInput = {
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   createdBy: string
+  sourceType?: $Enums.ProposalSource
+  templateId?: string | null
+  fileKey?: string | null
+  fileUrl?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   items?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutProposalInput
 }
 
@@ -803,9 +1074,14 @@ export type ProposalUpdateWithoutProjectInput = {
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneRequiredWithoutProposalsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCreatedProposalsNestedInput
+  template?: Prisma.ProposalTemplateUpdateOneWithoutProposalsNestedInput
   items?: Prisma.ProposalItemUpdateManyWithoutProposalNestedInput
 }
 
@@ -816,7 +1092,12 @@ export type ProposalUncheckedUpdateWithoutProjectInput = {
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
 }
 
@@ -826,8 +1107,13 @@ export type ProposalCreateManyUserInput = {
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
+  sourceType?: $Enums.ProposalSource
+  templateId?: string | null
+  fileKey?: string | null
+  fileUrl?: string | null
   generatedProjectId?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ProposalUpdateWithoutUserInput = {
@@ -835,8 +1121,13 @@ export type ProposalUpdateWithoutUserInput = {
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneRequiredWithoutProposalsNestedInput
+  template?: Prisma.ProposalTemplateUpdateOneWithoutProposalsNestedInput
   items?: Prisma.ProposalItemUpdateManyWithoutProposalNestedInput
   project?: Prisma.ProjectUpdateOneWithoutProposalNestedInput
 }
@@ -847,8 +1138,13 @@ export type ProposalUncheckedUpdateWithoutUserInput = {
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedProjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
 }
 
@@ -858,8 +1154,13 @@ export type ProposalUncheckedUpdateManyWithoutUserInput = {
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedProjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ProposalCreateManyClientInput = {
@@ -868,8 +1169,13 @@ export type ProposalCreateManyClientInput = {
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   createdBy: string
+  sourceType?: $Enums.ProposalSource
+  templateId?: string | null
+  fileKey?: string | null
+  fileUrl?: string | null
   generatedProjectId?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ProposalUpdateWithoutClientInput = {
@@ -877,8 +1183,13 @@ export type ProposalUpdateWithoutClientInput = {
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCreatedProposalsNestedInput
+  template?: Prisma.ProposalTemplateUpdateOneWithoutProposalsNestedInput
   items?: Prisma.ProposalItemUpdateManyWithoutProposalNestedInput
   project?: Prisma.ProjectUpdateOneWithoutProposalNestedInput
 }
@@ -889,8 +1200,13 @@ export type ProposalUncheckedUpdateWithoutClientInput = {
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedProjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
 }
 
@@ -900,8 +1216,75 @@ export type ProposalUncheckedUpdateManyWithoutClientInput = {
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedProjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ProposalCreateManyTemplateInput = {
+  id?: string
+  clientId: string
+  status?: $Enums.ProposalStatus
+  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Date | string | null
+  createdBy: string
+  sourceType?: $Enums.ProposalSource
+  fileKey?: string | null
+  fileUrl?: string | null
+  generatedProjectId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ProposalUpdateWithoutTemplateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
+  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  client?: Prisma.ClientUpdateOneRequiredWithoutProposalsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutCreatedProposalsNestedInput
+  items?: Prisma.ProposalItemUpdateManyWithoutProposalNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutProposalNestedInput
+}
+
+export type ProposalUncheckedUpdateWithoutTemplateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
+  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  generatedProjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
+}
+
+export type ProposalUncheckedUpdateManyWithoutTemplateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
+  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  generatedProjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -942,10 +1325,16 @@ export type ProposalSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   totalValue?: boolean
   validUntil?: boolean
   createdBy?: boolean
+  sourceType?: boolean
+  templateId?: boolean
+  fileKey?: boolean
+  fileUrl?: boolean
   generatedProjectId?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  template?: boolean | Prisma.Proposal$templateArgs<ExtArgs>
   items?: boolean | Prisma.Proposal$itemsArgs<ExtArgs>
   project?: boolean | Prisma.Proposal$projectArgs<ExtArgs>
   _count?: boolean | Prisma.ProposalCountOutputTypeDefaultArgs<ExtArgs>
@@ -958,10 +1347,16 @@ export type ProposalSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   totalValue?: boolean
   validUntil?: boolean
   createdBy?: boolean
+  sourceType?: boolean
+  templateId?: boolean
+  fileKey?: boolean
+  fileUrl?: boolean
   generatedProjectId?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  template?: boolean | Prisma.Proposal$templateArgs<ExtArgs>
   project?: boolean | Prisma.Proposal$projectArgs<ExtArgs>
 }, ExtArgs["result"]["proposal"]>
 
@@ -972,10 +1367,16 @@ export type ProposalSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   totalValue?: boolean
   validUntil?: boolean
   createdBy?: boolean
+  sourceType?: boolean
+  templateId?: boolean
+  fileKey?: boolean
+  fileUrl?: boolean
   generatedProjectId?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  template?: boolean | Prisma.Proposal$templateArgs<ExtArgs>
   project?: boolean | Prisma.Proposal$projectArgs<ExtArgs>
 }, ExtArgs["result"]["proposal"]>
 
@@ -986,14 +1387,20 @@ export type ProposalSelectScalar = {
   totalValue?: boolean
   validUntil?: boolean
   createdBy?: boolean
+  sourceType?: boolean
+  templateId?: boolean
+  fileKey?: boolean
+  fileUrl?: boolean
   generatedProjectId?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type ProposalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "status" | "totalValue" | "validUntil" | "createdBy" | "generatedProjectId" | "createdAt", ExtArgs["result"]["proposal"]>
+export type ProposalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "status" | "totalValue" | "validUntil" | "createdBy" | "sourceType" | "templateId" | "fileKey" | "fileUrl" | "generatedProjectId" | "createdAt" | "updatedAt", ExtArgs["result"]["proposal"]>
 export type ProposalInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  template?: boolean | Prisma.Proposal$templateArgs<ExtArgs>
   items?: boolean | Prisma.Proposal$itemsArgs<ExtArgs>
   project?: boolean | Prisma.Proposal$projectArgs<ExtArgs>
   _count?: boolean | Prisma.ProposalCountOutputTypeDefaultArgs<ExtArgs>
@@ -1001,11 +1408,13 @@ export type ProposalInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type ProposalIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  template?: boolean | Prisma.Proposal$templateArgs<ExtArgs>
   project?: boolean | Prisma.Proposal$projectArgs<ExtArgs>
 }
 export type ProposalIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  template?: boolean | Prisma.Proposal$templateArgs<ExtArgs>
   project?: boolean | Prisma.Proposal$projectArgs<ExtArgs>
 }
 
@@ -1014,6 +1423,7 @@ export type $ProposalPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   objects: {
     client: Prisma.$ClientPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
+    template: Prisma.$ProposalTemplatePayload<ExtArgs> | null
     items: Prisma.$ProposalItemPayload<ExtArgs>[]
     project: Prisma.$ProjectPayload<ExtArgs> | null
   }
@@ -1024,8 +1434,13 @@ export type $ProposalPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     totalValue: runtime.Decimal
     validUntil: Date | null
     createdBy: string
+    sourceType: $Enums.ProposalSource
+    templateId: string | null
+    fileKey: string | null
+    fileUrl: string | null
     generatedProjectId: string | null
     createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["proposal"]>
   composites: {}
 }
@@ -1422,6 +1837,7 @@ export interface Prisma__ProposalClient<T, Null = never, ExtArgs extends runtime
   readonly [Symbol.toStringTag]: "PrismaPromise"
   client<T extends Prisma.ClientDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientDefaultArgs<ExtArgs>>): Prisma.Prisma__ClientClient<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  template<T extends Prisma.Proposal$templateArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Proposal$templateArgs<ExtArgs>>): Prisma.Prisma__ProposalTemplateClient<runtime.Types.Result.GetResult<Prisma.$ProposalTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   items<T extends Prisma.Proposal$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Proposal$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProposalItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   project<T extends Prisma.Proposal$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Proposal$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
@@ -1459,8 +1875,13 @@ export interface ProposalFieldRefs {
   readonly totalValue: Prisma.FieldRef<"Proposal", 'Decimal'>
   readonly validUntil: Prisma.FieldRef<"Proposal", 'DateTime'>
   readonly createdBy: Prisma.FieldRef<"Proposal", 'String'>
+  readonly sourceType: Prisma.FieldRef<"Proposal", 'ProposalSource'>
+  readonly templateId: Prisma.FieldRef<"Proposal", 'String'>
+  readonly fileKey: Prisma.FieldRef<"Proposal", 'String'>
+  readonly fileUrl: Prisma.FieldRef<"Proposal", 'String'>
   readonly generatedProjectId: Prisma.FieldRef<"Proposal", 'String'>
   readonly createdAt: Prisma.FieldRef<"Proposal", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Proposal", 'DateTime'>
 }
     
 
@@ -1854,6 +2275,25 @@ export type ProposalDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many Proposals to delete.
    */
   limit?: number
+}
+
+/**
+ * Proposal.template
+ */
+export type Proposal$templateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProposalTemplate
+   */
+  select?: Prisma.ProposalTemplateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProposalTemplate
+   */
+  omit?: Prisma.ProposalTemplateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProposalTemplateInclude<ExtArgs> | null
+  where?: Prisma.ProposalTemplateWhereInput
 }
 
 /**

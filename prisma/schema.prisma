@@ -214,11 +214,12 @@ model DocumentTemplate {
   organizationId String       @map("organization_id")
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
-  title     String       @db.VarChar(150)
-  content   Json         @db.JsonB
-  type      TemplateType
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  title             String             @db.VarChar(150)
+  content           Json               @db.JsonB
+  type              TemplateType
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  proposalTemplates ProposalTemplate[]
 
   @@map("document_templates")
   @@schema("catalog")
@@ -264,10 +265,15 @@ enum ProposalStatus {
   @@schema("crm")
 }
 
+enum ProposalSource {
+  SYSTEM_TEMPLATE
+  MANUAL_UPLOAD
+
+  @@schema("crm")
+}
+
 model Proposal {
   id String @id @default(cuid())
-  // Proposta não precisa de link direto com Org pois herda do Cliente, 
-  // mas para queries rápidas pode ser útil. Vamos manter via Cliente para normalização.
 
   clientId   String         @map("client_id")
   client     Client         @relation(fields: [clientId], references: [id])
@@ -278,14 +284,50 @@ model Proposal {
   createdBy String @map("created_by")
   user      User   @relation(fields: [createdBy], references: [id])
 
+  sourceType ProposalSource @default(SYSTEM_TEMPLATE) @map("source_type")
+
+  templateId String?           @map("template_id")
+  template   ProposalTemplate? @relation(fields: [templateId], references: [id])
+
+  fileKey String? @map("file_key")
+  fileUrl String? @map("file_url") // Opcional: Cache da URL pública se for bucket público
+
   items ProposalItem[]
 
-  generatedProjectId String?  @unique @map("generated_project_id")
-  project            Project? @relation(fields: [generatedProjectId], references: [id])
+  generatedProjectId String  @unique @map("generated_project_id")
+  project            Project @relation(fields: [generatedProjectId], references: [id])
 
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("proposals")
+  @@schema("crm")
+}
+
+model ProposalTemplate {
+  id String @id @default(cuid())
+
+  template           DocumentTemplate @relation(fields: [documentTemplateId], references: [id])
+  documentTemplateId String
+
+  content Json @db.JsonB
+
+  isDefault Boolean @default(false) @map("is_default")
+  isActive  Boolean @default(true) @map("is_active")
+
+  proposals Proposal[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("proposal_templates")
+  @@schema("crm")
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED
+
   @@schema("crm")
 }
 
@@ -297,8 +339,11 @@ model ProposalItem {
   serviceTypeId String      @map("service_type_id")
   serviceType   ServiceType @relation(fields: [serviceTypeId], references: [id])
 
-  description String? @db.Text
-  price       Decimal @db.Decimal(10, 2)
+  description  String?      @db.Text
+  price        Decimal      @db.Decimal(10, 2)
+  discount     Decimal      @default(0) @db.Decimal(10, 2)
+  discountType DiscountType @default(FIXED) @map("discount_type")
+  finalPrice   Decimal      @db.Decimal(10, 2)
 
   @@map("proposal_items")
   @@schema("crm")

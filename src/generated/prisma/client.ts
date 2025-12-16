@@ -96,6 +96,11 @@ export type Client = Prisma.ClientModel
  */
 export type Proposal = Prisma.ProposalModel
 /**
+ * Model ProposalTemplate
+ * 
+ */
+export type ProposalTemplate = Prisma.ProposalTemplateModel
+/**
  * Model ProposalItem
  * 
  */

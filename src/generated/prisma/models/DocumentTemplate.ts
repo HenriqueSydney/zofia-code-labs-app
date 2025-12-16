@@ -28,7 +28,6 @@ export type DocumentTemplateMinAggregateOutputType = {
   id: string | null
   organizationId: string | null
   title: string | null
-  content: string | null
   type: $Enums.TemplateType | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -38,7 +37,6 @@ export type DocumentTemplateMaxAggregateOutputType = {
   id: string | null
   organizationId: string | null
   title: string | null
-  content: string | null
   type: $Enums.TemplateType | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -60,7 +58,6 @@ export type DocumentTemplateMinAggregateInputType = {
   id?: true
   organizationId?: true
   title?: true
-  content?: true
   type?: true
   createdAt?: true
   updatedAt?: true
@@ -70,7 +67,6 @@ export type DocumentTemplateMaxAggregateInputType = {
   id?: true
   organizationId?: true
   title?: true
-  content?: true
   type?: true
   createdAt?: true
   updatedAt?: true
@@ -163,7 +159,7 @@ export type DocumentTemplateGroupByOutputType = {
   id: string
   organizationId: string
   title: string
-  content: string
+  content: runtime.JsonValue
   type: $Enums.TemplateType
   createdAt: Date
   updatedAt: Date
@@ -194,11 +190,12 @@ export type DocumentTemplateWhereInput = {
   id?: Prisma.StringFilter<"DocumentTemplate"> | string
   organizationId?: Prisma.StringFilter<"DocumentTemplate"> | string
   title?: Prisma.StringFilter<"DocumentTemplate"> | string
-  content?: Prisma.StringFilter<"DocumentTemplate"> | string
+  content?: Prisma.JsonFilter<"DocumentTemplate">
   type?: Prisma.EnumTemplateTypeFilter<"DocumentTemplate"> | $Enums.TemplateType
   createdAt?: Prisma.DateTimeFilter<"DocumentTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DocumentTemplate"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
+  proposalTemplates?: Prisma.ProposalTemplateListRelationFilter
 }
 
 export type DocumentTemplateOrderByWithRelationInput = {
@@ -210,6 +207,7 @@ export type DocumentTemplateOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   organization?: Prisma.OrganizationOrderByWithRelationInput
+  proposalTemplates?: Prisma.ProposalTemplateOrderByRelationAggregateInput
 }
 
 export type DocumentTemplateWhereUniqueInput = Prisma.AtLeast<{
@@ -219,11 +217,12 @@ export type DocumentTemplateWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.DocumentTemplateWhereInput | Prisma.DocumentTemplateWhereInput[]
   organizationId?: Prisma.StringFilter<"DocumentTemplate"> | string
   title?: Prisma.StringFilter<"DocumentTemplate"> | string
-  content?: Prisma.StringFilter<"DocumentTemplate"> | string
+  content?: Prisma.JsonFilter<"DocumentTemplate">
   type?: Prisma.EnumTemplateTypeFilter<"DocumentTemplate"> | $Enums.TemplateType
   createdAt?: Prisma.DateTimeFilter<"DocumentTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DocumentTemplate"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
+  proposalTemplates?: Prisma.ProposalTemplateListRelationFilter
 }, "id">
 
 export type DocumentTemplateOrderByWithAggregationInput = {
@@ -246,7 +245,7 @@ export type DocumentTemplateScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"DocumentTemplate"> | string
   organizationId?: Prisma.StringWithAggregatesFilter<"DocumentTemplate"> | string
   title?: Prisma.StringWithAggregatesFilter<"DocumentTemplate"> | string
-  content?: Prisma.StringWithAggregatesFilter<"DocumentTemplate"> | string
+  content?: Prisma.JsonWithAggregatesFilter<"DocumentTemplate">
   type?: Prisma.EnumTemplateTypeWithAggregatesFilter<"DocumentTemplate"> | $Enums.TemplateType
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DocumentTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"DocumentTemplate"> | Date | string
@@ -255,48 +254,52 @@ export type DocumentTemplateScalarWhereWithAggregatesInput = {
 export type DocumentTemplateCreateInput = {
   id?: string
   title: string
-  content: string
+  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.TemplateType
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutTemplatesInput
+  proposalTemplates?: Prisma.ProposalTemplateCreateNestedManyWithoutTemplateInput
 }
 
 export type DocumentTemplateUncheckedCreateInput = {
   id?: string
   organizationId: string
   title: string
-  content: string
+  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.TemplateType
   createdAt?: Date | string
   updatedAt?: Date | string
+  proposalTemplates?: Prisma.ProposalTemplateUncheckedCreateNestedManyWithoutTemplateInput
 }
 
 export type DocumentTemplateUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutTemplatesNestedInput
+  proposalTemplates?: Prisma.ProposalTemplateUpdateManyWithoutTemplateNestedInput
 }
 
 export type DocumentTemplateUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proposalTemplates?: Prisma.ProposalTemplateUncheckedUpdateManyWithoutTemplateNestedInput
 }
 
 export type DocumentTemplateCreateManyInput = {
   id?: string
   organizationId: string
   title: string
-  content: string
+  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.TemplateType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -305,7 +308,7 @@ export type DocumentTemplateCreateManyInput = {
 export type DocumentTemplateUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -315,7 +318,7 @@ export type DocumentTemplateUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -345,7 +348,6 @@ export type DocumentTemplateMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   title?: Prisma.SortOrder
-  content?: Prisma.SortOrder
   type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -355,10 +357,14 @@ export type DocumentTemplateMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   title?: Prisma.SortOrder
-  content?: Prisma.SortOrder
   type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type DocumentTemplateScalarRelationFilter = {
+  is?: Prisma.DocumentTemplateWhereInput
+  isNot?: Prisma.DocumentTemplateWhereInput
 }
 
 export type DocumentTemplateCreateNestedManyWithoutOrganizationInput = {
@@ -407,22 +413,38 @@ export type EnumTemplateTypeFieldUpdateOperationsInput = {
   set?: $Enums.TemplateType
 }
 
+export type DocumentTemplateCreateNestedOneWithoutProposalTemplatesInput = {
+  create?: Prisma.XOR<Prisma.DocumentTemplateCreateWithoutProposalTemplatesInput, Prisma.DocumentTemplateUncheckedCreateWithoutProposalTemplatesInput>
+  connectOrCreate?: Prisma.DocumentTemplateCreateOrConnectWithoutProposalTemplatesInput
+  connect?: Prisma.DocumentTemplateWhereUniqueInput
+}
+
+export type DocumentTemplateUpdateOneRequiredWithoutProposalTemplatesNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentTemplateCreateWithoutProposalTemplatesInput, Prisma.DocumentTemplateUncheckedCreateWithoutProposalTemplatesInput>
+  connectOrCreate?: Prisma.DocumentTemplateCreateOrConnectWithoutProposalTemplatesInput
+  upsert?: Prisma.DocumentTemplateUpsertWithoutProposalTemplatesInput
+  connect?: Prisma.DocumentTemplateWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DocumentTemplateUpdateToOneWithWhereWithoutProposalTemplatesInput, Prisma.DocumentTemplateUpdateWithoutProposalTemplatesInput>, Prisma.DocumentTemplateUncheckedUpdateWithoutProposalTemplatesInput>
+}
+
 export type DocumentTemplateCreateWithoutOrganizationInput = {
   id?: string
   title: string
-  content: string
+  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.TemplateType
   createdAt?: Date | string
   updatedAt?: Date | string
+  proposalTemplates?: Prisma.ProposalTemplateCreateNestedManyWithoutTemplateInput
 }
 
 export type DocumentTemplateUncheckedCreateWithoutOrganizationInput = {
   id?: string
   title: string
-  content: string
+  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.TemplateType
   createdAt?: Date | string
   updatedAt?: Date | string
+  proposalTemplates?: Prisma.ProposalTemplateUncheckedCreateNestedManyWithoutTemplateInput
 }
 
 export type DocumentTemplateCreateOrConnectWithoutOrganizationInput = {
@@ -458,16 +480,72 @@ export type DocumentTemplateScalarWhereInput = {
   id?: Prisma.StringFilter<"DocumentTemplate"> | string
   organizationId?: Prisma.StringFilter<"DocumentTemplate"> | string
   title?: Prisma.StringFilter<"DocumentTemplate"> | string
-  content?: Prisma.StringFilter<"DocumentTemplate"> | string
+  content?: Prisma.JsonFilter<"DocumentTemplate">
   type?: Prisma.EnumTemplateTypeFilter<"DocumentTemplate"> | $Enums.TemplateType
   createdAt?: Prisma.DateTimeFilter<"DocumentTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DocumentTemplate"> | Date | string
 }
 
+export type DocumentTemplateCreateWithoutProposalTemplatesInput = {
+  id?: string
+  title: string
+  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type: $Enums.TemplateType
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutTemplatesInput
+}
+
+export type DocumentTemplateUncheckedCreateWithoutProposalTemplatesInput = {
+  id?: string
+  organizationId: string
+  title: string
+  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type: $Enums.TemplateType
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type DocumentTemplateCreateOrConnectWithoutProposalTemplatesInput = {
+  where: Prisma.DocumentTemplateWhereUniqueInput
+  create: Prisma.XOR<Prisma.DocumentTemplateCreateWithoutProposalTemplatesInput, Prisma.DocumentTemplateUncheckedCreateWithoutProposalTemplatesInput>
+}
+
+export type DocumentTemplateUpsertWithoutProposalTemplatesInput = {
+  update: Prisma.XOR<Prisma.DocumentTemplateUpdateWithoutProposalTemplatesInput, Prisma.DocumentTemplateUncheckedUpdateWithoutProposalTemplatesInput>
+  create: Prisma.XOR<Prisma.DocumentTemplateCreateWithoutProposalTemplatesInput, Prisma.DocumentTemplateUncheckedCreateWithoutProposalTemplatesInput>
+  where?: Prisma.DocumentTemplateWhereInput
+}
+
+export type DocumentTemplateUpdateToOneWithWhereWithoutProposalTemplatesInput = {
+  where?: Prisma.DocumentTemplateWhereInput
+  data: Prisma.XOR<Prisma.DocumentTemplateUpdateWithoutProposalTemplatesInput, Prisma.DocumentTemplateUncheckedUpdateWithoutProposalTemplatesInput>
+}
+
+export type DocumentTemplateUpdateWithoutProposalTemplatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutTemplatesNestedInput
+}
+
+export type DocumentTemplateUncheckedUpdateWithoutProposalTemplatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  type?: Prisma.EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type DocumentTemplateCreateManyOrganizationInput = {
   id?: string
   title: string
-  content: string
+  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.TemplateType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -476,30 +554,61 @@ export type DocumentTemplateCreateManyOrganizationInput = {
 export type DocumentTemplateUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proposalTemplates?: Prisma.ProposalTemplateUpdateManyWithoutTemplateNestedInput
 }
 
 export type DocumentTemplateUncheckedUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proposalTemplates?: Prisma.ProposalTemplateUncheckedUpdateManyWithoutTemplateNestedInput
 }
 
 export type DocumentTemplateUncheckedUpdateManyWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type DocumentTemplateCountOutputType
+ */
+
+export type DocumentTemplateCountOutputType = {
+  proposalTemplates: number
+}
+
+export type DocumentTemplateCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  proposalTemplates?: boolean | DocumentTemplateCountOutputTypeCountProposalTemplatesArgs
+}
+
+/**
+ * DocumentTemplateCountOutputType without action
+ */
+export type DocumentTemplateCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DocumentTemplateCountOutputType
+   */
+  select?: Prisma.DocumentTemplateCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * DocumentTemplateCountOutputType without action
+ */
+export type DocumentTemplateCountOutputTypeCountProposalTemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProposalTemplateWhereInput
+}
 
 
 export type DocumentTemplateSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -511,6 +620,8 @@ export type DocumentTemplateSelect<ExtArgs extends runtime.Types.Extensions.Inte
   createdAt?: boolean
   updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  proposalTemplates?: boolean | Prisma.DocumentTemplate$proposalTemplatesArgs<ExtArgs>
+  _count?: boolean | Prisma.DocumentTemplateCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["documentTemplate"]>
 
 export type DocumentTemplateSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -548,6 +659,8 @@ export type DocumentTemplateSelectScalar = {
 export type DocumentTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "title" | "content" | "type" | "createdAt" | "updatedAt", ExtArgs["result"]["documentTemplate"]>
 export type DocumentTemplateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  proposalTemplates?: boolean | Prisma.DocumentTemplate$proposalTemplatesArgs<ExtArgs>
+  _count?: boolean | Prisma.DocumentTemplateCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DocumentTemplateIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
@@ -560,12 +673,13 @@ export type $DocumentTemplatePayload<ExtArgs extends runtime.Types.Extensions.In
   name: "DocumentTemplate"
   objects: {
     organization: Prisma.$OrganizationPayload<ExtArgs>
+    proposalTemplates: Prisma.$ProposalTemplatePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     organizationId: string
     title: string
-    content: string
+    content: runtime.JsonValue
     type: $Enums.TemplateType
     createdAt: Date
     updatedAt: Date
@@ -964,6 +1078,7 @@ readonly fields: DocumentTemplateFieldRefs;
 export interface Prisma__DocumentTemplateClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  proposalTemplates<T extends Prisma.DocumentTemplate$proposalTemplatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DocumentTemplate$proposalTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProposalTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -996,7 +1111,7 @@ export interface DocumentTemplateFieldRefs {
   readonly id: Prisma.FieldRef<"DocumentTemplate", 'String'>
   readonly organizationId: Prisma.FieldRef<"DocumentTemplate", 'String'>
   readonly title: Prisma.FieldRef<"DocumentTemplate", 'String'>
-  readonly content: Prisma.FieldRef<"DocumentTemplate", 'String'>
+  readonly content: Prisma.FieldRef<"DocumentTemplate", 'Json'>
   readonly type: Prisma.FieldRef<"DocumentTemplate", 'TemplateType'>
   readonly createdAt: Prisma.FieldRef<"DocumentTemplate", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"DocumentTemplate", 'DateTime'>
@@ -1393,6 +1508,30 @@ export type DocumentTemplateDeleteManyArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many DocumentTemplates to delete.
    */
   limit?: number
+}
+
+/**
+ * DocumentTemplate.proposalTemplates
+ */
+export type DocumentTemplate$proposalTemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProposalTemplate
+   */
+  select?: Prisma.ProposalTemplateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProposalTemplate
+   */
+  omit?: Prisma.ProposalTemplateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProposalTemplateInclude<ExtArgs> | null
+  where?: Prisma.ProposalTemplateWhereInput
+  orderBy?: Prisma.ProposalTemplateOrderByWithRelationInput | Prisma.ProposalTemplateOrderByWithRelationInput[]
+  cursor?: Prisma.ProposalTemplateWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProposalTemplateScalarFieldEnum | Prisma.ProposalTemplateScalarFieldEnum[]
 }
 
 /**

@@ -50,6 +50,22 @@ export const ProposalStatus = {
 export type ProposalStatus = (typeof ProposalStatus)[keyof typeof ProposalStatus]
 
 
+export const ProposalSource = {
+  SYSTEM_TEMPLATE: 'SYSTEM_TEMPLATE',
+  MANUAL_UPLOAD: 'MANUAL_UPLOAD'
+} as const
+
+export type ProposalSource = (typeof ProposalSource)[keyof typeof ProposalSource]
+
+
+export const DiscountType = {
+  PERCENTAGE: 'PERCENTAGE',
+  FIXED: 'FIXED'
+} as const
+
+export type DiscountType = (typeof DiscountType)[keyof typeof DiscountType]
+
+
 export const ProjectStatus = {
   DRAFT: 'DRAFT',
   TECH_ANALYSIS: 'TECH_ANALYSIS',

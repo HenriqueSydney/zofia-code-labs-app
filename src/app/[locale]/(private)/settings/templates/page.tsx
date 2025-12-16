@@ -96,7 +96,7 @@ export default async function TemplateDocuments({ searchParams }: IParams) {
                       {getTypeBadge(template.type)}
                     </div>
                     <p className="text-sm text-muted-foreground line-clamp-3">
-                      {template.content}
+                      {/* {template.content} */}
                     </p>
                     <div className="flex items-center gap-4 text-xs text-muted-foreground pt-2">
                       <span>

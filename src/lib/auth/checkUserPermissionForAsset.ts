@@ -6,6 +6,7 @@ import { AppError } from "@/errors/AppError";
 import { Operation } from "./strategies/types";
 import { AuthProjectDocumentsStrategy } from "./strategies/auth-project-documents-strategy copy";
 import { AuthDocumentTemplateStrategy } from "./strategies/auth-document-template-strategy";
+import { AuthProposalStrategy } from "./strategies/auth-proposal-strategy";
 
 // Mapa de estratégias
 const strategies = {
@@ -13,6 +14,7 @@ const strategies = {
   projectNotes: new AuthProjectNotesStrategy(),
   documents: new AuthProjectDocumentsStrategy(),
   documentTemplate: new AuthDocumentTemplateStrategy(),
+  proposal: new AuthProposalStrategy(),
   // comment: new CommentStrategy(),
 } as const; // 'as const' ajuda na tipagem
 

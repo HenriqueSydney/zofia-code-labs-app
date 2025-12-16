@@ -395,6 +395,7 @@ export const ModelName = {
   DocumentTemplate: 'DocumentTemplate',
   Client: 'Client',
   Proposal: 'Proposal',
+  ProposalTemplate: 'ProposalTemplate',
   ProposalItem: 'ProposalItem',
   Project: 'Project',
   ProjectDocuments: 'ProjectDocuments',
@@ -422,7 +423,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "organization" | "user" | "account" | "loginHistory" | "session" | "verificationToken" | "serviceCategory" | "serviceType" | "documentTemplate" | "client" | "proposal" | "proposalItem" | "project" | "projectDocuments" | "projectServices" | "projectNote" | "sprint" | "backlogItem" | "invoice" | "integrationType" | "organizationIntegration" | "projectIntegration" | "auditLog"
+    modelProps: "organization" | "user" | "account" | "loginHistory" | "session" | "verificationToken" | "serviceCategory" | "serviceType" | "documentTemplate" | "client" | "proposal" | "proposalTemplate" | "proposalItem" | "project" | "projectDocuments" | "projectServices" | "projectNote" | "sprint" | "backlogItem" | "invoice" | "integrationType" | "organizationIntegration" | "projectIntegration" | "auditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1237,6 +1238,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ProposalCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ProposalCountAggregateOutputType> | number
+        }
+      }
+    }
+    ProposalTemplate: {
+      payload: Prisma.$ProposalTemplatePayload<ExtArgs>
+      fields: Prisma.ProposalTemplateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProposalTemplateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProposalTemplatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProposalTemplateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProposalTemplatePayload>
+        }
+        findFirst: {
+          args: Prisma.ProposalTemplateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProposalTemplatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProposalTemplateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProposalTemplatePayload>
+        }
+        findMany: {
+          args: Prisma.ProposalTemplateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProposalTemplatePayload>[]
+        }
+        create: {
+          args: Prisma.ProposalTemplateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProposalTemplatePayload>
+        }
+        createMany: {
+          args: Prisma.ProposalTemplateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProposalTemplateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProposalTemplatePayload>[]
+        }
+        delete: {
+          args: Prisma.ProposalTemplateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProposalTemplatePayload>
+        }
+        update: {
+          args: Prisma.ProposalTemplateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProposalTemplatePayload>
+        }
+        deleteMany: {
+          args: Prisma.ProposalTemplateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProposalTemplateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProposalTemplateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProposalTemplatePayload>[]
+        }
+        upsert: {
+          args: Prisma.ProposalTemplateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProposalTemplatePayload>
+        }
+        aggregate: {
+          args: Prisma.ProposalTemplateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProposalTemplate>
+        }
+        groupBy: {
+          args: Prisma.ProposalTemplateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProposalTemplateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProposalTemplateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProposalTemplateCountAggregateOutputType> | number
         }
       }
     }
@@ -2311,11 +2386,29 @@ export const ProposalScalarFieldEnum = {
   totalValue: 'totalValue',
   validUntil: 'validUntil',
   createdBy: 'createdBy',
+  sourceType: 'sourceType',
+  templateId: 'templateId',
+  fileKey: 'fileKey',
+  fileUrl: 'fileUrl',
   generatedProjectId: 'generatedProjectId',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type ProposalScalarFieldEnum = (typeof ProposalScalarFieldEnum)[keyof typeof ProposalScalarFieldEnum]
+
+
+export const ProposalTemplateScalarFieldEnum = {
+  id: 'id',
+  documentTemplateId: 'documentTemplateId',
+  content: 'content',
+  isDefault: 'isDefault',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProposalTemplateScalarFieldEnum = (typeof ProposalTemplateScalarFieldEnum)[keyof typeof ProposalTemplateScalarFieldEnum]
 
 
 export const ProposalItemScalarFieldEnum = {
@@ -2323,7 +2416,10 @@ export const ProposalItemScalarFieldEnum = {
   proposalId: 'proposalId',
   serviceTypeId: 'serviceTypeId',
   description: 'description',
-  price: 'price'
+  price: 'price',
+  discount: 'discount',
+  discountType: 'discountType',
+  finalPrice: 'finalPrice'
 } as const
 
 export type ProposalItemScalarFieldEnum = (typeof ProposalItemScalarFieldEnum)[keyof typeof ProposalItemScalarFieldEnum]
@@ -2503,6 +2599,13 @@ export const NullableJsonNullValueInput = {
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
 export const QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -2668,6 +2771,34 @@ export type ListEnumProposalStatusFieldRefInput<$PrismaModel> = FieldRefInputTyp
 
 
 /**
+ * Reference to a field of type 'ProposalSource'
+ */
+export type EnumProposalSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProposalSource'>
+    
+
+
+/**
+ * Reference to a field of type 'ProposalSource[]'
+ */
+export type ListEnumProposalSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProposalSource[]'>
+    
+
+
+/**
+ * Reference to a field of type 'DiscountType'
+ */
+export type EnumDiscountTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiscountType'>
+    
+
+
+/**
+ * Reference to a field of type 'DiscountType[]'
+ */
+export type ListEnumDiscountTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DiscountType[]'>
+    
+
+
+/**
  * Reference to a field of type 'ProjectStatus'
  */
 export type EnumProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectStatus'>
@@ -2828,6 +2959,7 @@ export type GlobalOmitConfig = {
   documentTemplate?: Prisma.DocumentTemplateOmit
   client?: Prisma.ClientOmit
   proposal?: Prisma.ProposalOmit
+  proposalTemplate?: Prisma.ProposalTemplateOmit
   proposalItem?: Prisma.ProposalItemOmit
   project?: Prisma.ProjectOmit
   projectDocuments?: Prisma.ProjectDocumentsOmit

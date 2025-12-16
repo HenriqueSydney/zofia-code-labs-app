@@ -62,6 +62,7 @@ export const ModelName = {
   DocumentTemplate: 'DocumentTemplate',
   Client: 'Client',
   Proposal: 'Proposal',
+  ProposalTemplate: 'ProposalTemplate',
   ProposalItem: 'ProposalItem',
   Project: 'Project',
   ProjectDocuments: 'ProjectDocuments',
@@ -236,11 +237,29 @@ export const ProposalScalarFieldEnum = {
   totalValue: 'totalValue',
   validUntil: 'validUntil',
   createdBy: 'createdBy',
+  sourceType: 'sourceType',
+  templateId: 'templateId',
+  fileKey: 'fileKey',
+  fileUrl: 'fileUrl',
   generatedProjectId: 'generatedProjectId',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type ProposalScalarFieldEnum = (typeof ProposalScalarFieldEnum)[keyof typeof ProposalScalarFieldEnum]
+
+
+export const ProposalTemplateScalarFieldEnum = {
+  id: 'id',
+  documentTemplateId: 'documentTemplateId',
+  content: 'content',
+  isDefault: 'isDefault',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProposalTemplateScalarFieldEnum = (typeof ProposalTemplateScalarFieldEnum)[keyof typeof ProposalTemplateScalarFieldEnum]
 
 
 export const ProposalItemScalarFieldEnum = {
@@ -248,7 +267,10 @@ export const ProposalItemScalarFieldEnum = {
   proposalId: 'proposalId',
   serviceTypeId: 'serviceTypeId',
   description: 'description',
-  price: 'price'
+  price: 'price',
+  discount: 'discount',
+  discountType: 'discountType',
+  finalPrice: 'finalPrice'
 } as const
 
 export type ProposalItemScalarFieldEnum = (typeof ProposalItemScalarFieldEnum)[keyof typeof ProposalItemScalarFieldEnum]
@@ -426,6 +448,13 @@ export const NullableJsonNullValueInput = {
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: 'JsonNull'
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {

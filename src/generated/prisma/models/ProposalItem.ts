@@ -28,10 +28,14 @@ export type AggregateProposalItem = {
 
 export type ProposalItemAvgAggregateOutputType = {
   price: runtime.Decimal | null
+  discount: runtime.Decimal | null
+  finalPrice: runtime.Decimal | null
 }
 
 export type ProposalItemSumAggregateOutputType = {
   price: runtime.Decimal | null
+  discount: runtime.Decimal | null
+  finalPrice: runtime.Decimal | null
 }
 
 export type ProposalItemMinAggregateOutputType = {
@@ -40,6 +44,9 @@ export type ProposalItemMinAggregateOutputType = {
   serviceTypeId: string | null
   description: string | null
   price: runtime.Decimal | null
+  discount: runtime.Decimal | null
+  discountType: $Enums.DiscountType | null
+  finalPrice: runtime.Decimal | null
 }
 
 export type ProposalItemMaxAggregateOutputType = {
@@ -48,6 +55,9 @@ export type ProposalItemMaxAggregateOutputType = {
   serviceTypeId: string | null
   description: string | null
   price: runtime.Decimal | null
+  discount: runtime.Decimal | null
+  discountType: $Enums.DiscountType | null
+  finalPrice: runtime.Decimal | null
 }
 
 export type ProposalItemCountAggregateOutputType = {
@@ -56,16 +66,23 @@ export type ProposalItemCountAggregateOutputType = {
   serviceTypeId: number
   description: number
   price: number
+  discount: number
+  discountType: number
+  finalPrice: number
   _all: number
 }
 
 
 export type ProposalItemAvgAggregateInputType = {
   price?: true
+  discount?: true
+  finalPrice?: true
 }
 
 export type ProposalItemSumAggregateInputType = {
   price?: true
+  discount?: true
+  finalPrice?: true
 }
 
 export type ProposalItemMinAggregateInputType = {
@@ -74,6 +91,9 @@ export type ProposalItemMinAggregateInputType = {
   serviceTypeId?: true
   description?: true
   price?: true
+  discount?: true
+  discountType?: true
+  finalPrice?: true
 }
 
 export type ProposalItemMaxAggregateInputType = {
@@ -82,6 +102,9 @@ export type ProposalItemMaxAggregateInputType = {
   serviceTypeId?: true
   description?: true
   price?: true
+  discount?: true
+  discountType?: true
+  finalPrice?: true
 }
 
 export type ProposalItemCountAggregateInputType = {
@@ -90,6 +113,9 @@ export type ProposalItemCountAggregateInputType = {
   serviceTypeId?: true
   description?: true
   price?: true
+  discount?: true
+  discountType?: true
+  finalPrice?: true
   _all?: true
 }
 
@@ -185,6 +211,9 @@ export type ProposalItemGroupByOutputType = {
   serviceTypeId: string
   description: string | null
   price: runtime.Decimal
+  discount: runtime.Decimal
+  discountType: $Enums.DiscountType
+  finalPrice: runtime.Decimal
   _count: ProposalItemCountAggregateOutputType | null
   _avg: ProposalItemAvgAggregateOutputType | null
   _sum: ProposalItemSumAggregateOutputType | null
@@ -216,6 +245,9 @@ export type ProposalItemWhereInput = {
   serviceTypeId?: Prisma.StringFilter<"ProposalItem"> | string
   description?: Prisma.StringNullableFilter<"ProposalItem"> | string | null
   price?: Prisma.DecimalFilter<"ProposalItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: Prisma.DecimalFilter<"ProposalItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: Prisma.EnumDiscountTypeFilter<"ProposalItem"> | $Enums.DiscountType
+  finalPrice?: Prisma.DecimalFilter<"ProposalItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   proposal?: Prisma.XOR<Prisma.ProposalScalarRelationFilter, Prisma.ProposalWhereInput>
   serviceType?: Prisma.XOR<Prisma.ServiceTypeScalarRelationFilter, Prisma.ServiceTypeWhereInput>
 }
@@ -226,6 +258,9 @@ export type ProposalItemOrderByWithRelationInput = {
   serviceTypeId?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   price?: Prisma.SortOrder
+  discount?: Prisma.SortOrder
+  discountType?: Prisma.SortOrder
+  finalPrice?: Prisma.SortOrder
   proposal?: Prisma.ProposalOrderByWithRelationInput
   serviceType?: Prisma.ServiceTypeOrderByWithRelationInput
 }
@@ -239,6 +274,9 @@ export type ProposalItemWhereUniqueInput = Prisma.AtLeast<{
   serviceTypeId?: Prisma.StringFilter<"ProposalItem"> | string
   description?: Prisma.StringNullableFilter<"ProposalItem"> | string | null
   price?: Prisma.DecimalFilter<"ProposalItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: Prisma.DecimalFilter<"ProposalItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: Prisma.EnumDiscountTypeFilter<"ProposalItem"> | $Enums.DiscountType
+  finalPrice?: Prisma.DecimalFilter<"ProposalItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   proposal?: Prisma.XOR<Prisma.ProposalScalarRelationFilter, Prisma.ProposalWhereInput>
   serviceType?: Prisma.XOR<Prisma.ServiceTypeScalarRelationFilter, Prisma.ServiceTypeWhereInput>
 }, "id">
@@ -249,6 +287,9 @@ export type ProposalItemOrderByWithAggregationInput = {
   serviceTypeId?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   price?: Prisma.SortOrder
+  discount?: Prisma.SortOrder
+  discountType?: Prisma.SortOrder
+  finalPrice?: Prisma.SortOrder
   _count?: Prisma.ProposalItemCountOrderByAggregateInput
   _avg?: Prisma.ProposalItemAvgOrderByAggregateInput
   _max?: Prisma.ProposalItemMaxOrderByAggregateInput
@@ -265,12 +306,18 @@ export type ProposalItemScalarWhereWithAggregatesInput = {
   serviceTypeId?: Prisma.StringWithAggregatesFilter<"ProposalItem"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"ProposalItem"> | string | null
   price?: Prisma.DecimalWithAggregatesFilter<"ProposalItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: Prisma.DecimalWithAggregatesFilter<"ProposalItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: Prisma.EnumDiscountTypeWithAggregatesFilter<"ProposalItem"> | $Enums.DiscountType
+  finalPrice?: Prisma.DecimalWithAggregatesFilter<"ProposalItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type ProposalItemCreateInput = {
   id?: string
   description?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: $Enums.DiscountType
+  finalPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   proposal: Prisma.ProposalCreateNestedOneWithoutItemsInput
   serviceType: Prisma.ServiceTypeCreateNestedOneWithoutProposalsInput
 }
@@ -281,12 +328,18 @@ export type ProposalItemUncheckedCreateInput = {
   serviceTypeId: string
   description?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: $Enums.DiscountType
+  finalPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type ProposalItemUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: Prisma.EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+  finalPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   proposal?: Prisma.ProposalUpdateOneRequiredWithoutItemsNestedInput
   serviceType?: Prisma.ServiceTypeUpdateOneRequiredWithoutProposalsNestedInput
 }
@@ -297,6 +350,9 @@ export type ProposalItemUncheckedUpdateInput = {
   serviceTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: Prisma.EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+  finalPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type ProposalItemCreateManyInput = {
@@ -305,12 +361,18 @@ export type ProposalItemCreateManyInput = {
   serviceTypeId: string
   description?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: $Enums.DiscountType
+  finalPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type ProposalItemUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: Prisma.EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+  finalPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type ProposalItemUncheckedUpdateManyInput = {
@@ -319,6 +381,9 @@ export type ProposalItemUncheckedUpdateManyInput = {
   serviceTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: Prisma.EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+  finalPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type ProposalItemListRelationFilter = {
@@ -337,10 +402,15 @@ export type ProposalItemCountOrderByAggregateInput = {
   serviceTypeId?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  discount?: Prisma.SortOrder
+  discountType?: Prisma.SortOrder
+  finalPrice?: Prisma.SortOrder
 }
 
 export type ProposalItemAvgOrderByAggregateInput = {
   price?: Prisma.SortOrder
+  discount?: Prisma.SortOrder
+  finalPrice?: Prisma.SortOrder
 }
 
 export type ProposalItemMaxOrderByAggregateInput = {
@@ -349,6 +419,9 @@ export type ProposalItemMaxOrderByAggregateInput = {
   serviceTypeId?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  discount?: Prisma.SortOrder
+  discountType?: Prisma.SortOrder
+  finalPrice?: Prisma.SortOrder
 }
 
 export type ProposalItemMinOrderByAggregateInput = {
@@ -357,10 +430,15 @@ export type ProposalItemMinOrderByAggregateInput = {
   serviceTypeId?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  discount?: Prisma.SortOrder
+  discountType?: Prisma.SortOrder
+  finalPrice?: Prisma.SortOrder
 }
 
 export type ProposalItemSumOrderByAggregateInput = {
   price?: Prisma.SortOrder
+  discount?: Prisma.SortOrder
+  finalPrice?: Prisma.SortOrder
 }
 
 export type ProposalItemCreateNestedManyWithoutServiceTypeInput = {
@@ -447,10 +525,17 @@ export type ProposalItemUncheckedUpdateManyWithoutProposalNestedInput = {
   deleteMany?: Prisma.ProposalItemScalarWhereInput | Prisma.ProposalItemScalarWhereInput[]
 }
 
+export type EnumDiscountTypeFieldUpdateOperationsInput = {
+  set?: $Enums.DiscountType
+}
+
 export type ProposalItemCreateWithoutServiceTypeInput = {
   id?: string
   description?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: $Enums.DiscountType
+  finalPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   proposal: Prisma.ProposalCreateNestedOneWithoutItemsInput
 }
 
@@ -459,6 +544,9 @@ export type ProposalItemUncheckedCreateWithoutServiceTypeInput = {
   proposalId: string
   description?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: $Enums.DiscountType
+  finalPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type ProposalItemCreateOrConnectWithoutServiceTypeInput = {
@@ -496,12 +584,18 @@ export type ProposalItemScalarWhereInput = {
   serviceTypeId?: Prisma.StringFilter<"ProposalItem"> | string
   description?: Prisma.StringNullableFilter<"ProposalItem"> | string | null
   price?: Prisma.DecimalFilter<"ProposalItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: Prisma.DecimalFilter<"ProposalItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: Prisma.EnumDiscountTypeFilter<"ProposalItem"> | $Enums.DiscountType
+  finalPrice?: Prisma.DecimalFilter<"ProposalItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type ProposalItemCreateWithoutProposalInput = {
   id?: string
   description?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: $Enums.DiscountType
+  finalPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
   serviceType: Prisma.ServiceTypeCreateNestedOneWithoutProposalsInput
 }
 
@@ -510,6 +604,9 @@ export type ProposalItemUncheckedCreateWithoutProposalInput = {
   serviceTypeId: string
   description?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: $Enums.DiscountType
+  finalPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type ProposalItemCreateOrConnectWithoutProposalInput = {
@@ -543,12 +640,18 @@ export type ProposalItemCreateManyServiceTypeInput = {
   proposalId: string
   description?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: $Enums.DiscountType
+  finalPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type ProposalItemUpdateWithoutServiceTypeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: Prisma.EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+  finalPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   proposal?: Prisma.ProposalUpdateOneRequiredWithoutItemsNestedInput
 }
 
@@ -557,6 +660,9 @@ export type ProposalItemUncheckedUpdateWithoutServiceTypeInput = {
   proposalId?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: Prisma.EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+  finalPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type ProposalItemUncheckedUpdateManyWithoutServiceTypeInput = {
@@ -564,6 +670,9 @@ export type ProposalItemUncheckedUpdateManyWithoutServiceTypeInput = {
   proposalId?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: Prisma.EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+  finalPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type ProposalItemCreateManyProposalInput = {
@@ -571,12 +680,18 @@ export type ProposalItemCreateManyProposalInput = {
   serviceTypeId: string
   description?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: $Enums.DiscountType
+  finalPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type ProposalItemUpdateWithoutProposalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: Prisma.EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+  finalPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   serviceType?: Prisma.ServiceTypeUpdateOneRequiredWithoutProposalsNestedInput
 }
 
@@ -585,6 +700,9 @@ export type ProposalItemUncheckedUpdateWithoutProposalInput = {
   serviceTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: Prisma.EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+  finalPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type ProposalItemUncheckedUpdateManyWithoutProposalInput = {
@@ -592,6 +710,9 @@ export type ProposalItemUncheckedUpdateManyWithoutProposalInput = {
   serviceTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  discountType?: Prisma.EnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType
+  finalPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 
@@ -602,6 +723,9 @@ export type ProposalItemSelect<ExtArgs extends runtime.Types.Extensions.Internal
   serviceTypeId?: boolean
   description?: boolean
   price?: boolean
+  discount?: boolean
+  discountType?: boolean
+  finalPrice?: boolean
   proposal?: boolean | Prisma.ProposalDefaultArgs<ExtArgs>
   serviceType?: boolean | Prisma.ServiceTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["proposalItem"]>
@@ -612,6 +736,9 @@ export type ProposalItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   serviceTypeId?: boolean
   description?: boolean
   price?: boolean
+  discount?: boolean
+  discountType?: boolean
+  finalPrice?: boolean
   proposal?: boolean | Prisma.ProposalDefaultArgs<ExtArgs>
   serviceType?: boolean | Prisma.ServiceTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["proposalItem"]>
@@ -622,6 +749,9 @@ export type ProposalItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   serviceTypeId?: boolean
   description?: boolean
   price?: boolean
+  discount?: boolean
+  discountType?: boolean
+  finalPrice?: boolean
   proposal?: boolean | Prisma.ProposalDefaultArgs<ExtArgs>
   serviceType?: boolean | Prisma.ServiceTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["proposalItem"]>
@@ -632,9 +762,12 @@ export type ProposalItemSelectScalar = {
   serviceTypeId?: boolean
   description?: boolean
   price?: boolean
+  discount?: boolean
+  discountType?: boolean
+  finalPrice?: boolean
 }
 
-export type ProposalItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "proposalId" | "serviceTypeId" | "description" | "price", ExtArgs["result"]["proposalItem"]>
+export type ProposalItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "proposalId" | "serviceTypeId" | "description" | "price" | "discount" | "discountType" | "finalPrice", ExtArgs["result"]["proposalItem"]>
 export type ProposalItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   proposal?: boolean | Prisma.ProposalDefaultArgs<ExtArgs>
   serviceType?: boolean | Prisma.ServiceTypeDefaultArgs<ExtArgs>
@@ -660,6 +793,9 @@ export type $ProposalItemPayload<ExtArgs extends runtime.Types.Extensions.Intern
     serviceTypeId: string
     description: string | null
     price: runtime.Decimal
+    discount: runtime.Decimal
+    discountType: $Enums.DiscountType
+    finalPrice: runtime.Decimal
   }, ExtArgs["result"]["proposalItem"]>
   composites: {}
 }
@@ -1090,6 +1226,9 @@ export interface ProposalItemFieldRefs {
   readonly serviceTypeId: Prisma.FieldRef<"ProposalItem", 'String'>
   readonly description: Prisma.FieldRef<"ProposalItem", 'String'>
   readonly price: Prisma.FieldRef<"ProposalItem", 'Decimal'>
+  readonly discount: Prisma.FieldRef<"ProposalItem", 'Decimal'>
+  readonly discountType: Prisma.FieldRef<"ProposalItem", 'DiscountType'>
+  readonly finalPrice: Prisma.FieldRef<"ProposalItem", 'Decimal'>
 }
     
 
