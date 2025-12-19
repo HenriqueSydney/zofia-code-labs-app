@@ -42,7 +42,9 @@ export type TemplateType = (typeof TemplateType)[keyof typeof TemplateType]
 
 export const ProposalStatus = {
   DRAFT: 'DRAFT',
+  REVIEW: 'REVIEW',
   SENT: 'SENT',
+  APPROVED: 'APPROVED',
   ACCEPTED: 'ACCEPTED',
   REJECTED: 'REJECTED'
 } as const

@@ -1,0 +1,24 @@
+"use server";
+
+import { auth } from "@/auth";
+import { AppError } from "@/errors/AppError";
+import { makeGetProposalByIdUseCase } from "@/useCases/proposal/factories/makeGetProposalByIdUseCase";
+
+export async function getProposalAction(proposalId: string) {
+  const session = await auth();
+  if (!session?.user) throw new AppError("Não autorizado");
+
+  const useCase = makeGetProposalByIdUseCase();
+
+  try {
+    const proposal = await useCase.execute({
+      id: proposalId,
+      userId: session.user.id,
+    });
+
+    return proposal;
+  } catch (error) {
+    console.error(error);
+    throw new AppError("Erro ao localizar a proposta vigente.");
+  }
+}

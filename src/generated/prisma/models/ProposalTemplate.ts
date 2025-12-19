@@ -31,6 +31,7 @@ export type ProposalTemplateMinAggregateOutputType = {
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  proposalId: string | null
 }
 
 export type ProposalTemplateMaxAggregateOutputType = {
@@ -40,6 +41,7 @@ export type ProposalTemplateMaxAggregateOutputType = {
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  proposalId: string | null
 }
 
 export type ProposalTemplateCountAggregateOutputType = {
@@ -50,6 +52,7 @@ export type ProposalTemplateCountAggregateOutputType = {
   isActive: number
   createdAt: number
   updatedAt: number
+  proposalId: number
   _all: number
 }
 
@@ -61,6 +64,7 @@ export type ProposalTemplateMinAggregateInputType = {
   isActive?: true
   createdAt?: true
   updatedAt?: true
+  proposalId?: true
 }
 
 export type ProposalTemplateMaxAggregateInputType = {
@@ -70,6 +74,7 @@ export type ProposalTemplateMaxAggregateInputType = {
   isActive?: true
   createdAt?: true
   updatedAt?: true
+  proposalId?: true
 }
 
 export type ProposalTemplateCountAggregateInputType = {
@@ -80,6 +85,7 @@ export type ProposalTemplateCountAggregateInputType = {
   isActive?: true
   createdAt?: true
   updatedAt?: true
+  proposalId?: true
   _all?: true
 }
 
@@ -163,6 +169,7 @@ export type ProposalTemplateGroupByOutputType = {
   isActive: boolean
   createdAt: Date
   updatedAt: Date
+  proposalId: string
   _count: ProposalTemplateCountAggregateOutputType | null
   _min: ProposalTemplateMinAggregateOutputType | null
   _max: ProposalTemplateMaxAggregateOutputType | null
@@ -194,8 +201,9 @@ export type ProposalTemplateWhereInput = {
   isActive?: Prisma.BoolFilter<"ProposalTemplate"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ProposalTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ProposalTemplate"> | Date | string
+  proposalId?: Prisma.StringFilter<"ProposalTemplate"> | string
   template?: Prisma.XOR<Prisma.DocumentTemplateScalarRelationFilter, Prisma.DocumentTemplateWhereInput>
-  proposals?: Prisma.ProposalListRelationFilter
+  proposal?: Prisma.XOR<Prisma.ProposalScalarRelationFilter, Prisma.ProposalWhereInput>
 }
 
 export type ProposalTemplateOrderByWithRelationInput = {
@@ -206,12 +214,14 @@ export type ProposalTemplateOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  proposalId?: Prisma.SortOrder
   template?: Prisma.DocumentTemplateOrderByWithRelationInput
-  proposals?: Prisma.ProposalOrderByRelationAggregateInput
+  proposal?: Prisma.ProposalOrderByWithRelationInput
 }
 
 export type ProposalTemplateWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  proposalId?: string
   AND?: Prisma.ProposalTemplateWhereInput | Prisma.ProposalTemplateWhereInput[]
   OR?: Prisma.ProposalTemplateWhereInput[]
   NOT?: Prisma.ProposalTemplateWhereInput | Prisma.ProposalTemplateWhereInput[]
@@ -222,8 +232,8 @@ export type ProposalTemplateWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"ProposalTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ProposalTemplate"> | Date | string
   template?: Prisma.XOR<Prisma.DocumentTemplateScalarRelationFilter, Prisma.DocumentTemplateWhereInput>
-  proposals?: Prisma.ProposalListRelationFilter
-}, "id">
+  proposal?: Prisma.XOR<Prisma.ProposalScalarRelationFilter, Prisma.ProposalWhereInput>
+}, "id" | "proposalId">
 
 export type ProposalTemplateOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -233,6 +243,7 @@ export type ProposalTemplateOrderByWithAggregationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  proposalId?: Prisma.SortOrder
   _count?: Prisma.ProposalTemplateCountOrderByAggregateInput
   _max?: Prisma.ProposalTemplateMaxOrderByAggregateInput
   _min?: Prisma.ProposalTemplateMinOrderByAggregateInput
@@ -249,6 +260,7 @@ export type ProposalTemplateScalarWhereWithAggregatesInput = {
   isActive?: Prisma.BoolWithAggregatesFilter<"ProposalTemplate"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ProposalTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ProposalTemplate"> | Date | string
+  proposalId?: Prisma.StringWithAggregatesFilter<"ProposalTemplate"> | string
 }
 
 export type ProposalTemplateCreateInput = {
@@ -259,7 +271,7 @@ export type ProposalTemplateCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   template: Prisma.DocumentTemplateCreateNestedOneWithoutProposalTemplatesInput
-  proposals?: Prisma.ProposalCreateNestedManyWithoutTemplateInput
+  proposal: Prisma.ProposalCreateNestedOneWithoutProposalTemplateInput
 }
 
 export type ProposalTemplateUncheckedCreateInput = {
@@ -270,7 +282,7 @@ export type ProposalTemplateUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  proposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutTemplateInput
+  proposalId: string
 }
 
 export type ProposalTemplateUpdateInput = {
@@ -281,7 +293,7 @@ export type ProposalTemplateUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   template?: Prisma.DocumentTemplateUpdateOneRequiredWithoutProposalTemplatesNestedInput
-  proposals?: Prisma.ProposalUpdateManyWithoutTemplateNestedInput
+  proposal?: Prisma.ProposalUpdateOneRequiredWithoutProposalTemplateNestedInput
 }
 
 export type ProposalTemplateUncheckedUpdateInput = {
@@ -292,7 +304,7 @@ export type ProposalTemplateUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  proposals?: Prisma.ProposalUncheckedUpdateManyWithoutTemplateNestedInput
+  proposalId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ProposalTemplateCreateManyInput = {
@@ -303,6 +315,7 @@ export type ProposalTemplateCreateManyInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  proposalId: string
 }
 
 export type ProposalTemplateUpdateManyMutationInput = {
@@ -322,6 +335,7 @@ export type ProposalTemplateUncheckedUpdateManyInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proposalId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ProposalTemplateListRelationFilter = {
@@ -347,6 +361,7 @@ export type ProposalTemplateCountOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  proposalId?: Prisma.SortOrder
 }
 
 export type ProposalTemplateMaxOrderByAggregateInput = {
@@ -356,6 +371,7 @@ export type ProposalTemplateMaxOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  proposalId?: Prisma.SortOrder
 }
 
 export type ProposalTemplateMinOrderByAggregateInput = {
@@ -365,6 +381,7 @@ export type ProposalTemplateMinOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  proposalId?: Prisma.SortOrder
 }
 
 export type ProposalTemplateCreateNestedManyWithoutTemplateInput = {
@@ -409,20 +426,36 @@ export type ProposalTemplateUncheckedUpdateManyWithoutTemplateNestedInput = {
   deleteMany?: Prisma.ProposalTemplateScalarWhereInput | Prisma.ProposalTemplateScalarWhereInput[]
 }
 
-export type ProposalTemplateCreateNestedOneWithoutProposalsInput = {
-  create?: Prisma.XOR<Prisma.ProposalTemplateCreateWithoutProposalsInput, Prisma.ProposalTemplateUncheckedCreateWithoutProposalsInput>
-  connectOrCreate?: Prisma.ProposalTemplateCreateOrConnectWithoutProposalsInput
+export type ProposalTemplateCreateNestedOneWithoutProposalInput = {
+  create?: Prisma.XOR<Prisma.ProposalTemplateCreateWithoutProposalInput, Prisma.ProposalTemplateUncheckedCreateWithoutProposalInput>
+  connectOrCreate?: Prisma.ProposalTemplateCreateOrConnectWithoutProposalInput
   connect?: Prisma.ProposalTemplateWhereUniqueInput
 }
 
-export type ProposalTemplateUpdateOneWithoutProposalsNestedInput = {
-  create?: Prisma.XOR<Prisma.ProposalTemplateCreateWithoutProposalsInput, Prisma.ProposalTemplateUncheckedCreateWithoutProposalsInput>
-  connectOrCreate?: Prisma.ProposalTemplateCreateOrConnectWithoutProposalsInput
-  upsert?: Prisma.ProposalTemplateUpsertWithoutProposalsInput
+export type ProposalTemplateUncheckedCreateNestedOneWithoutProposalInput = {
+  create?: Prisma.XOR<Prisma.ProposalTemplateCreateWithoutProposalInput, Prisma.ProposalTemplateUncheckedCreateWithoutProposalInput>
+  connectOrCreate?: Prisma.ProposalTemplateCreateOrConnectWithoutProposalInput
+  connect?: Prisma.ProposalTemplateWhereUniqueInput
+}
+
+export type ProposalTemplateUpdateOneWithoutProposalNestedInput = {
+  create?: Prisma.XOR<Prisma.ProposalTemplateCreateWithoutProposalInput, Prisma.ProposalTemplateUncheckedCreateWithoutProposalInput>
+  connectOrCreate?: Prisma.ProposalTemplateCreateOrConnectWithoutProposalInput
+  upsert?: Prisma.ProposalTemplateUpsertWithoutProposalInput
   disconnect?: Prisma.ProposalTemplateWhereInput | boolean
   delete?: Prisma.ProposalTemplateWhereInput | boolean
   connect?: Prisma.ProposalTemplateWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ProposalTemplateUpdateToOneWithWhereWithoutProposalsInput, Prisma.ProposalTemplateUpdateWithoutProposalsInput>, Prisma.ProposalTemplateUncheckedUpdateWithoutProposalsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProposalTemplateUpdateToOneWithWhereWithoutProposalInput, Prisma.ProposalTemplateUpdateWithoutProposalInput>, Prisma.ProposalTemplateUncheckedUpdateWithoutProposalInput>
+}
+
+export type ProposalTemplateUncheckedUpdateOneWithoutProposalNestedInput = {
+  create?: Prisma.XOR<Prisma.ProposalTemplateCreateWithoutProposalInput, Prisma.ProposalTemplateUncheckedCreateWithoutProposalInput>
+  connectOrCreate?: Prisma.ProposalTemplateCreateOrConnectWithoutProposalInput
+  upsert?: Prisma.ProposalTemplateUpsertWithoutProposalInput
+  disconnect?: Prisma.ProposalTemplateWhereInput | boolean
+  delete?: Prisma.ProposalTemplateWhereInput | boolean
+  connect?: Prisma.ProposalTemplateWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProposalTemplateUpdateToOneWithWhereWithoutProposalInput, Prisma.ProposalTemplateUpdateWithoutProposalInput>, Prisma.ProposalTemplateUncheckedUpdateWithoutProposalInput>
 }
 
 export type ProposalTemplateCreateWithoutTemplateInput = {
@@ -432,7 +465,7 @@ export type ProposalTemplateCreateWithoutTemplateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  proposals?: Prisma.ProposalCreateNestedManyWithoutTemplateInput
+  proposal: Prisma.ProposalCreateNestedOneWithoutProposalTemplateInput
 }
 
 export type ProposalTemplateUncheckedCreateWithoutTemplateInput = {
@@ -442,7 +475,7 @@ export type ProposalTemplateUncheckedCreateWithoutTemplateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  proposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutTemplateInput
+  proposalId: string
 }
 
 export type ProposalTemplateCreateOrConnectWithoutTemplateInput = {
@@ -482,9 +515,10 @@ export type ProposalTemplateScalarWhereInput = {
   isActive?: Prisma.BoolFilter<"ProposalTemplate"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ProposalTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ProposalTemplate"> | Date | string
+  proposalId?: Prisma.StringFilter<"ProposalTemplate"> | string
 }
 
-export type ProposalTemplateCreateWithoutProposalsInput = {
+export type ProposalTemplateCreateWithoutProposalInput = {
   id?: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isDefault?: boolean
@@ -494,7 +528,7 @@ export type ProposalTemplateCreateWithoutProposalsInput = {
   template: Prisma.DocumentTemplateCreateNestedOneWithoutProposalTemplatesInput
 }
 
-export type ProposalTemplateUncheckedCreateWithoutProposalsInput = {
+export type ProposalTemplateUncheckedCreateWithoutProposalInput = {
   id?: string
   documentTemplateId: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -504,23 +538,23 @@ export type ProposalTemplateUncheckedCreateWithoutProposalsInput = {
   updatedAt?: Date | string
 }
 
-export type ProposalTemplateCreateOrConnectWithoutProposalsInput = {
+export type ProposalTemplateCreateOrConnectWithoutProposalInput = {
   where: Prisma.ProposalTemplateWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProposalTemplateCreateWithoutProposalsInput, Prisma.ProposalTemplateUncheckedCreateWithoutProposalsInput>
+  create: Prisma.XOR<Prisma.ProposalTemplateCreateWithoutProposalInput, Prisma.ProposalTemplateUncheckedCreateWithoutProposalInput>
 }
 
-export type ProposalTemplateUpsertWithoutProposalsInput = {
-  update: Prisma.XOR<Prisma.ProposalTemplateUpdateWithoutProposalsInput, Prisma.ProposalTemplateUncheckedUpdateWithoutProposalsInput>
-  create: Prisma.XOR<Prisma.ProposalTemplateCreateWithoutProposalsInput, Prisma.ProposalTemplateUncheckedCreateWithoutProposalsInput>
+export type ProposalTemplateUpsertWithoutProposalInput = {
+  update: Prisma.XOR<Prisma.ProposalTemplateUpdateWithoutProposalInput, Prisma.ProposalTemplateUncheckedUpdateWithoutProposalInput>
+  create: Prisma.XOR<Prisma.ProposalTemplateCreateWithoutProposalInput, Prisma.ProposalTemplateUncheckedCreateWithoutProposalInput>
   where?: Prisma.ProposalTemplateWhereInput
 }
 
-export type ProposalTemplateUpdateToOneWithWhereWithoutProposalsInput = {
+export type ProposalTemplateUpdateToOneWithWhereWithoutProposalInput = {
   where?: Prisma.ProposalTemplateWhereInput
-  data: Prisma.XOR<Prisma.ProposalTemplateUpdateWithoutProposalsInput, Prisma.ProposalTemplateUncheckedUpdateWithoutProposalsInput>
+  data: Prisma.XOR<Prisma.ProposalTemplateUpdateWithoutProposalInput, Prisma.ProposalTemplateUncheckedUpdateWithoutProposalInput>
 }
 
-export type ProposalTemplateUpdateWithoutProposalsInput = {
+export type ProposalTemplateUpdateWithoutProposalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -530,7 +564,7 @@ export type ProposalTemplateUpdateWithoutProposalsInput = {
   template?: Prisma.DocumentTemplateUpdateOneRequiredWithoutProposalTemplatesNestedInput
 }
 
-export type ProposalTemplateUncheckedUpdateWithoutProposalsInput = {
+export type ProposalTemplateUncheckedUpdateWithoutProposalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentTemplateId?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -547,6 +581,7 @@ export type ProposalTemplateCreateManyTemplateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  proposalId: string
 }
 
 export type ProposalTemplateUpdateWithoutTemplateInput = {
@@ -556,7 +591,7 @@ export type ProposalTemplateUpdateWithoutTemplateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  proposals?: Prisma.ProposalUpdateManyWithoutTemplateNestedInput
+  proposal?: Prisma.ProposalUpdateOneRequiredWithoutProposalTemplateNestedInput
 }
 
 export type ProposalTemplateUncheckedUpdateWithoutTemplateInput = {
@@ -566,7 +601,7 @@ export type ProposalTemplateUncheckedUpdateWithoutTemplateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  proposals?: Prisma.ProposalUncheckedUpdateManyWithoutTemplateNestedInput
+  proposalId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ProposalTemplateUncheckedUpdateManyWithoutTemplateInput = {
@@ -576,37 +611,9 @@ export type ProposalTemplateUncheckedUpdateManyWithoutTemplateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proposalId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
-
-/**
- * Count Type ProposalTemplateCountOutputType
- */
-
-export type ProposalTemplateCountOutputType = {
-  proposals: number
-}
-
-export type ProposalTemplateCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  proposals?: boolean | ProposalTemplateCountOutputTypeCountProposalsArgs
-}
-
-/**
- * ProposalTemplateCountOutputType without action
- */
-export type ProposalTemplateCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ProposalTemplateCountOutputType
-   */
-  select?: Prisma.ProposalTemplateCountOutputTypeSelect<ExtArgs> | null
-}
-
-/**
- * ProposalTemplateCountOutputType without action
- */
-export type ProposalTemplateCountOutputTypeCountProposalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ProposalWhereInput
-}
 
 
 export type ProposalTemplateSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -617,9 +624,9 @@ export type ProposalTemplateSelect<ExtArgs extends runtime.Types.Extensions.Inte
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  proposalId?: boolean
   template?: boolean | Prisma.DocumentTemplateDefaultArgs<ExtArgs>
-  proposals?: boolean | Prisma.ProposalTemplate$proposalsArgs<ExtArgs>
-  _count?: boolean | Prisma.ProposalTemplateCountOutputTypeDefaultArgs<ExtArgs>
+  proposal?: boolean | Prisma.ProposalDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["proposalTemplate"]>
 
 export type ProposalTemplateSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -630,7 +637,9 @@ export type ProposalTemplateSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  proposalId?: boolean
   template?: boolean | Prisma.DocumentTemplateDefaultArgs<ExtArgs>
+  proposal?: boolean | Prisma.ProposalDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["proposalTemplate"]>
 
 export type ProposalTemplateSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -641,7 +650,9 @@ export type ProposalTemplateSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  proposalId?: boolean
   template?: boolean | Prisma.DocumentTemplateDefaultArgs<ExtArgs>
+  proposal?: boolean | Prisma.ProposalDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["proposalTemplate"]>
 
 export type ProposalTemplateSelectScalar = {
@@ -652,26 +663,28 @@ export type ProposalTemplateSelectScalar = {
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  proposalId?: boolean
 }
 
-export type ProposalTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "documentTemplateId" | "content" | "isDefault" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["proposalTemplate"]>
+export type ProposalTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "documentTemplateId" | "content" | "isDefault" | "isActive" | "createdAt" | "updatedAt" | "proposalId", ExtArgs["result"]["proposalTemplate"]>
 export type ProposalTemplateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   template?: boolean | Prisma.DocumentTemplateDefaultArgs<ExtArgs>
-  proposals?: boolean | Prisma.ProposalTemplate$proposalsArgs<ExtArgs>
-  _count?: boolean | Prisma.ProposalTemplateCountOutputTypeDefaultArgs<ExtArgs>
+  proposal?: boolean | Prisma.ProposalDefaultArgs<ExtArgs>
 }
 export type ProposalTemplateIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   template?: boolean | Prisma.DocumentTemplateDefaultArgs<ExtArgs>
+  proposal?: boolean | Prisma.ProposalDefaultArgs<ExtArgs>
 }
 export type ProposalTemplateIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   template?: boolean | Prisma.DocumentTemplateDefaultArgs<ExtArgs>
+  proposal?: boolean | Prisma.ProposalDefaultArgs<ExtArgs>
 }
 
 export type $ProposalTemplatePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ProposalTemplate"
   objects: {
     template: Prisma.$DocumentTemplatePayload<ExtArgs>
-    proposals: Prisma.$ProposalPayload<ExtArgs>[]
+    proposal: Prisma.$ProposalPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -681,6 +694,7 @@ export type $ProposalTemplatePayload<ExtArgs extends runtime.Types.Extensions.In
     isActive: boolean
     createdAt: Date
     updatedAt: Date
+    proposalId: string
   }, ExtArgs["result"]["proposalTemplate"]>
   composites: {}
 }
@@ -1076,7 +1090,7 @@ readonly fields: ProposalTemplateFieldRefs;
 export interface Prisma__ProposalTemplateClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   template<T extends Prisma.DocumentTemplateDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DocumentTemplateDefaultArgs<ExtArgs>>): Prisma.Prisma__DocumentTemplateClient<runtime.Types.Result.GetResult<Prisma.$DocumentTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  proposals<T extends Prisma.ProposalTemplate$proposalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProposalTemplate$proposalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  proposal<T extends Prisma.ProposalDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProposalDefaultArgs<ExtArgs>>): Prisma.Prisma__ProposalClient<runtime.Types.Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1113,6 +1127,7 @@ export interface ProposalTemplateFieldRefs {
   readonly isActive: Prisma.FieldRef<"ProposalTemplate", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"ProposalTemplate", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ProposalTemplate", 'DateTime'>
+  readonly proposalId: Prisma.FieldRef<"ProposalTemplate", 'String'>
 }
     
 
@@ -1506,30 +1521,6 @@ export type ProposalTemplateDeleteManyArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many ProposalTemplates to delete.
    */
   limit?: number
-}
-
-/**
- * ProposalTemplate.proposals
- */
-export type ProposalTemplate$proposalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Proposal
-   */
-  select?: Prisma.ProposalSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Proposal
-   */
-  omit?: Prisma.ProposalOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ProposalInclude<ExtArgs> | null
-  where?: Prisma.ProposalWhereInput
-  orderBy?: Prisma.ProposalOrderByWithRelationInput | Prisma.ProposalOrderByWithRelationInput[]
-  cursor?: Prisma.ProposalWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ProposalScalarFieldEnum | Prisma.ProposalScalarFieldEnum[]
 }
 
 /**

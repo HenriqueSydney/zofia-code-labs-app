@@ -6,12 +6,14 @@ import {
   ProjectDocuments,
   ProjectServices,
   ProjectStatus,
+  Proposal,
   ServiceType,
 } from "@/generated/prisma/client";
 
 export type ProjectWithDetails = PrismaToPlain<Project> & {
   client: { id: string; companyName: string };
   projectDocuments: ProjectDocuments[];
+  proposal: PrismaToPlain<Proposal>;
   projectServices: (ProjectServices & {
     serviceType: ServiceType;
   })[];
@@ -51,18 +53,18 @@ export interface IUpdateProjectDTO {
 export interface IProjectsRepository {
   create(
     data: ICreateProjectDTO
-  ): Promise<Omit<ProjectWithDetails, "projectServices">>;
+  ): Promise<Omit<ProjectWithDetails, "projectServices" | "proposal">>;
   findById(id: string): Promise<ProjectWithDetails | null>;
   findAll(
     params: FindAllParams,
     pagination?: Pagination
   ): Promise<{
     totalOfRegisters: number;
-    projects: Omit<ProjectWithDetails, "projectServices">[];
+    projects: Omit<ProjectWithDetails, "projectServices" | "proposal">[];
   }>;
   update(
     data: IUpdateProjectDTO
-  ): Promise<Omit<ProjectWithDetails, "projectServices">>;
+  ): Promise<Omit<ProjectWithDetails, "projectServices" | "proposal">>;
   updateStatus(
     id: string,
     status: ProjectStatus,
@@ -73,7 +75,7 @@ export interface IProjectsRepository {
   addDocuments(
     projectId: string,
     documents: DocumentInput[]
-  ): Promise<Omit<ProjectWithDetails, "projectServices">>;
+  ): Promise<Omit<ProjectWithDetails, "projectServices" | "proposal">>;
   updateProjectServices(
     projectId: string,
     serviceIds: string[],

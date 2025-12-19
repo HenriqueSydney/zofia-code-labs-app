@@ -39,6 +39,7 @@ export async function createDocumentTemplateAction(
     });
 
     revalidatePath("/settings/templates"); // Atualize conforme sua rota
+    
     return { success: true, message: "Modelo criado com sucesso!" };
   } catch (err: any) {
     console.error(err);

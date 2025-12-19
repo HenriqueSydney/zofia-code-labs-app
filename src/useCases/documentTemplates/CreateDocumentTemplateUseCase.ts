@@ -30,14 +30,14 @@ export class CreateDocumentTemplateUseCase {
         organizationId
       );
 
-    if (!documentTemplateExists) {
+    if (documentTemplateExists) {
       throw new AppError("Template de documento já existe.");
     }
 
     await checkUserPermissionForAsset(
       "documentTemplate",
       userId,
-      documentTemplateExists,
+      { organizationId },
       "CREATE"
     );
 

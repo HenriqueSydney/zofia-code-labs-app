@@ -287,7 +287,7 @@ export type ProjectWhereInput = {
   sprints?: Prisma.SprintListRelationFilter
   backlog?: Prisma.BacklogItemListRelationFilter
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  proposal?: Prisma.XOR<Prisma.ProposalNullableScalarRelationFilter, Prisma.ProposalWhereInput> | null
+  proposal?: Prisma.ProposalListRelationFilter
   integrations?: Prisma.ProjectIntegrationListRelationFilter
   projectServices?: Prisma.ProjectServicesListRelationFilter
   projectDocuments?: Prisma.ProjectDocumentsListRelationFilter
@@ -314,7 +314,7 @@ export type ProjectOrderByWithRelationInput = {
   sprints?: Prisma.SprintOrderByRelationAggregateInput
   backlog?: Prisma.BacklogItemOrderByRelationAggregateInput
   user?: Prisma.UserOrderByWithRelationInput
-  proposal?: Prisma.ProposalOrderByWithRelationInput
+  proposal?: Prisma.ProposalOrderByRelationAggregateInput
   integrations?: Prisma.ProjectIntegrationOrderByRelationAggregateInput
   projectServices?: Prisma.ProjectServicesOrderByRelationAggregateInput
   projectDocuments?: Prisma.ProjectDocumentsOrderByRelationAggregateInput
@@ -344,7 +344,7 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   sprints?: Prisma.SprintListRelationFilter
   backlog?: Prisma.BacklogItemListRelationFilter
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  proposal?: Prisma.XOR<Prisma.ProposalNullableScalarRelationFilter, Prisma.ProposalWhereInput> | null
+  proposal?: Prisma.ProposalListRelationFilter
   integrations?: Prisma.ProjectIntegrationListRelationFilter
   projectServices?: Prisma.ProjectServicesListRelationFilter
   projectDocuments?: Prisma.ProjectDocumentsListRelationFilter
@@ -408,7 +408,7 @@ export type ProjectCreateInput = {
   sprints?: Prisma.SprintCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemCreateNestedManyWithoutProjectInput
   user: Prisma.UserCreateNestedOneWithoutCreatedProjectsInput
-  proposal?: Prisma.ProposalCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalCreateNestedManyWithoutProjectInput
   integrations?: Prisma.ProjectIntegrationCreateNestedManyWithoutProjectInput
   projectServices?: Prisma.ProjectServicesCreateNestedManyWithoutProjectInput
   projectDocuments?: Prisma.ProjectDocumentsCreateNestedManyWithoutProjectInput
@@ -432,7 +432,7 @@ export type ProjectUncheckedCreateInput = {
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutProjectInput
-  proposal?: Prisma.ProposalUncheckedCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalUncheckedCreateNestedManyWithoutProjectInput
   integrations?: Prisma.ProjectIntegrationUncheckedCreateNestedManyWithoutProjectInput
   projectServices?: Prisma.ProjectServicesUncheckedCreateNestedManyWithoutProjectInput
   projectDocuments?: Prisma.ProjectDocumentsUncheckedCreateNestedManyWithoutProjectInput
@@ -456,7 +456,7 @@ export type ProjectUpdateInput = {
   sprints?: Prisma.SprintUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUpdateManyWithoutProjectNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCreatedProjectsNestedInput
-  proposal?: Prisma.ProposalUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUpdateManyWithoutProjectNestedInput
   integrations?: Prisma.ProjectIntegrationUpdateManyWithoutProjectNestedInput
   projectServices?: Prisma.ProjectServicesUpdateManyWithoutProjectNestedInput
   projectDocuments?: Prisma.ProjectDocumentsUpdateManyWithoutProjectNestedInput
@@ -480,7 +480,7 @@ export type ProjectUncheckedUpdateInput = {
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUncheckedUpdateManyWithoutProjectNestedInput
-  proposal?: Prisma.ProposalUncheckedUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUncheckedUpdateManyWithoutProjectNestedInput
   integrations?: Prisma.ProjectIntegrationUncheckedUpdateManyWithoutProjectNestedInput
   projectServices?: Prisma.ProjectServicesUncheckedUpdateManyWithoutProjectNestedInput
   projectDocuments?: Prisma.ProjectDocumentsUncheckedUpdateManyWithoutProjectNestedInput
@@ -541,9 +541,9 @@ export type ProjectOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type ProjectNullableScalarRelationFilter = {
-  is?: Prisma.ProjectWhereInput | null
-  isNot?: Prisma.ProjectWhereInput | null
+export type ProjectScalarRelationFilter = {
+  is?: Prisma.ProjectWhereInput
+  isNot?: Prisma.ProjectWhereInput
 }
 
 export type ProjectCountOrderByAggregateInput = {
@@ -600,11 +600,6 @@ export type ProjectMinOrderByAggregateInput = {
 
 export type ProjectSumOrderByAggregateInput = {
   budget?: Prisma.SortOrder
-}
-
-export type ProjectScalarRelationFilter = {
-  is?: Prisma.ProjectWhereInput
-  isNot?: Prisma.ProjectWhereInput
 }
 
 export type ProjectCreateNestedManyWithoutOrganizationInput = {
@@ -739,12 +734,10 @@ export type ProjectCreateNestedOneWithoutProposalInput = {
   connect?: Prisma.ProjectWhereUniqueInput
 }
 
-export type ProjectUpdateOneWithoutProposalNestedInput = {
+export type ProjectUpdateOneRequiredWithoutProposalNestedInput = {
   create?: Prisma.XOR<Prisma.ProjectCreateWithoutProposalInput, Prisma.ProjectUncheckedCreateWithoutProposalInput>
   connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutProposalInput
   upsert?: Prisma.ProjectUpsertWithoutProposalInput
-  disconnect?: Prisma.ProjectWhereInput | boolean
-  delete?: Prisma.ProjectWhereInput | boolean
   connect?: Prisma.ProjectWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutProposalInput, Prisma.ProjectUpdateWithoutProposalInput>, Prisma.ProjectUncheckedUpdateWithoutProposalInput>
 }
@@ -868,7 +861,7 @@ export type ProjectCreateWithoutOrganizationInput = {
   sprints?: Prisma.SprintCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemCreateNestedManyWithoutProjectInput
   user: Prisma.UserCreateNestedOneWithoutCreatedProjectsInput
-  proposal?: Prisma.ProposalCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalCreateNestedManyWithoutProjectInput
   integrations?: Prisma.ProjectIntegrationCreateNestedManyWithoutProjectInput
   projectServices?: Prisma.ProjectServicesCreateNestedManyWithoutProjectInput
   projectDocuments?: Prisma.ProjectDocumentsCreateNestedManyWithoutProjectInput
@@ -891,7 +884,7 @@ export type ProjectUncheckedCreateWithoutOrganizationInput = {
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutProjectInput
-  proposal?: Prisma.ProposalUncheckedCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalUncheckedCreateNestedManyWithoutProjectInput
   integrations?: Prisma.ProjectIntegrationUncheckedCreateNestedManyWithoutProjectInput
   projectServices?: Prisma.ProjectServicesUncheckedCreateNestedManyWithoutProjectInput
   projectDocuments?: Prisma.ProjectDocumentsUncheckedCreateNestedManyWithoutProjectInput
@@ -959,7 +952,7 @@ export type ProjectCreateWithoutUserInput = {
   notes?: Prisma.ProjectNoteCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemCreateNestedManyWithoutProjectInput
-  proposal?: Prisma.ProposalCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalCreateNestedManyWithoutProjectInput
   integrations?: Prisma.ProjectIntegrationCreateNestedManyWithoutProjectInput
   projectServices?: Prisma.ProjectServicesCreateNestedManyWithoutProjectInput
   projectDocuments?: Prisma.ProjectDocumentsCreateNestedManyWithoutProjectInput
@@ -982,7 +975,7 @@ export type ProjectUncheckedCreateWithoutUserInput = {
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutProjectInput
-  proposal?: Prisma.ProposalUncheckedCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalUncheckedCreateNestedManyWithoutProjectInput
   integrations?: Prisma.ProjectIntegrationUncheckedCreateNestedManyWithoutProjectInput
   projectServices?: Prisma.ProjectServicesUncheckedCreateNestedManyWithoutProjectInput
   projectDocuments?: Prisma.ProjectDocumentsUncheckedCreateNestedManyWithoutProjectInput
@@ -1031,7 +1024,7 @@ export type ProjectCreateWithoutClientInput = {
   sprints?: Prisma.SprintCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemCreateNestedManyWithoutProjectInput
   user: Prisma.UserCreateNestedOneWithoutCreatedProjectsInput
-  proposal?: Prisma.ProposalCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalCreateNestedManyWithoutProjectInput
   integrations?: Prisma.ProjectIntegrationCreateNestedManyWithoutProjectInput
   projectServices?: Prisma.ProjectServicesCreateNestedManyWithoutProjectInput
   projectDocuments?: Prisma.ProjectDocumentsCreateNestedManyWithoutProjectInput
@@ -1054,7 +1047,7 @@ export type ProjectUncheckedCreateWithoutClientInput = {
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutProjectInput
-  proposal?: Prisma.ProposalUncheckedCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalUncheckedCreateNestedManyWithoutProjectInput
   integrations?: Prisma.ProjectIntegrationUncheckedCreateNestedManyWithoutProjectInput
   projectServices?: Prisma.ProjectServicesUncheckedCreateNestedManyWithoutProjectInput
   projectDocuments?: Prisma.ProjectDocumentsUncheckedCreateNestedManyWithoutProjectInput
@@ -1212,7 +1205,7 @@ export type ProjectCreateWithoutProjectDocumentsInput = {
   sprints?: Prisma.SprintCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemCreateNestedManyWithoutProjectInput
   user: Prisma.UserCreateNestedOneWithoutCreatedProjectsInput
-  proposal?: Prisma.ProposalCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalCreateNestedManyWithoutProjectInput
   integrations?: Prisma.ProjectIntegrationCreateNestedManyWithoutProjectInput
   projectServices?: Prisma.ProjectServicesCreateNestedManyWithoutProjectInput
 }
@@ -1235,7 +1228,7 @@ export type ProjectUncheckedCreateWithoutProjectDocumentsInput = {
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutProjectInput
-  proposal?: Prisma.ProposalUncheckedCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalUncheckedCreateNestedManyWithoutProjectInput
   integrations?: Prisma.ProjectIntegrationUncheckedCreateNestedManyWithoutProjectInput
   projectServices?: Prisma.ProjectServicesUncheckedCreateNestedManyWithoutProjectInput
 }
@@ -1274,7 +1267,7 @@ export type ProjectUpdateWithoutProjectDocumentsInput = {
   sprints?: Prisma.SprintUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUpdateManyWithoutProjectNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCreatedProjectsNestedInput
-  proposal?: Prisma.ProposalUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUpdateManyWithoutProjectNestedInput
   integrations?: Prisma.ProjectIntegrationUpdateManyWithoutProjectNestedInput
   projectServices?: Prisma.ProjectServicesUpdateManyWithoutProjectNestedInput
 }
@@ -1297,7 +1290,7 @@ export type ProjectUncheckedUpdateWithoutProjectDocumentsInput = {
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUncheckedUpdateManyWithoutProjectNestedInput
-  proposal?: Prisma.ProposalUncheckedUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUncheckedUpdateManyWithoutProjectNestedInput
   integrations?: Prisma.ProjectIntegrationUncheckedUpdateManyWithoutProjectNestedInput
   projectServices?: Prisma.ProjectServicesUncheckedUpdateManyWithoutProjectNestedInput
 }
@@ -1320,7 +1313,7 @@ export type ProjectCreateWithoutProjectServicesInput = {
   sprints?: Prisma.SprintCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemCreateNestedManyWithoutProjectInput
   user: Prisma.UserCreateNestedOneWithoutCreatedProjectsInput
-  proposal?: Prisma.ProposalCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalCreateNestedManyWithoutProjectInput
   integrations?: Prisma.ProjectIntegrationCreateNestedManyWithoutProjectInput
   projectDocuments?: Prisma.ProjectDocumentsCreateNestedManyWithoutProjectInput
 }
@@ -1343,7 +1336,7 @@ export type ProjectUncheckedCreateWithoutProjectServicesInput = {
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutProjectInput
-  proposal?: Prisma.ProposalUncheckedCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalUncheckedCreateNestedManyWithoutProjectInput
   integrations?: Prisma.ProjectIntegrationUncheckedCreateNestedManyWithoutProjectInput
   projectDocuments?: Prisma.ProjectDocumentsUncheckedCreateNestedManyWithoutProjectInput
 }
@@ -1382,7 +1375,7 @@ export type ProjectUpdateWithoutProjectServicesInput = {
   sprints?: Prisma.SprintUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUpdateManyWithoutProjectNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCreatedProjectsNestedInput
-  proposal?: Prisma.ProposalUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUpdateManyWithoutProjectNestedInput
   integrations?: Prisma.ProjectIntegrationUpdateManyWithoutProjectNestedInput
   projectDocuments?: Prisma.ProjectDocumentsUpdateManyWithoutProjectNestedInput
 }
@@ -1405,7 +1398,7 @@ export type ProjectUncheckedUpdateWithoutProjectServicesInput = {
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUncheckedUpdateManyWithoutProjectNestedInput
-  proposal?: Prisma.ProposalUncheckedUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUncheckedUpdateManyWithoutProjectNestedInput
   integrations?: Prisma.ProjectIntegrationUncheckedUpdateManyWithoutProjectNestedInput
   projectDocuments?: Prisma.ProjectDocumentsUncheckedUpdateManyWithoutProjectNestedInput
 }
@@ -1427,7 +1420,7 @@ export type ProjectCreateWithoutNotesInput = {
   sprints?: Prisma.SprintCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemCreateNestedManyWithoutProjectInput
   user: Prisma.UserCreateNestedOneWithoutCreatedProjectsInput
-  proposal?: Prisma.ProposalCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalCreateNestedManyWithoutProjectInput
   integrations?: Prisma.ProjectIntegrationCreateNestedManyWithoutProjectInput
   projectServices?: Prisma.ProjectServicesCreateNestedManyWithoutProjectInput
   projectDocuments?: Prisma.ProjectDocumentsCreateNestedManyWithoutProjectInput
@@ -1450,7 +1443,7 @@ export type ProjectUncheckedCreateWithoutNotesInput = {
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutProjectInput
-  proposal?: Prisma.ProposalUncheckedCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalUncheckedCreateNestedManyWithoutProjectInput
   integrations?: Prisma.ProjectIntegrationUncheckedCreateNestedManyWithoutProjectInput
   projectServices?: Prisma.ProjectServicesUncheckedCreateNestedManyWithoutProjectInput
   projectDocuments?: Prisma.ProjectDocumentsUncheckedCreateNestedManyWithoutProjectInput
@@ -1489,7 +1482,7 @@ export type ProjectUpdateWithoutNotesInput = {
   sprints?: Prisma.SprintUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUpdateManyWithoutProjectNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCreatedProjectsNestedInput
-  proposal?: Prisma.ProposalUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUpdateManyWithoutProjectNestedInput
   integrations?: Prisma.ProjectIntegrationUpdateManyWithoutProjectNestedInput
   projectServices?: Prisma.ProjectServicesUpdateManyWithoutProjectNestedInput
   projectDocuments?: Prisma.ProjectDocumentsUpdateManyWithoutProjectNestedInput
@@ -1512,7 +1505,7 @@ export type ProjectUncheckedUpdateWithoutNotesInput = {
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUncheckedUpdateManyWithoutProjectNestedInput
-  proposal?: Prisma.ProposalUncheckedUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUncheckedUpdateManyWithoutProjectNestedInput
   integrations?: Prisma.ProjectIntegrationUncheckedUpdateManyWithoutProjectNestedInput
   projectServices?: Prisma.ProjectServicesUncheckedUpdateManyWithoutProjectNestedInput
   projectDocuments?: Prisma.ProjectDocumentsUncheckedUpdateManyWithoutProjectNestedInput
@@ -1535,7 +1528,7 @@ export type ProjectCreateWithoutSprintsInput = {
   notes?: Prisma.ProjectNoteCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemCreateNestedManyWithoutProjectInput
   user: Prisma.UserCreateNestedOneWithoutCreatedProjectsInput
-  proposal?: Prisma.ProposalCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalCreateNestedManyWithoutProjectInput
   integrations?: Prisma.ProjectIntegrationCreateNestedManyWithoutProjectInput
   projectServices?: Prisma.ProjectServicesCreateNestedManyWithoutProjectInput
   projectDocuments?: Prisma.ProjectDocumentsCreateNestedManyWithoutProjectInput
@@ -1558,7 +1551,7 @@ export type ProjectUncheckedCreateWithoutSprintsInput = {
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutProjectInput
-  proposal?: Prisma.ProposalUncheckedCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalUncheckedCreateNestedManyWithoutProjectInput
   integrations?: Prisma.ProjectIntegrationUncheckedCreateNestedManyWithoutProjectInput
   projectServices?: Prisma.ProjectServicesUncheckedCreateNestedManyWithoutProjectInput
   projectDocuments?: Prisma.ProjectDocumentsUncheckedCreateNestedManyWithoutProjectInput
@@ -1597,7 +1590,7 @@ export type ProjectUpdateWithoutSprintsInput = {
   notes?: Prisma.ProjectNoteUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUpdateManyWithoutProjectNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCreatedProjectsNestedInput
-  proposal?: Prisma.ProposalUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUpdateManyWithoutProjectNestedInput
   integrations?: Prisma.ProjectIntegrationUpdateManyWithoutProjectNestedInput
   projectServices?: Prisma.ProjectServicesUpdateManyWithoutProjectNestedInput
   projectDocuments?: Prisma.ProjectDocumentsUpdateManyWithoutProjectNestedInput
@@ -1620,7 +1613,7 @@ export type ProjectUncheckedUpdateWithoutSprintsInput = {
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUncheckedUpdateManyWithoutProjectNestedInput
-  proposal?: Prisma.ProposalUncheckedUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUncheckedUpdateManyWithoutProjectNestedInput
   integrations?: Prisma.ProjectIntegrationUncheckedUpdateManyWithoutProjectNestedInput
   projectServices?: Prisma.ProjectServicesUncheckedUpdateManyWithoutProjectNestedInput
   projectDocuments?: Prisma.ProjectDocumentsUncheckedUpdateManyWithoutProjectNestedInput
@@ -1643,7 +1636,7 @@ export type ProjectCreateWithoutBacklogInput = {
   notes?: Prisma.ProjectNoteCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintCreateNestedManyWithoutProjectInput
   user: Prisma.UserCreateNestedOneWithoutCreatedProjectsInput
-  proposal?: Prisma.ProposalCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalCreateNestedManyWithoutProjectInput
   integrations?: Prisma.ProjectIntegrationCreateNestedManyWithoutProjectInput
   projectServices?: Prisma.ProjectServicesCreateNestedManyWithoutProjectInput
   projectDocuments?: Prisma.ProjectDocumentsCreateNestedManyWithoutProjectInput
@@ -1666,7 +1659,7 @@ export type ProjectUncheckedCreateWithoutBacklogInput = {
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
-  proposal?: Prisma.ProposalUncheckedCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalUncheckedCreateNestedManyWithoutProjectInput
   integrations?: Prisma.ProjectIntegrationUncheckedCreateNestedManyWithoutProjectInput
   projectServices?: Prisma.ProjectServicesUncheckedCreateNestedManyWithoutProjectInput
   projectDocuments?: Prisma.ProjectDocumentsUncheckedCreateNestedManyWithoutProjectInput
@@ -1705,7 +1698,7 @@ export type ProjectUpdateWithoutBacklogInput = {
   notes?: Prisma.ProjectNoteUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUpdateManyWithoutProjectNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCreatedProjectsNestedInput
-  proposal?: Prisma.ProposalUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUpdateManyWithoutProjectNestedInput
   integrations?: Prisma.ProjectIntegrationUpdateManyWithoutProjectNestedInput
   projectServices?: Prisma.ProjectServicesUpdateManyWithoutProjectNestedInput
   projectDocuments?: Prisma.ProjectDocumentsUpdateManyWithoutProjectNestedInput
@@ -1728,7 +1721,7 @@ export type ProjectUncheckedUpdateWithoutBacklogInput = {
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
-  proposal?: Prisma.ProposalUncheckedUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUncheckedUpdateManyWithoutProjectNestedInput
   integrations?: Prisma.ProjectIntegrationUncheckedUpdateManyWithoutProjectNestedInput
   projectServices?: Prisma.ProjectServicesUncheckedUpdateManyWithoutProjectNestedInput
   projectDocuments?: Prisma.ProjectDocumentsUncheckedUpdateManyWithoutProjectNestedInput
@@ -1751,7 +1744,7 @@ export type ProjectCreateWithoutInvoicesInput = {
   sprints?: Prisma.SprintCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemCreateNestedManyWithoutProjectInput
   user: Prisma.UserCreateNestedOneWithoutCreatedProjectsInput
-  proposal?: Prisma.ProposalCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalCreateNestedManyWithoutProjectInput
   integrations?: Prisma.ProjectIntegrationCreateNestedManyWithoutProjectInput
   projectServices?: Prisma.ProjectServicesCreateNestedManyWithoutProjectInput
   projectDocuments?: Prisma.ProjectDocumentsCreateNestedManyWithoutProjectInput
@@ -1774,7 +1767,7 @@ export type ProjectUncheckedCreateWithoutInvoicesInput = {
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutProjectInput
-  proposal?: Prisma.ProposalUncheckedCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalUncheckedCreateNestedManyWithoutProjectInput
   integrations?: Prisma.ProjectIntegrationUncheckedCreateNestedManyWithoutProjectInput
   projectServices?: Prisma.ProjectServicesUncheckedCreateNestedManyWithoutProjectInput
   projectDocuments?: Prisma.ProjectDocumentsUncheckedCreateNestedManyWithoutProjectInput
@@ -1813,7 +1806,7 @@ export type ProjectUpdateWithoutInvoicesInput = {
   sprints?: Prisma.SprintUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUpdateManyWithoutProjectNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCreatedProjectsNestedInput
-  proposal?: Prisma.ProposalUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUpdateManyWithoutProjectNestedInput
   integrations?: Prisma.ProjectIntegrationUpdateManyWithoutProjectNestedInput
   projectServices?: Prisma.ProjectServicesUpdateManyWithoutProjectNestedInput
   projectDocuments?: Prisma.ProjectDocumentsUpdateManyWithoutProjectNestedInput
@@ -1836,7 +1829,7 @@ export type ProjectUncheckedUpdateWithoutInvoicesInput = {
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUncheckedUpdateManyWithoutProjectNestedInput
-  proposal?: Prisma.ProposalUncheckedUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUncheckedUpdateManyWithoutProjectNestedInput
   integrations?: Prisma.ProjectIntegrationUncheckedUpdateManyWithoutProjectNestedInput
   projectServices?: Prisma.ProjectServicesUncheckedUpdateManyWithoutProjectNestedInput
   projectDocuments?: Prisma.ProjectDocumentsUncheckedUpdateManyWithoutProjectNestedInput
@@ -1860,7 +1853,7 @@ export type ProjectCreateWithoutIntegrationsInput = {
   sprints?: Prisma.SprintCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemCreateNestedManyWithoutProjectInput
   user: Prisma.UserCreateNestedOneWithoutCreatedProjectsInput
-  proposal?: Prisma.ProposalCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalCreateNestedManyWithoutProjectInput
   projectServices?: Prisma.ProjectServicesCreateNestedManyWithoutProjectInput
   projectDocuments?: Prisma.ProjectDocumentsCreateNestedManyWithoutProjectInput
 }
@@ -1883,7 +1876,7 @@ export type ProjectUncheckedCreateWithoutIntegrationsInput = {
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutProjectInput
-  proposal?: Prisma.ProposalUncheckedCreateNestedOneWithoutProjectInput
+  proposal?: Prisma.ProposalUncheckedCreateNestedManyWithoutProjectInput
   projectServices?: Prisma.ProjectServicesUncheckedCreateNestedManyWithoutProjectInput
   projectDocuments?: Prisma.ProjectDocumentsUncheckedCreateNestedManyWithoutProjectInput
 }
@@ -1922,7 +1915,7 @@ export type ProjectUpdateWithoutIntegrationsInput = {
   sprints?: Prisma.SprintUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUpdateManyWithoutProjectNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCreatedProjectsNestedInput
-  proposal?: Prisma.ProposalUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUpdateManyWithoutProjectNestedInput
   projectServices?: Prisma.ProjectServicesUpdateManyWithoutProjectNestedInput
   projectDocuments?: Prisma.ProjectDocumentsUpdateManyWithoutProjectNestedInput
 }
@@ -1945,7 +1938,7 @@ export type ProjectUncheckedUpdateWithoutIntegrationsInput = {
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUncheckedUpdateManyWithoutProjectNestedInput
-  proposal?: Prisma.ProposalUncheckedUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUncheckedUpdateManyWithoutProjectNestedInput
   projectServices?: Prisma.ProjectServicesUncheckedUpdateManyWithoutProjectNestedInput
   projectDocuments?: Prisma.ProjectDocumentsUncheckedUpdateManyWithoutProjectNestedInput
 }
@@ -1982,7 +1975,7 @@ export type ProjectUpdateWithoutOrganizationInput = {
   sprints?: Prisma.SprintUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUpdateManyWithoutProjectNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCreatedProjectsNestedInput
-  proposal?: Prisma.ProposalUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUpdateManyWithoutProjectNestedInput
   integrations?: Prisma.ProjectIntegrationUpdateManyWithoutProjectNestedInput
   projectServices?: Prisma.ProjectServicesUpdateManyWithoutProjectNestedInput
   projectDocuments?: Prisma.ProjectDocumentsUpdateManyWithoutProjectNestedInput
@@ -2005,7 +1998,7 @@ export type ProjectUncheckedUpdateWithoutOrganizationInput = {
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUncheckedUpdateManyWithoutProjectNestedInput
-  proposal?: Prisma.ProposalUncheckedUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUncheckedUpdateManyWithoutProjectNestedInput
   integrations?: Prisma.ProjectIntegrationUncheckedUpdateManyWithoutProjectNestedInput
   projectServices?: Prisma.ProjectServicesUncheckedUpdateManyWithoutProjectNestedInput
   projectDocuments?: Prisma.ProjectDocumentsUncheckedUpdateManyWithoutProjectNestedInput
@@ -2058,7 +2051,7 @@ export type ProjectUpdateWithoutUserInput = {
   notes?: Prisma.ProjectNoteUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUpdateManyWithoutProjectNestedInput
-  proposal?: Prisma.ProposalUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUpdateManyWithoutProjectNestedInput
   integrations?: Prisma.ProjectIntegrationUpdateManyWithoutProjectNestedInput
   projectServices?: Prisma.ProjectServicesUpdateManyWithoutProjectNestedInput
   projectDocuments?: Prisma.ProjectDocumentsUpdateManyWithoutProjectNestedInput
@@ -2081,7 +2074,7 @@ export type ProjectUncheckedUpdateWithoutUserInput = {
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUncheckedUpdateManyWithoutProjectNestedInput
-  proposal?: Prisma.ProposalUncheckedUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUncheckedUpdateManyWithoutProjectNestedInput
   integrations?: Prisma.ProjectIntegrationUncheckedUpdateManyWithoutProjectNestedInput
   projectServices?: Prisma.ProjectServicesUncheckedUpdateManyWithoutProjectNestedInput
   projectDocuments?: Prisma.ProjectDocumentsUncheckedUpdateManyWithoutProjectNestedInput
@@ -2134,7 +2127,7 @@ export type ProjectUpdateWithoutClientInput = {
   sprints?: Prisma.SprintUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUpdateManyWithoutProjectNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCreatedProjectsNestedInput
-  proposal?: Prisma.ProposalUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUpdateManyWithoutProjectNestedInput
   integrations?: Prisma.ProjectIntegrationUpdateManyWithoutProjectNestedInput
   projectServices?: Prisma.ProjectServicesUpdateManyWithoutProjectNestedInput
   projectDocuments?: Prisma.ProjectDocumentsUpdateManyWithoutProjectNestedInput
@@ -2157,7 +2150,7 @@ export type ProjectUncheckedUpdateWithoutClientInput = {
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUncheckedUpdateManyWithoutProjectNestedInput
-  proposal?: Prisma.ProposalUncheckedUpdateOneWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUncheckedUpdateManyWithoutProjectNestedInput
   integrations?: Prisma.ProjectIntegrationUncheckedUpdateManyWithoutProjectNestedInput
   projectServices?: Prisma.ProjectServicesUncheckedUpdateManyWithoutProjectNestedInput
   projectDocuments?: Prisma.ProjectDocumentsUncheckedUpdateManyWithoutProjectNestedInput
@@ -2188,6 +2181,7 @@ export type ProjectCountOutputType = {
   notes: number
   sprints: number
   backlog: number
+  proposal: number
   integrations: number
   projectServices: number
   projectDocuments: number
@@ -2198,6 +2192,7 @@ export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   notes?: boolean | ProjectCountOutputTypeCountNotesArgs
   sprints?: boolean | ProjectCountOutputTypeCountSprintsArgs
   backlog?: boolean | ProjectCountOutputTypeCountBacklogArgs
+  proposal?: boolean | ProjectCountOutputTypeCountProposalArgs
   integrations?: boolean | ProjectCountOutputTypeCountIntegrationsArgs
   projectServices?: boolean | ProjectCountOutputTypeCountProjectServicesArgs
   projectDocuments?: boolean | ProjectCountOutputTypeCountProjectDocumentsArgs
@@ -2239,6 +2234,13 @@ export type ProjectCountOutputTypeCountSprintsArgs<ExtArgs extends runtime.Types
  */
 export type ProjectCountOutputTypeCountBacklogArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.BacklogItemWhereInput
+}
+
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountProposalArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProposalWhereInput
 }
 
 /**
@@ -2381,7 +2383,7 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     sprints: Prisma.$SprintPayload<ExtArgs>[]
     backlog: Prisma.$BacklogItemPayload<ExtArgs>[]
     user: Prisma.$UserPayload<ExtArgs>
-    proposal: Prisma.$ProposalPayload<ExtArgs> | null
+    proposal: Prisma.$ProposalPayload<ExtArgs>[]
     integrations: Prisma.$ProjectIntegrationPayload<ExtArgs>[]
     projectServices: Prisma.$ProjectServicesPayload<ExtArgs>[]
     projectDocuments: Prisma.$ProjectDocumentsPayload<ExtArgs>[]
@@ -2801,7 +2803,7 @@ export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.
   sprints<T extends Prisma.Project$sprintsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$sprintsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SprintPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   backlog<T extends Prisma.Project$backlogArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$backlogArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BacklogItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  proposal<T extends Prisma.Project$proposalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$proposalArgs<ExtArgs>>): Prisma.Prisma__ProposalClient<runtime.Types.Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  proposal<T extends Prisma.Project$proposalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$proposalArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   integrations<T extends Prisma.Project$integrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$integrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectIntegrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projectServices<T extends Prisma.Project$projectServicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$projectServicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectServicesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projectDocuments<T extends Prisma.Project$projectDocumentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$projectDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectDocumentsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3355,6 +3357,11 @@ export type Project$proposalArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   include?: Prisma.ProposalInclude<ExtArgs> | null
   where?: Prisma.ProposalWhereInput
+  orderBy?: Prisma.ProposalOrderByWithRelationInput | Prisma.ProposalOrderByWithRelationInput[]
+  cursor?: Prisma.ProposalWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProposalScalarFieldEnum | Prisma.ProposalScalarFieldEnum[]
 }
 
 /**

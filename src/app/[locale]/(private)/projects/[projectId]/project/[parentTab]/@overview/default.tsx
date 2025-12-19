@@ -9,27 +9,76 @@ import ProjectTimeline from "./ProjectTimeline";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { FetchServiceTypeWithCategory } from "@/repositories/IServiceTypeRepository";
 import { fetchServiceTypeAction } from "@/actions/services/fetchServiceTypeAction";
-import { Tooltip } from "@/components/Tooltip";
+import { getProjectAction } from "@/actions/projects/getProject";
+import { getParams } from "@/utils/getParams";
+import { AppError } from "@/errors/AppError";
+import { getProposalAction } from "@/actions/proposal/getProposal";
+import { ProposalWithDetails } from "@/repositories/IProposalRepository";
 
 interface IOverviewTab {
-  project: ProjectWithDetails;
+  params: Promise<{ projectId: string }>;
 }
 
-export async function OverviewTab({ project }: IOverviewTab) {
-  const [fetchServicesError, fetchServicesSuccess] = await operationWrapper<{
-    serviceTypes: FetchServiceTypeWithCategory[];
-  }>(
-    "action",
-    "fetchServiceTypeAction",
-    () => {
-      return fetchServiceTypeAction();
-    },
-    {
-      cache: "no-cache",
-    }
-  );
+export default async function OverviewTab({ params }: IOverviewTab) {
+  const { projectId } = await getParams<{
+    projectId: string;
+  }>(params, ["projectId"]);
 
+  const [projectResponse, serviceResponse] = await Promise.all([
+    operationWrapper<{
+      project: ProjectWithDetails;
+    }>(
+      "action",
+      "getProjectAction",
+      () => {
+        return getProjectAction(projectId);
+      },
+      {
+        cache: "no-cache",
+      }
+    ),
+    operationWrapper<{
+      serviceTypes: FetchServiceTypeWithCategory[];
+    }>(
+      "action",
+      "fetchServiceTypeAction",
+      () => {
+        return fetchServiceTypeAction();
+      },
+      {
+        cache: "no-cache",
+      }
+    ),
+  ]);
+
+  const [getProjectError, getProjectSuccess] = projectResponse;
+
+  if (getProjectError) {
+    throw new AppError("Erro ao tentar localizar os projetos da Organização");
+  }
+
+  const [fetchServicesError, fetchServicesSuccess] = serviceResponse;
+
+  const project = getProjectSuccess.project;
   const services = fetchServicesError ? [] : fetchServicesSuccess.serviceTypes;
+  let contextualData: any = services;
+  if (project.status === "PROPOSAL") {
+    const [proposalError, proposalSuccess] =
+      await operationWrapper<ProposalWithDetails>(
+        "action",
+        "getProposalAction",
+        () => {
+          return getProposalAction(project.proposal.id);
+        },
+        {
+          cache: "no-cache",
+        }
+      );
+
+    if (!proposalError && proposalSuccess) contextualData = proposalSuccess;
+  }
+
+  console.log(JSON.stringify(contextualData,null,2))
   return (
     <TabsContent value="overview" className="space-y-6 mt-6">
       {/* Summary Section */}
@@ -60,7 +109,7 @@ export async function OverviewTab({ project }: IOverviewTab) {
 
         <ProjectDocuments project={project} />
       </div>
-      <ProjectTimeline project={project} contextData={services} />
+      <ProjectTimeline project={project} contextData={contextualData} />
 
       {/* Observations Section */}
       <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6">

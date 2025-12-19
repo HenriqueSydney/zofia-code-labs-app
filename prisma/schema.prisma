@@ -82,12 +82,14 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Ações realizadas pelo usuário
-  createdProposals Proposal[]
   createdProjects  Project[]
   loginHistories   LoginHistory[]
   projectNotes     ProjectNote[]
   auditLogs        AuditLog[]
+  createdProposals Proposal[]     @relation("create_user")
+
+  approvedProposals Proposal[] @relation("approve_user")
+  reviwedProposals  Proposal[] @relation("review_user")
 
   @@map("users")
   @@schema("identity")
@@ -242,9 +244,8 @@ model Client {
   phone       String  @db.VarChar(20)
   address     String? @db.Text
 
-  projects  Project[]
-  proposals Proposal[]
-  invoices  Invoice[]
+  projects Project[]
+  invoices Invoice[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -258,7 +259,9 @@ model Client {
 
 enum ProposalStatus {
   DRAFT
+  REVIEW
   SENT
+  APPROVED
   ACCEPTED
   REJECTED
 
@@ -273,33 +276,39 @@ enum ProposalSource {
 }
 
 model Proposal {
-  id String @id @default(cuid())
+  id        String  @id @default(cuid())
+  version   Int     @default(1)
+  isCurrent Boolean @default(true) @map("is_current")
 
-  clientId   String         @map("client_id")
-  client     Client         @relation(fields: [clientId], references: [id])
   status     ProposalStatus @default(DRAFT)
   totalValue Decimal        @map("total_value") @db.Decimal(10, 2)
   validUntil DateTime?      @map("valid_until")
 
-  createdBy String @map("created_by")
-  user      User   @relation(fields: [createdBy], references: [id])
-
-  sourceType ProposalSource @default(SYSTEM_TEMPLATE) @map("source_type")
-
-  templateId String?           @map("template_id")
-  template   ProposalTemplate? @relation(fields: [templateId], references: [id])
+  createdBy   String         @map("created_by")
+  createdUser User           @relation(name: "create_user", fields: [createdBy], references: [id])
+  sourceType  ProposalSource @default(SYSTEM_TEMPLATE) @map("source_type")
 
   fileKey String? @map("file_key")
   fileUrl String? @map("file_url") // Opcional: Cache da URL pública se for bucket público
 
-  items ProposalItem[]
+  items            ProposalItem[]
+  proposalTemplate ProposalTemplate?
 
-  generatedProjectId String  @unique @map("generated_project_id")
-  project            Project @relation(fields: [generatedProjectId], references: [id])
+  projectId String  @map("project_id")
+  project   Project @relation(fields: [projectId], references: [id])
+
+  reviewedAt DateTime?
+  reviewedBy String?   @map("reviewed_by")
+  reviewUser User?     @relation(name: "review_user", fields: [reviewedBy], references: [id])
+
+  approvedAt   DateTime?
+  approvedBy   String?   @map("approved_by")
+  approvedUser User?     @relation(name: "approve_user", fields: [approvedBy], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([projectId, version])
   @@map("proposals")
   @@schema("crm")
 }
@@ -315,10 +324,11 @@ model ProposalTemplate {
   isDefault Boolean @default(false) @map("is_default")
   isActive  Boolean @default(true) @map("is_active")
 
-  proposals Proposal[]
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  proposalId String   @unique @map("proposal_id")
+  proposal   Proposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
 
   @@map("proposal_templates")
   @@schema("crm")
@@ -339,7 +349,6 @@ model ProposalItem {
   serviceTypeId String      @map("service_type_id")
   serviceType   ServiceType @relation(fields: [serviceTypeId], references: [id])
 
-  description  String?      @db.Text
   price        Decimal      @db.Decimal(10, 2)
   discount     Decimal      @default(0) @db.Decimal(10, 2)
   discountType DiscountType @default(FIXED) @map("discount_type")
@@ -399,7 +408,7 @@ model Project {
   createdBy String @map("created_by")
   user      User   @relation(fields: [createdBy], references: [id])
 
-  proposal Proposal?
+  proposal Proposal[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

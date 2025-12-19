@@ -11,6 +11,7 @@ import {
   Key,
   LayoutDashboard,
   UsersRound,
+  Boxes,
 } from "lucide-react";
 import {
   Sidebar,
@@ -34,9 +35,9 @@ const mainMenuItems = [
 
 const settingsMenuItems = [
   {
-    title: "Categoria de Serviços",
+    title: "Categorias de Serviço",
     url: "/settings/services/category",
-    icon: Package,
+    icon: Boxes,
   },
   {
     title: "Catálogo de Serviços",
@@ -81,7 +82,7 @@ export function AdminSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>
             <Settings />
-            <span className="group-data-[collapsible=icon]:hidden">
+            <span className="ml-1 group-data-[collapsible=icon]:hidden">
               Configurações
             </span>
           </SidebarGroupLabel>

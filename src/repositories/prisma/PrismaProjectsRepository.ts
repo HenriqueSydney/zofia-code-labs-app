@@ -21,7 +21,7 @@ import { PrismaToPlain } from "@/@types/PrismaToPlain";
 export class PrismaProjectsRepository implements IProjectsRepository {
   async create(
     data: ICreateProjectDTO
-  ): Promise<Omit<ProjectWithDetails, "projectServices">> {
+  ): Promise<Omit<ProjectWithDetails, "projectServices" | "proposal">> {
     // Desestrutura 'documents' ao invés de 'documentUrls'
     const { documents, ...projectData } = data;
 
@@ -61,6 +61,14 @@ export class PrismaProjectsRepository implements IProjectsRepository {
       include: {
         client: { select: { id: true, companyName: true } },
         projectDocuments: true,
+        proposal: {
+          where: { isCurrent: true },
+          take: 1, // Otimização para pegar apenas a atual
+          include: {
+            items: true,
+            proposalTemplate: true,
+          },
+        },
         projectServices: {
           include: {
             serviceType: true,
@@ -69,9 +77,15 @@ export class PrismaProjectsRepository implements IProjectsRepository {
       },
     });
 
-    const plain = normalizePrisma(project);
+    if (!project) return null;
 
-    return plain as any;
+    const plain = normalizePrisma({
+      ...project,
+      proposal: project.proposal[0] || null,
+    });
+    // 2. Normalização para o Tipo ProjectWithDetails
+    // Transformamos o array 'proposal' em um objeto único 'currentProposal'
+    return plain as ProjectWithDetails;
   }
 
   async findAll(
@@ -118,7 +132,7 @@ export class PrismaProjectsRepository implements IProjectsRepository {
 
   async update(
     data: IUpdateProjectDTO
-  ): Promise<Omit<ProjectWithDetails, "projectServices">> {
+  ): Promise<Omit<ProjectWithDetails, "projectServices" | "proposal">> {
     // Ajuste para receber documents
     const { id, documents, ...updateData } = data;
 
@@ -180,7 +194,7 @@ export class PrismaProjectsRepository implements IProjectsRepository {
   async addDocuments(
     projectId: string,
     documents: DocumentInput[]
-  ): Promise<Omit<ProjectWithDetails, "projectServices">> {
+  ): Promise<Omit<ProjectWithDetails, "projectServices" | "proposal">> {
     const project = await prisma.project.update({
       where: { id: projectId },
       data: {

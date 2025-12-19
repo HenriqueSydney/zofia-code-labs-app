@@ -7,24 +7,54 @@ import {
   UpdateProposalDTO,
 } from "../IProposalRepository";
 import { Prisma, Proposal, ProposalStatus } from "@/generated/prisma/client";
+import { normalizePrisma } from "@/utils/normalizePrisma";
 
 export class PrismaProposalRepository implements IProposalRepository {
   async create(
     data: CreateProposalDTO,
     tx?: Prisma.TransactionClient
   ): Promise<Proposal> {
-    const client = tx || prisma;
-    return await client.proposal.create({
+    if (tx) {
+      return this.executeCreateLogic(data, tx);
+    }
+
+    return await prisma.$transaction((newTx) => {
+      return this.executeCreateLogic(data, newTx);
+    });
+  }
+
+  private async executeCreateLogic(
+    data: CreateProposalDTO,
+    tx: Prisma.TransactionClient
+  ): Promise<Proposal> {
+    // 1. Buscar a última versão para este projeto
+    const lastProposal = await tx.proposal.findFirst({
+      where: { projectId: data.projectId },
+      orderBy: { version: "desc" },
+      select: { version: true },
+    });
+
+    const nextVersion = (lastProposal?.version ?? 0) + 1;
+
+    // 2. Marcar versões anteriores como não atuais (opcional, se usar isCurrent)
+    await tx.proposal.updateMany({
+      where: { projectId: data.projectId, isCurrent: true },
+      data: { isCurrent: false, status: "REJECTED" },
+    });
+
+    // 3. Criar a nova versão (Snapshot)
+    const proposal = await tx.proposal.create({
       data: {
-        clientId: data.clientId,
+        projectId: data.projectId,
         createdBy: data.createdBy,
         validUntil: data.validUntil,
-        totalValue: data.totalValue, // Prisma converte number para Decimal automaticamente
+        totalValue: data.totalValue,
         status: "DRAFT",
+        version: nextVersion,
+        isCurrent: true,
         items: {
           create: data.items.map((item) => ({
             serviceTypeId: item.serviceTypeId,
-            description: item.description,
             price: item.price,
             discount: item.discount,
             discountType: item.discountType,
@@ -36,10 +66,12 @@ export class PrismaProposalRepository implements IProposalRepository {
         items: true,
       },
     });
+
+    return normalizePrisma(proposal);
   }
 
   async findById(id: string): Promise<ProposalWithDetails | null> {
-    return (await prisma.proposal.findUnique({
+    const proposal = await prisma.proposal.findUnique({
       where: { id },
       include: {
         items: {
@@ -47,28 +79,72 @@ export class PrismaProposalRepository implements IProposalRepository {
             serviceType: { select: { name: true } }, // Trazendo info extra do tipo de serviço
           },
         },
-        client: {
-          select: { tradeName: true, email: true }, // Otimização: trazer só o necessário
+        proposalTemplate: {
+          include: { template: { select: { title: true } } },
         },
-        user: {
+        project: {
+          select: {
+            organizationId: true,
+            client: { select: { tradeName: true, email: true } },
+          }, // Otimização: trazer só o necessário
+        },
+        createdUser: {
+          select: { name: true },
+        },
+        approvedUser: {
+          select: { name: true },
+        },
+        reviewUser: {
           select: { name: true },
         },
       },
-    })) as ProposalWithDetails | null;
+    });
+
+    return normalizePrisma(proposal);
+  }
+
+  async getHistory(projectId: string): Promise<ProposalWithDetails[]> {
+    const history = await prisma.proposal.findMany({
+      where: { projectId },
+      include: {
+        items: {
+          include: {
+            serviceType: { select: { name: true } }, // Trazendo info extra do tipo de serviço
+          },
+        },
+        project: {
+          select: { client: { select: { tradeName: true, email: true } } }, // Otimização: trazer só o necessário
+        },
+        proposalTemplate: {
+          include: { template: { select: { title: true } } },
+        },
+        createdUser: {
+          select: { name: true },
+        },
+        approvedUser: {
+          select: { name: true },
+        },
+        reviewUser: {
+          select: { name: true },
+        },
+      },
+      orderBy: { version: "desc" },
+    });
+
+    const plain = history.map(normalizePrisma);
+
+    return plain as any;
   }
 
   async findAllByClient(clientId: string): Promise<Proposal[]> {
-    return await prisma.proposal.findMany({
-      where: { clientId },
-      orderBy: { createdAt: "desc" },
+    const proposals = await prisma.proposal.findMany({
+      where: { project: { clientId }, isCurrent: true },
+      orderBy: { version: "desc" },
     });
-  }
 
-  async findAllByProjectId(projectId: string): Promise<Proposal[]> {
-    return await prisma.proposal.findMany({
-      where: { generatedProjectId: projectId },
-      orderBy: { createdAt: "desc" },
-    });
+    const plain = proposals.map(normalizePrisma);
+
+    return plain as any;
   }
 
   async update(
@@ -119,7 +195,6 @@ export class PrismaProposalRepository implements IProposalRepository {
             items: {
               create: newItems.map((item) => ({
                 serviceTypeId: item.serviceTypeId,
-                description: item.description,
                 price: item.price,
                 discount: item.discount,
                 discountType: item.discountType,
@@ -144,7 +219,6 @@ export class PrismaProposalRepository implements IProposalRepository {
           items: {
             create: newItems.map((item) => ({
               serviceTypeId: item.serviceTypeId,
-              description: item.description,
               price: item.price,
               discount: item.discount,
               discountType: item.discountType,

@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === "test") {
 }
 
 if (process.env.NODE_ENV === "development") {
-  logLevel = [...logLevel, "query"];
+  logLevel = [...logLevel];
 }
 
 const pool = new Pool({
@@ -24,7 +24,7 @@ export const prisma =
   new PrismaClient({
     adapter,
     errorFormat: "pretty",
-    log: logLevel,
+    log: ["error"],
   });
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;

@@ -27,57 +27,71 @@ export type AggregateProposal = {
 }
 
 export type ProposalAvgAggregateOutputType = {
+  version: number | null
   totalValue: runtime.Decimal | null
 }
 
 export type ProposalSumAggregateOutputType = {
+  version: number | null
   totalValue: runtime.Decimal | null
 }
 
 export type ProposalMinAggregateOutputType = {
   id: string | null
-  clientId: string | null
+  version: number | null
+  isCurrent: boolean | null
   status: $Enums.ProposalStatus | null
   totalValue: runtime.Decimal | null
   validUntil: Date | null
   createdBy: string | null
   sourceType: $Enums.ProposalSource | null
-  templateId: string | null
   fileKey: string | null
   fileUrl: string | null
-  generatedProjectId: string | null
+  projectId: string | null
+  reviewedAt: Date | null
+  reviewedBy: string | null
+  approvedAt: Date | null
+  approvedBy: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type ProposalMaxAggregateOutputType = {
   id: string | null
-  clientId: string | null
+  version: number | null
+  isCurrent: boolean | null
   status: $Enums.ProposalStatus | null
   totalValue: runtime.Decimal | null
   validUntil: Date | null
   createdBy: string | null
   sourceType: $Enums.ProposalSource | null
-  templateId: string | null
   fileKey: string | null
   fileUrl: string | null
-  generatedProjectId: string | null
+  projectId: string | null
+  reviewedAt: Date | null
+  reviewedBy: string | null
+  approvedAt: Date | null
+  approvedBy: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type ProposalCountAggregateOutputType = {
   id: number
-  clientId: number
+  version: number
+  isCurrent: number
   status: number
   totalValue: number
   validUntil: number
   createdBy: number
   sourceType: number
-  templateId: number
   fileKey: number
   fileUrl: number
-  generatedProjectId: number
+  projectId: number
+  reviewedAt: number
+  reviewedBy: number
+  approvedAt: number
+  approvedBy: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -85,57 +99,71 @@ export type ProposalCountAggregateOutputType = {
 
 
 export type ProposalAvgAggregateInputType = {
+  version?: true
   totalValue?: true
 }
 
 export type ProposalSumAggregateInputType = {
+  version?: true
   totalValue?: true
 }
 
 export type ProposalMinAggregateInputType = {
   id?: true
-  clientId?: true
+  version?: true
+  isCurrent?: true
   status?: true
   totalValue?: true
   validUntil?: true
   createdBy?: true
   sourceType?: true
-  templateId?: true
   fileKey?: true
   fileUrl?: true
-  generatedProjectId?: true
+  projectId?: true
+  reviewedAt?: true
+  reviewedBy?: true
+  approvedAt?: true
+  approvedBy?: true
   createdAt?: true
   updatedAt?: true
 }
 
 export type ProposalMaxAggregateInputType = {
   id?: true
-  clientId?: true
+  version?: true
+  isCurrent?: true
   status?: true
   totalValue?: true
   validUntil?: true
   createdBy?: true
   sourceType?: true
-  templateId?: true
   fileKey?: true
   fileUrl?: true
-  generatedProjectId?: true
+  projectId?: true
+  reviewedAt?: true
+  reviewedBy?: true
+  approvedAt?: true
+  approvedBy?: true
   createdAt?: true
   updatedAt?: true
 }
 
 export type ProposalCountAggregateInputType = {
   id?: true
-  clientId?: true
+  version?: true
+  isCurrent?: true
   status?: true
   totalValue?: true
   validUntil?: true
   createdBy?: true
   sourceType?: true
-  templateId?: true
   fileKey?: true
   fileUrl?: true
-  generatedProjectId?: true
+  projectId?: true
+  reviewedAt?: true
+  reviewedBy?: true
+  approvedAt?: true
+  approvedBy?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -229,16 +257,20 @@ export type ProposalGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 
 export type ProposalGroupByOutputType = {
   id: string
-  clientId: string
+  version: number
+  isCurrent: boolean
   status: $Enums.ProposalStatus
   totalValue: runtime.Decimal
   validUntil: Date | null
   createdBy: string
   sourceType: $Enums.ProposalSource
-  templateId: string | null
   fileKey: string | null
   fileUrl: string | null
-  generatedProjectId: string | null
+  projectId: string
+  reviewedAt: Date | null
+  reviewedBy: string | null
+  approvedAt: Date | null
+  approvedBy: string | null
   createdAt: Date
   updatedAt: Date
   _count: ProposalCountAggregateOutputType | null
@@ -268,82 +300,102 @@ export type ProposalWhereInput = {
   OR?: Prisma.ProposalWhereInput[]
   NOT?: Prisma.ProposalWhereInput | Prisma.ProposalWhereInput[]
   id?: Prisma.StringFilter<"Proposal"> | string
-  clientId?: Prisma.StringFilter<"Proposal"> | string
+  version?: Prisma.IntFilter<"Proposal"> | number
+  isCurrent?: Prisma.BoolFilter<"Proposal"> | boolean
   status?: Prisma.EnumProposalStatusFilter<"Proposal"> | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFilter<"Proposal"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.DateTimeNullableFilter<"Proposal"> | Date | string | null
   createdBy?: Prisma.StringFilter<"Proposal"> | string
   sourceType?: Prisma.EnumProposalSourceFilter<"Proposal"> | $Enums.ProposalSource
-  templateId?: Prisma.StringNullableFilter<"Proposal"> | string | null
   fileKey?: Prisma.StringNullableFilter<"Proposal"> | string | null
   fileUrl?: Prisma.StringNullableFilter<"Proposal"> | string | null
-  generatedProjectId?: Prisma.StringNullableFilter<"Proposal"> | string | null
+  projectId?: Prisma.StringFilter<"Proposal"> | string
+  reviewedAt?: Prisma.DateTimeNullableFilter<"Proposal"> | Date | string | null
+  reviewedBy?: Prisma.StringNullableFilter<"Proposal"> | string | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"Proposal"> | Date | string | null
+  approvedBy?: Prisma.StringNullableFilter<"Proposal"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Proposal"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Proposal"> | Date | string
-  client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  template?: Prisma.XOR<Prisma.ProposalTemplateNullableScalarRelationFilter, Prisma.ProposalTemplateWhereInput> | null
+  createdUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   items?: Prisma.ProposalItemListRelationFilter
-  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
+  proposalTemplate?: Prisma.XOR<Prisma.ProposalTemplateNullableScalarRelationFilter, Prisma.ProposalTemplateWhereInput> | null
+  project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
+  reviewUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  approvedUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
 export type ProposalOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  clientId?: Prisma.SortOrder
+  version?: Prisma.SortOrder
+  isCurrent?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalValue?: Prisma.SortOrder
   validUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
-  templateId?: Prisma.SortOrderInput | Prisma.SortOrder
   fileKey?: Prisma.SortOrderInput | Prisma.SortOrder
   fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  generatedProjectId?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectId?: Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  client?: Prisma.ClientOrderByWithRelationInput
-  user?: Prisma.UserOrderByWithRelationInput
-  template?: Prisma.ProposalTemplateOrderByWithRelationInput
+  createdUser?: Prisma.UserOrderByWithRelationInput
   items?: Prisma.ProposalItemOrderByRelationAggregateInput
+  proposalTemplate?: Prisma.ProposalTemplateOrderByWithRelationInput
   project?: Prisma.ProjectOrderByWithRelationInput
+  reviewUser?: Prisma.UserOrderByWithRelationInput
+  approvedUser?: Prisma.UserOrderByWithRelationInput
 }
 
 export type ProposalWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  generatedProjectId?: string
+  projectId_version?: Prisma.ProposalProjectIdVersionCompoundUniqueInput
   AND?: Prisma.ProposalWhereInput | Prisma.ProposalWhereInput[]
   OR?: Prisma.ProposalWhereInput[]
   NOT?: Prisma.ProposalWhereInput | Prisma.ProposalWhereInput[]
-  clientId?: Prisma.StringFilter<"Proposal"> | string
+  version?: Prisma.IntFilter<"Proposal"> | number
+  isCurrent?: Prisma.BoolFilter<"Proposal"> | boolean
   status?: Prisma.EnumProposalStatusFilter<"Proposal"> | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFilter<"Proposal"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.DateTimeNullableFilter<"Proposal"> | Date | string | null
   createdBy?: Prisma.StringFilter<"Proposal"> | string
   sourceType?: Prisma.EnumProposalSourceFilter<"Proposal"> | $Enums.ProposalSource
-  templateId?: Prisma.StringNullableFilter<"Proposal"> | string | null
   fileKey?: Prisma.StringNullableFilter<"Proposal"> | string | null
   fileUrl?: Prisma.StringNullableFilter<"Proposal"> | string | null
+  projectId?: Prisma.StringFilter<"Proposal"> | string
+  reviewedAt?: Prisma.DateTimeNullableFilter<"Proposal"> | Date | string | null
+  reviewedBy?: Prisma.StringNullableFilter<"Proposal"> | string | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"Proposal"> | Date | string | null
+  approvedBy?: Prisma.StringNullableFilter<"Proposal"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Proposal"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Proposal"> | Date | string
-  client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  template?: Prisma.XOR<Prisma.ProposalTemplateNullableScalarRelationFilter, Prisma.ProposalTemplateWhereInput> | null
+  createdUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   items?: Prisma.ProposalItemListRelationFilter
-  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
-}, "id" | "generatedProjectId">
+  proposalTemplate?: Prisma.XOR<Prisma.ProposalTemplateNullableScalarRelationFilter, Prisma.ProposalTemplateWhereInput> | null
+  project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
+  reviewUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  approvedUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+}, "id" | "projectId_version">
 
 export type ProposalOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  clientId?: Prisma.SortOrder
+  version?: Prisma.SortOrder
+  isCurrent?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalValue?: Prisma.SortOrder
   validUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
-  templateId?: Prisma.SortOrderInput | Prisma.SortOrder
   fileKey?: Prisma.SortOrderInput | Prisma.SortOrder
   fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  generatedProjectId?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectId?: Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ProposalCountOrderByAggregateInput
@@ -358,128 +410,164 @@ export type ProposalScalarWhereWithAggregatesInput = {
   OR?: Prisma.ProposalScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ProposalScalarWhereWithAggregatesInput | Prisma.ProposalScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Proposal"> | string
-  clientId?: Prisma.StringWithAggregatesFilter<"Proposal"> | string
+  version?: Prisma.IntWithAggregatesFilter<"Proposal"> | number
+  isCurrent?: Prisma.BoolWithAggregatesFilter<"Proposal"> | boolean
   status?: Prisma.EnumProposalStatusWithAggregatesFilter<"Proposal"> | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalWithAggregatesFilter<"Proposal"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"Proposal"> | Date | string | null
   createdBy?: Prisma.StringWithAggregatesFilter<"Proposal"> | string
   sourceType?: Prisma.EnumProposalSourceWithAggregatesFilter<"Proposal"> | $Enums.ProposalSource
-  templateId?: Prisma.StringNullableWithAggregatesFilter<"Proposal"> | string | null
   fileKey?: Prisma.StringNullableWithAggregatesFilter<"Proposal"> | string | null
   fileUrl?: Prisma.StringNullableWithAggregatesFilter<"Proposal"> | string | null
-  generatedProjectId?: Prisma.StringNullableWithAggregatesFilter<"Proposal"> | string | null
+  projectId?: Prisma.StringWithAggregatesFilter<"Proposal"> | string
+  reviewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Proposal"> | Date | string | null
+  reviewedBy?: Prisma.StringNullableWithAggregatesFilter<"Proposal"> | string | null
+  approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Proposal"> | Date | string | null
+  approvedBy?: Prisma.StringNullableWithAggregatesFilter<"Proposal"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Proposal"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Proposal"> | Date | string
 }
 
 export type ProposalCreateInput = {
   id?: string
+  version?: number
+  isCurrent?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
   fileKey?: string | null
   fileUrl?: string | null
+  reviewedAt?: Date | string | null
+  approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  client: Prisma.ClientCreateNestedOneWithoutProposalsInput
-  user: Prisma.UserCreateNestedOneWithoutCreatedProposalsInput
-  template?: Prisma.ProposalTemplateCreateNestedOneWithoutProposalsInput
+  createdUser: Prisma.UserCreateNestedOneWithoutCreatedProposalsInput
   items?: Prisma.ProposalItemCreateNestedManyWithoutProposalInput
-  project?: Prisma.ProjectCreateNestedOneWithoutProposalInput
+  proposalTemplate?: Prisma.ProposalTemplateCreateNestedOneWithoutProposalInput
+  project: Prisma.ProjectCreateNestedOneWithoutProposalInput
+  reviewUser?: Prisma.UserCreateNestedOneWithoutReviwedProposalsInput
+  approvedUser?: Prisma.UserCreateNestedOneWithoutApprovedProposalsInput
 }
 
 export type ProposalUncheckedCreateInput = {
   id?: string
-  clientId: string
+  version?: number
+  isCurrent?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   createdBy: string
   sourceType?: $Enums.ProposalSource
-  templateId?: string | null
   fileKey?: string | null
   fileUrl?: string | null
-  generatedProjectId?: string | null
+  projectId: string
+  reviewedAt?: Date | string | null
+  reviewedBy?: string | null
+  approvedAt?: Date | string | null
+  approvedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutProposalInput
+  proposalTemplate?: Prisma.ProposalTemplateUncheckedCreateNestedOneWithoutProposalInput
 }
 
 export type ProposalUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  client?: Prisma.ClientUpdateOneRequiredWithoutProposalsNestedInput
-  user?: Prisma.UserUpdateOneRequiredWithoutCreatedProposalsNestedInput
-  template?: Prisma.ProposalTemplateUpdateOneWithoutProposalsNestedInput
+  createdUser?: Prisma.UserUpdateOneRequiredWithoutCreatedProposalsNestedInput
   items?: Prisma.ProposalItemUpdateManyWithoutProposalNestedInput
-  project?: Prisma.ProjectUpdateOneWithoutProposalNestedInput
+  proposalTemplate?: Prisma.ProposalTemplateUpdateOneWithoutProposalNestedInput
+  project?: Prisma.ProjectUpdateOneRequiredWithoutProposalNestedInput
+  reviewUser?: Prisma.UserUpdateOneWithoutReviwedProposalsNestedInput
+  approvedUser?: Prisma.UserUpdateOneWithoutApprovedProposalsNestedInput
 }
 
 export type ProposalUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
-  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  generatedProjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
+  proposalTemplate?: Prisma.ProposalTemplateUncheckedUpdateOneWithoutProposalNestedInput
 }
 
 export type ProposalCreateManyInput = {
   id?: string
-  clientId: string
+  version?: number
+  isCurrent?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   createdBy: string
   sourceType?: $Enums.ProposalSource
-  templateId?: string | null
   fileKey?: string | null
   fileUrl?: string | null
-  generatedProjectId?: string | null
+  projectId: string
+  reviewedAt?: Date | string | null
+  reviewedBy?: string | null
+  approvedAt?: Date | string | null
+  approvedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type ProposalUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ProposalUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
-  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  generatedProjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -494,59 +582,78 @@ export type ProposalOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type ProposalProjectIdVersionCompoundUniqueInput = {
+  projectId: string
+  version: number
+}
+
 export type ProposalCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  clientId?: Prisma.SortOrder
+  version?: Prisma.SortOrder
+  isCurrent?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalValue?: Prisma.SortOrder
   validUntil?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
-  templateId?: Prisma.SortOrder
   fileKey?: Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
-  generatedProjectId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrder
+  reviewedBy?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type ProposalAvgOrderByAggregateInput = {
+  version?: Prisma.SortOrder
   totalValue?: Prisma.SortOrder
 }
 
 export type ProposalMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  clientId?: Prisma.SortOrder
+  version?: Prisma.SortOrder
+  isCurrent?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalValue?: Prisma.SortOrder
   validUntil?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
-  templateId?: Prisma.SortOrder
   fileKey?: Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
-  generatedProjectId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrder
+  reviewedBy?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type ProposalMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  clientId?: Prisma.SortOrder
+  version?: Prisma.SortOrder
+  isCurrent?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalValue?: Prisma.SortOrder
   validUntil?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
-  templateId?: Prisma.SortOrder
   fileKey?: Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
-  generatedProjectId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrder
+  reviewedBy?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type ProposalSumOrderByAggregateInput = {
+  version?: Prisma.SortOrder
   totalValue?: Prisma.SortOrder
 }
 
@@ -555,93 +662,138 @@ export type ProposalScalarRelationFilter = {
   isNot?: Prisma.ProposalWhereInput
 }
 
-export type ProposalNullableScalarRelationFilter = {
-  is?: Prisma.ProposalWhereInput | null
-  isNot?: Prisma.ProposalWhereInput | null
-}
-
-export type ProposalCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.ProposalCreateWithoutUserInput, Prisma.ProposalUncheckedCreateWithoutUserInput> | Prisma.ProposalCreateWithoutUserInput[] | Prisma.ProposalUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutUserInput | Prisma.ProposalCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.ProposalCreateManyUserInputEnvelope
+export type ProposalCreateNestedManyWithoutCreatedUserInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutCreatedUserInput, Prisma.ProposalUncheckedCreateWithoutCreatedUserInput> | Prisma.ProposalCreateWithoutCreatedUserInput[] | Prisma.ProposalUncheckedCreateWithoutCreatedUserInput[]
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutCreatedUserInput | Prisma.ProposalCreateOrConnectWithoutCreatedUserInput[]
+  createMany?: Prisma.ProposalCreateManyCreatedUserInputEnvelope
   connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
 }
 
-export type ProposalUncheckedCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.ProposalCreateWithoutUserInput, Prisma.ProposalUncheckedCreateWithoutUserInput> | Prisma.ProposalCreateWithoutUserInput[] | Prisma.ProposalUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutUserInput | Prisma.ProposalCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.ProposalCreateManyUserInputEnvelope
+export type ProposalCreateNestedManyWithoutApprovedUserInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutApprovedUserInput, Prisma.ProposalUncheckedCreateWithoutApprovedUserInput> | Prisma.ProposalCreateWithoutApprovedUserInput[] | Prisma.ProposalUncheckedCreateWithoutApprovedUserInput[]
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutApprovedUserInput | Prisma.ProposalCreateOrConnectWithoutApprovedUserInput[]
+  createMany?: Prisma.ProposalCreateManyApprovedUserInputEnvelope
   connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
 }
 
-export type ProposalUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.ProposalCreateWithoutUserInput, Prisma.ProposalUncheckedCreateWithoutUserInput> | Prisma.ProposalCreateWithoutUserInput[] | Prisma.ProposalUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutUserInput | Prisma.ProposalCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.ProposalUpsertWithWhereUniqueWithoutUserInput | Prisma.ProposalUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.ProposalCreateManyUserInputEnvelope
+export type ProposalCreateNestedManyWithoutReviewUserInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutReviewUserInput, Prisma.ProposalUncheckedCreateWithoutReviewUserInput> | Prisma.ProposalCreateWithoutReviewUserInput[] | Prisma.ProposalUncheckedCreateWithoutReviewUserInput[]
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutReviewUserInput | Prisma.ProposalCreateOrConnectWithoutReviewUserInput[]
+  createMany?: Prisma.ProposalCreateManyReviewUserInputEnvelope
+  connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+}
+
+export type ProposalUncheckedCreateNestedManyWithoutCreatedUserInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutCreatedUserInput, Prisma.ProposalUncheckedCreateWithoutCreatedUserInput> | Prisma.ProposalCreateWithoutCreatedUserInput[] | Prisma.ProposalUncheckedCreateWithoutCreatedUserInput[]
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutCreatedUserInput | Prisma.ProposalCreateOrConnectWithoutCreatedUserInput[]
+  createMany?: Prisma.ProposalCreateManyCreatedUserInputEnvelope
+  connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+}
+
+export type ProposalUncheckedCreateNestedManyWithoutApprovedUserInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutApprovedUserInput, Prisma.ProposalUncheckedCreateWithoutApprovedUserInput> | Prisma.ProposalCreateWithoutApprovedUserInput[] | Prisma.ProposalUncheckedCreateWithoutApprovedUserInput[]
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutApprovedUserInput | Prisma.ProposalCreateOrConnectWithoutApprovedUserInput[]
+  createMany?: Prisma.ProposalCreateManyApprovedUserInputEnvelope
+  connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+}
+
+export type ProposalUncheckedCreateNestedManyWithoutReviewUserInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutReviewUserInput, Prisma.ProposalUncheckedCreateWithoutReviewUserInput> | Prisma.ProposalCreateWithoutReviewUserInput[] | Prisma.ProposalUncheckedCreateWithoutReviewUserInput[]
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutReviewUserInput | Prisma.ProposalCreateOrConnectWithoutReviewUserInput[]
+  createMany?: Prisma.ProposalCreateManyReviewUserInputEnvelope
+  connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+}
+
+export type ProposalUpdateManyWithoutCreatedUserNestedInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutCreatedUserInput, Prisma.ProposalUncheckedCreateWithoutCreatedUserInput> | Prisma.ProposalCreateWithoutCreatedUserInput[] | Prisma.ProposalUncheckedCreateWithoutCreatedUserInput[]
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutCreatedUserInput | Prisma.ProposalCreateOrConnectWithoutCreatedUserInput[]
+  upsert?: Prisma.ProposalUpsertWithWhereUniqueWithoutCreatedUserInput | Prisma.ProposalUpsertWithWhereUniqueWithoutCreatedUserInput[]
+  createMany?: Prisma.ProposalCreateManyCreatedUserInputEnvelope
   set?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
   disconnect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
   delete?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
   connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
-  update?: Prisma.ProposalUpdateWithWhereUniqueWithoutUserInput | Prisma.ProposalUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.ProposalUpdateManyWithWhereWithoutUserInput | Prisma.ProposalUpdateManyWithWhereWithoutUserInput[]
+  update?: Prisma.ProposalUpdateWithWhereUniqueWithoutCreatedUserInput | Prisma.ProposalUpdateWithWhereUniqueWithoutCreatedUserInput[]
+  updateMany?: Prisma.ProposalUpdateManyWithWhereWithoutCreatedUserInput | Prisma.ProposalUpdateManyWithWhereWithoutCreatedUserInput[]
   deleteMany?: Prisma.ProposalScalarWhereInput | Prisma.ProposalScalarWhereInput[]
 }
 
-export type ProposalUncheckedUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.ProposalCreateWithoutUserInput, Prisma.ProposalUncheckedCreateWithoutUserInput> | Prisma.ProposalCreateWithoutUserInput[] | Prisma.ProposalUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutUserInput | Prisma.ProposalCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.ProposalUpsertWithWhereUniqueWithoutUserInput | Prisma.ProposalUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.ProposalCreateManyUserInputEnvelope
+export type ProposalUpdateManyWithoutApprovedUserNestedInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutApprovedUserInput, Prisma.ProposalUncheckedCreateWithoutApprovedUserInput> | Prisma.ProposalCreateWithoutApprovedUserInput[] | Prisma.ProposalUncheckedCreateWithoutApprovedUserInput[]
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutApprovedUserInput | Prisma.ProposalCreateOrConnectWithoutApprovedUserInput[]
+  upsert?: Prisma.ProposalUpsertWithWhereUniqueWithoutApprovedUserInput | Prisma.ProposalUpsertWithWhereUniqueWithoutApprovedUserInput[]
+  createMany?: Prisma.ProposalCreateManyApprovedUserInputEnvelope
   set?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
   disconnect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
   delete?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
   connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
-  update?: Prisma.ProposalUpdateWithWhereUniqueWithoutUserInput | Prisma.ProposalUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.ProposalUpdateManyWithWhereWithoutUserInput | Prisma.ProposalUpdateManyWithWhereWithoutUserInput[]
+  update?: Prisma.ProposalUpdateWithWhereUniqueWithoutApprovedUserInput | Prisma.ProposalUpdateWithWhereUniqueWithoutApprovedUserInput[]
+  updateMany?: Prisma.ProposalUpdateManyWithWhereWithoutApprovedUserInput | Prisma.ProposalUpdateManyWithWhereWithoutApprovedUserInput[]
   deleteMany?: Prisma.ProposalScalarWhereInput | Prisma.ProposalScalarWhereInput[]
 }
 
-export type ProposalCreateNestedManyWithoutClientInput = {
-  create?: Prisma.XOR<Prisma.ProposalCreateWithoutClientInput, Prisma.ProposalUncheckedCreateWithoutClientInput> | Prisma.ProposalCreateWithoutClientInput[] | Prisma.ProposalUncheckedCreateWithoutClientInput[]
-  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutClientInput | Prisma.ProposalCreateOrConnectWithoutClientInput[]
-  createMany?: Prisma.ProposalCreateManyClientInputEnvelope
-  connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
-}
-
-export type ProposalUncheckedCreateNestedManyWithoutClientInput = {
-  create?: Prisma.XOR<Prisma.ProposalCreateWithoutClientInput, Prisma.ProposalUncheckedCreateWithoutClientInput> | Prisma.ProposalCreateWithoutClientInput[] | Prisma.ProposalUncheckedCreateWithoutClientInput[]
-  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutClientInput | Prisma.ProposalCreateOrConnectWithoutClientInput[]
-  createMany?: Prisma.ProposalCreateManyClientInputEnvelope
-  connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
-}
-
-export type ProposalUpdateManyWithoutClientNestedInput = {
-  create?: Prisma.XOR<Prisma.ProposalCreateWithoutClientInput, Prisma.ProposalUncheckedCreateWithoutClientInput> | Prisma.ProposalCreateWithoutClientInput[] | Prisma.ProposalUncheckedCreateWithoutClientInput[]
-  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutClientInput | Prisma.ProposalCreateOrConnectWithoutClientInput[]
-  upsert?: Prisma.ProposalUpsertWithWhereUniqueWithoutClientInput | Prisma.ProposalUpsertWithWhereUniqueWithoutClientInput[]
-  createMany?: Prisma.ProposalCreateManyClientInputEnvelope
+export type ProposalUpdateManyWithoutReviewUserNestedInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutReviewUserInput, Prisma.ProposalUncheckedCreateWithoutReviewUserInput> | Prisma.ProposalCreateWithoutReviewUserInput[] | Prisma.ProposalUncheckedCreateWithoutReviewUserInput[]
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutReviewUserInput | Prisma.ProposalCreateOrConnectWithoutReviewUserInput[]
+  upsert?: Prisma.ProposalUpsertWithWhereUniqueWithoutReviewUserInput | Prisma.ProposalUpsertWithWhereUniqueWithoutReviewUserInput[]
+  createMany?: Prisma.ProposalCreateManyReviewUserInputEnvelope
   set?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
   disconnect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
   delete?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
   connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
-  update?: Prisma.ProposalUpdateWithWhereUniqueWithoutClientInput | Prisma.ProposalUpdateWithWhereUniqueWithoutClientInput[]
-  updateMany?: Prisma.ProposalUpdateManyWithWhereWithoutClientInput | Prisma.ProposalUpdateManyWithWhereWithoutClientInput[]
+  update?: Prisma.ProposalUpdateWithWhereUniqueWithoutReviewUserInput | Prisma.ProposalUpdateWithWhereUniqueWithoutReviewUserInput[]
+  updateMany?: Prisma.ProposalUpdateManyWithWhereWithoutReviewUserInput | Prisma.ProposalUpdateManyWithWhereWithoutReviewUserInput[]
   deleteMany?: Prisma.ProposalScalarWhereInput | Prisma.ProposalScalarWhereInput[]
 }
 
-export type ProposalUncheckedUpdateManyWithoutClientNestedInput = {
-  create?: Prisma.XOR<Prisma.ProposalCreateWithoutClientInput, Prisma.ProposalUncheckedCreateWithoutClientInput> | Prisma.ProposalCreateWithoutClientInput[] | Prisma.ProposalUncheckedCreateWithoutClientInput[]
-  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutClientInput | Prisma.ProposalCreateOrConnectWithoutClientInput[]
-  upsert?: Prisma.ProposalUpsertWithWhereUniqueWithoutClientInput | Prisma.ProposalUpsertWithWhereUniqueWithoutClientInput[]
-  createMany?: Prisma.ProposalCreateManyClientInputEnvelope
+export type ProposalUncheckedUpdateManyWithoutCreatedUserNestedInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutCreatedUserInput, Prisma.ProposalUncheckedCreateWithoutCreatedUserInput> | Prisma.ProposalCreateWithoutCreatedUserInput[] | Prisma.ProposalUncheckedCreateWithoutCreatedUserInput[]
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutCreatedUserInput | Prisma.ProposalCreateOrConnectWithoutCreatedUserInput[]
+  upsert?: Prisma.ProposalUpsertWithWhereUniqueWithoutCreatedUserInput | Prisma.ProposalUpsertWithWhereUniqueWithoutCreatedUserInput[]
+  createMany?: Prisma.ProposalCreateManyCreatedUserInputEnvelope
   set?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
   disconnect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
   delete?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
   connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
-  update?: Prisma.ProposalUpdateWithWhereUniqueWithoutClientInput | Prisma.ProposalUpdateWithWhereUniqueWithoutClientInput[]
-  updateMany?: Prisma.ProposalUpdateManyWithWhereWithoutClientInput | Prisma.ProposalUpdateManyWithWhereWithoutClientInput[]
+  update?: Prisma.ProposalUpdateWithWhereUniqueWithoutCreatedUserInput | Prisma.ProposalUpdateWithWhereUniqueWithoutCreatedUserInput[]
+  updateMany?: Prisma.ProposalUpdateManyWithWhereWithoutCreatedUserInput | Prisma.ProposalUpdateManyWithWhereWithoutCreatedUserInput[]
   deleteMany?: Prisma.ProposalScalarWhereInput | Prisma.ProposalScalarWhereInput[]
+}
+
+export type ProposalUncheckedUpdateManyWithoutApprovedUserNestedInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutApprovedUserInput, Prisma.ProposalUncheckedCreateWithoutApprovedUserInput> | Prisma.ProposalCreateWithoutApprovedUserInput[] | Prisma.ProposalUncheckedCreateWithoutApprovedUserInput[]
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutApprovedUserInput | Prisma.ProposalCreateOrConnectWithoutApprovedUserInput[]
+  upsert?: Prisma.ProposalUpsertWithWhereUniqueWithoutApprovedUserInput | Prisma.ProposalUpsertWithWhereUniqueWithoutApprovedUserInput[]
+  createMany?: Prisma.ProposalCreateManyApprovedUserInputEnvelope
+  set?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  disconnect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  delete?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  update?: Prisma.ProposalUpdateWithWhereUniqueWithoutApprovedUserInput | Prisma.ProposalUpdateWithWhereUniqueWithoutApprovedUserInput[]
+  updateMany?: Prisma.ProposalUpdateManyWithWhereWithoutApprovedUserInput | Prisma.ProposalUpdateManyWithWhereWithoutApprovedUserInput[]
+  deleteMany?: Prisma.ProposalScalarWhereInput | Prisma.ProposalScalarWhereInput[]
+}
+
+export type ProposalUncheckedUpdateManyWithoutReviewUserNestedInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutReviewUserInput, Prisma.ProposalUncheckedCreateWithoutReviewUserInput> | Prisma.ProposalCreateWithoutReviewUserInput[] | Prisma.ProposalUncheckedCreateWithoutReviewUserInput[]
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutReviewUserInput | Prisma.ProposalCreateOrConnectWithoutReviewUserInput[]
+  upsert?: Prisma.ProposalUpsertWithWhereUniqueWithoutReviewUserInput | Prisma.ProposalUpsertWithWhereUniqueWithoutReviewUserInput[]
+  createMany?: Prisma.ProposalCreateManyReviewUserInputEnvelope
+  set?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  disconnect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  delete?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  update?: Prisma.ProposalUpdateWithWhereUniqueWithoutReviewUserInput | Prisma.ProposalUpdateWithWhereUniqueWithoutReviewUserInput[]
+  updateMany?: Prisma.ProposalUpdateManyWithWhereWithoutReviewUserInput | Prisma.ProposalUpdateManyWithWhereWithoutReviewUserInput[]
+  deleteMany?: Prisma.ProposalScalarWhereInput | Prisma.ProposalScalarWhereInput[]
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type EnumProposalStatusFieldUpdateOperationsInput = {
@@ -660,46 +812,18 @@ export type EnumProposalSourceFieldUpdateOperationsInput = {
   set?: $Enums.ProposalSource
 }
 
-export type ProposalCreateNestedManyWithoutTemplateInput = {
-  create?: Prisma.XOR<Prisma.ProposalCreateWithoutTemplateInput, Prisma.ProposalUncheckedCreateWithoutTemplateInput> | Prisma.ProposalCreateWithoutTemplateInput[] | Prisma.ProposalUncheckedCreateWithoutTemplateInput[]
-  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutTemplateInput | Prisma.ProposalCreateOrConnectWithoutTemplateInput[]
-  createMany?: Prisma.ProposalCreateManyTemplateInputEnvelope
-  connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+export type ProposalCreateNestedOneWithoutProposalTemplateInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutProposalTemplateInput, Prisma.ProposalUncheckedCreateWithoutProposalTemplateInput>
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutProposalTemplateInput
+  connect?: Prisma.ProposalWhereUniqueInput
 }
 
-export type ProposalUncheckedCreateNestedManyWithoutTemplateInput = {
-  create?: Prisma.XOR<Prisma.ProposalCreateWithoutTemplateInput, Prisma.ProposalUncheckedCreateWithoutTemplateInput> | Prisma.ProposalCreateWithoutTemplateInput[] | Prisma.ProposalUncheckedCreateWithoutTemplateInput[]
-  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutTemplateInput | Prisma.ProposalCreateOrConnectWithoutTemplateInput[]
-  createMany?: Prisma.ProposalCreateManyTemplateInputEnvelope
-  connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
-}
-
-export type ProposalUpdateManyWithoutTemplateNestedInput = {
-  create?: Prisma.XOR<Prisma.ProposalCreateWithoutTemplateInput, Prisma.ProposalUncheckedCreateWithoutTemplateInput> | Prisma.ProposalCreateWithoutTemplateInput[] | Prisma.ProposalUncheckedCreateWithoutTemplateInput[]
-  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutTemplateInput | Prisma.ProposalCreateOrConnectWithoutTemplateInput[]
-  upsert?: Prisma.ProposalUpsertWithWhereUniqueWithoutTemplateInput | Prisma.ProposalUpsertWithWhereUniqueWithoutTemplateInput[]
-  createMany?: Prisma.ProposalCreateManyTemplateInputEnvelope
-  set?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
-  disconnect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
-  delete?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
-  connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
-  update?: Prisma.ProposalUpdateWithWhereUniqueWithoutTemplateInput | Prisma.ProposalUpdateWithWhereUniqueWithoutTemplateInput[]
-  updateMany?: Prisma.ProposalUpdateManyWithWhereWithoutTemplateInput | Prisma.ProposalUpdateManyWithWhereWithoutTemplateInput[]
-  deleteMany?: Prisma.ProposalScalarWhereInput | Prisma.ProposalScalarWhereInput[]
-}
-
-export type ProposalUncheckedUpdateManyWithoutTemplateNestedInput = {
-  create?: Prisma.XOR<Prisma.ProposalCreateWithoutTemplateInput, Prisma.ProposalUncheckedCreateWithoutTemplateInput> | Prisma.ProposalCreateWithoutTemplateInput[] | Prisma.ProposalUncheckedCreateWithoutTemplateInput[]
-  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutTemplateInput | Prisma.ProposalCreateOrConnectWithoutTemplateInput[]
-  upsert?: Prisma.ProposalUpsertWithWhereUniqueWithoutTemplateInput | Prisma.ProposalUpsertWithWhereUniqueWithoutTemplateInput[]
-  createMany?: Prisma.ProposalCreateManyTemplateInputEnvelope
-  set?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
-  disconnect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
-  delete?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
-  connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
-  update?: Prisma.ProposalUpdateWithWhereUniqueWithoutTemplateInput | Prisma.ProposalUpdateWithWhereUniqueWithoutTemplateInput[]
-  updateMany?: Prisma.ProposalUpdateManyWithWhereWithoutTemplateInput | Prisma.ProposalUpdateManyWithWhereWithoutTemplateInput[]
-  deleteMany?: Prisma.ProposalScalarWhereInput | Prisma.ProposalScalarWhereInput[]
+export type ProposalUpdateOneRequiredWithoutProposalTemplateNestedInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutProposalTemplateInput, Prisma.ProposalUncheckedCreateWithoutProposalTemplateInput>
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutProposalTemplateInput
+  upsert?: Prisma.ProposalUpsertWithoutProposalTemplateInput
+  connect?: Prisma.ProposalWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProposalUpdateToOneWithWhereWithoutProposalTemplateInput, Prisma.ProposalUpdateWithoutProposalTemplateInput>, Prisma.ProposalUncheckedUpdateWithoutProposalTemplateInput>
 }
 
 export type ProposalCreateNestedOneWithoutItemsInput = {
@@ -716,94 +840,218 @@ export type ProposalUpdateOneRequiredWithoutItemsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProposalUpdateToOneWithWhereWithoutItemsInput, Prisma.ProposalUpdateWithoutItemsInput>, Prisma.ProposalUncheckedUpdateWithoutItemsInput>
 }
 
-export type ProposalCreateNestedOneWithoutProjectInput = {
-  create?: Prisma.XOR<Prisma.ProposalCreateWithoutProjectInput, Prisma.ProposalUncheckedCreateWithoutProjectInput>
-  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutProjectInput
-  connect?: Prisma.ProposalWhereUniqueInput
+export type ProposalCreateNestedManyWithoutProjectInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutProjectInput, Prisma.ProposalUncheckedCreateWithoutProjectInput> | Prisma.ProposalCreateWithoutProjectInput[] | Prisma.ProposalUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutProjectInput | Prisma.ProposalCreateOrConnectWithoutProjectInput[]
+  createMany?: Prisma.ProposalCreateManyProjectInputEnvelope
+  connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
 }
 
-export type ProposalUncheckedCreateNestedOneWithoutProjectInput = {
-  create?: Prisma.XOR<Prisma.ProposalCreateWithoutProjectInput, Prisma.ProposalUncheckedCreateWithoutProjectInput>
-  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutProjectInput
-  connect?: Prisma.ProposalWhereUniqueInput
+export type ProposalUncheckedCreateNestedManyWithoutProjectInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutProjectInput, Prisma.ProposalUncheckedCreateWithoutProjectInput> | Prisma.ProposalCreateWithoutProjectInput[] | Prisma.ProposalUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutProjectInput | Prisma.ProposalCreateOrConnectWithoutProjectInput[]
+  createMany?: Prisma.ProposalCreateManyProjectInputEnvelope
+  connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
 }
 
-export type ProposalUpdateOneWithoutProjectNestedInput = {
-  create?: Prisma.XOR<Prisma.ProposalCreateWithoutProjectInput, Prisma.ProposalUncheckedCreateWithoutProjectInput>
-  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutProjectInput
-  upsert?: Prisma.ProposalUpsertWithoutProjectInput
-  disconnect?: Prisma.ProposalWhereInput | boolean
-  delete?: Prisma.ProposalWhereInput | boolean
-  connect?: Prisma.ProposalWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ProposalUpdateToOneWithWhereWithoutProjectInput, Prisma.ProposalUpdateWithoutProjectInput>, Prisma.ProposalUncheckedUpdateWithoutProjectInput>
+export type ProposalUpdateManyWithoutProjectNestedInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutProjectInput, Prisma.ProposalUncheckedCreateWithoutProjectInput> | Prisma.ProposalCreateWithoutProjectInput[] | Prisma.ProposalUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutProjectInput | Prisma.ProposalCreateOrConnectWithoutProjectInput[]
+  upsert?: Prisma.ProposalUpsertWithWhereUniqueWithoutProjectInput | Prisma.ProposalUpsertWithWhereUniqueWithoutProjectInput[]
+  createMany?: Prisma.ProposalCreateManyProjectInputEnvelope
+  set?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  disconnect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  delete?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  update?: Prisma.ProposalUpdateWithWhereUniqueWithoutProjectInput | Prisma.ProposalUpdateWithWhereUniqueWithoutProjectInput[]
+  updateMany?: Prisma.ProposalUpdateManyWithWhereWithoutProjectInput | Prisma.ProposalUpdateManyWithWhereWithoutProjectInput[]
+  deleteMany?: Prisma.ProposalScalarWhereInput | Prisma.ProposalScalarWhereInput[]
 }
 
-export type ProposalUncheckedUpdateOneWithoutProjectNestedInput = {
-  create?: Prisma.XOR<Prisma.ProposalCreateWithoutProjectInput, Prisma.ProposalUncheckedCreateWithoutProjectInput>
-  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutProjectInput
-  upsert?: Prisma.ProposalUpsertWithoutProjectInput
-  disconnect?: Prisma.ProposalWhereInput | boolean
-  delete?: Prisma.ProposalWhereInput | boolean
-  connect?: Prisma.ProposalWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ProposalUpdateToOneWithWhereWithoutProjectInput, Prisma.ProposalUpdateWithoutProjectInput>, Prisma.ProposalUncheckedUpdateWithoutProjectInput>
+export type ProposalUncheckedUpdateManyWithoutProjectNestedInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutProjectInput, Prisma.ProposalUncheckedCreateWithoutProjectInput> | Prisma.ProposalCreateWithoutProjectInput[] | Prisma.ProposalUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutProjectInput | Prisma.ProposalCreateOrConnectWithoutProjectInput[]
+  upsert?: Prisma.ProposalUpsertWithWhereUniqueWithoutProjectInput | Prisma.ProposalUpsertWithWhereUniqueWithoutProjectInput[]
+  createMany?: Prisma.ProposalCreateManyProjectInputEnvelope
+  set?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  disconnect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  delete?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  connect?: Prisma.ProposalWhereUniqueInput | Prisma.ProposalWhereUniqueInput[]
+  update?: Prisma.ProposalUpdateWithWhereUniqueWithoutProjectInput | Prisma.ProposalUpdateWithWhereUniqueWithoutProjectInput[]
+  updateMany?: Prisma.ProposalUpdateManyWithWhereWithoutProjectInput | Prisma.ProposalUpdateManyWithWhereWithoutProjectInput[]
+  deleteMany?: Prisma.ProposalScalarWhereInput | Prisma.ProposalScalarWhereInput[]
 }
 
-export type ProposalCreateWithoutUserInput = {
+export type ProposalCreateWithoutCreatedUserInput = {
   id?: string
+  version?: number
+  isCurrent?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
   fileKey?: string | null
   fileUrl?: string | null
+  reviewedAt?: Date | string | null
+  approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  client: Prisma.ClientCreateNestedOneWithoutProposalsInput
-  template?: Prisma.ProposalTemplateCreateNestedOneWithoutProposalsInput
   items?: Prisma.ProposalItemCreateNestedManyWithoutProposalInput
-  project?: Prisma.ProjectCreateNestedOneWithoutProposalInput
+  proposalTemplate?: Prisma.ProposalTemplateCreateNestedOneWithoutProposalInput
+  project: Prisma.ProjectCreateNestedOneWithoutProposalInput
+  reviewUser?: Prisma.UserCreateNestedOneWithoutReviwedProposalsInput
+  approvedUser?: Prisma.UserCreateNestedOneWithoutApprovedProposalsInput
 }
 
-export type ProposalUncheckedCreateWithoutUserInput = {
+export type ProposalUncheckedCreateWithoutCreatedUserInput = {
   id?: string
-  clientId: string
+  version?: number
+  isCurrent?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
-  templateId?: string | null
   fileKey?: string | null
   fileUrl?: string | null
-  generatedProjectId?: string | null
+  projectId: string
+  reviewedAt?: Date | string | null
+  reviewedBy?: string | null
+  approvedAt?: Date | string | null
+  approvedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutProposalInput
+  proposalTemplate?: Prisma.ProposalTemplateUncheckedCreateNestedOneWithoutProposalInput
 }
 
-export type ProposalCreateOrConnectWithoutUserInput = {
+export type ProposalCreateOrConnectWithoutCreatedUserInput = {
   where: Prisma.ProposalWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProposalCreateWithoutUserInput, Prisma.ProposalUncheckedCreateWithoutUserInput>
+  create: Prisma.XOR<Prisma.ProposalCreateWithoutCreatedUserInput, Prisma.ProposalUncheckedCreateWithoutCreatedUserInput>
 }
 
-export type ProposalCreateManyUserInputEnvelope = {
-  data: Prisma.ProposalCreateManyUserInput | Prisma.ProposalCreateManyUserInput[]
+export type ProposalCreateManyCreatedUserInputEnvelope = {
+  data: Prisma.ProposalCreateManyCreatedUserInput | Prisma.ProposalCreateManyCreatedUserInput[]
   skipDuplicates?: boolean
 }
 
-export type ProposalUpsertWithWhereUniqueWithoutUserInput = {
-  where: Prisma.ProposalWhereUniqueInput
-  update: Prisma.XOR<Prisma.ProposalUpdateWithoutUserInput, Prisma.ProposalUncheckedUpdateWithoutUserInput>
-  create: Prisma.XOR<Prisma.ProposalCreateWithoutUserInput, Prisma.ProposalUncheckedCreateWithoutUserInput>
+export type ProposalCreateWithoutApprovedUserInput = {
+  id?: string
+  version?: number
+  isCurrent?: boolean
+  status?: $Enums.ProposalStatus
+  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Date | string | null
+  sourceType?: $Enums.ProposalSource
+  fileKey?: string | null
+  fileUrl?: string | null
+  reviewedAt?: Date | string | null
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdUser: Prisma.UserCreateNestedOneWithoutCreatedProposalsInput
+  items?: Prisma.ProposalItemCreateNestedManyWithoutProposalInput
+  proposalTemplate?: Prisma.ProposalTemplateCreateNestedOneWithoutProposalInput
+  project: Prisma.ProjectCreateNestedOneWithoutProposalInput
+  reviewUser?: Prisma.UserCreateNestedOneWithoutReviwedProposalsInput
 }
 
-export type ProposalUpdateWithWhereUniqueWithoutUserInput = {
-  where: Prisma.ProposalWhereUniqueInput
-  data: Prisma.XOR<Prisma.ProposalUpdateWithoutUserInput, Prisma.ProposalUncheckedUpdateWithoutUserInput>
+export type ProposalUncheckedCreateWithoutApprovedUserInput = {
+  id?: string
+  version?: number
+  isCurrent?: boolean
+  status?: $Enums.ProposalStatus
+  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Date | string | null
+  createdBy: string
+  sourceType?: $Enums.ProposalSource
+  fileKey?: string | null
+  fileUrl?: string | null
+  projectId: string
+  reviewedAt?: Date | string | null
+  reviewedBy?: string | null
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutProposalInput
+  proposalTemplate?: Prisma.ProposalTemplateUncheckedCreateNestedOneWithoutProposalInput
 }
 
-export type ProposalUpdateManyWithWhereWithoutUserInput = {
+export type ProposalCreateOrConnectWithoutApprovedUserInput = {
+  where: Prisma.ProposalWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProposalCreateWithoutApprovedUserInput, Prisma.ProposalUncheckedCreateWithoutApprovedUserInput>
+}
+
+export type ProposalCreateManyApprovedUserInputEnvelope = {
+  data: Prisma.ProposalCreateManyApprovedUserInput | Prisma.ProposalCreateManyApprovedUserInput[]
+  skipDuplicates?: boolean
+}
+
+export type ProposalCreateWithoutReviewUserInput = {
+  id?: string
+  version?: number
+  isCurrent?: boolean
+  status?: $Enums.ProposalStatus
+  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Date | string | null
+  sourceType?: $Enums.ProposalSource
+  fileKey?: string | null
+  fileUrl?: string | null
+  reviewedAt?: Date | string | null
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdUser: Prisma.UserCreateNestedOneWithoutCreatedProposalsInput
+  items?: Prisma.ProposalItemCreateNestedManyWithoutProposalInput
+  proposalTemplate?: Prisma.ProposalTemplateCreateNestedOneWithoutProposalInput
+  project: Prisma.ProjectCreateNestedOneWithoutProposalInput
+  approvedUser?: Prisma.UserCreateNestedOneWithoutApprovedProposalsInput
+}
+
+export type ProposalUncheckedCreateWithoutReviewUserInput = {
+  id?: string
+  version?: number
+  isCurrent?: boolean
+  status?: $Enums.ProposalStatus
+  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Date | string | null
+  createdBy: string
+  sourceType?: $Enums.ProposalSource
+  fileKey?: string | null
+  fileUrl?: string | null
+  projectId: string
+  reviewedAt?: Date | string | null
+  approvedAt?: Date | string | null
+  approvedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutProposalInput
+  proposalTemplate?: Prisma.ProposalTemplateUncheckedCreateNestedOneWithoutProposalInput
+}
+
+export type ProposalCreateOrConnectWithoutReviewUserInput = {
+  where: Prisma.ProposalWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProposalCreateWithoutReviewUserInput, Prisma.ProposalUncheckedCreateWithoutReviewUserInput>
+}
+
+export type ProposalCreateManyReviewUserInputEnvelope = {
+  data: Prisma.ProposalCreateManyReviewUserInput | Prisma.ProposalCreateManyReviewUserInput[]
+  skipDuplicates?: boolean
+}
+
+export type ProposalUpsertWithWhereUniqueWithoutCreatedUserInput = {
+  where: Prisma.ProposalWhereUniqueInput
+  update: Prisma.XOR<Prisma.ProposalUpdateWithoutCreatedUserInput, Prisma.ProposalUncheckedUpdateWithoutCreatedUserInput>
+  create: Prisma.XOR<Prisma.ProposalCreateWithoutCreatedUserInput, Prisma.ProposalUncheckedCreateWithoutCreatedUserInput>
+}
+
+export type ProposalUpdateWithWhereUniqueWithoutCreatedUserInput = {
+  where: Prisma.ProposalWhereUniqueInput
+  data: Prisma.XOR<Prisma.ProposalUpdateWithoutCreatedUserInput, Prisma.ProposalUncheckedUpdateWithoutCreatedUserInput>
+}
+
+export type ProposalUpdateManyWithWhereWithoutCreatedUserInput = {
   where: Prisma.ProposalScalarWhereInput
-  data: Prisma.XOR<Prisma.ProposalUpdateManyMutationInput, Prisma.ProposalUncheckedUpdateManyWithoutUserInput>
+  data: Prisma.XOR<Prisma.ProposalUpdateManyMutationInput, Prisma.ProposalUncheckedUpdateManyWithoutCreatedUserInput>
 }
 
 export type ProposalScalarWhereInput = {
@@ -811,97 +1059,81 @@ export type ProposalScalarWhereInput = {
   OR?: Prisma.ProposalScalarWhereInput[]
   NOT?: Prisma.ProposalScalarWhereInput | Prisma.ProposalScalarWhereInput[]
   id?: Prisma.StringFilter<"Proposal"> | string
-  clientId?: Prisma.StringFilter<"Proposal"> | string
+  version?: Prisma.IntFilter<"Proposal"> | number
+  isCurrent?: Prisma.BoolFilter<"Proposal"> | boolean
   status?: Prisma.EnumProposalStatusFilter<"Proposal"> | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFilter<"Proposal"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.DateTimeNullableFilter<"Proposal"> | Date | string | null
   createdBy?: Prisma.StringFilter<"Proposal"> | string
   sourceType?: Prisma.EnumProposalSourceFilter<"Proposal"> | $Enums.ProposalSource
-  templateId?: Prisma.StringNullableFilter<"Proposal"> | string | null
   fileKey?: Prisma.StringNullableFilter<"Proposal"> | string | null
   fileUrl?: Prisma.StringNullableFilter<"Proposal"> | string | null
-  generatedProjectId?: Prisma.StringNullableFilter<"Proposal"> | string | null
+  projectId?: Prisma.StringFilter<"Proposal"> | string
+  reviewedAt?: Prisma.DateTimeNullableFilter<"Proposal"> | Date | string | null
+  reviewedBy?: Prisma.StringNullableFilter<"Proposal"> | string | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"Proposal"> | Date | string | null
+  approvedBy?: Prisma.StringNullableFilter<"Proposal"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Proposal"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Proposal"> | Date | string
 }
 
-export type ProposalCreateWithoutClientInput = {
-  id?: string
-  status?: $Enums.ProposalStatus
-  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  validUntil?: Date | string | null
-  sourceType?: $Enums.ProposalSource
-  fileKey?: string | null
-  fileUrl?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutCreatedProposalsInput
-  template?: Prisma.ProposalTemplateCreateNestedOneWithoutProposalsInput
-  items?: Prisma.ProposalItemCreateNestedManyWithoutProposalInput
-  project?: Prisma.ProjectCreateNestedOneWithoutProposalInput
-}
-
-export type ProposalUncheckedCreateWithoutClientInput = {
-  id?: string
-  status?: $Enums.ProposalStatus
-  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  validUntil?: Date | string | null
-  createdBy: string
-  sourceType?: $Enums.ProposalSource
-  templateId?: string | null
-  fileKey?: string | null
-  fileUrl?: string | null
-  generatedProjectId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  items?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutProposalInput
-}
-
-export type ProposalCreateOrConnectWithoutClientInput = {
+export type ProposalUpsertWithWhereUniqueWithoutApprovedUserInput = {
   where: Prisma.ProposalWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProposalCreateWithoutClientInput, Prisma.ProposalUncheckedCreateWithoutClientInput>
+  update: Prisma.XOR<Prisma.ProposalUpdateWithoutApprovedUserInput, Prisma.ProposalUncheckedUpdateWithoutApprovedUserInput>
+  create: Prisma.XOR<Prisma.ProposalCreateWithoutApprovedUserInput, Prisma.ProposalUncheckedCreateWithoutApprovedUserInput>
 }
 
-export type ProposalCreateManyClientInputEnvelope = {
-  data: Prisma.ProposalCreateManyClientInput | Prisma.ProposalCreateManyClientInput[]
-  skipDuplicates?: boolean
-}
-
-export type ProposalUpsertWithWhereUniqueWithoutClientInput = {
+export type ProposalUpdateWithWhereUniqueWithoutApprovedUserInput = {
   where: Prisma.ProposalWhereUniqueInput
-  update: Prisma.XOR<Prisma.ProposalUpdateWithoutClientInput, Prisma.ProposalUncheckedUpdateWithoutClientInput>
-  create: Prisma.XOR<Prisma.ProposalCreateWithoutClientInput, Prisma.ProposalUncheckedCreateWithoutClientInput>
+  data: Prisma.XOR<Prisma.ProposalUpdateWithoutApprovedUserInput, Prisma.ProposalUncheckedUpdateWithoutApprovedUserInput>
 }
 
-export type ProposalUpdateWithWhereUniqueWithoutClientInput = {
-  where: Prisma.ProposalWhereUniqueInput
-  data: Prisma.XOR<Prisma.ProposalUpdateWithoutClientInput, Prisma.ProposalUncheckedUpdateWithoutClientInput>
-}
-
-export type ProposalUpdateManyWithWhereWithoutClientInput = {
+export type ProposalUpdateManyWithWhereWithoutApprovedUserInput = {
   where: Prisma.ProposalScalarWhereInput
-  data: Prisma.XOR<Prisma.ProposalUpdateManyMutationInput, Prisma.ProposalUncheckedUpdateManyWithoutClientInput>
+  data: Prisma.XOR<Prisma.ProposalUpdateManyMutationInput, Prisma.ProposalUncheckedUpdateManyWithoutApprovedUserInput>
 }
 
-export type ProposalCreateWithoutTemplateInput = {
+export type ProposalUpsertWithWhereUniqueWithoutReviewUserInput = {
+  where: Prisma.ProposalWhereUniqueInput
+  update: Prisma.XOR<Prisma.ProposalUpdateWithoutReviewUserInput, Prisma.ProposalUncheckedUpdateWithoutReviewUserInput>
+  create: Prisma.XOR<Prisma.ProposalCreateWithoutReviewUserInput, Prisma.ProposalUncheckedCreateWithoutReviewUserInput>
+}
+
+export type ProposalUpdateWithWhereUniqueWithoutReviewUserInput = {
+  where: Prisma.ProposalWhereUniqueInput
+  data: Prisma.XOR<Prisma.ProposalUpdateWithoutReviewUserInput, Prisma.ProposalUncheckedUpdateWithoutReviewUserInput>
+}
+
+export type ProposalUpdateManyWithWhereWithoutReviewUserInput = {
+  where: Prisma.ProposalScalarWhereInput
+  data: Prisma.XOR<Prisma.ProposalUpdateManyMutationInput, Prisma.ProposalUncheckedUpdateManyWithoutReviewUserInput>
+}
+
+export type ProposalCreateWithoutProposalTemplateInput = {
   id?: string
+  version?: number
+  isCurrent?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
   fileKey?: string | null
   fileUrl?: string | null
+  reviewedAt?: Date | string | null
+  approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  client: Prisma.ClientCreateNestedOneWithoutProposalsInput
-  user: Prisma.UserCreateNestedOneWithoutCreatedProposalsInput
+  createdUser: Prisma.UserCreateNestedOneWithoutCreatedProposalsInput
   items?: Prisma.ProposalItemCreateNestedManyWithoutProposalInput
-  project?: Prisma.ProjectCreateNestedOneWithoutProposalInput
+  project: Prisma.ProjectCreateNestedOneWithoutProposalInput
+  reviewUser?: Prisma.UserCreateNestedOneWithoutReviwedProposalsInput
+  approvedUser?: Prisma.UserCreateNestedOneWithoutApprovedProposalsInput
 }
 
-export type ProposalUncheckedCreateWithoutTemplateInput = {
+export type ProposalUncheckedCreateWithoutProposalTemplateInput = {
   id?: string
-  clientId: string
+  version?: number
+  isCurrent?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
@@ -909,68 +1141,114 @@ export type ProposalUncheckedCreateWithoutTemplateInput = {
   sourceType?: $Enums.ProposalSource
   fileKey?: string | null
   fileUrl?: string | null
-  generatedProjectId?: string | null
+  projectId: string
+  reviewedAt?: Date | string | null
+  reviewedBy?: string | null
+  approvedAt?: Date | string | null
+  approvedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutProposalInput
 }
 
-export type ProposalCreateOrConnectWithoutTemplateInput = {
+export type ProposalCreateOrConnectWithoutProposalTemplateInput = {
   where: Prisma.ProposalWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProposalCreateWithoutTemplateInput, Prisma.ProposalUncheckedCreateWithoutTemplateInput>
+  create: Prisma.XOR<Prisma.ProposalCreateWithoutProposalTemplateInput, Prisma.ProposalUncheckedCreateWithoutProposalTemplateInput>
 }
 
-export type ProposalCreateManyTemplateInputEnvelope = {
-  data: Prisma.ProposalCreateManyTemplateInput | Prisma.ProposalCreateManyTemplateInput[]
-  skipDuplicates?: boolean
+export type ProposalUpsertWithoutProposalTemplateInput = {
+  update: Prisma.XOR<Prisma.ProposalUpdateWithoutProposalTemplateInput, Prisma.ProposalUncheckedUpdateWithoutProposalTemplateInput>
+  create: Prisma.XOR<Prisma.ProposalCreateWithoutProposalTemplateInput, Prisma.ProposalUncheckedCreateWithoutProposalTemplateInput>
+  where?: Prisma.ProposalWhereInput
 }
 
-export type ProposalUpsertWithWhereUniqueWithoutTemplateInput = {
-  where: Prisma.ProposalWhereUniqueInput
-  update: Prisma.XOR<Prisma.ProposalUpdateWithoutTemplateInput, Prisma.ProposalUncheckedUpdateWithoutTemplateInput>
-  create: Prisma.XOR<Prisma.ProposalCreateWithoutTemplateInput, Prisma.ProposalUncheckedCreateWithoutTemplateInput>
+export type ProposalUpdateToOneWithWhereWithoutProposalTemplateInput = {
+  where?: Prisma.ProposalWhereInput
+  data: Prisma.XOR<Prisma.ProposalUpdateWithoutProposalTemplateInput, Prisma.ProposalUncheckedUpdateWithoutProposalTemplateInput>
 }
 
-export type ProposalUpdateWithWhereUniqueWithoutTemplateInput = {
-  where: Prisma.ProposalWhereUniqueInput
-  data: Prisma.XOR<Prisma.ProposalUpdateWithoutTemplateInput, Prisma.ProposalUncheckedUpdateWithoutTemplateInput>
+export type ProposalUpdateWithoutProposalTemplateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
+  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdUser?: Prisma.UserUpdateOneRequiredWithoutCreatedProposalsNestedInput
+  items?: Prisma.ProposalItemUpdateManyWithoutProposalNestedInput
+  project?: Prisma.ProjectUpdateOneRequiredWithoutProposalNestedInput
+  reviewUser?: Prisma.UserUpdateOneWithoutReviwedProposalsNestedInput
+  approvedUser?: Prisma.UserUpdateOneWithoutApprovedProposalsNestedInput
 }
 
-export type ProposalUpdateManyWithWhereWithoutTemplateInput = {
-  where: Prisma.ProposalScalarWhereInput
-  data: Prisma.XOR<Prisma.ProposalUpdateManyMutationInput, Prisma.ProposalUncheckedUpdateManyWithoutTemplateInput>
+export type ProposalUncheckedUpdateWithoutProposalTemplateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
+  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
 }
 
 export type ProposalCreateWithoutItemsInput = {
   id?: string
+  version?: number
+  isCurrent?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
   fileKey?: string | null
   fileUrl?: string | null
+  reviewedAt?: Date | string | null
+  approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  client: Prisma.ClientCreateNestedOneWithoutProposalsInput
-  user: Prisma.UserCreateNestedOneWithoutCreatedProposalsInput
-  template?: Prisma.ProposalTemplateCreateNestedOneWithoutProposalsInput
-  project?: Prisma.ProjectCreateNestedOneWithoutProposalInput
+  createdUser: Prisma.UserCreateNestedOneWithoutCreatedProposalsInput
+  proposalTemplate?: Prisma.ProposalTemplateCreateNestedOneWithoutProposalInput
+  project: Prisma.ProjectCreateNestedOneWithoutProposalInput
+  reviewUser?: Prisma.UserCreateNestedOneWithoutReviwedProposalsInput
+  approvedUser?: Prisma.UserCreateNestedOneWithoutApprovedProposalsInput
 }
 
 export type ProposalUncheckedCreateWithoutItemsInput = {
   id?: string
-  clientId: string
+  version?: number
+  isCurrent?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   createdBy: string
   sourceType?: $Enums.ProposalSource
-  templateId?: string | null
   fileKey?: string | null
   fileUrl?: string | null
-  generatedProjectId?: string | null
+  projectId: string
+  reviewedAt?: Date | string | null
+  reviewedBy?: string | null
+  approvedAt?: Date | string | null
+  approvedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  proposalTemplate?: Prisma.ProposalTemplateUncheckedCreateNestedOneWithoutProposalInput
 }
 
 export type ProposalCreateOrConnectWithoutItemsInput = {
@@ -991,66 +1269,86 @@ export type ProposalUpdateToOneWithWhereWithoutItemsInput = {
 
 export type ProposalUpdateWithoutItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  client?: Prisma.ClientUpdateOneRequiredWithoutProposalsNestedInput
-  user?: Prisma.UserUpdateOneRequiredWithoutCreatedProposalsNestedInput
-  template?: Prisma.ProposalTemplateUpdateOneWithoutProposalsNestedInput
-  project?: Prisma.ProjectUpdateOneWithoutProposalNestedInput
+  createdUser?: Prisma.UserUpdateOneRequiredWithoutCreatedProposalsNestedInput
+  proposalTemplate?: Prisma.ProposalTemplateUpdateOneWithoutProposalNestedInput
+  project?: Prisma.ProjectUpdateOneRequiredWithoutProposalNestedInput
+  reviewUser?: Prisma.UserUpdateOneWithoutReviwedProposalsNestedInput
+  approvedUser?: Prisma.UserUpdateOneWithoutApprovedProposalsNestedInput
 }
 
 export type ProposalUncheckedUpdateWithoutItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
-  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  generatedProjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proposalTemplate?: Prisma.ProposalTemplateUncheckedUpdateOneWithoutProposalNestedInput
 }
 
 export type ProposalCreateWithoutProjectInput = {
   id?: string
+  version?: number
+  isCurrent?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
   fileKey?: string | null
   fileUrl?: string | null
+  reviewedAt?: Date | string | null
+  approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  client: Prisma.ClientCreateNestedOneWithoutProposalsInput
-  user: Prisma.UserCreateNestedOneWithoutCreatedProposalsInput
-  template?: Prisma.ProposalTemplateCreateNestedOneWithoutProposalsInput
+  createdUser: Prisma.UserCreateNestedOneWithoutCreatedProposalsInput
   items?: Prisma.ProposalItemCreateNestedManyWithoutProposalInput
+  proposalTemplate?: Prisma.ProposalTemplateCreateNestedOneWithoutProposalInput
+  reviewUser?: Prisma.UserCreateNestedOneWithoutReviwedProposalsInput
+  approvedUser?: Prisma.UserCreateNestedOneWithoutApprovedProposalsInput
 }
 
 export type ProposalUncheckedCreateWithoutProjectInput = {
   id?: string
-  clientId: string
+  version?: number
+  isCurrent?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   createdBy: string
   sourceType?: $Enums.ProposalSource
-  templateId?: string | null
   fileKey?: string | null
   fileUrl?: string | null
+  reviewedAt?: Date | string | null
+  reviewedBy?: string | null
+  approvedAt?: Date | string | null
+  approvedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutProposalInput
+  proposalTemplate?: Prisma.ProposalTemplateUncheckedCreateNestedOneWithoutProposalInput
 }
 
 export type ProposalCreateOrConnectWithoutProjectInput = {
@@ -1058,207 +1356,332 @@ export type ProposalCreateOrConnectWithoutProjectInput = {
   create: Prisma.XOR<Prisma.ProposalCreateWithoutProjectInput, Prisma.ProposalUncheckedCreateWithoutProjectInput>
 }
 
-export type ProposalUpsertWithoutProjectInput = {
-  update: Prisma.XOR<Prisma.ProposalUpdateWithoutProjectInput, Prisma.ProposalUncheckedUpdateWithoutProjectInput>
-  create: Prisma.XOR<Prisma.ProposalCreateWithoutProjectInput, Prisma.ProposalUncheckedCreateWithoutProjectInput>
-  where?: Prisma.ProposalWhereInput
+export type ProposalCreateManyProjectInputEnvelope = {
+  data: Prisma.ProposalCreateManyProjectInput | Prisma.ProposalCreateManyProjectInput[]
+  skipDuplicates?: boolean
 }
 
-export type ProposalUpdateToOneWithWhereWithoutProjectInput = {
-  where?: Prisma.ProposalWhereInput
+export type ProposalUpsertWithWhereUniqueWithoutProjectInput = {
+  where: Prisma.ProposalWhereUniqueInput
+  update: Prisma.XOR<Prisma.ProposalUpdateWithoutProjectInput, Prisma.ProposalUncheckedUpdateWithoutProjectInput>
+  create: Prisma.XOR<Prisma.ProposalCreateWithoutProjectInput, Prisma.ProposalUncheckedCreateWithoutProjectInput>
+}
+
+export type ProposalUpdateWithWhereUniqueWithoutProjectInput = {
+  where: Prisma.ProposalWhereUniqueInput
   data: Prisma.XOR<Prisma.ProposalUpdateWithoutProjectInput, Prisma.ProposalUncheckedUpdateWithoutProjectInput>
+}
+
+export type ProposalUpdateManyWithWhereWithoutProjectInput = {
+  where: Prisma.ProposalScalarWhereInput
+  data: Prisma.XOR<Prisma.ProposalUpdateManyMutationInput, Prisma.ProposalUncheckedUpdateManyWithoutProjectInput>
+}
+
+export type ProposalCreateManyCreatedUserInput = {
+  id?: string
+  version?: number
+  isCurrent?: boolean
+  status?: $Enums.ProposalStatus
+  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Date | string | null
+  sourceType?: $Enums.ProposalSource
+  fileKey?: string | null
+  fileUrl?: string | null
+  projectId: string
+  reviewedAt?: Date | string | null
+  reviewedBy?: string | null
+  approvedAt?: Date | string | null
+  approvedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ProposalCreateManyApprovedUserInput = {
+  id?: string
+  version?: number
+  isCurrent?: boolean
+  status?: $Enums.ProposalStatus
+  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Date | string | null
+  createdBy: string
+  sourceType?: $Enums.ProposalSource
+  fileKey?: string | null
+  fileUrl?: string | null
+  projectId: string
+  reviewedAt?: Date | string | null
+  reviewedBy?: string | null
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ProposalCreateManyReviewUserInput = {
+  id?: string
+  version?: number
+  isCurrent?: boolean
+  status?: $Enums.ProposalStatus
+  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Date | string | null
+  createdBy: string
+  sourceType?: $Enums.ProposalSource
+  fileKey?: string | null
+  fileUrl?: string | null
+  projectId: string
+  reviewedAt?: Date | string | null
+  approvedAt?: Date | string | null
+  approvedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ProposalUpdateWithoutCreatedUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
+  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.ProposalItemUpdateManyWithoutProposalNestedInput
+  proposalTemplate?: Prisma.ProposalTemplateUpdateOneWithoutProposalNestedInput
+  project?: Prisma.ProjectUpdateOneRequiredWithoutProposalNestedInput
+  reviewUser?: Prisma.UserUpdateOneWithoutReviwedProposalsNestedInput
+  approvedUser?: Prisma.UserUpdateOneWithoutApprovedProposalsNestedInput
+}
+
+export type ProposalUncheckedUpdateWithoutCreatedUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
+  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
+  proposalTemplate?: Prisma.ProposalTemplateUncheckedUpdateOneWithoutProposalNestedInput
+}
+
+export type ProposalUncheckedUpdateManyWithoutCreatedUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
+  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ProposalUpdateWithoutApprovedUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
+  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdUser?: Prisma.UserUpdateOneRequiredWithoutCreatedProposalsNestedInput
+  items?: Prisma.ProposalItemUpdateManyWithoutProposalNestedInput
+  proposalTemplate?: Prisma.ProposalTemplateUpdateOneWithoutProposalNestedInput
+  project?: Prisma.ProjectUpdateOneRequiredWithoutProposalNestedInput
+  reviewUser?: Prisma.UserUpdateOneWithoutReviwedProposalsNestedInput
+}
+
+export type ProposalUncheckedUpdateWithoutApprovedUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
+  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
+  proposalTemplate?: Prisma.ProposalTemplateUncheckedUpdateOneWithoutProposalNestedInput
+}
+
+export type ProposalUncheckedUpdateManyWithoutApprovedUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
+  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ProposalUpdateWithoutReviewUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
+  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdUser?: Prisma.UserUpdateOneRequiredWithoutCreatedProposalsNestedInput
+  items?: Prisma.ProposalItemUpdateManyWithoutProposalNestedInput
+  proposalTemplate?: Prisma.ProposalTemplateUpdateOneWithoutProposalNestedInput
+  project?: Prisma.ProjectUpdateOneRequiredWithoutProposalNestedInput
+  approvedUser?: Prisma.UserUpdateOneWithoutApprovedProposalsNestedInput
+}
+
+export type ProposalUncheckedUpdateWithoutReviewUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
+  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
+  proposalTemplate?: Prisma.ProposalTemplateUncheckedUpdateOneWithoutProposalNestedInput
+}
+
+export type ProposalUncheckedUpdateManyWithoutReviewUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
+  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ProposalCreateManyProjectInput = {
+  id?: string
+  version?: number
+  isCurrent?: boolean
+  status?: $Enums.ProposalStatus
+  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Date | string | null
+  createdBy: string
+  sourceType?: $Enums.ProposalSource
+  fileKey?: string | null
+  fileUrl?: string | null
+  reviewedAt?: Date | string | null
+  reviewedBy?: string | null
+  approvedAt?: Date | string | null
+  approvedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ProposalUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  client?: Prisma.ClientUpdateOneRequiredWithoutProposalsNestedInput
-  user?: Prisma.UserUpdateOneRequiredWithoutCreatedProposalsNestedInput
-  template?: Prisma.ProposalTemplateUpdateOneWithoutProposalsNestedInput
+  createdUser?: Prisma.UserUpdateOneRequiredWithoutCreatedProposalsNestedInput
   items?: Prisma.ProposalItemUpdateManyWithoutProposalNestedInput
+  proposalTemplate?: Prisma.ProposalTemplateUpdateOneWithoutProposalNestedInput
+  reviewUser?: Prisma.UserUpdateOneWithoutReviwedProposalsNestedInput
+  approvedUser?: Prisma.UserUpdateOneWithoutApprovedProposalsNestedInput
 }
 
 export type ProposalUncheckedUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
-  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
+  proposalTemplate?: Prisma.ProposalTemplateUncheckedUpdateOneWithoutProposalNestedInput
 }
 
-export type ProposalCreateManyUserInput = {
-  id?: string
-  clientId: string
-  status?: $Enums.ProposalStatus
-  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  validUntil?: Date | string | null
-  sourceType?: $Enums.ProposalSource
-  templateId?: string | null
-  fileKey?: string | null
-  fileUrl?: string | null
-  generatedProjectId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type ProposalUpdateWithoutUserInput = {
+export type ProposalUncheckedUpdateManyWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
-  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  client?: Prisma.ClientUpdateOneRequiredWithoutProposalsNestedInput
-  template?: Prisma.ProposalTemplateUpdateOneWithoutProposalsNestedInput
-  items?: Prisma.ProposalItemUpdateManyWithoutProposalNestedInput
-  project?: Prisma.ProjectUpdateOneWithoutProposalNestedInput
-}
-
-export type ProposalUncheckedUpdateWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  clientId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
-  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  generatedProjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  items?: Prisma.ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
-}
-
-export type ProposalUncheckedUpdateManyWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  clientId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
-  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  generatedProjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type ProposalCreateManyClientInput = {
-  id?: string
-  status?: $Enums.ProposalStatus
-  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  validUntil?: Date | string | null
-  createdBy: string
-  sourceType?: $Enums.ProposalSource
-  templateId?: string | null
-  fileKey?: string | null
-  fileUrl?: string | null
-  generatedProjectId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type ProposalUpdateWithoutClientInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
-  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutCreatedProposalsNestedInput
-  template?: Prisma.ProposalTemplateUpdateOneWithoutProposalsNestedInput
-  items?: Prisma.ProposalItemUpdateManyWithoutProposalNestedInput
-  project?: Prisma.ProjectUpdateOneWithoutProposalNestedInput
-}
-
-export type ProposalUncheckedUpdateWithoutClientInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
-  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
-  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  generatedProjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  items?: Prisma.ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
-}
-
-export type ProposalUncheckedUpdateManyWithoutClientInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
-  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
-  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  generatedProjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type ProposalCreateManyTemplateInput = {
-  id?: string
-  clientId: string
-  status?: $Enums.ProposalStatus
-  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
-  validUntil?: Date | string | null
-  createdBy: string
-  sourceType?: $Enums.ProposalSource
-  fileKey?: string | null
-  fileUrl?: string | null
-  generatedProjectId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type ProposalUpdateWithoutTemplateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
-  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  client?: Prisma.ClientUpdateOneRequiredWithoutProposalsNestedInput
-  user?: Prisma.UserUpdateOneRequiredWithoutCreatedProposalsNestedInput
-  items?: Prisma.ProposalItemUpdateManyWithoutProposalNestedInput
-  project?: Prisma.ProjectUpdateOneWithoutProposalNestedInput
-}
-
-export type ProposalUncheckedUpdateWithoutTemplateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1266,23 +1689,10 @@ export type ProposalUncheckedUpdateWithoutTemplateInput = {
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  generatedProjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  items?: Prisma.ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
-}
-
-export type ProposalUncheckedUpdateManyWithoutTemplateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  clientId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
-  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
-  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
-  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  generatedProjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1320,125 +1730,148 @@ export type ProposalCountOutputTypeCountItemsArgs<ExtArgs extends runtime.Types.
 
 export type ProposalSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  clientId?: boolean
+  version?: boolean
+  isCurrent?: boolean
   status?: boolean
   totalValue?: boolean
   validUntil?: boolean
   createdBy?: boolean
   sourceType?: boolean
-  templateId?: boolean
   fileKey?: boolean
   fileUrl?: boolean
-  generatedProjectId?: boolean
+  projectId?: boolean
+  reviewedAt?: boolean
+  reviewedBy?: boolean
+  approvedAt?: boolean
+  approvedBy?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  template?: boolean | Prisma.Proposal$templateArgs<ExtArgs>
+  createdUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   items?: boolean | Prisma.Proposal$itemsArgs<ExtArgs>
-  project?: boolean | Prisma.Proposal$projectArgs<ExtArgs>
+  proposalTemplate?: boolean | Prisma.Proposal$proposalTemplateArgs<ExtArgs>
+  project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  reviewUser?: boolean | Prisma.Proposal$reviewUserArgs<ExtArgs>
+  approvedUser?: boolean | Prisma.Proposal$approvedUserArgs<ExtArgs>
   _count?: boolean | Prisma.ProposalCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["proposal"]>
 
 export type ProposalSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  clientId?: boolean
+  version?: boolean
+  isCurrent?: boolean
   status?: boolean
   totalValue?: boolean
   validUntil?: boolean
   createdBy?: boolean
   sourceType?: boolean
-  templateId?: boolean
   fileKey?: boolean
   fileUrl?: boolean
-  generatedProjectId?: boolean
+  projectId?: boolean
+  reviewedAt?: boolean
+  reviewedBy?: boolean
+  approvedAt?: boolean
+  approvedBy?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  template?: boolean | Prisma.Proposal$templateArgs<ExtArgs>
-  project?: boolean | Prisma.Proposal$projectArgs<ExtArgs>
+  createdUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  reviewUser?: boolean | Prisma.Proposal$reviewUserArgs<ExtArgs>
+  approvedUser?: boolean | Prisma.Proposal$approvedUserArgs<ExtArgs>
 }, ExtArgs["result"]["proposal"]>
 
 export type ProposalSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  clientId?: boolean
+  version?: boolean
+  isCurrent?: boolean
   status?: boolean
   totalValue?: boolean
   validUntil?: boolean
   createdBy?: boolean
   sourceType?: boolean
-  templateId?: boolean
   fileKey?: boolean
   fileUrl?: boolean
-  generatedProjectId?: boolean
+  projectId?: boolean
+  reviewedAt?: boolean
+  reviewedBy?: boolean
+  approvedAt?: boolean
+  approvedBy?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  template?: boolean | Prisma.Proposal$templateArgs<ExtArgs>
-  project?: boolean | Prisma.Proposal$projectArgs<ExtArgs>
+  createdUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  reviewUser?: boolean | Prisma.Proposal$reviewUserArgs<ExtArgs>
+  approvedUser?: boolean | Prisma.Proposal$approvedUserArgs<ExtArgs>
 }, ExtArgs["result"]["proposal"]>
 
 export type ProposalSelectScalar = {
   id?: boolean
-  clientId?: boolean
+  version?: boolean
+  isCurrent?: boolean
   status?: boolean
   totalValue?: boolean
   validUntil?: boolean
   createdBy?: boolean
   sourceType?: boolean
-  templateId?: boolean
   fileKey?: boolean
   fileUrl?: boolean
-  generatedProjectId?: boolean
+  projectId?: boolean
+  reviewedAt?: boolean
+  reviewedBy?: boolean
+  approvedAt?: boolean
+  approvedBy?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ProposalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "status" | "totalValue" | "validUntil" | "createdBy" | "sourceType" | "templateId" | "fileKey" | "fileUrl" | "generatedProjectId" | "createdAt" | "updatedAt", ExtArgs["result"]["proposal"]>
+export type ProposalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "version" | "isCurrent" | "status" | "totalValue" | "validUntil" | "createdBy" | "sourceType" | "fileKey" | "fileUrl" | "projectId" | "reviewedAt" | "reviewedBy" | "approvedAt" | "approvedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["proposal"]>
 export type ProposalInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  template?: boolean | Prisma.Proposal$templateArgs<ExtArgs>
+  createdUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   items?: boolean | Prisma.Proposal$itemsArgs<ExtArgs>
-  project?: boolean | Prisma.Proposal$projectArgs<ExtArgs>
+  proposalTemplate?: boolean | Prisma.Proposal$proposalTemplateArgs<ExtArgs>
+  project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  reviewUser?: boolean | Prisma.Proposal$reviewUserArgs<ExtArgs>
+  approvedUser?: boolean | Prisma.Proposal$approvedUserArgs<ExtArgs>
   _count?: boolean | Prisma.ProposalCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProposalIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  template?: boolean | Prisma.Proposal$templateArgs<ExtArgs>
-  project?: boolean | Prisma.Proposal$projectArgs<ExtArgs>
+  createdUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  reviewUser?: boolean | Prisma.Proposal$reviewUserArgs<ExtArgs>
+  approvedUser?: boolean | Prisma.Proposal$approvedUserArgs<ExtArgs>
 }
 export type ProposalIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  template?: boolean | Prisma.Proposal$templateArgs<ExtArgs>
-  project?: boolean | Prisma.Proposal$projectArgs<ExtArgs>
+  createdUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  reviewUser?: boolean | Prisma.Proposal$reviewUserArgs<ExtArgs>
+  approvedUser?: boolean | Prisma.Proposal$approvedUserArgs<ExtArgs>
 }
 
 export type $ProposalPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Proposal"
   objects: {
-    client: Prisma.$ClientPayload<ExtArgs>
-    user: Prisma.$UserPayload<ExtArgs>
-    template: Prisma.$ProposalTemplatePayload<ExtArgs> | null
+    createdUser: Prisma.$UserPayload<ExtArgs>
     items: Prisma.$ProposalItemPayload<ExtArgs>[]
-    project: Prisma.$ProjectPayload<ExtArgs> | null
+    proposalTemplate: Prisma.$ProposalTemplatePayload<ExtArgs> | null
+    project: Prisma.$ProjectPayload<ExtArgs>
+    reviewUser: Prisma.$UserPayload<ExtArgs> | null
+    approvedUser: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    clientId: string
+    version: number
+    isCurrent: boolean
     status: $Enums.ProposalStatus
     totalValue: runtime.Decimal
     validUntil: Date | null
     createdBy: string
     sourceType: $Enums.ProposalSource
-    templateId: string | null
     fileKey: string | null
     fileUrl: string | null
-    generatedProjectId: string | null
+    projectId: string
+    reviewedAt: Date | null
+    reviewedBy: string | null
+    approvedAt: Date | null
+    approvedBy: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["proposal"]>
@@ -1835,11 +2268,12 @@ readonly fields: ProposalFieldRefs;
  */
 export interface Prisma__ProposalClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  client<T extends Prisma.ClientDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientDefaultArgs<ExtArgs>>): Prisma.Prisma__ClientClient<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  template<T extends Prisma.Proposal$templateArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Proposal$templateArgs<ExtArgs>>): Prisma.Prisma__ProposalTemplateClient<runtime.Types.Result.GetResult<Prisma.$ProposalTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  createdUser<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   items<T extends Prisma.Proposal$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Proposal$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProposalItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  project<T extends Prisma.Proposal$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Proposal$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  proposalTemplate<T extends Prisma.Proposal$proposalTemplateArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Proposal$proposalTemplateArgs<ExtArgs>>): Prisma.Prisma__ProposalTemplateClient<runtime.Types.Result.GetResult<Prisma.$ProposalTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  project<T extends Prisma.ProjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProjectDefaultArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  reviewUser<T extends Prisma.Proposal$reviewUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Proposal$reviewUserArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  approvedUser<T extends Prisma.Proposal$approvedUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Proposal$approvedUserArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1870,16 +2304,20 @@ export interface Prisma__ProposalClient<T, Null = never, ExtArgs extends runtime
  */
 export interface ProposalFieldRefs {
   readonly id: Prisma.FieldRef<"Proposal", 'String'>
-  readonly clientId: Prisma.FieldRef<"Proposal", 'String'>
+  readonly version: Prisma.FieldRef<"Proposal", 'Int'>
+  readonly isCurrent: Prisma.FieldRef<"Proposal", 'Boolean'>
   readonly status: Prisma.FieldRef<"Proposal", 'ProposalStatus'>
   readonly totalValue: Prisma.FieldRef<"Proposal", 'Decimal'>
   readonly validUntil: Prisma.FieldRef<"Proposal", 'DateTime'>
   readonly createdBy: Prisma.FieldRef<"Proposal", 'String'>
   readonly sourceType: Prisma.FieldRef<"Proposal", 'ProposalSource'>
-  readonly templateId: Prisma.FieldRef<"Proposal", 'String'>
   readonly fileKey: Prisma.FieldRef<"Proposal", 'String'>
   readonly fileUrl: Prisma.FieldRef<"Proposal", 'String'>
-  readonly generatedProjectId: Prisma.FieldRef<"Proposal", 'String'>
+  readonly projectId: Prisma.FieldRef<"Proposal", 'String'>
+  readonly reviewedAt: Prisma.FieldRef<"Proposal", 'DateTime'>
+  readonly reviewedBy: Prisma.FieldRef<"Proposal", 'String'>
+  readonly approvedAt: Prisma.FieldRef<"Proposal", 'DateTime'>
+  readonly approvedBy: Prisma.FieldRef<"Proposal", 'String'>
   readonly createdAt: Prisma.FieldRef<"Proposal", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Proposal", 'DateTime'>
 }
@@ -2278,25 +2716,6 @@ export type ProposalDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
- * Proposal.template
- */
-export type Proposal$templateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ProposalTemplate
-   */
-  select?: Prisma.ProposalTemplateSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the ProposalTemplate
-   */
-  omit?: Prisma.ProposalTemplateOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ProposalTemplateInclude<ExtArgs> | null
-  where?: Prisma.ProposalTemplateWhereInput
-}
-
-/**
  * Proposal.items
  */
 export type Proposal$itemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2321,22 +2740,60 @@ export type Proposal$itemsArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * Proposal.project
+ * Proposal.proposalTemplate
  */
-export type Proposal$projectArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Proposal$proposalTemplateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Project
+   * Select specific fields to fetch from the ProposalTemplate
    */
-  select?: Prisma.ProjectSelect<ExtArgs> | null
+  select?: Prisma.ProposalTemplateSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Project
+   * Omit specific fields from the ProposalTemplate
    */
-  omit?: Prisma.ProjectOmit<ExtArgs> | null
+  omit?: Prisma.ProposalTemplateOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProjectInclude<ExtArgs> | null
-  where?: Prisma.ProjectWhereInput
+  include?: Prisma.ProposalTemplateInclude<ExtArgs> | null
+  where?: Prisma.ProposalTemplateWhereInput
+}
+
+/**
+ * Proposal.reviewUser
+ */
+export type Proposal$reviewUserArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+}
+
+/**
+ * Proposal.approvedUser
+ */
+export type Proposal$approvedUserArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

@@ -2,8 +2,6 @@ import { PrismaToPlain } from "@/@types/PrismaToPlain";
 import { ServiceCategory, ServiceType } from "@/generated/prisma/client";
 import { Decimal } from "@prisma/client/runtime/client";
 
-
-
 export interface CreateServiceDTO {
   organizationId: string;
   categoryId: string;
@@ -31,5 +29,9 @@ export interface IServiceTypeRepository {
     id: string,
     organizationId: string
   ): Promise<PrismaToPlain<ServiceType> | null>;
+  findManyByIds(
+    serviceIds: string[],
+    organizationId: string
+  ): Promise<PrismaToPlain<ServiceType>[]>;
   delete(id: string): Promise<void>;
 }

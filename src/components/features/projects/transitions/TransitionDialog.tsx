@@ -29,7 +29,6 @@ export function ProjectTransitionDialog({
 }: Props) {
   // 1. Descobre qual estratégia usar baseada no destino
   const StrategyComponent = getTransitionStrategy(targetStatus);
-
   if (!StrategyComponent) {
     // Retorna null ou um modal genérico de "Tem certeza?"
     return null;
@@ -37,7 +36,7 @@ export function ProjectTransitionDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[800px] ">
+      <DialogContent className="sm:max-w-[800px] md:max-w-[1200px] ">
         <DialogHeader>
           <DialogTitle>Avançar para: {targetStatusLabel}</DialogTitle>
         </DialogHeader>

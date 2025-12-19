@@ -15,7 +15,7 @@ export class PrismaProposalTemplateRepository
     tx?: Prisma.TransactionClient
   ): Promise<ProposalTemplate> {
     const client = tx || prisma;
-    const { isDefault, ...rest } = data;
+    const { isDefault, documentTemplateId, proposalId, ...rest } = data;
 
     // Criação simples se não for default
     return await client.proposalTemplate.create({
@@ -23,6 +23,10 @@ export class PrismaProposalTemplateRepository
         ...rest,
         isDefault: false,
         content: data.content as Prisma.InputJsonValue,
+        template: { connect: { id: documentTemplateId } },
+        proposal: {
+          connect: { id: proposalId },
+        },
       },
     });
   }

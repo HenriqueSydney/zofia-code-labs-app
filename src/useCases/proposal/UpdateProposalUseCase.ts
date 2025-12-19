@@ -64,7 +64,7 @@ export class UpdateProposalUseCase {
         await this.auditLogRepository.create(
           {
             entityType: "Project",
-            entityId: proposal.generatedProjectId ?? "",
+            entityId: proposal.projectId ?? "",
             action: "PROPOSAL_UPDATED",
             userId: data.userId,
             changes: {
@@ -96,7 +96,7 @@ export class UpdateProposalUseCase {
       await this.auditLogRepository.create(
         {
           entityType: "Project",
-          entityId: proposal.generatedProjectId ?? "",
+          entityId: proposal.projectId ?? "",
           action: "PROPOSAL_UPDATED",
           userId: data.userId,
           changes: {

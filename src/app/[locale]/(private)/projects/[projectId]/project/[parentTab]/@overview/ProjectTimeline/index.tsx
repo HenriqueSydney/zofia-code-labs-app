@@ -16,7 +16,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
-import { FlowSection } from "./ProjectTimeline/FlowSection";
+import { FlowSection } from "./FlowSection";
 import {
   allStages,
   cancelledStage,
@@ -87,6 +87,26 @@ const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
 
     toast.success(result.message);
     setShowCancelDialog(false);
+  };
+
+  const getProposalNextStep = (
+    proposal: ProjectWithDetails["proposal"] | null
+  ) => {
+    const proposalStatusLabel: Record<
+      ProjectWithDetails["proposal"]["status"],
+      string
+    > = {
+      DRAFT: "Revisar minuta de proposta",
+      REVIEW: "Aprovar proposta comercial",
+      APPROVED: "Encaminhar proposta ao cliente",
+      SENT: "Confirmar aceite",
+      ACCEPTED: "Avançar para Etapa de Contrato",
+      REJECTED: "Gerar nova proposta",
+    };
+
+    return !proposal
+      ? "Gerar minuta de proposta"
+      : proposalStatusLabel[proposal.status];
   };
 
   return (
@@ -167,7 +187,11 @@ const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
                     onClick={() => setShowAdvanceDialog(true)}
                     className="gap-1"
                   >
-                    {currentStageConfig.nextAction}
+                    {currentStageConfig.key !== "PROPOSAL" &&
+                      currentStageConfig.nextAction}
+
+                    {currentStageConfig.key === "PROPOSAL" &&
+                      getProposalNextStep(project.proposal)}
                     <ChevronRight className="h-4 w-4" />
                   </Button>
                 )}

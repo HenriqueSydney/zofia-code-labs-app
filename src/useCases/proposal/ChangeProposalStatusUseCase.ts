@@ -36,7 +36,12 @@ export class ChangeProposalStatusUseCase {
       );
     }
 
-    await checkUserPermissionForAsset("proposal", userId, proposal, "UPDATE");
+    await checkUserPermissionForAsset(
+      "proposal",
+      userId,
+      { proposal, organizationId: proposal.project.organizationId },
+      "UPDATE"
+    );
 
     if (newStatus === ProposalStatus.ACCEPTED) {
       // TODO: Aqui você poderia disparar a criação automática do Projeto
@@ -48,7 +53,7 @@ export class ChangeProposalStatusUseCase {
       await this.auditLogRepository.create(
         {
           entityType: "Project",
-          entityId: proposal.generatedProjectId ?? "",
+          entityId: proposal.projectId ?? "",
           action: "PROPOSAL_STATUS_CHANGE",
           userId,
           changes: { status: { from: proposal.status, to: newStatus } },
@@ -70,14 +75,24 @@ export class ChangeProposalStatusUseCase {
     if (current === next) return true;
 
     const allowedTransitions: Record<ProposalStatus, ProposalStatus[]> = {
-      [ProposalStatus.DRAFT]: [ProposalStatus.SENT, ProposalStatus.REJECTED],
+      [ProposalStatus.DRAFT]: [ProposalStatus.REVIEW, ProposalStatus.REJECTED],
+      [ProposalStatus.REVIEW]: [
+        ProposalStatus.DRAFT,
+        ProposalStatus.APPROVED,
+        ProposalStatus.REJECTED,
+      ],
+      [ProposalStatus.APPROVED]: [
+        ProposalStatus.REVIEW,
+        ProposalStatus.SENT,
+        ProposalStatus.REJECTED,
+      ],
       [ProposalStatus.SENT]: [
         ProposalStatus.ACCEPTED,
         ProposalStatus.REJECTED,
         ProposalStatus.DRAFT,
       ],
       [ProposalStatus.ACCEPTED]: [ProposalStatus.REJECTED], // Cancelamento
-      [ProposalStatus.REJECTED]: [ProposalStatus.DRAFT], // Restaurar como rascunho (Un-delete)
+      [ProposalStatus.REJECTED]: [ProposalStatus.DRAFT],
     };
 
     return allowedTransitions[current]?.includes(next) ?? false;

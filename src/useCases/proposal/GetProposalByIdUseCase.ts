@@ -16,7 +16,12 @@ export class GetProposalByIdUseCase {
       throw new Error("Proposal not found");
     }
 
-    await checkUserPermissionForAsset("proposal", userId, proposal, "READ");
+    await checkUserPermissionForAsset(
+      "proposal",
+      userId,
+      { organizationId: proposal.project.organizationId },
+      "READ"
+    );
 
     return proposal;
   }

@@ -21,6 +21,6 @@ export class ListProposalsByProjectIdUseCase {
       { organizationId },
       "READ"
     );
-    return await this.proposalRepository.findAllByProjectId(projectId);
+    return await this.proposalRepository.getHistory(projectId);
   }
 }

@@ -8,13 +8,15 @@ import { Link } from "@/i18n/navigation";
 import { date } from "@/lib/dayjs";
 import { Tooltip } from "@/components/Tooltip";
 
+type ProjectListType = Omit<ProjectWithDetails, "projectServices">;
+
 interface IProjectList {
-  projects: ProjectWithDetails[];
+  projects: ProjectListType[];
 }
 
 export function ProjectList({ projects }: IProjectList) {
   const [displayedProjects, setDisplayedProjects] =
-    useState<ProjectWithDetails[]>(projects);
+    useState<ProjectListType[]>(projects);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const observerTarget = useRef<HTMLDivElement>(null);
@@ -22,7 +24,7 @@ export function ProjectList({ projects }: IProjectList) {
   const ITEMS_PER_PAGE = 10;
 
   const loadMoreProjects = (
-    projectsList: ProjectWithDetails[],
+    projectsList: ProjectListType[],
     currentPage: number
   ) => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -63,7 +65,10 @@ export function ProjectList({ projects }: IProjectList) {
     <>
       <div className="grid grid-cols-1 gap-4">
         {displayedProjects.map((project) => (
-          <Link key={project.id} href={`/projects/${project.id}/dashboard`}>
+          <Link
+            key={project.id}
+            href={`/projects/${project.id}/project/overview`}
+          >
             <Card className="hover:shadow-lg transition-shadow cursor-pointer hover:border-primary/50">
               <CardContent className="p-6">
                 <div className="flex items-start justify-between">

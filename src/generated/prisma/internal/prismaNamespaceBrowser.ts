@@ -232,16 +232,20 @@ export type ClientScalarFieldEnum = (typeof ClientScalarFieldEnum)[keyof typeof 
 
 export const ProposalScalarFieldEnum = {
   id: 'id',
-  clientId: 'clientId',
+  version: 'version',
+  isCurrent: 'isCurrent',
   status: 'status',
   totalValue: 'totalValue',
   validUntil: 'validUntil',
   createdBy: 'createdBy',
   sourceType: 'sourceType',
-  templateId: 'templateId',
   fileKey: 'fileKey',
   fileUrl: 'fileUrl',
-  generatedProjectId: 'generatedProjectId',
+  projectId: 'projectId',
+  reviewedAt: 'reviewedAt',
+  reviewedBy: 'reviewedBy',
+  approvedAt: 'approvedAt',
+  approvedBy: 'approvedBy',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -256,7 +260,8 @@ export const ProposalTemplateScalarFieldEnum = {
   isDefault: 'isDefault',
   isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  proposalId: 'proposalId'
 } as const
 
 export type ProposalTemplateScalarFieldEnum = (typeof ProposalTemplateScalarFieldEnum)[keyof typeof ProposalTemplateScalarFieldEnum]
@@ -266,7 +271,6 @@ export const ProposalItemScalarFieldEnum = {
   id: 'id',
   proposalId: 'proposalId',
   serviceTypeId: 'serviceTypeId',
-  description: 'description',
   price: 'price',
   discount: 'discount',
   discountType: 'discountType',

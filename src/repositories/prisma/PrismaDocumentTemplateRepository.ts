@@ -1,9 +1,10 @@
 import { Pagination } from "@/@types/Pagination";
-import { DocumentTemplate, Prisma } from "@/generated/prisma/client";
 import {
-  DocumentTemplateUncheckedCreateInput,
-  ProjectNoteUncheckedCreateInput,
-} from "@/generated/prisma/models";
+  DocumentTemplate,
+  Prisma,
+  TemplateType,
+} from "@/generated/prisma/client";
+import { DocumentTemplateUncheckedCreateInput } from "@/generated/prisma/models";
 import {
   FetchDocumentTemplatesParams,
   IDocumentTemplateRepository,
@@ -69,17 +70,35 @@ export class PrismaDocumentTemplateRepository
     totalOfRegisters: number;
     documentTemplates: DocumentTemplate[];
   }> {
-    let where: Prisma.DocumentTemplateWhereInput = params.query
-      ? {
-          OR: [
-            { title: { contains: params.query, mode: "insensitive" } },
-            { content: { contains: params.query, mode: "insensitive" } },
-          ],
-          organizationId: params.organizationId,
-        }
-      : {
-          organizationId: params.organizationId,
-        };
+    let where: Prisma.DocumentTemplateWhereInput = {
+      organizationId: params.organizationId,
+    };
+
+    if (params && params.query) {
+      const templateType: TemplateType[] = [
+        "CONTRACT",
+        "DELIVERY_TERM",
+        "OTHER",
+        "PROPOSAL",
+      ];
+
+      const templateTypesQuery = templateType.filter((type) =>
+        (params.query as string).toLowerCase().includes(type.toLowerCase())
+      );
+
+      console.log(templateTypesQuery);
+      where = {
+        OR: [
+          {
+            title: { contains: params.query, mode: "insensitive" },
+          },
+          {
+            type: { in: templateTypesQuery },
+          },
+        ],
+        organizationId: params.organizationId,
+      };
+    }
 
     const paginationDef = pagination ? getPaginationQuery(pagination) : {};
     const [totalOfRegisters, documentTemplates] = await Promise.all([

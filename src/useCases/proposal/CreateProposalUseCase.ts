@@ -5,17 +5,24 @@ import { IAuditLogRepository } from "@/repositories/IAuditLogRepository";
 import { IDocumentTemplateRepository } from "@/repositories/IDocumentTemplateRepository";
 import {
   CreateProposalDTO,
+  CreateProposalItemDTO,
   IProposalRepository,
 } from "@/repositories/IProposalRepository";
 import { IProposalTemplateRepository } from "@/repositories/IProposalTemplateRepository";
+import { IServiceTypeRepository } from "@/repositories/IServiceTypeRepository";
 import { IS3StorageService } from "@/services/s3Client/IS3StorageService";
 import {
   calculateItemFinalPrice,
   calculateProposalTotal,
 } from "@/utils/calculateItemFinalPrice";
 
-type CreateProposalUseCaseParams = CreateProposalDTO & {
-  userId: string;
+type CreateProposalUseCaseParams = {
+  projectId: string;
+  templateId?: string | null;
+  fileUrl?: string | null;
+  createdBy: string;
+  validUntil?: Date;
+  items: Omit<CreateProposalItemDTO, "totalValue" | "price" | "finalPrice">[];
   organizationId: string;
   documentTemplateId?: string;
   file?: File;
@@ -26,6 +33,7 @@ export class CreateProposalUseCase {
     private proposalRepository: IProposalRepository,
     private proposalTemplateRepository: IProposalTemplateRepository,
     private documentTemplateRepository: IDocumentTemplateRepository,
+    private serviceTypeRepository: IServiceTypeRepository,
     private storageService: IS3StorageService,
     private auditLogRepository: IAuditLogRepository
   ) {}
@@ -33,7 +41,7 @@ export class CreateProposalUseCase {
   async execute(data: CreateProposalUseCaseParams) {
     await checkUserPermissionForAsset(
       "proposal",
-      data.userId,
+      data.createdBy,
       { organizationId: data.organizationId },
       "CREATE"
     );
@@ -44,7 +52,21 @@ export class CreateProposalUseCase {
       );
     }
 
-    const processedItems = data.items.map((item) => ({
+    const serviceIds = data.items.map((item) => item.serviceTypeId);
+
+    const services = await this.serviceTypeRepository.findManyByIds(
+      serviceIds,
+      data.organizationId
+    );
+
+    const itemsWithValue = data.items.map((item) => ({
+      ...item,
+      price:
+        services.find((service) => service.id === item.serviceTypeId)
+          ?.basePrice ?? 0,
+    }));
+
+    const processedItems = itemsWithValue.map((item) => ({
       ...item,
       finalPrice: calculateItemFinalPrice(item), // Garante que o finalPrice está certo
     }));
@@ -91,6 +113,18 @@ export class CreateProposalUseCase {
     }
 
     return await prisma.$transaction(async (tx) => {
+      const proposalData = {
+        ...data,
+        items: processedItems,
+        totalValue: calculatedTotal,
+        fileUrl: proposalFileUrl,
+        sourceType: data.documentTemplateId
+          ? ProposalSource.SYSTEM_TEMPLATE
+          : ProposalSource.MANUAL_UPLOAD,
+      };
+
+      const proposal = await this.proposalRepository.create(proposalData, tx);
+
       let newProposalTemplate = null;
       if (proposalContent && data.documentTemplateId) {
         newProposalTemplate = await this.proposalTemplateRepository.create(
@@ -99,30 +133,18 @@ export class CreateProposalUseCase {
             content: proposalContent,
             isDefault: false,
             isActive: true,
+            proposalId: proposal.id,
           },
           tx
         );
       }
 
-      const proposalData = {
-        ...data,
-        items: processedItems,
-        totalValue: calculatedTotal,
-        fileUrl: proposalFileUrl,
-        sourceType: newProposalTemplate
-          ? ProposalSource.SYSTEM_TEMPLATE
-          : ProposalSource.MANUAL_UPLOAD,
-        templateId: newProposalTemplate ? newProposalTemplate.id : null,
-      };
-
-      const proposal = await this.proposalRepository.create(proposalData, tx);
-
       await this.auditLogRepository.create(
         {
           entityType: "Project",
-          entityId: proposal.generatedProjectId ?? "",
+          entityId: proposal.projectId ?? "",
           action: "PROPOSAL_GENERATED",
-          userId: data.userId,
+          userId: data.createdBy,
           changes: { status: { from: "", to: ProposalStatus.DRAFT } },
           metadata: {
             proposalId: proposal.id,

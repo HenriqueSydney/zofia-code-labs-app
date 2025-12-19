@@ -3,6 +3,7 @@ import { Prisma, ProposalTemplate } from "@/generated/prisma/client";
 export type TemplateContent = Record<string, any> | Array<any>;
 
 export interface CreateProposalTemplateDTO {
+  proposalId: string;
   documentTemplateId: string;
   content: TemplateContent; // Agora é JSON, não string
   isDefault?: boolean;

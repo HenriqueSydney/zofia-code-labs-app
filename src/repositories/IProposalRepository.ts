@@ -1,10 +1,14 @@
 // dtos/proposal.dto.ts
-import { Prisma, Proposal, ProposalItem } from "@/generated/prisma/client";
+import {
+  DocumentTemplate,
+  Prisma,
+  Proposal,
+  ProposalItem,
+} from "@/generated/prisma/client";
 import { DiscountType, ProposalStatus } from "@/generated/prisma/enums";
 
 export interface CreateProposalItemDTO {
   serviceTypeId: string;
-  description?: string;
   price: number;
   discount: number;
   discountType: DiscountType;
@@ -12,10 +16,9 @@ export interface CreateProposalItemDTO {
 }
 
 export interface CreateProposalDTO {
-  generatedProjectId: string;
+  projectId: string;
   templateId?: string | null;
   fileUrl?: string | null;
-  clientId: string;
   createdBy: string;
   validUntil?: Date;
   totalValue: number;
@@ -25,14 +28,23 @@ export interface CreateProposalDTO {
 export interface UpdateProposalDTO
   extends Partial<Omit<CreateProposalDTO, "items">> {
   status?: ProposalStatus;
-  generatedProjectId?: string;
+  projectId?: string;
 }
 
 // Tipo de retorno completo (com relações)
 export type ProposalWithDetails = Proposal & {
   items: (ProposalItem & { serviceType: { name: string } })[];
-  client: { tradeName: string; email: string };
-  user: { name: string };
+  proposalTemplate: {
+    id: string;
+    template: { title: string | null } | null;
+  } | null;
+  project: {
+    organizationId: string;
+    client: { tradeName: string; email: string };
+  };
+  createdUser: { name: string | null } | null;
+  approvedUser: { name: string | null } | null;
+  reviewUser: { name: string | null } | null;
 };
 
 export interface IProposalRepository {
@@ -42,7 +54,7 @@ export interface IProposalRepository {
   ): Promise<Proposal>;
   findById(id: string): Promise<ProposalWithDetails | null>;
   findAllByClient(clientId: string): Promise<Proposal[]>;
-  findAllByProjectId(projectId: string): Promise<Proposal[]>;
+  getHistory(projectId: string): Promise<ProposalWithDetails[]>;
   update(
     id: string,
     data: UpdateProposalDTO,

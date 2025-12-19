@@ -33,7 +33,7 @@ export class DeleteProposalUseCase {
       await this.auditLogRepository.create(
         {
           entityType: "Project",
-          entityId: proposal.generatedProjectId ?? "",
+          entityId: proposal.projectId ?? "",
           action: "PROPOSAL_STATUS_CHANGE",
           userId,
           changes: { status: { from: proposal.status, to: "REJECTED" } },

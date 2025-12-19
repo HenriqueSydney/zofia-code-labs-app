@@ -1,111 +1,80 @@
-// src/components/features/projects/transitions/strategies/ToProposalGenerated.tsx
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ProposalCreationForm } from "./toProposalGeneratedSteps/ProposalCreationForm"; // O form anterior
+// import { ProposalEditor } from "./toProposalGeneratedSteps/ProposalEditor"; // Novo componente de edição
+// import { ProposalReview } from "./toProposalGeneratedSteps/ProposalReview"; // Novo componente de revisão
 import { TransitionStrategyProps } from "../types";
-import { changeProjectStatusAction } from "@/actions/projects/changeProjectStatus";
+import { ProposalEditor } from "./toProposalGeneratedSteps/ProposalEditor";
+import { ProposalReview } from "./toProposalGeneratedSteps/ProposalReview";
+import { ProposalSendToClient } from "./toProposalGeneratedSteps/ProposalSendToClient";
 
 export function ToProposalGenerated({
   project,
   targetStatus,
   onSuccess,
   onCancel,
+  contextData,
 }: TransitionStrategyProps) {
-  const [mode, setMode] = useState<"template" | "upload">("template");
-  const [selectedTemplate, setSelectedTemplate] = useState("default-v1");
-  const [file, setFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
+  // Verificamos o estado atual da proposta baseada nos dados do banco
+  const proposal = contextData; // Assumindo que o include foi feito no backend
 
-  const handleSubmit = async () => {
-    if (mode === "upload" && !file) return alert("Selecione um arquivo.");
+  // ESTÁGIO 1: Criação
+  // Se não existe proposta vinculada ao projeto, mostra o formulário de criação/upload
+  if (!proposal) {
+    return (
+      <ProposalCreationForm
+        project={project}
+        onSuccess={() => {
+          // Recarrega a página ou invalida o cache do React Query/SWR
+          // para que o componente remonte e caia no ESTÁGIO 2
+          window.location.reload();
+        }}
+        onCancel={onCancel}
+        targetStatus={targetStatus} // Passamos, mas talvez só mudemos o status no final
+      />
+    );
+  }
 
-    setLoading(true);
+  // ESTÁGIO 2: Edição (Apenas para Templates)
+  // Se existe, é template e ainda não foi aprovada internamente
+  if (
+    proposal.sourceType === "SYSTEM_TEMPLATE" &&
+    proposal.status === "DRAFT"
+  ) {
+    return (
+      <ProposalEditor
+        proposal={proposal}
+        project={project}
+        onApproved={onSuccess}
+        contextData={contextData}
+      />
+    );
+  }
 
-    // Se for upload, você provavelmente faria o upload para S3/Blob aqui antes
-    // e passaria apenas a URL para a action.
-    // Vamos simular passando apenas metadados por enquanto.
+  // // ESTÁGIO 3: Revisão/Aprovação (Para Uploads ou pós-edição)
+  // // Se existe e não foi aprovada (caso de upload direto)
+  if (proposal && proposal.status === "REVIEW") {
+    return <ProposalReview proposal={proposal} onSuccess={onSuccess} />;
+  }
 
-    const transitionData = {
-      proposalMethod: mode,
-      templateId: mode === "template" ? selectedTemplate : undefined,
-      fileName: file?.name, // Exemplo simplificado
-    };
+  if (proposal && proposal.status === "APPROVED") {
+    return (
+      <ProposalSendToClient
+      proposal={proposal} onSuccess={onSuccess}
+      />
+    );
+  }
 
-    const result = await changeProjectStatusAction({
-      projectId: project.id,
-      newStatus: targetStatus,
-      data: transitionData,
-    });
-
-    setLoading(false);
-    if (result.success) onSuccess();
-    else alert(result.error);
-  };
-
+  // ESTÁGIO 4: Já Aprovado
   return (
-    <div className="space-y-6">
-      <RadioGroup
-        defaultValue="template"
-        onValueChange={(v: any) => setMode(v)}
-        className="grid grid-cols-2 gap-4"
-      >
-        <div>
-          <RadioGroupItem
-            value="template"
-            id="template"
-            className="peer sr-only"
-          />
-          <Label
-            htmlFor="template"
-            className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-          >
-            Gerar Automático (Template)
-          </Label>
-        </div>
-        <div>
-          <RadioGroupItem value="upload" id="upload" className="peer sr-only" />
-          <Label
-            htmlFor="upload"
-            className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-          >
-            Upload de PDF Externo
-          </Label>
-        </div>
-      </RadioGroup>
-
-      {mode === "template" ? (
-        <div className="space-y-2">
-          <Label>Selecione o Modelo</Label>
-          <select
-            className="w-full border p-2 rounded"
-            value={selectedTemplate}
-            onChange={(e) => setSelectedTemplate(e.target.value)}
-          >
-            <option value="default-v1">Padrão Receita Federal</option>
-            <option value="simple-v2">Simplificado</option>
-          </select>
-        </div>
-      ) : (
-        <div className="space-y-2">
-          <Label>Anexar Proposta Assinada/Elaborada</Label>
-          <Input
-            type="file"
-            accept=".pdf"
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
-          />
-        </div>
+    <div className="p-4 bg-green-50 border border-green-200 rounded text-green-800">
+      {proposal.aprovedAt && (
+        <span>
+          Proposta gerada e aprovada em:{" "}
+          {new Date(proposal.aprovedAt).toLocaleDateString()}.
+        </span>
       )}
-
-      <div className="flex justify-end gap-2">
-        <Button variant="outline" onClick={onCancel}>
-          Voltar
-        </Button>
-        <Button onClick={handleSubmit} disabled={loading}>
-          Concluir
-        </Button>
-      </div>
+      {!proposal.aprovedAt && <span>Proposta gerada e aprovada</span>}
+      <br />
+      Aguardando envio/resposta do cliente.
     </div>
   );
 }

@@ -99,6 +99,24 @@ export class PrismaServiceTypeRepository implements IServiceTypeRepository {
     return plain as PrismaToPlain<ServiceType> | null;
   }
 
+  async findManyByIds(
+    serviceIds: string[],
+    organizationId: string
+  ): Promise<PrismaToPlain<ServiceType>[]> {
+    const serviceTypes = await prisma.serviceType.findMany({
+      where: {
+        id: {
+          in: serviceIds,
+        },
+        organizationId, // CLÁUSULA DE SEGURANÇA MULTI-TENANT
+      },
+    });
+
+    const plain = serviceTypes.map(normalizePrisma);
+
+    return plain as PrismaToPlain<ServiceType>[];
+  }
+
   async findByName(
     name: string,
     organizationId: string

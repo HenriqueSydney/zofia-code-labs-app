@@ -32,6 +32,7 @@ import {
   CreateTemplateSchemaType,
 } from "@/schemas/documentTemplates/createDocumentTemplateSchema";
 import Editor from "@/components/TipTap/Editor";
+import { useRouter } from "next/navigation";
 
 // Variáveis disponíveis
 const VARIAVEIS_EXEMPLO = [
@@ -48,6 +49,7 @@ interface DocumentTemplateFormProps {
 
 export function DocumentTemplateForm({ onSuccess }: DocumentTemplateFormProps) {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<CreateTemplateSchemaType>({
     resolver: zodResolver(createTemplateSchema),
@@ -69,7 +71,9 @@ export function DocumentTemplateForm({ onSuccess }: DocumentTemplateFormProps) {
     }
 
     toast.success("Modelo salvo com sucesso!");
-    form.reset(); // Limpa o form
+    form.reset();
+    router.back();
+
     if (onSuccess) onSuccess();
   };
 
