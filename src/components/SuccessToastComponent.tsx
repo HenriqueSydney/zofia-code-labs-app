@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 
-export function ToastComponent() {
+export function SuccessToastComponent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();

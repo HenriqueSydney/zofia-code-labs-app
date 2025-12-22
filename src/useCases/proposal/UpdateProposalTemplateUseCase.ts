@@ -15,7 +15,9 @@ export class UpdateProposalTemplateUseCase {
     private proposalTemplateRepository: IProposalTemplateRepository
   ) {}
 
-  async execute(data: CreateProposalUseCaseParams) {
+  async execute(
+    data: CreateProposalUseCaseParams
+  ): Promise<{ projectId: string }> {
     const proposal = await this.proposalRepository.findById(data.proposalId);
 
     if (!proposal) {
@@ -37,5 +39,7 @@ export class UpdateProposalTemplateUseCase {
       proposalId: proposal.id,
       content: data.newContent,
     });
+
+    return { projectId: proposal.projectId };
   }
 }

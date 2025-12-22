@@ -69,6 +69,13 @@ export class PrismaProjectsRepository implements IProjectsRepository {
             proposalTemplate: true,
           },
         },
+        contracts: {
+          where: { isCurrent: true },
+          take: 1,
+          include: {
+            contractTemplate: true,
+          },
+        },
         projectServices: {
           include: {
             serviceType: true,
@@ -82,9 +89,9 @@ export class PrismaProjectsRepository implements IProjectsRepository {
     const plain = normalizePrisma({
       ...project,
       proposal: project.proposal[0] || null,
+      contract: project.contracts[0] || null,
     });
-    // 2. Normalização para o Tipo ProjectWithDetails
-    // Transformamos o array 'proposal' em um objeto único 'currentProposal'
+
     return plain as ProjectWithDetails;
   }
 
@@ -226,7 +233,7 @@ export class PrismaProjectsRepository implements IProjectsRepository {
       where: { projectId },
     });
 
-    if (serviceIds.length > 0) {
+    if (serviceIds && serviceIds.length > 0) {
       await client.projectServices.createMany({
         data: serviceIds.map((serviceTypeId) => ({
           projectId,

@@ -1,18 +1,18 @@
-import { DeleteProposalUseCase } from "../DeleteProposalUseCase";
+import { CancelProposalUseCase } from "../CancelProposalUseCase";
 import { makeAuditLogRepository } from "@/repositories/factories/makeAuditLogRepository";
 import { makeProposalRepository } from "@/repositories/factories/makeProposalRepository";
 
-let deleteProposalUseCase: DeleteProposalUseCase;
+let cancelProposalUseCase: CancelProposalUseCase;
 
-export function makeDeleteProposalUseCase() {
-  if (!deleteProposalUseCase) {
+export function makeCancelProposalUseCase() {
+  if (!cancelProposalUseCase) {
     const proposalRepository = makeProposalRepository();
     const auditLogRepository = makeAuditLogRepository();
-    deleteProposalUseCase = new DeleteProposalUseCase(
+    cancelProposalUseCase = new CancelProposalUseCase(
       proposalRepository,
       auditLogRepository
     );
   }
 
-  return deleteProposalUseCase;
+  return cancelProposalUseCase;
 }

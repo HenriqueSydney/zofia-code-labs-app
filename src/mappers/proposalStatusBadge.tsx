@@ -14,6 +14,7 @@ export const getProposalStatusBadge = (status: Proposal["status"]) => {
     SENT: { label: "Enviada", variant: "default" },
     ACCEPTED: { label: "Aceita", variant: "default" },
     REJECTED: { label: "Rejeitada", variant: "destructive" },
+    CANCELLED: { label: "Cancelada", variant: "destructive" },
   };
   return (
     <Badge variant={config[status]?.variant ?? "default"}>

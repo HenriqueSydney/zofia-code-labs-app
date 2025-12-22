@@ -1,19 +1,24 @@
 import { AppError } from "@/errors/AppError";
+import { Proposal } from "@/generated/prisma/client";
 import { ProposalStatus } from "@/generated/prisma/enums";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { prisma } from "@/lib/prisma";
 import { IAuditLogRepository } from "@/repositories/IAuditLogRepository";
+import { IProjectsRepository } from "@/repositories/IProjectsRepository";
 import { IProposalRepository } from "@/repositories/IProposalRepository";
+import { ChangeProjectStatusUseCase } from "../projects/ChangeProjectStatusUseCase";
 
 interface ChangeProposalStatusRequest {
   proposalId: string;
   newStatus: ProposalStatus;
-  userId: string; // Para garantir que o usuário é dono da proposta
+  userId: string;
+  communicationChannel?: "whatsapp" | "email";
 }
 
 export class ChangeProposalStatusUseCase {
   constructor(
     private proposalRepository: IProposalRepository,
+    private chageProjectStatusUseCase: ChangeProjectStatusUseCase,
     private auditLogRepository: IAuditLogRepository
   ) {}
 
@@ -21,8 +26,8 @@ export class ChangeProposalStatusUseCase {
     proposalId,
     newStatus,
     userId,
-  }: ChangeProposalStatusRequest): Promise<void> {
-    // 1. Buscar a proposta
+    communicationChannel,
+  }: ChangeProposalStatusRequest): Promise<Proposal> {
     const proposal = await this.proposalRepository.findById(proposalId);
 
     if (!proposal) {
@@ -43,13 +48,29 @@ export class ChangeProposalStatusUseCase {
       "UPDATE"
     );
 
-    if (newStatus === ProposalStatus.ACCEPTED) {
-      // TODO: Aqui você poderia disparar a criação automática do Projeto
-      // await this.createProjectFromProposal.execute(proposal);
-    }
+    const updatedProposal = await prisma.$transaction(async (tx) => {
+      const proposal = await this.proposalRepository.updateStatus(
+        proposalId,
+        newStatus,
+        tx
+      );
 
-    await prisma.$transaction(async (tx) => {
-      await this.proposalRepository.updateStatus(proposalId, newStatus, tx);
+      if (newStatus === "SENT" && communicationChannel) {
+        console.log({ sent: communicationChannel });
+      }
+
+      if (newStatus === "ACCEPTED") {
+        await this.chageProjectStatusUseCase.execute(
+          {
+            projectId: proposal.projectId,
+            newStatus: "PROPOSAL_GENERATED",
+            data: { observation: "Proposta aceita pelo cliente." },
+            userId: userId,
+          },
+          tx
+        );
+      }
+
       await this.auditLogRepository.create(
         {
           entityType: "Project",
@@ -63,7 +84,10 @@ export class ChangeProposalStatusUseCase {
         },
         tx
       );
+      return proposal;
     });
+
+    return updatedProposal;
   }
 
   // Helper para validar a transição (State Machine Guard)
@@ -80,19 +104,23 @@ export class ChangeProposalStatusUseCase {
         ProposalStatus.DRAFT,
         ProposalStatus.APPROVED,
         ProposalStatus.REJECTED,
+        ProposalStatus.CANCELLED,
       ],
       [ProposalStatus.APPROVED]: [
         ProposalStatus.REVIEW,
         ProposalStatus.SENT,
         ProposalStatus.REJECTED,
+        ProposalStatus.CANCELLED,
       ],
       [ProposalStatus.SENT]: [
         ProposalStatus.ACCEPTED,
         ProposalStatus.REJECTED,
+        ProposalStatus.CANCELLED,
         ProposalStatus.DRAFT,
       ],
       [ProposalStatus.ACCEPTED]: [ProposalStatus.REJECTED], // Cancelamento
       [ProposalStatus.REJECTED]: [ProposalStatus.DRAFT],
+      [ProposalStatus.CANCELLED]: [],
     };
 
     return allowedTransitions[current]?.includes(next) ?? false;

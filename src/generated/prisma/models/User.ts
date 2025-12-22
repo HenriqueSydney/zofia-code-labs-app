@@ -232,6 +232,9 @@ export type UserWhereInput = {
   createdProposals?: Prisma.ProposalListRelationFilter
   approvedProposals?: Prisma.ProposalListRelationFilter
   reviwedProposals?: Prisma.ProposalListRelationFilter
+  createdcontracts?: Prisma.ContractListRelationFilter
+  approvedcontracts?: Prisma.ContractListRelationFilter
+  reviwedcontracts?: Prisma.ContractListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -255,6 +258,9 @@ export type UserOrderByWithRelationInput = {
   createdProposals?: Prisma.ProposalOrderByRelationAggregateInput
   approvedProposals?: Prisma.ProposalOrderByRelationAggregateInput
   reviwedProposals?: Prisma.ProposalOrderByRelationAggregateInput
+  createdcontracts?: Prisma.ContractOrderByRelationAggregateInput
+  approvedcontracts?: Prisma.ContractOrderByRelationAggregateInput
+  reviwedcontracts?: Prisma.ContractOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -281,6 +287,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdProposals?: Prisma.ProposalListRelationFilter
   approvedProposals?: Prisma.ProposalListRelationFilter
   reviwedProposals?: Prisma.ProposalListRelationFilter
+  createdcontracts?: Prisma.ContractListRelationFilter
+  approvedcontracts?: Prisma.ContractListRelationFilter
+  reviwedcontracts?: Prisma.ContractListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -335,6 +344,9 @@ export type UserCreateInput = {
   createdProposals?: Prisma.ProposalCreateNestedManyWithoutCreatedUserInput
   approvedProposals?: Prisma.ProposalCreateNestedManyWithoutApprovedUserInput
   reviwedProposals?: Prisma.ProposalCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -357,6 +369,9 @@ export type UserUncheckedCreateInput = {
   createdProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutCreatedUserInput
   approvedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutApprovedUserInput
   reviwedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserUpdateInput = {
@@ -379,6 +394,9 @@ export type UserUpdateInput = {
   createdProposals?: Prisma.ProposalUpdateManyWithoutCreatedUserNestedInput
   approvedProposals?: Prisma.ProposalUpdateManyWithoutApprovedUserNestedInput
   reviwedProposals?: Prisma.ProposalUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -401,6 +419,9 @@ export type UserUncheckedUpdateInput = {
   createdProposals?: Prisma.ProposalUncheckedUpdateManyWithoutCreatedUserNestedInput
   approvedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutApprovedUserNestedInput
   reviwedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUncheckedUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -638,6 +659,52 @@ export type UserUpdateOneWithoutApprovedProposalsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutApprovedProposalsInput, Prisma.UserUpdateWithoutApprovedProposalsInput>, Prisma.UserUncheckedUpdateWithoutApprovedProposalsInput>
 }
 
+export type UserCreateNestedOneWithoutCreatedcontractsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedcontractsInput, Prisma.UserUncheckedCreateWithoutCreatedcontractsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedcontractsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutReviwedcontractsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviwedcontractsInput, Prisma.UserUncheckedCreateWithoutReviwedcontractsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviwedcontractsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutApprovedcontractsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApprovedcontractsInput, Prisma.UserUncheckedCreateWithoutApprovedcontractsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApprovedcontractsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCreatedcontractsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedcontractsInput, Prisma.UserUncheckedCreateWithoutCreatedcontractsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedcontractsInput
+  upsert?: Prisma.UserUpsertWithoutCreatedcontractsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedcontractsInput, Prisma.UserUpdateWithoutCreatedcontractsInput>, Prisma.UserUncheckedUpdateWithoutCreatedcontractsInput>
+}
+
+export type UserUpdateOneWithoutReviwedcontractsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviwedcontractsInput, Prisma.UserUncheckedCreateWithoutReviwedcontractsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviwedcontractsInput
+  upsert?: Prisma.UserUpsertWithoutReviwedcontractsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReviwedcontractsInput, Prisma.UserUpdateWithoutReviwedcontractsInput>, Prisma.UserUncheckedUpdateWithoutReviwedcontractsInput>
+}
+
+export type UserUpdateOneWithoutApprovedcontractsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApprovedcontractsInput, Prisma.UserUncheckedCreateWithoutApprovedcontractsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApprovedcontractsInput
+  upsert?: Prisma.UserUpsertWithoutApprovedcontractsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutApprovedcontractsInput, Prisma.UserUpdateWithoutApprovedcontractsInput>, Prisma.UserUncheckedUpdateWithoutApprovedcontractsInput>
+}
+
 export type UserCreateNestedOneWithoutCreatedProjectsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedProjectsInput, Prisma.UserUncheckedCreateWithoutCreatedProjectsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedProjectsInput
@@ -701,6 +768,9 @@ export type UserCreateWithoutOrganizationInput = {
   createdProposals?: Prisma.ProposalCreateNestedManyWithoutCreatedUserInput
   approvedProposals?: Prisma.ProposalCreateNestedManyWithoutApprovedUserInput
   reviwedProposals?: Prisma.ProposalCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserUncheckedCreateWithoutOrganizationInput = {
@@ -722,6 +792,9 @@ export type UserUncheckedCreateWithoutOrganizationInput = {
   createdProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutCreatedUserInput
   approvedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutApprovedUserInput
   reviwedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserCreateOrConnectWithoutOrganizationInput = {
@@ -785,6 +858,9 @@ export type UserCreateWithoutAccountsInput = {
   createdProposals?: Prisma.ProposalCreateNestedManyWithoutCreatedUserInput
   approvedProposals?: Prisma.ProposalCreateNestedManyWithoutApprovedUserInput
   reviwedProposals?: Prisma.ProposalCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -806,6 +882,9 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   createdProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutCreatedUserInput
   approvedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutApprovedUserInput
   reviwedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -843,6 +922,9 @@ export type UserUpdateWithoutAccountsInput = {
   createdProposals?: Prisma.ProposalUpdateManyWithoutCreatedUserNestedInput
   approvedProposals?: Prisma.ProposalUpdateManyWithoutApprovedUserNestedInput
   reviwedProposals?: Prisma.ProposalUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -864,6 +946,9 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   createdProposals?: Prisma.ProposalUncheckedUpdateManyWithoutCreatedUserNestedInput
   approvedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutApprovedUserNestedInput
   reviwedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUncheckedUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserCreateWithoutLoginHistoriesInput = {
@@ -885,6 +970,9 @@ export type UserCreateWithoutLoginHistoriesInput = {
   createdProposals?: Prisma.ProposalCreateNestedManyWithoutCreatedUserInput
   approvedProposals?: Prisma.ProposalCreateNestedManyWithoutApprovedUserInput
   reviwedProposals?: Prisma.ProposalCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserUncheckedCreateWithoutLoginHistoriesInput = {
@@ -906,6 +994,9 @@ export type UserUncheckedCreateWithoutLoginHistoriesInput = {
   createdProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutCreatedUserInput
   approvedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutApprovedUserInput
   reviwedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserCreateOrConnectWithoutLoginHistoriesInput = {
@@ -943,6 +1034,9 @@ export type UserUpdateWithoutLoginHistoriesInput = {
   createdProposals?: Prisma.ProposalUpdateManyWithoutCreatedUserNestedInput
   approvedProposals?: Prisma.ProposalUpdateManyWithoutApprovedUserNestedInput
   reviwedProposals?: Prisma.ProposalUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLoginHistoriesInput = {
@@ -964,6 +1058,9 @@ export type UserUncheckedUpdateWithoutLoginHistoriesInput = {
   createdProposals?: Prisma.ProposalUncheckedUpdateManyWithoutCreatedUserNestedInput
   approvedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutApprovedUserNestedInput
   reviwedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUncheckedUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -985,6 +1082,9 @@ export type UserCreateWithoutSessionsInput = {
   createdProposals?: Prisma.ProposalCreateNestedManyWithoutCreatedUserInput
   approvedProposals?: Prisma.ProposalCreateNestedManyWithoutApprovedUserInput
   reviwedProposals?: Prisma.ProposalCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1006,6 +1106,9 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   createdProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutCreatedUserInput
   approvedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutApprovedUserInput
   reviwedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1043,6 +1146,9 @@ export type UserUpdateWithoutSessionsInput = {
   createdProposals?: Prisma.ProposalUpdateManyWithoutCreatedUserNestedInput
   approvedProposals?: Prisma.ProposalUpdateManyWithoutApprovedUserNestedInput
   reviwedProposals?: Prisma.ProposalUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1064,6 +1170,9 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   createdProposals?: Prisma.ProposalUncheckedUpdateManyWithoutCreatedUserNestedInput
   approvedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutApprovedUserNestedInput
   reviwedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUncheckedUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserCreateWithoutCreatedProposalsInput = {
@@ -1085,6 +1194,9 @@ export type UserCreateWithoutCreatedProposalsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   approvedProposals?: Prisma.ProposalCreateNestedManyWithoutApprovedUserInput
   reviwedProposals?: Prisma.ProposalCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedProposalsInput = {
@@ -1106,6 +1218,9 @@ export type UserUncheckedCreateWithoutCreatedProposalsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   approvedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutApprovedUserInput
   reviwedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedProposalsInput = {
@@ -1132,6 +1247,9 @@ export type UserCreateWithoutReviwedProposalsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   createdProposals?: Prisma.ProposalCreateNestedManyWithoutCreatedUserInput
   approvedProposals?: Prisma.ProposalCreateNestedManyWithoutApprovedUserInput
+  createdcontracts?: Prisma.ContractCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserUncheckedCreateWithoutReviwedProposalsInput = {
@@ -1153,6 +1271,9 @@ export type UserUncheckedCreateWithoutReviwedProposalsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   createdProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutCreatedUserInput
   approvedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutApprovedUserInput
+  createdcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserCreateOrConnectWithoutReviwedProposalsInput = {
@@ -1179,6 +1300,9 @@ export type UserCreateWithoutApprovedProposalsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   createdProposals?: Prisma.ProposalCreateNestedManyWithoutCreatedUserInput
   reviwedProposals?: Prisma.ProposalCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserUncheckedCreateWithoutApprovedProposalsInput = {
@@ -1200,6 +1324,9 @@ export type UserUncheckedCreateWithoutApprovedProposalsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   createdProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutCreatedUserInput
   reviwedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserCreateOrConnectWithoutApprovedProposalsInput = {
@@ -1237,6 +1364,9 @@ export type UserUpdateWithoutCreatedProposalsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   approvedProposals?: Prisma.ProposalUpdateManyWithoutApprovedUserNestedInput
   reviwedProposals?: Prisma.ProposalUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedProposalsInput = {
@@ -1258,6 +1388,9 @@ export type UserUncheckedUpdateWithoutCreatedProposalsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   approvedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutApprovedUserNestedInput
   reviwedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUncheckedUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserUpsertWithoutReviwedProposalsInput = {
@@ -1290,6 +1423,9 @@ export type UserUpdateWithoutReviwedProposalsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   createdProposals?: Prisma.ProposalUpdateManyWithoutCreatedUserNestedInput
   approvedProposals?: Prisma.ProposalUpdateManyWithoutApprovedUserNestedInput
+  createdcontracts?: Prisma.ContractUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviwedProposalsInput = {
@@ -1311,6 +1447,9 @@ export type UserUncheckedUpdateWithoutReviwedProposalsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   createdProposals?: Prisma.ProposalUncheckedUpdateManyWithoutCreatedUserNestedInput
   approvedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutApprovedUserNestedInput
+  createdcontracts?: Prisma.ContractUncheckedUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserUpsertWithoutApprovedProposalsInput = {
@@ -1343,6 +1482,9 @@ export type UserUpdateWithoutApprovedProposalsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   createdProposals?: Prisma.ProposalUpdateManyWithoutCreatedUserNestedInput
   reviwedProposals?: Prisma.ProposalUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApprovedProposalsInput = {
@@ -1364,6 +1506,345 @@ export type UserUncheckedUpdateWithoutApprovedProposalsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   createdProposals?: Prisma.ProposalUncheckedUpdateManyWithoutCreatedUserNestedInput
   reviwedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUncheckedUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
+}
+
+export type UserCreateWithoutCreatedcontractsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutUsersInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  createdProjects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  loginHistories?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  createdProposals?: Prisma.ProposalCreateNestedManyWithoutCreatedUserInput
+  approvedProposals?: Prisma.ProposalCreateNestedManyWithoutApprovedUserInput
+  reviwedProposals?: Prisma.ProposalCreateNestedManyWithoutReviewUserInput
+  approvedcontracts?: Prisma.ContractCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
+}
+
+export type UserUncheckedCreateWithoutCreatedcontractsInput = {
+  id?: string
+  organizationId: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  loginHistories?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  createdProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutCreatedUserInput
+  approvedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutApprovedUserInput
+  reviwedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutReviewUserInput
+  approvedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
+}
+
+export type UserCreateOrConnectWithoutCreatedcontractsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedcontractsInput, Prisma.UserUncheckedCreateWithoutCreatedcontractsInput>
+}
+
+export type UserCreateWithoutReviwedcontractsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutUsersInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  createdProjects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  loginHistories?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  createdProposals?: Prisma.ProposalCreateNestedManyWithoutCreatedUserInput
+  approvedProposals?: Prisma.ProposalCreateNestedManyWithoutApprovedUserInput
+  reviwedProposals?: Prisma.ProposalCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractCreateNestedManyWithoutApprovedUserInput
+}
+
+export type UserUncheckedCreateWithoutReviwedcontractsInput = {
+  id?: string
+  organizationId: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  loginHistories?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  createdProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutCreatedUserInput
+  approvedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutApprovedUserInput
+  reviwedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutApprovedUserInput
+}
+
+export type UserCreateOrConnectWithoutReviwedcontractsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviwedcontractsInput, Prisma.UserUncheckedCreateWithoutReviwedcontractsInput>
+}
+
+export type UserCreateWithoutApprovedcontractsInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutUsersInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  createdProjects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  loginHistories?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  createdProposals?: Prisma.ProposalCreateNestedManyWithoutCreatedUserInput
+  approvedProposals?: Prisma.ProposalCreateNestedManyWithoutApprovedUserInput
+  reviwedProposals?: Prisma.ProposalCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractCreateNestedManyWithoutCreatedUserInput
+  reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
+}
+
+export type UserUncheckedCreateWithoutApprovedcontractsInput = {
+  id?: string
+  organizationId: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  loginHistories?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  createdProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutCreatedUserInput
+  approvedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutApprovedUserInput
+  reviwedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCreatedUserInput
+  reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
+}
+
+export type UserCreateOrConnectWithoutApprovedcontractsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutApprovedcontractsInput, Prisma.UserUncheckedCreateWithoutApprovedcontractsInput>
+}
+
+export type UserUpsertWithoutCreatedcontractsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCreatedcontractsInput, Prisma.UserUncheckedUpdateWithoutCreatedcontractsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedcontractsInput, Prisma.UserUncheckedCreateWithoutCreatedcontractsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCreatedcontractsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCreatedcontractsInput, Prisma.UserUncheckedUpdateWithoutCreatedcontractsInput>
+}
+
+export type UserUpdateWithoutCreatedcontractsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutUsersNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  createdProjects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  loginHistories?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  createdProposals?: Prisma.ProposalUpdateManyWithoutCreatedUserNestedInput
+  approvedProposals?: Prisma.ProposalUpdateManyWithoutApprovedUserNestedInput
+  reviwedProposals?: Prisma.ProposalUpdateManyWithoutReviewUserNestedInput
+  approvedcontracts?: Prisma.ContractUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCreatedcontractsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  loginHistories?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  createdProposals?: Prisma.ProposalUncheckedUpdateManyWithoutCreatedUserNestedInput
+  approvedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutApprovedUserNestedInput
+  reviwedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutReviewUserNestedInput
+  approvedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
+}
+
+export type UserUpsertWithoutReviwedcontractsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReviwedcontractsInput, Prisma.UserUncheckedUpdateWithoutReviwedcontractsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviwedcontractsInput, Prisma.UserUncheckedCreateWithoutReviwedcontractsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReviwedcontractsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReviwedcontractsInput, Prisma.UserUncheckedUpdateWithoutReviwedcontractsInput>
+}
+
+export type UserUpdateWithoutReviwedcontractsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutUsersNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  createdProjects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  loginHistories?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  createdProposals?: Prisma.ProposalUpdateManyWithoutCreatedUserNestedInput
+  approvedProposals?: Prisma.ProposalUpdateManyWithoutApprovedUserNestedInput
+  reviwedProposals?: Prisma.ProposalUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUpdateManyWithoutApprovedUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReviwedcontractsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  loginHistories?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  createdProposals?: Prisma.ProposalUncheckedUpdateManyWithoutCreatedUserNestedInput
+  approvedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutApprovedUserNestedInput
+  reviwedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUncheckedUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutApprovedUserNestedInput
+}
+
+export type UserUpsertWithoutApprovedcontractsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutApprovedcontractsInput, Prisma.UserUncheckedUpdateWithoutApprovedcontractsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutApprovedcontractsInput, Prisma.UserUncheckedCreateWithoutApprovedcontractsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutApprovedcontractsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutApprovedcontractsInput, Prisma.UserUncheckedUpdateWithoutApprovedcontractsInput>
+}
+
+export type UserUpdateWithoutApprovedcontractsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutUsersNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  createdProjects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  loginHistories?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  createdProposals?: Prisma.ProposalUpdateManyWithoutCreatedUserNestedInput
+  approvedProposals?: Prisma.ProposalUpdateManyWithoutApprovedUserNestedInput
+  reviwedProposals?: Prisma.ProposalUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUpdateManyWithoutCreatedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutApprovedcontractsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  loginHistories?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  createdProposals?: Prisma.ProposalUncheckedUpdateManyWithoutCreatedUserNestedInput
+  approvedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutApprovedUserNestedInput
+  reviwedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUncheckedUpdateManyWithoutCreatedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserCreateWithoutCreatedProjectsInput = {
@@ -1385,6 +1866,9 @@ export type UserCreateWithoutCreatedProjectsInput = {
   createdProposals?: Prisma.ProposalCreateNestedManyWithoutCreatedUserInput
   approvedProposals?: Prisma.ProposalCreateNestedManyWithoutApprovedUserInput
   reviwedProposals?: Prisma.ProposalCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedProjectsInput = {
@@ -1406,6 +1890,9 @@ export type UserUncheckedCreateWithoutCreatedProjectsInput = {
   createdProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutCreatedUserInput
   approvedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutApprovedUserInput
   reviwedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedProjectsInput = {
@@ -1443,6 +1930,9 @@ export type UserUpdateWithoutCreatedProjectsInput = {
   createdProposals?: Prisma.ProposalUpdateManyWithoutCreatedUserNestedInput
   approvedProposals?: Prisma.ProposalUpdateManyWithoutApprovedUserNestedInput
   reviwedProposals?: Prisma.ProposalUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedProjectsInput = {
@@ -1464,6 +1954,9 @@ export type UserUncheckedUpdateWithoutCreatedProjectsInput = {
   createdProposals?: Prisma.ProposalUncheckedUpdateManyWithoutCreatedUserNestedInput
   approvedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutApprovedUserNestedInput
   reviwedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUncheckedUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserCreateWithoutProjectNotesInput = {
@@ -1485,6 +1978,9 @@ export type UserCreateWithoutProjectNotesInput = {
   createdProposals?: Prisma.ProposalCreateNestedManyWithoutCreatedUserInput
   approvedProposals?: Prisma.ProposalCreateNestedManyWithoutApprovedUserInput
   reviwedProposals?: Prisma.ProposalCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserUncheckedCreateWithoutProjectNotesInput = {
@@ -1506,6 +2002,9 @@ export type UserUncheckedCreateWithoutProjectNotesInput = {
   createdProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutCreatedUserInput
   approvedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutApprovedUserInput
   reviwedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserCreateOrConnectWithoutProjectNotesInput = {
@@ -1543,6 +2042,9 @@ export type UserUpdateWithoutProjectNotesInput = {
   createdProposals?: Prisma.ProposalUpdateManyWithoutCreatedUserNestedInput
   approvedProposals?: Prisma.ProposalUpdateManyWithoutApprovedUserNestedInput
   reviwedProposals?: Prisma.ProposalUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProjectNotesInput = {
@@ -1564,6 +2066,9 @@ export type UserUncheckedUpdateWithoutProjectNotesInput = {
   createdProposals?: Prisma.ProposalUncheckedUpdateManyWithoutCreatedUserNestedInput
   approvedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutApprovedUserNestedInput
   reviwedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUncheckedUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -1585,6 +2090,9 @@ export type UserCreateWithoutAuditLogsInput = {
   createdProposals?: Prisma.ProposalCreateNestedManyWithoutCreatedUserInput
   approvedProposals?: Prisma.ProposalCreateNestedManyWithoutApprovedUserInput
   reviwedProposals?: Prisma.ProposalCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -1606,6 +2114,9 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   createdProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutCreatedUserInput
   approvedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutApprovedUserInput
   reviwedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -1643,6 +2154,9 @@ export type UserUpdateWithoutAuditLogsInput = {
   createdProposals?: Prisma.ProposalUpdateManyWithoutCreatedUserNestedInput
   approvedProposals?: Prisma.ProposalUpdateManyWithoutApprovedUserNestedInput
   reviwedProposals?: Prisma.ProposalUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -1664,6 +2178,9 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   createdProposals?: Prisma.ProposalUncheckedUpdateManyWithoutCreatedUserNestedInput
   approvedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutApprovedUserNestedInput
   reviwedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUncheckedUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserCreateManyOrganizationInput = {
@@ -1697,6 +2214,9 @@ export type UserUpdateWithoutOrganizationInput = {
   createdProposals?: Prisma.ProposalUpdateManyWithoutCreatedUserNestedInput
   approvedProposals?: Prisma.ProposalUpdateManyWithoutApprovedUserNestedInput
   reviwedProposals?: Prisma.ProposalUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrganizationInput = {
@@ -1718,6 +2238,9 @@ export type UserUncheckedUpdateWithoutOrganizationInput = {
   createdProposals?: Prisma.ProposalUncheckedUpdateManyWithoutCreatedUserNestedInput
   approvedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutApprovedUserNestedInput
   reviwedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUncheckedUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutOrganizationInput = {
@@ -1747,6 +2270,9 @@ export type UserCountOutputType = {
   createdProposals: number
   approvedProposals: number
   reviwedProposals: number
+  createdcontracts: number
+  approvedcontracts: number
+  reviwedcontracts: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1759,6 +2285,9 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   createdProposals?: boolean | UserCountOutputTypeCountCreatedProposalsArgs
   approvedProposals?: boolean | UserCountOutputTypeCountApprovedProposalsArgs
   reviwedProposals?: boolean | UserCountOutputTypeCountReviwedProposalsArgs
+  createdcontracts?: boolean | UserCountOutputTypeCountCreatedcontractsArgs
+  approvedcontracts?: boolean | UserCountOutputTypeCountApprovedcontractsArgs
+  reviwedcontracts?: boolean | UserCountOutputTypeCountReviwedcontractsArgs
 }
 
 /**
@@ -1834,6 +2363,27 @@ export type UserCountOutputTypeCountReviwedProposalsArgs<ExtArgs extends runtime
   where?: Prisma.ProposalWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCreatedcontractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ContractWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountApprovedcontractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ContractWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReviwedcontractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ContractWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1856,6 +2406,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdProposals?: boolean | Prisma.User$createdProposalsArgs<ExtArgs>
   approvedProposals?: boolean | Prisma.User$approvedProposalsArgs<ExtArgs>
   reviwedProposals?: boolean | Prisma.User$reviwedProposalsArgs<ExtArgs>
+  createdcontracts?: boolean | Prisma.User$createdcontractsArgs<ExtArgs>
+  approvedcontracts?: boolean | Prisma.User$approvedcontractsArgs<ExtArgs>
+  reviwedcontracts?: boolean | Prisma.User$reviwedcontractsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1912,6 +2465,9 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   createdProposals?: boolean | Prisma.User$createdProposalsArgs<ExtArgs>
   approvedProposals?: boolean | Prisma.User$approvedProposalsArgs<ExtArgs>
   reviwedProposals?: boolean | Prisma.User$reviwedProposalsArgs<ExtArgs>
+  createdcontracts?: boolean | Prisma.User$createdcontractsArgs<ExtArgs>
+  approvedcontracts?: boolean | Prisma.User$approvedcontractsArgs<ExtArgs>
+  reviwedcontracts?: boolean | Prisma.User$reviwedcontractsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1934,6 +2490,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     createdProposals: Prisma.$ProposalPayload<ExtArgs>[]
     approvedProposals: Prisma.$ProposalPayload<ExtArgs>[]
     reviwedProposals: Prisma.$ProposalPayload<ExtArgs>[]
+    createdcontracts: Prisma.$ContractPayload<ExtArgs>[]
+    approvedcontracts: Prisma.$ContractPayload<ExtArgs>[]
+    reviwedcontracts: Prisma.$ContractPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2350,6 +2909,9 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   createdProposals<T extends Prisma.User$createdProposalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdProposalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   approvedProposals<T extends Prisma.User$approvedProposalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvedProposalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviwedProposals<T extends Prisma.User$reviwedProposalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviwedProposalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  createdcontracts<T extends Prisma.User$createdcontractsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdcontractsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  approvedcontracts<T extends Prisma.User$approvedcontractsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvedcontractsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reviwedcontracts<T extends Prisma.User$reviwedcontractsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviwedcontractsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2998,6 +3560,78 @@ export type User$reviwedProposalsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.ProposalScalarFieldEnum | Prisma.ProposalScalarFieldEnum[]
+}
+
+/**
+ * User.createdcontracts
+ */
+export type User$createdcontractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Contract
+   */
+  select?: Prisma.ContractSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Contract
+   */
+  omit?: Prisma.ContractOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ContractInclude<ExtArgs> | null
+  where?: Prisma.ContractWhereInput
+  orderBy?: Prisma.ContractOrderByWithRelationInput | Prisma.ContractOrderByWithRelationInput[]
+  cursor?: Prisma.ContractWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ContractScalarFieldEnum | Prisma.ContractScalarFieldEnum[]
+}
+
+/**
+ * User.approvedcontracts
+ */
+export type User$approvedcontractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Contract
+   */
+  select?: Prisma.ContractSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Contract
+   */
+  omit?: Prisma.ContractOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ContractInclude<ExtArgs> | null
+  where?: Prisma.ContractWhereInput
+  orderBy?: Prisma.ContractOrderByWithRelationInput | Prisma.ContractOrderByWithRelationInput[]
+  cursor?: Prisma.ContractWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ContractScalarFieldEnum | Prisma.ContractScalarFieldEnum[]
+}
+
+/**
+ * User.reviwedcontracts
+ */
+export type User$reviwedcontractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Contract
+   */
+  select?: Prisma.ContractSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Contract
+   */
+  omit?: Prisma.ContractOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ContractInclude<ExtArgs> | null
+  where?: Prisma.ContractWhereInput
+  orderBy?: Prisma.ContractOrderByWithRelationInput | Prisma.ContractOrderByWithRelationInput[]
+  cursor?: Prisma.ContractWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ContractScalarFieldEnum | Prisma.ContractScalarFieldEnum[]
 }
 
 /**

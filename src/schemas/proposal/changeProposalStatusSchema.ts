@@ -8,6 +8,7 @@ export const proposalStatus: ProposalStatus[] = [
   "REJECTED",
   "REVIEW",
   "SENT",
+  "CANCELLED",
 ];
 
 export const changeProposalStatusSchema = z.object({

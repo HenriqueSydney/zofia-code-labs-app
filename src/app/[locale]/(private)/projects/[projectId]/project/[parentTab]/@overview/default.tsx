@@ -78,7 +78,6 @@ export default async function OverviewTab({ params }: IOverviewTab) {
     if (!proposalError && proposalSuccess) contextualData = proposalSuccess;
   }
 
-  console.log(JSON.stringify(contextualData,null,2))
   return (
     <TabsContent value="overview" className="space-y-6 mt-6">
       {/* Summary Section */}

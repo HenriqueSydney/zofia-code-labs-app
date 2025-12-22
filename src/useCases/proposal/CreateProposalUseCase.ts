@@ -125,11 +125,10 @@ export class CreateProposalUseCase {
 
       const proposal = await this.proposalRepository.create(proposalData, tx);
 
-      let newProposalTemplate = null;
       if (proposalContent && data.documentTemplateId) {
-        newProposalTemplate = await this.proposalTemplateRepository.create(
+        await this.proposalTemplateRepository.create(
           {
-            documentTemplateId: data.documentTemplateId, // Pode ser null/undefined se for upload
+            documentTemplateId: data.documentTemplateId,
             content: proposalContent,
             isDefault: false,
             isActive: true,

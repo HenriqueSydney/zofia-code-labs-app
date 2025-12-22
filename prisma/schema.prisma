@@ -90,6 +90,9 @@ model User {
 
   approvedProposals Proposal[] @relation("approve_user")
   reviwedProposals  Proposal[] @relation("review_user")
+  createdcontracts  Contract[] @relation("create_user")
+  approvedcontracts Contract[] @relation("approve_user")
+  reviwedcontracts  Contract[] @relation("review_user")
 
   @@map("users")
   @@schema("identity")
@@ -222,6 +225,7 @@ model DocumentTemplate {
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
   proposalTemplates ProposalTemplate[]
+  contractTemplates ContractTemplate[]
 
   @@map("document_templates")
   @@schema("catalog")
@@ -264,6 +268,7 @@ enum ProposalStatus {
   APPROVED
   ACCEPTED
   REJECTED
+  CANCELLED
 
   @@schema("crm")
 }
@@ -305,8 +310,9 @@ model Proposal {
   approvedBy   String?   @map("approved_by")
   approvedUser User?     @relation(name: "approve_user", fields: [approvedBy], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  contracts Contract[]
 
   @@unique([projectId, version])
   @@map("proposals")
@@ -355,6 +361,82 @@ model ProposalItem {
   finalPrice   Decimal      @db.Decimal(10, 2)
 
   @@map("proposal_items")
+  @@schema("crm")
+}
+
+enum ContractStatus {
+  DRAFT
+  REVIEW
+  SENT
+  SIGNED
+  CANCELLED
+
+  @@schema("crm")
+}
+
+enum ContractSource {
+  SYSTEM_TEMPLATE
+  MANUAL_UPLOAD
+
+  @@schema("crm")
+}
+
+model Contract {
+  id        String  @id @default(cuid())
+  version   Int     @default(1)
+  isCurrent Boolean @default(true) @map("is_current")
+
+  proposal   Proposal @relation(fields: [proposalId], references: [id])
+  proposalId String
+
+  status ContractStatus @default(DRAFT)
+
+  createdBy   String         @map("created_by")
+  createdUser User           @relation(name: "create_user", fields: [createdBy], references: [id])
+  sourceType  ContractSource @default(SYSTEM_TEMPLATE) @map("source_type")
+
+  fileKey String? @map("file_key")
+  fileUrl String? @map("file_url") // Opcional: Cache da URL pública se for bucket público
+
+  contractTemplate ContractTemplate?
+
+  projectId String  @map("project_id")
+  project   Project @relation(fields: [projectId], references: [id])
+
+  reviewedAt DateTime?
+  reviewedBy String?   @map("reviewed_by")
+  reviewUser User?     @relation(name: "review_user", fields: [reviewedBy], references: [id])
+
+  approvedAt   DateTime?
+  approvedBy   String?   @map("approved_by")
+  approvedUser User?     @relation(name: "approve_user", fields: [approvedBy], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([projectId, version])
+  @@map("contracts")
+  @@schema("crm")
+}
+
+model ContractTemplate {
+  id String @id @default(cuid())
+
+  template           DocumentTemplate @relation(fields: [documentTemplateId], references: [id])
+  documentTemplateId String
+
+  content Json @db.JsonB
+
+  isDefault Boolean @default(false) @map("is_default")
+  isActive  Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  contractId String   @unique @map("contract_id")
+  contract   Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+
+  @@map("contract_templates")
   @@schema("crm")
 }
 
@@ -416,6 +498,7 @@ model Project {
   integrations     ProjectIntegration[]
   projectServices  ProjectServices[]
   projectDocuments ProjectDocuments[]
+  contracts        Contract[]
 
   @@map("projects")
   @@schema("projects")

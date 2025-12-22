@@ -65,7 +65,8 @@ export interface IProposalRepository {
     status: ProposalStatus,
     tx?: Prisma.TransactionClient
   ): Promise<Proposal>;
-  delete(id: string, tx?: Prisma.TransactionClient): Promise<void>;
+  cancel(id: string, tx?: Prisma.TransactionClient): Promise<void>;
+  findLastAcceptedProposal(projectId: string): Promise<Proposal | null>;
 
   replaceItems(
     proposalId: string,

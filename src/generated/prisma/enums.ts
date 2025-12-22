@@ -46,7 +46,8 @@ export const ProposalStatus = {
   SENT: 'SENT',
   APPROVED: 'APPROVED',
   ACCEPTED: 'ACCEPTED',
-  REJECTED: 'REJECTED'
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED'
 } as const
 
 export type ProposalStatus = (typeof ProposalStatus)[keyof typeof ProposalStatus]
@@ -66,6 +67,25 @@ export const DiscountType = {
 } as const
 
 export type DiscountType = (typeof DiscountType)[keyof typeof DiscountType]
+
+
+export const ContractStatus = {
+  DRAFT: 'DRAFT',
+  REVIEW: 'REVIEW',
+  SENT: 'SENT',
+  SIGNED: 'SIGNED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type ContractStatus = (typeof ContractStatus)[keyof typeof ContractStatus]
+
+
+export const ContractSource = {
+  SYSTEM_TEMPLATE: 'SYSTEM_TEMPLATE',
+  MANUAL_UPLOAD: 'MANUAL_UPLOAD'
+} as const
+
+export type ContractSource = (typeof ContractSource)[keyof typeof ContractSource]
 
 
 export const ProjectStatus = {

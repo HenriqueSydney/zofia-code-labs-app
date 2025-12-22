@@ -19,48 +19,49 @@ interface IProposalDetails {
 }
 
 export function ProposalDetails({ proposal }: IProposalDetails) {
-  console.log(proposal);
   return (
     <>
       <ScrollArea className="flex-1 pr-4">
-        <div className="grid grid-cols-2 gap-6 mb-6">
-          {/* Informações Gerais */}
-          <div className="space-y-3">
-            <h4 className="text-sm font-medium leading-none text-muted-foreground">
-              Detalhes da Emissão
-            </h4>
-            <div className="flex items-center gap-2 text-sm">
-              <User className="h-4 w-4 opacity-70" />
-              <span className="font-semibold">Criado por:</span>{" "}
-              {proposal.createdUser?.name}
+        <div className="min-h-30 flex flex-col justify-between">
+          <div className="grid grid-cols-2 gap-6 mb-6">
+            {/* Informações Gerais */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium leading-none text-muted-foreground">
+                Detalhes da Emissão
+              </h4>
+              <div className="flex items-center gap-2 text-sm">
+                <User className="h-4 w-4 opacity-70" />
+                <span className="font-semibold">Criado por:</span>{" "}
+                {proposal.createdUser?.name}
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <CalendarDays className="h-4 w-4 opacity-70" />
+                <span className="font-semibold">Emitida em:</span>{" "}
+                {date(proposal.createdAt).format("DD/MM/YYYY HH:mm")}
+              </div>
             </div>
-            <div className="flex items-center gap-2 text-sm">
-              <CalendarDays className="h-4 w-4 opacity-70" />
-              <span className="font-semibold">Emitida em:</span>{" "}
-              {date(proposal.createdAt).format("DD/MM/YYYY HH:mm")}
+
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium leading-none text-muted-foreground">
+                Validade e Aprovação
+              </h4>
+              <div className="flex items-center gap-2 text-sm">
+                <CalendarDays className="h-4 w-4 text-orange-500" />
+                <span className="font-semibold">Válida até:</span>{" "}
+                {date(proposal.validUntil).format("DD/MM/YYYY")}
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <CheckCircle2 className="h-4 w-4 opacity-70" />
+                <span className="font-semibold">Status Atual:</span>
+                <span className="text-primary font-medium">
+                  {proposal.isCurrent ? "Versão Ativa" : "Histórico"}
+                </span>
+              </div>
             </div>
           </div>
 
-          <div className="space-y-3">
-            <h4 className="text-sm font-medium leading-none text-muted-foreground">
-              Validade e Aprovação
-            </h4>
-            <div className="flex items-center gap-2 text-sm">
-              <CalendarDays className="h-4 w-4 text-orange-500" />
-              <span className="font-semibold">Válida até:</span>{" "}
-              {date(proposal.validUntil).format("DD/MM/YYYY")}
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <CheckCircle2 className="h-4 w-4 opacity-70" />
-              <span className="font-semibold">Status Atual:</span>
-              <span className="text-primary font-medium">
-                {proposal.isCurrent ? "Versão Ativa" : "Histórico"}
-              </span>
-            </div>
-          </div>
+          <Separator className="my-4" />
         </div>
-
-        <Separator className="my-4" />
 
         {/* Tabela de Itens/Serviços */}
         <div className="space-y-4">
@@ -101,7 +102,7 @@ export function ProposalDetails({ proposal }: IProposalDetails) {
       </ScrollArea>
 
       {/* Rodapé com Totalização */}
-      <div className="mt-6 flex justify-end">
+      <div className="mt-4 flex justify-end pr-4">
         <div className="bg-primary/5 rounded-lg p-4 w-full sm:w-[300px] border border-primary/10">
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium text-muted-foreground">

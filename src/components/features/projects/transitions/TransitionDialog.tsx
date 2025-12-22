@@ -1,4 +1,4 @@
-// src/components/features/projects/transitions/TransitionDialog.tsx
+
 import {
   Dialog,
   DialogContent,

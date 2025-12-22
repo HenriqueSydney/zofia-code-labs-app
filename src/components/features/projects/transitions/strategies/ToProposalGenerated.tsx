@@ -1,30 +1,65 @@
-import { ProposalCreationForm } from "./toProposalGeneratedSteps/ProposalCreationForm"; // O form anterior
-// import { ProposalEditor } from "./toProposalGeneratedSteps/ProposalEditor"; // Novo componente de edição
-// import { ProposalReview } from "./toProposalGeneratedSteps/ProposalReview"; // Novo componente de revisão
+"use client";
+
+import { ProposalCreationForm } from "./toProposalGeneratedSteps/ProposalCreationForm";
 import { TransitionStrategyProps } from "../types";
 import { ProposalEditor } from "./toProposalGeneratedSteps/ProposalEditor";
 import { ProposalReview } from "./toProposalGeneratedSteps/ProposalReview";
 import { ProposalSendToClient } from "./toProposalGeneratedSteps/ProposalSendToClient";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ThumbsUp } from "lucide-react";
+import { ProposalDetails } from "@/components/ProposalDetail";
+import { ProposalWithDetails } from "@/repositories/IProposalRepository";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { changeProposalStatusAction } from "@/actions/proposal/changeProposalStatus";
+import { operationWrapper } from "@/lib/operationWrapper";
+import { getProposalAction } from "@/actions/proposal/getProposal";
 
 export function ToProposalGenerated({
   project,
   targetStatus,
   onSuccess,
-  onCancel,
-  contextData,
+  onCancel
 }: TransitionStrategyProps) {
-  // Verificamos o estado atual da proposta baseada nos dados do banco
-  const proposal = contextData; // Assumindo que o include foi feito no backend
+  const [isLoading, setIsLoading] = useState(false);
+  const [proposal, setProposal] = useState<ProposalWithDetails | null>(null);
+
+  async function getProposalWithDetails() {
+    const [proposalError, proposalSuccess] =
+      await operationWrapper<ProposalWithDetails>(
+        "action",
+        "getProposalAction",
+        () => {
+          return getProposalAction(project.proposal.id);
+        },
+        {
+          cache: "no-cache",
+        }
+      );
+
+    if (proposalError) {
+      toast.error(proposalError.message);
+      return;
+    }
+
+    setProposal(proposalSuccess);
+  }
+
+  useEffect(() => {
+    setIsLoading(true)
+    getProposalWithDetails();
+    setIsLoading(false)
+  }, [project]);
 
   // ESTÁGIO 1: Criação
   // Se não existe proposta vinculada ao projeto, mostra o formulário de criação/upload
-  if (!proposal) {
+  if (!project.proposal) {
     return (
       <ProposalCreationForm
         project={project}
         onSuccess={() => {
-          // Recarrega a página ou invalida o cache do React Query/SWR
-          // para que o componente remonte e caia no ESTÁGIO 2
           window.location.reload();
         }}
         onCancel={onCancel}
@@ -36,6 +71,7 @@ export function ToProposalGenerated({
   // ESTÁGIO 2: Edição (Apenas para Templates)
   // Se existe, é template e ainda não foi aprovada internamente
   if (
+    proposal &&
     proposal.sourceType === "SYSTEM_TEMPLATE" &&
     proposal.status === "DRAFT"
   ) {
@@ -44,7 +80,7 @@ export function ToProposalGenerated({
         proposal={proposal}
         project={project}
         onApproved={onSuccess}
-        contextData={contextData}
+        contextData={proposal}
       />
     );
   }
@@ -56,25 +92,64 @@ export function ToProposalGenerated({
   }
 
   if (proposal && proposal.status === "APPROVED") {
-    return (
-      <ProposalSendToClient
-      proposal={proposal} onSuccess={onSuccess}
-      />
-    );
+    return <ProposalSendToClient proposal={proposal} onSuccess={onSuccess} />;
+  }
+
+  async function handleProposal(action: "REJECTED" | "ACCEPTED") {
+    if (!proposal) return;
+    setIsLoading(true);
+    try {
+      // Aqui você pode passar o data.communicationChannel para sua action se necessário
+      const result = await changeProposalStatusAction(proposal.id, action);
+
+      if (result.error) {
+        toast.error(result.error);
+        return;
+      }
+
+      toast.success("Proposta atualizada com sucesso");
+      onSuccess();
+    } catch (error) {
+      toast.error("Erro inesperado ao encaminhar a proposta ao cliente.");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   // ESTÁGIO 4: Já Aprovado
   return (
-    <div className="p-4 bg-green-50 border border-green-200 rounded text-green-800">
-      {proposal.aprovedAt && (
-        <span>
-          Proposta gerada e aprovada em:{" "}
-          {new Date(proposal.aprovedAt).toLocaleDateString()}.
-        </span>
-      )}
-      {!proposal.aprovedAt && <span>Proposta gerada e aprovada</span>}
-      <br />
-      Aguardando envio/resposta do cliente.
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4">
+        <Alert className="bg-green-800/10 border-green-300/30 col-span-2">
+          <ThumbsUp className="h-4 w-4" />
+          <AlertTitle>Proposta gerada e aprovada</AlertTitle>
+          <AlertDescription>
+            {proposal && proposal.approvedAt && (
+              <span>
+                Proposta gerada e aprovada em:{" "}
+                {new Date(proposal.approvedAt).toLocaleDateString()}.
+              </span>
+            )}
+            {proposal && !proposal.approvedAt && (
+              <span>Proposta gerada e aprovada</span>
+            )}
+            <br />
+            Aguardando envio/resposta do cliente.
+          </AlertDescription>
+        </Alert>
+        <div className="flex flex-col sm:flex-row items-center justify-end gap-2">
+          <Button variant="outline" onClick={() => handleProposal("REJECTED")}>
+            <ThumbsUp className="w-4 h-4" />
+            Informar rejeição de proposta
+          </Button>
+          <Button onClick={() => handleProposal("ACCEPTED")}>
+            <ThumbsUp className="w-4 h-4" />
+            Confirmar aceite do Cliente
+          </Button>
+        </div>
+      </div>
+      <Separator />
+      {proposal && <ProposalDetails proposal={proposal} />}
     </div>
   );
 }

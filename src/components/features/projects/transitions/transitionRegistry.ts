@@ -4,6 +4,7 @@ import { ToTechAnalysis } from "./strategies/ToTechAnalysis";
 import { ToProposal } from "./strategies/ToProposal";
 import { ToProposalGenerated } from "./strategies/ToProposalGenerated";
 import { DefaultTransitionForm } from "./strategies/DefaultTransitionForm";
+import { ToWaitingSignature } from "./strategies/ToWaitingSignature";
 
 // Mapeia STATUS_ALVO -> Componente
 export const TRANSITION_STRATEGIES: Partial<
@@ -12,7 +13,7 @@ export const TRANSITION_STRATEGIES: Partial<
   [ProjectStatus.TECH_ANALYSIS]: ToTechAnalysis,
   [ProjectStatus.PROPOSAL]: ToProposal,
   [ProjectStatus.PROPOSAL_GENERATED]: ToProposalGenerated,
-  // ... adicione os outros conforme criar
+  [ProjectStatus.WAITING_SIGNATURE]: ToWaitingSignature,
 };
 
 export const getTransitionStrategy = (status: ProjectStatus) => {

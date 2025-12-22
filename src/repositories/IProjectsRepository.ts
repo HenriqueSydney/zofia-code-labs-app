@@ -1,6 +1,7 @@
 import { Pagination } from "@/@types/Pagination";
 import { PrismaToPlain } from "@/@types/PrismaToPlain";
 import {
+  Contract,
   Prisma,
   Project,
   ProjectDocuments,
@@ -14,6 +15,7 @@ export type ProjectWithDetails = PrismaToPlain<Project> & {
   client: { id: string; companyName: string };
   projectDocuments: ProjectDocuments[];
   proposal: PrismaToPlain<Proposal>;
+  contract: Contract;
   projectServices: (ProjectServices & {
     serviceType: ServiceType;
   })[];

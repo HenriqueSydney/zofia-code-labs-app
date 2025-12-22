@@ -64,6 +64,8 @@ export const ModelName = {
   Proposal: 'Proposal',
   ProposalTemplate: 'ProposalTemplate',
   ProposalItem: 'ProposalItem',
+  Contract: 'Contract',
+  ContractTemplate: 'ContractTemplate',
   Project: 'Project',
   ProjectDocuments: 'ProjectDocuments',
   ProjectServices: 'ProjectServices',
@@ -278,6 +280,42 @@ export const ProposalItemScalarFieldEnum = {
 } as const
 
 export type ProposalItemScalarFieldEnum = (typeof ProposalItemScalarFieldEnum)[keyof typeof ProposalItemScalarFieldEnum]
+
+
+export const ContractScalarFieldEnum = {
+  id: 'id',
+  version: 'version',
+  isCurrent: 'isCurrent',
+  proposalId: 'proposalId',
+  status: 'status',
+  createdBy: 'createdBy',
+  sourceType: 'sourceType',
+  fileKey: 'fileKey',
+  fileUrl: 'fileUrl',
+  projectId: 'projectId',
+  reviewedAt: 'reviewedAt',
+  reviewedBy: 'reviewedBy',
+  approvedAt: 'approvedAt',
+  approvedBy: 'approvedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ContractScalarFieldEnum = (typeof ContractScalarFieldEnum)[keyof typeof ContractScalarFieldEnum]
+
+
+export const ContractTemplateScalarFieldEnum = {
+  id: 'id',
+  documentTemplateId: 'documentTemplateId',
+  content: 'content',
+  isDefault: 'isDefault',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  contractId: 'contractId'
+} as const
+
+export type ContractTemplateScalarFieldEnum = (typeof ContractTemplateScalarFieldEnum)[keyof typeof ContractTemplateScalarFieldEnum]
 
 
 export const ProjectScalarFieldEnum = {

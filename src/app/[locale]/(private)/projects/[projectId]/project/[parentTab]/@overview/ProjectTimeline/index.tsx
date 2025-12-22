@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Wrench, XCircle, AlertTriangle } from "lucide-react";
+import {
+  ChevronRight,
+  Wrench,
+  XCircle,
+  AlertTriangle,
+  AlertCircle,
+} from "lucide-react";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -28,6 +34,12 @@ import { changeProjectStatusAction } from "@/actions/projects/changeProjectStatu
 import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 import { cancelProjectAction } from "@/actions/projects/cancelProject";
 import { ProjectTransitionDialog } from "@/components/features/projects/transitions/TransitionDialog";
+import { ProposalStatus } from "@/generated/prisma/enums";
+import { cancelProposalAction } from "@/actions/proposal/cancelProposal";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Separator } from "@/components/ui/separator";
+import { checkIfProposalIsEditable } from "@/utils/checkIfProposalIsEditable";
+import { getProposalNextStepLabel } from "@/utils/getNextStageLabel";
 
 interface ProjectTimelineProps {
   project: ProjectWithDetails;
@@ -62,10 +74,18 @@ const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
 
   const handleRegress = async () => {
     if (prevStage) {
-      // Chama o Server Action
+      if (currentStageConfig.key === "PROPOSAL" && project.proposal) {
+        const result = await cancelProposalAction(project.proposal.id);
+
+        if (result.error) {
+          toast.error(result.error);
+          return;
+        }
+      }
       const result = await changeProjectStatusAction({
         projectId: project.id,
         newStatus: prevStage.key,
+        data: contextData,
       });
 
       if (result.error) {
@@ -89,25 +109,9 @@ const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
     setShowCancelDialog(false);
   };
 
-  const getProposalNextStep = (
-    proposal: ProjectWithDetails["proposal"] | null
-  ) => {
-    const proposalStatusLabel: Record<
-      ProjectWithDetails["proposal"]["status"],
-      string
-    > = {
-      DRAFT: "Revisar minuta de proposta",
-      REVIEW: "Aprovar proposta comercial",
-      APPROVED: "Encaminhar proposta ao cliente",
-      SENT: "Confirmar aceite",
-      ACCEPTED: "Avançar para Etapa de Contrato",
-      REJECTED: "Gerar nova proposta",
-    };
-
-    return !proposal
-      ? "Gerar minuta de proposta"
-      : proposalStatusLabel[proposal.status];
-  };
+  const { canBeCancelled } = checkIfProposalIsEditable(
+    project.proposal?.status
+  );
 
   return (
     <Card>
@@ -191,7 +195,7 @@ const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
                       currentStageConfig.nextAction}
 
                     {currentStageConfig.key === "PROPOSAL" &&
-                      getProposalNextStep(project.proposal)}
+                      getProposalNextStepLabel(project.proposal)}
                     <ChevronRight className="h-4 w-4" />
                   </Button>
                 )}
@@ -230,21 +234,36 @@ const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
             <AlertDialogHeader>
               <AlertDialogTitle>Retornar Etapa</AlertDialogTitle>
               <AlertDialogDescription asChild>
-                <div className="flex items-start gap-2">
-                  <AlertTriangle className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
-                  <span>
-                    Deseja retornar o projeto de{" "}
-                    <strong>{currentStageConfig?.label}</strong> para{" "}
-                    <strong>{prevStage?.label}</strong>?
-                  </span>
+                <div className="flex flex-col space-y-6">
+                  {canBeCancelled && (
+                    <Alert className="bg-accent/10 border-accent/30">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertTitle>Projeto possui proposta ativa</AlertTitle>
+                      <AlertDescription>
+                        Caso retorne para o status anterior, a proposta será
+                        cancelada.
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                  <Separator />
+                  <div className="flex items-start gap-2">
+                    <AlertTriangle className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                    <span>
+                      Deseja retornar o projeto de{" "}
+                      <strong>{currentStageConfig?.label}</strong> para{" "}
+                      <strong>{prevStage?.label}</strong>?
+                    </span>
+                  </div>
                 </div>
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogCancel className="cursor-pointer">
+                Cancelar
+              </AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleRegress}
-                className="bg-amber-500 hover:bg-amber-600"
+                className="bg-secondary hover:bg-accent cursor-pointer"
               >
                 Retornar
               </AlertDialogAction>

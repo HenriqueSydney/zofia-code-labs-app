@@ -2,8 +2,6 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { PrismaProjectsRepository } from "@/repositories/prisma/PrismaProjectsRepository";
-import { ChangeProjectStatusUseCase } from "@/useCases/projects/ChangeProjectStatusUseCase";
 import { auth } from "@/auth"; // Seu helper de auth (NextAuth/Auth.js)
 import { PROJECT_STATUS_FLOW } from "@/domain/project/ProjectWorkflow";
 import { makeChangeProjectStatusUseCase } from "@/useCases/projects/factories/makeChangeProjectStatusUseCase";

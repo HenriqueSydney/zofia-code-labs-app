@@ -15,6 +15,7 @@ const strategies = {
   documents: new AuthProjectDocumentsStrategy(),
   documentTemplate: new AuthDocumentTemplateStrategy(),
   proposal: new AuthProposalStrategy(),
+  contract: new AuthProposalStrategy(),
   // comment: new CommentStrategy(),
 } as const; // 'as const' ajuda na tipagem
 

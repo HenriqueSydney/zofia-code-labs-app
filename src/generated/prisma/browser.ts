@@ -84,6 +84,16 @@ export type ProposalTemplate = Prisma.ProposalTemplateModel
  */
 export type ProposalItem = Prisma.ProposalItemModel
 /**
+ * Model Contract
+ * 
+ */
+export type Contract = Prisma.ContractModel
+/**
+ * Model ContractTemplate
+ * 
+ */
+export type ContractTemplate = Prisma.ContractTemplateModel
+/**
  * Model Project
  * 
  */

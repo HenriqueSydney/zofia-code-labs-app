@@ -147,6 +147,20 @@ export class PrismaProposalRepository implements IProposalRepository {
     return plain as any;
   }
 
+  async findLastAcceptedProposal(projectId: string): Promise<Proposal | null> {
+    const proposal = await prisma.proposal.findFirst({
+      where: {
+        projectId,
+        status: "ACCEPTED",
+      },
+      orderBy: {
+        approvedAt: "desc",
+      },
+    });
+
+    return normalizePrisma(proposal);
+  }
+
   async update(
     id: string,
     data: UpdateProposalDTO,
@@ -230,7 +244,17 @@ export class PrismaProposalRepository implements IProposalRepository {
     ]);
   }
 
-  async delete(id: string, tx?: Prisma.TransactionClient): Promise<void> {
+  async cancel(id: string, tx?: Prisma.TransactionClient): Promise<void> {
+    const client = tx || prisma;
+    await client.proposal.update({
+      data: {
+        status: "CANCELLED",
+      },
+      where: { id },
+    });
+  }
+
+  async reject(id: string, tx?: Prisma.TransactionClient): Promise<void> {
     const client = tx || prisma;
     await client.proposal.update({
       data: {

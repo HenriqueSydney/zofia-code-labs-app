@@ -62,7 +62,8 @@ export async function createProposalAction(formData: FormData) {
   }
 
   if (success) {
-    revalidatePath(`/projects/${success.projectId}/dashboard`);
+    revalidatePath(`/projects/${success.projectId}/project`);
+    revalidatePath(`/projects/${success.projectId}/project/commercial/proposal`);
     redirect(
       `/projects/${success.projectId}/project/commercial/proposals?success=true`,
       RedirectType.push

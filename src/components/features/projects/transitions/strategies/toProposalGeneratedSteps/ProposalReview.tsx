@@ -12,6 +12,7 @@ import { date } from "@/lib/dayjs";
 import { AttachmentIcon } from "@/components/AttachmentIcon";
 import { changeProposalStatusAction } from "@/actions/proposal/changeProposalStatus";
 import { toast } from "sonner";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 interface ProposalReviewProps {
   proposal: any;
@@ -127,12 +128,14 @@ export function ProposalReview({
             <CardContent className="space-y-4 flex-1">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Criado em:</span>
-                {/* <span>{format(new Date(proposal.createdAt), "dd/MM/yyyy", { locale: ptBR })}</span> */}
+                <span>
+                  {date(proposal.createdAt).format("DD/MM/YYYY HH:mm")}
+                </span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Origem:</span>
                 <Badge variant="outline">
-                  {isTemplate ? "Sistema (Template)" : "Upload Externo"}
+                  {isTemplate ? "Sistema (Modelo)" : "Arquivo PDF"}
                 </Badge>
               </div>
               {isTemplate && (
@@ -140,12 +143,20 @@ export function ProposalReview({
                   <span className="text-muted-foreground">Modelo:</span>
                   <span
                     className="truncate max-w-[150px] text-right"
-                    title={proposal.templateId || ""}
+                    title={proposal?.proposalTemplate?.template?.title || ""}
                   >
-                    {proposal.templateId || "Padrão"}
+                    {proposal?.proposalTemplate?.template?.title || "Padrão"}
                   </span>
                 </div>
               )}
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">
+                  Valor Total da Proposta:
+                </span>
+                <strong className="truncate max-w-[150px] text-right ">
+                  {formatCurrency(Number(proposal.totalValue))}
+                </strong>
+              </div>
 
               <Separator />
 

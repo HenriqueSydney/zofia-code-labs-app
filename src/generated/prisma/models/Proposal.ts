@@ -322,6 +322,7 @@ export type ProposalWhereInput = {
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   reviewUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   approvedUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  contracts?: Prisma.ContractListRelationFilter
 }
 
 export type ProposalOrderByWithRelationInput = {
@@ -348,6 +349,7 @@ export type ProposalOrderByWithRelationInput = {
   project?: Prisma.ProjectOrderByWithRelationInput
   reviewUser?: Prisma.UserOrderByWithRelationInput
   approvedUser?: Prisma.UserOrderByWithRelationInput
+  contracts?: Prisma.ContractOrderByRelationAggregateInput
 }
 
 export type ProposalWhereUniqueInput = Prisma.AtLeast<{
@@ -378,6 +380,7 @@ export type ProposalWhereUniqueInput = Prisma.AtLeast<{
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   reviewUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   approvedUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  contracts?: Prisma.ContractListRelationFilter
 }, "id" | "projectId_version">
 
 export type ProposalOrderByWithAggregationInput = {
@@ -448,6 +451,7 @@ export type ProposalCreateInput = {
   project: Prisma.ProjectCreateNestedOneWithoutProposalInput
   reviewUser?: Prisma.UserCreateNestedOneWithoutReviwedProposalsInput
   approvedUser?: Prisma.UserCreateNestedOneWithoutApprovedProposalsInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutProposalInput
 }
 
 export type ProposalUncheckedCreateInput = {
@@ -470,6 +474,7 @@ export type ProposalUncheckedCreateInput = {
   updatedAt?: Date | string
   items?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutProposalInput
   proposalTemplate?: Prisma.ProposalTemplateUncheckedCreateNestedOneWithoutProposalInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProposalInput
 }
 
 export type ProposalUpdateInput = {
@@ -492,6 +497,7 @@ export type ProposalUpdateInput = {
   project?: Prisma.ProjectUpdateOneRequiredWithoutProposalNestedInput
   reviewUser?: Prisma.UserUpdateOneWithoutReviwedProposalsNestedInput
   approvedUser?: Prisma.UserUpdateOneWithoutApprovedProposalsNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutProposalNestedInput
 }
 
 export type ProposalUncheckedUpdateInput = {
@@ -514,6 +520,7 @@ export type ProposalUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
   proposalTemplate?: Prisma.ProposalTemplateUncheckedUpdateOneWithoutProposalNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutProposalNestedInput
 }
 
 export type ProposalCreateManyInput = {
@@ -840,6 +847,20 @@ export type ProposalUpdateOneRequiredWithoutItemsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProposalUpdateToOneWithWhereWithoutItemsInput, Prisma.ProposalUpdateWithoutItemsInput>, Prisma.ProposalUncheckedUpdateWithoutItemsInput>
 }
 
+export type ProposalCreateNestedOneWithoutContractsInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutContractsInput, Prisma.ProposalUncheckedCreateWithoutContractsInput>
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutContractsInput
+  connect?: Prisma.ProposalWhereUniqueInput
+}
+
+export type ProposalUpdateOneRequiredWithoutContractsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProposalCreateWithoutContractsInput, Prisma.ProposalUncheckedCreateWithoutContractsInput>
+  connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutContractsInput
+  upsert?: Prisma.ProposalUpsertWithoutContractsInput
+  connect?: Prisma.ProposalWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProposalUpdateToOneWithWhereWithoutContractsInput, Prisma.ProposalUpdateWithoutContractsInput>, Prisma.ProposalUncheckedUpdateWithoutContractsInput>
+}
+
 export type ProposalCreateNestedManyWithoutProjectInput = {
   create?: Prisma.XOR<Prisma.ProposalCreateWithoutProjectInput, Prisma.ProposalUncheckedCreateWithoutProjectInput> | Prisma.ProposalCreateWithoutProjectInput[] | Prisma.ProposalUncheckedCreateWithoutProjectInput[]
   connectOrCreate?: Prisma.ProposalCreateOrConnectWithoutProjectInput | Prisma.ProposalCreateOrConnectWithoutProjectInput[]
@@ -901,6 +922,7 @@ export type ProposalCreateWithoutCreatedUserInput = {
   project: Prisma.ProjectCreateNestedOneWithoutProposalInput
   reviewUser?: Prisma.UserCreateNestedOneWithoutReviwedProposalsInput
   approvedUser?: Prisma.UserCreateNestedOneWithoutApprovedProposalsInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutProposalInput
 }
 
 export type ProposalUncheckedCreateWithoutCreatedUserInput = {
@@ -922,6 +944,7 @@ export type ProposalUncheckedCreateWithoutCreatedUserInput = {
   updatedAt?: Date | string
   items?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutProposalInput
   proposalTemplate?: Prisma.ProposalTemplateUncheckedCreateNestedOneWithoutProposalInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProposalInput
 }
 
 export type ProposalCreateOrConnectWithoutCreatedUserInput = {
@@ -953,6 +976,7 @@ export type ProposalCreateWithoutApprovedUserInput = {
   proposalTemplate?: Prisma.ProposalTemplateCreateNestedOneWithoutProposalInput
   project: Prisma.ProjectCreateNestedOneWithoutProposalInput
   reviewUser?: Prisma.UserCreateNestedOneWithoutReviwedProposalsInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutProposalInput
 }
 
 export type ProposalUncheckedCreateWithoutApprovedUserInput = {
@@ -974,6 +998,7 @@ export type ProposalUncheckedCreateWithoutApprovedUserInput = {
   updatedAt?: Date | string
   items?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutProposalInput
   proposalTemplate?: Prisma.ProposalTemplateUncheckedCreateNestedOneWithoutProposalInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProposalInput
 }
 
 export type ProposalCreateOrConnectWithoutApprovedUserInput = {
@@ -1005,6 +1030,7 @@ export type ProposalCreateWithoutReviewUserInput = {
   proposalTemplate?: Prisma.ProposalTemplateCreateNestedOneWithoutProposalInput
   project: Prisma.ProjectCreateNestedOneWithoutProposalInput
   approvedUser?: Prisma.UserCreateNestedOneWithoutApprovedProposalsInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutProposalInput
 }
 
 export type ProposalUncheckedCreateWithoutReviewUserInput = {
@@ -1026,6 +1052,7 @@ export type ProposalUncheckedCreateWithoutReviewUserInput = {
   updatedAt?: Date | string
   items?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutProposalInput
   proposalTemplate?: Prisma.ProposalTemplateUncheckedCreateNestedOneWithoutProposalInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProposalInput
 }
 
 export type ProposalCreateOrConnectWithoutReviewUserInput = {
@@ -1128,6 +1155,7 @@ export type ProposalCreateWithoutProposalTemplateInput = {
   project: Prisma.ProjectCreateNestedOneWithoutProposalInput
   reviewUser?: Prisma.UserCreateNestedOneWithoutReviwedProposalsInput
   approvedUser?: Prisma.UserCreateNestedOneWithoutApprovedProposalsInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutProposalInput
 }
 
 export type ProposalUncheckedCreateWithoutProposalTemplateInput = {
@@ -1149,6 +1177,7 @@ export type ProposalUncheckedCreateWithoutProposalTemplateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutProposalInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProposalInput
 }
 
 export type ProposalCreateOrConnectWithoutProposalTemplateInput = {
@@ -1186,6 +1215,7 @@ export type ProposalUpdateWithoutProposalTemplateInput = {
   project?: Prisma.ProjectUpdateOneRequiredWithoutProposalNestedInput
   reviewUser?: Prisma.UserUpdateOneWithoutReviwedProposalsNestedInput
   approvedUser?: Prisma.UserUpdateOneWithoutApprovedProposalsNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutProposalNestedInput
 }
 
 export type ProposalUncheckedUpdateWithoutProposalTemplateInput = {
@@ -1207,6 +1237,7 @@ export type ProposalUncheckedUpdateWithoutProposalTemplateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutProposalNestedInput
 }
 
 export type ProposalCreateWithoutItemsInput = {
@@ -1228,6 +1259,7 @@ export type ProposalCreateWithoutItemsInput = {
   project: Prisma.ProjectCreateNestedOneWithoutProposalInput
   reviewUser?: Prisma.UserCreateNestedOneWithoutReviwedProposalsInput
   approvedUser?: Prisma.UserCreateNestedOneWithoutApprovedProposalsInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutProposalInput
 }
 
 export type ProposalUncheckedCreateWithoutItemsInput = {
@@ -1249,6 +1281,7 @@ export type ProposalUncheckedCreateWithoutItemsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   proposalTemplate?: Prisma.ProposalTemplateUncheckedCreateNestedOneWithoutProposalInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProposalInput
 }
 
 export type ProposalCreateOrConnectWithoutItemsInput = {
@@ -1286,6 +1319,7 @@ export type ProposalUpdateWithoutItemsInput = {
   project?: Prisma.ProjectUpdateOneRequiredWithoutProposalNestedInput
   reviewUser?: Prisma.UserUpdateOneWithoutReviwedProposalsNestedInput
   approvedUser?: Prisma.UserUpdateOneWithoutApprovedProposalsNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutProposalNestedInput
 }
 
 export type ProposalUncheckedUpdateWithoutItemsInput = {
@@ -1306,6 +1340,111 @@ export type ProposalUncheckedUpdateWithoutItemsInput = {
   approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proposalTemplate?: Prisma.ProposalTemplateUncheckedUpdateOneWithoutProposalNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutProposalNestedInput
+}
+
+export type ProposalCreateWithoutContractsInput = {
+  id?: string
+  version?: number
+  isCurrent?: boolean
+  status?: $Enums.ProposalStatus
+  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Date | string | null
+  sourceType?: $Enums.ProposalSource
+  fileKey?: string | null
+  fileUrl?: string | null
+  reviewedAt?: Date | string | null
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdUser: Prisma.UserCreateNestedOneWithoutCreatedProposalsInput
+  items?: Prisma.ProposalItemCreateNestedManyWithoutProposalInput
+  proposalTemplate?: Prisma.ProposalTemplateCreateNestedOneWithoutProposalInput
+  project: Prisma.ProjectCreateNestedOneWithoutProposalInput
+  reviewUser?: Prisma.UserCreateNestedOneWithoutReviwedProposalsInput
+  approvedUser?: Prisma.UserCreateNestedOneWithoutApprovedProposalsInput
+}
+
+export type ProposalUncheckedCreateWithoutContractsInput = {
+  id?: string
+  version?: number
+  isCurrent?: boolean
+  status?: $Enums.ProposalStatus
+  totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Date | string | null
+  createdBy: string
+  sourceType?: $Enums.ProposalSource
+  fileKey?: string | null
+  fileUrl?: string | null
+  projectId: string
+  reviewedAt?: Date | string | null
+  reviewedBy?: string | null
+  approvedAt?: Date | string | null
+  approvedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutProposalInput
+  proposalTemplate?: Prisma.ProposalTemplateUncheckedCreateNestedOneWithoutProposalInput
+}
+
+export type ProposalCreateOrConnectWithoutContractsInput = {
+  where: Prisma.ProposalWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProposalCreateWithoutContractsInput, Prisma.ProposalUncheckedCreateWithoutContractsInput>
+}
+
+export type ProposalUpsertWithoutContractsInput = {
+  update: Prisma.XOR<Prisma.ProposalUpdateWithoutContractsInput, Prisma.ProposalUncheckedUpdateWithoutContractsInput>
+  create: Prisma.XOR<Prisma.ProposalCreateWithoutContractsInput, Prisma.ProposalUncheckedCreateWithoutContractsInput>
+  where?: Prisma.ProposalWhereInput
+}
+
+export type ProposalUpdateToOneWithWhereWithoutContractsInput = {
+  where?: Prisma.ProposalWhereInput
+  data: Prisma.XOR<Prisma.ProposalUpdateWithoutContractsInput, Prisma.ProposalUncheckedUpdateWithoutContractsInput>
+}
+
+export type ProposalUpdateWithoutContractsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
+  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdUser?: Prisma.UserUpdateOneRequiredWithoutCreatedProposalsNestedInput
+  items?: Prisma.ProposalItemUpdateManyWithoutProposalNestedInput
+  proposalTemplate?: Prisma.ProposalTemplateUpdateOneWithoutProposalNestedInput
+  project?: Prisma.ProjectUpdateOneRequiredWithoutProposalNestedInput
+  reviewUser?: Prisma.UserUpdateOneWithoutReviwedProposalsNestedInput
+  approvedUser?: Prisma.UserUpdateOneWithoutApprovedProposalsNestedInput
+}
+
+export type ProposalUncheckedUpdateWithoutContractsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
+  totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
   proposalTemplate?: Prisma.ProposalTemplateUncheckedUpdateOneWithoutProposalNestedInput
 }
 
@@ -1328,6 +1467,7 @@ export type ProposalCreateWithoutProjectInput = {
   proposalTemplate?: Prisma.ProposalTemplateCreateNestedOneWithoutProposalInput
   reviewUser?: Prisma.UserCreateNestedOneWithoutReviwedProposalsInput
   approvedUser?: Prisma.UserCreateNestedOneWithoutApprovedProposalsInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutProposalInput
 }
 
 export type ProposalUncheckedCreateWithoutProjectInput = {
@@ -1349,6 +1489,7 @@ export type ProposalUncheckedCreateWithoutProjectInput = {
   updatedAt?: Date | string
   items?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutProposalInput
   proposalTemplate?: Prisma.ProposalTemplateUncheckedCreateNestedOneWithoutProposalInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProposalInput
 }
 
 export type ProposalCreateOrConnectWithoutProjectInput = {
@@ -1453,6 +1594,7 @@ export type ProposalUpdateWithoutCreatedUserInput = {
   project?: Prisma.ProjectUpdateOneRequiredWithoutProposalNestedInput
   reviewUser?: Prisma.UserUpdateOneWithoutReviwedProposalsNestedInput
   approvedUser?: Prisma.UserUpdateOneWithoutApprovedProposalsNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutProposalNestedInput
 }
 
 export type ProposalUncheckedUpdateWithoutCreatedUserInput = {
@@ -1474,6 +1616,7 @@ export type ProposalUncheckedUpdateWithoutCreatedUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
   proposalTemplate?: Prisma.ProposalTemplateUncheckedUpdateOneWithoutProposalNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutProposalNestedInput
 }
 
 export type ProposalUncheckedUpdateManyWithoutCreatedUserInput = {
@@ -1514,6 +1657,7 @@ export type ProposalUpdateWithoutApprovedUserInput = {
   proposalTemplate?: Prisma.ProposalTemplateUpdateOneWithoutProposalNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutProposalNestedInput
   reviewUser?: Prisma.UserUpdateOneWithoutReviwedProposalsNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutProposalNestedInput
 }
 
 export type ProposalUncheckedUpdateWithoutApprovedUserInput = {
@@ -1535,6 +1679,7 @@ export type ProposalUncheckedUpdateWithoutApprovedUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
   proposalTemplate?: Prisma.ProposalTemplateUncheckedUpdateOneWithoutProposalNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutProposalNestedInput
 }
 
 export type ProposalUncheckedUpdateManyWithoutApprovedUserInput = {
@@ -1575,6 +1720,7 @@ export type ProposalUpdateWithoutReviewUserInput = {
   proposalTemplate?: Prisma.ProposalTemplateUpdateOneWithoutProposalNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutProposalNestedInput
   approvedUser?: Prisma.UserUpdateOneWithoutApprovedProposalsNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutProposalNestedInput
 }
 
 export type ProposalUncheckedUpdateWithoutReviewUserInput = {
@@ -1596,6 +1742,7 @@ export type ProposalUncheckedUpdateWithoutReviewUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
   proposalTemplate?: Prisma.ProposalTemplateUncheckedUpdateOneWithoutProposalNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutProposalNestedInput
 }
 
 export type ProposalUncheckedUpdateManyWithoutReviewUserInput = {
@@ -1655,6 +1802,7 @@ export type ProposalUpdateWithoutProjectInput = {
   proposalTemplate?: Prisma.ProposalTemplateUpdateOneWithoutProposalNestedInput
   reviewUser?: Prisma.UserUpdateOneWithoutReviwedProposalsNestedInput
   approvedUser?: Prisma.UserUpdateOneWithoutApprovedProposalsNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutProposalNestedInput
 }
 
 export type ProposalUncheckedUpdateWithoutProjectInput = {
@@ -1676,6 +1824,7 @@ export type ProposalUncheckedUpdateWithoutProjectInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
   proposalTemplate?: Prisma.ProposalTemplateUncheckedUpdateOneWithoutProposalNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutProposalNestedInput
 }
 
 export type ProposalUncheckedUpdateManyWithoutProjectInput = {
@@ -1704,10 +1853,12 @@ export type ProposalUncheckedUpdateManyWithoutProjectInput = {
 
 export type ProposalCountOutputType = {
   items: number
+  contracts: number
 }
 
 export type ProposalCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   items?: boolean | ProposalCountOutputTypeCountItemsArgs
+  contracts?: boolean | ProposalCountOutputTypeCountContractsArgs
 }
 
 /**
@@ -1725,6 +1876,13 @@ export type ProposalCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ext
  */
 export type ProposalCountOutputTypeCountItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ProposalItemWhereInput
+}
+
+/**
+ * ProposalCountOutputType without action
+ */
+export type ProposalCountOutputTypeCountContractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ContractWhereInput
 }
 
 
@@ -1752,6 +1910,7 @@ export type ProposalSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   reviewUser?: boolean | Prisma.Proposal$reviewUserArgs<ExtArgs>
   approvedUser?: boolean | Prisma.Proposal$approvedUserArgs<ExtArgs>
+  contracts?: boolean | Prisma.Proposal$contractsArgs<ExtArgs>
   _count?: boolean | Prisma.ProposalCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["proposal"]>
 
@@ -1831,6 +1990,7 @@ export type ProposalInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   reviewUser?: boolean | Prisma.Proposal$reviewUserArgs<ExtArgs>
   approvedUser?: boolean | Prisma.Proposal$approvedUserArgs<ExtArgs>
+  contracts?: boolean | Prisma.Proposal$contractsArgs<ExtArgs>
   _count?: boolean | Prisma.ProposalCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProposalIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1855,6 +2015,7 @@ export type $ProposalPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     project: Prisma.$ProjectPayload<ExtArgs>
     reviewUser: Prisma.$UserPayload<ExtArgs> | null
     approvedUser: Prisma.$UserPayload<ExtArgs> | null
+    contracts: Prisma.$ContractPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2274,6 +2435,7 @@ export interface Prisma__ProposalClient<T, Null = never, ExtArgs extends runtime
   project<T extends Prisma.ProjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProjectDefaultArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   reviewUser<T extends Prisma.Proposal$reviewUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Proposal$reviewUserArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   approvedUser<T extends Prisma.Proposal$approvedUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Proposal$approvedUserArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  contracts<T extends Prisma.Proposal$contractsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Proposal$contractsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2794,6 +2956,30 @@ export type Proposal$approvedUserArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   include?: Prisma.UserInclude<ExtArgs> | null
   where?: Prisma.UserWhereInput
+}
+
+/**
+ * Proposal.contracts
+ */
+export type Proposal$contractsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Contract
+   */
+  select?: Prisma.ContractSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Contract
+   */
+  omit?: Prisma.ContractOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ContractInclude<ExtArgs> | null
+  where?: Prisma.ContractWhereInput
+  orderBy?: Prisma.ContractOrderByWithRelationInput | Prisma.ContractOrderByWithRelationInput[]
+  cursor?: Prisma.ContractWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ContractScalarFieldEnum | Prisma.ContractScalarFieldEnum[]
 }
 
 /**

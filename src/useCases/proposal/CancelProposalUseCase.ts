@@ -3,40 +3,47 @@ import { prisma } from "@/lib/prisma";
 import { IAuditLogRepository } from "@/repositories/IAuditLogRepository";
 import { IProposalRepository } from "@/repositories/IProposalRepository";
 
-interface DeleteProposalUseCaseParams {
+interface CancelProposalUseCaseParams {
   id: string;
   userId: string;
 }
 
-export class DeleteProposalUseCase {
+export class CancelProposalUseCase {
   constructor(
     private proposalRepository: IProposalRepository,
     private auditLogRepository: IAuditLogRepository
   ) {}
 
-  async execute({ id, userId }: DeleteProposalUseCaseParams) {
+  async execute({
+    id,
+    userId,
+  }: CancelProposalUseCaseParams): Promise<{ projectId: string }> {
     const proposal = await this.proposalRepository.findById(id);
 
     if (!proposal) {
-      throw new Error("Proposal not found");
+      throw new Error("Proposta não localizada");
     }
 
     await checkUserPermissionForAsset("proposal", userId, proposal, "DELETE");
 
     // Regra de negócio: Talvez impedir deletar propostas já ACEITAS?
     if (proposal.status === "ACCEPTED") {
-      throw new Error("Cannot delete an accepted proposal");
+      throw new Error("Não é possível excluir uma proposta aceita");
+    }
+
+    if (proposal.status === "REJECTED") {
+      throw new Error("Não é possível excluir uma proposta rejeitada");
     }
 
     await prisma.$transaction(async (tx) => {
-      await this.proposalRepository.delete(id, tx);
+      await this.proposalRepository.cancel(id, tx);
       await this.auditLogRepository.create(
         {
           entityType: "Project",
           entityId: proposal.projectId ?? "",
           action: "PROPOSAL_STATUS_CHANGE",
           userId,
-          changes: { status: { from: proposal.status, to: "REJECTED" } },
+          changes: { status: { from: proposal.status, to: "CANCELLED" } },
           metadata: {
             proposalId: proposal.id,
           },
@@ -44,5 +51,7 @@ export class DeleteProposalUseCase {
         tx
       );
     });
+
+    return { projectId: proposal.projectId };
   }
 }

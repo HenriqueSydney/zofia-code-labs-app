@@ -1,22 +1,17 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TabsContent } from "@radix-ui/react-tabs";
-import { CreateNewProposalButton } from "./CreateNewProposalButton";
+import { CreateNewProposalButton } from "../@proposals/CreateNewProposalButton";
 import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 import { fetchProposalHistory } from "@/actions/proposal/fetchProposalHistory";
-import { Badge } from "@/components/ui/badge";
-import { formatCurrency } from "@/utils/formatCurrency";
-import { Button } from "@/components/ui/button";
-import { getProposalStatusBadge } from "@/mappers/proposalStatusBadge";
-import { CheckCircle, Download, Eye, FileEdit, Send, User } from "lucide-react";
-import { date } from "@/lib/dayjs";
-import { ProposalDetailsModal } from "./ProposalDetailsModal";
-import { ToastComponent } from "./ToastComponent";
+import { SuccessToastComponent } from "@/components/SuccessToastComponent";
 import { getParams } from "@/utils/getParams";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { getProjectAction } from "@/actions/projects/getProject";
 import { AppError } from "@/errors/AppError";
 import { ProposalWithDetails } from "@/repositories/IProposalRepository";
-import { Link } from "@/i18n/navigation";
+import { ProposalHistoryList } from "./ProposalHistoryList";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 interface IProposalTab {
   params: Promise<{ projectId: string; contextualTab: string }>;
@@ -31,7 +26,7 @@ export default async function ProposalTab({ params }: IProposalTab) {
       project: ProjectWithDetails;
     }>(
       "action",
-      "fetchProjectNotes",
+      "getProjectAction",
       () => {
         return getProjectAction(projectId);
       },
@@ -41,7 +36,7 @@ export default async function ProposalTab({ params }: IProposalTab) {
     ),
     operationWrapper<ProposalWithDetails[]>(
       "action",
-      "fetchProjectNotes",
+      "fetchProposalHistory",
       () => {
         return fetchProposalHistory(projectId);
       },
@@ -63,7 +58,7 @@ export default async function ProposalTab({ params }: IProposalTab) {
 
   return (
     <TabsContent value="proposals" className="mt-6">
-      <ToastComponent />
+      <SuccessToastComponent />
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg">Histórico de Propostas</CardTitle>
@@ -72,87 +67,26 @@ export default async function ProposalTab({ params }: IProposalTab) {
         <CardContent>
           <div className="space-y-4">
             {historySuccess.map((proposal) => (
-              <div
+              <ProposalHistoryList
                 key={proposal.id}
-                className="border rounded-lg p-4 space-y-3"
-              >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      {proposal.proposalTemplate?.template && (
-                        <h4 className="font-medium">
-                          {proposal.proposalTemplate?.template?.title}
-                        </h4>
-                      )}
-                      <Badge variant="outline">
-                        Versão: {proposal.version}
-                      </Badge>
-                    </div>
-                    <p className="text-lg font-semibold text-primary mt-1">
-                      {formatCurrency(Number(proposal.totalValue))}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {getProposalStatusBadge(proposal.status)}
-                    <ProposalDetailsModal proposal={proposal} />
-                    <Link href={proposal.id}>
-                      <Button variant="ghost" size="icon">
-                        <FileEdit className="h-4 w-4" />
-                      </Button>
-                    </Link>
-                    <Button variant="ghost" size="icon">
-                      <Download className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm pt-2 border-t">
-                  <div>
-                    <p className="text-muted-foreground flex items-center gap-1">
-                      <User className="h-3 w-3" /> Criado por
-                    </p>
-                    {proposal.createdUser && (
-                      <p className="font-medium">
-                        {proposal.createdUser?.name}
-                      </p>
-                    )}
-                    <p className="text-xs text-muted-foreground">
-                      {date(proposal.createdAt).format("DD/MM/YYYY HH:mm")}
-                    </p>
-                  </div>
-                  {proposal.reviewedBy && (
-                    <div>
-                      <p className="text-muted-foreground flex items-center gap-1">
-                        <Eye className="h-3 w-3" /> Revisado por
-                      </p>
-                      <p className="font-medium">{proposal.reviewedBy}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {date(proposal.reviewedAt!).format("DD/MM/YYYY HH:mm")}
-                      </p>
-                    </div>
-                  )}
-                  {proposal.approvedBy && (
-                    <div>
-                      <p className="text-muted-foreground flex items-center gap-1">
-                        <CheckCircle className="h-3 w-3" /> Aprovado por
-                      </p>
-                      <p className="font-medium">{proposal.approvedBy}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {date(proposal.approvedAt!).format("DD/MM/YYYY HH:mm")}
-                      </p>
-                    </div>
-                  )}
-                  {proposal.status === "SENT" && (
-                    <div>
-                      <p className="text-muted-foreground flex items-center gap-1">
-                        <Send className="h-3 w-3" /> Proposta enviada para o
-                        client
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
+                proposal={proposal}
+                project={project}
+              />
             ))}
+
+            {historySuccess.length === 0 && (
+              <div className="flex items-center justify-center my-6">
+                <Alert className="bg-accent/10 border-accent/30 w-full max-w-4xl">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Nenhuma proposta localizada</AlertTitle>
+                  <AlertDescription>
+                    Nenhuma proposta cadastrada até o momento. Siga o fluxo do
+                    projeto para criar uma a partir de um template ou anexe a
+                    proposta para encaminhamento para assinatura
+                  </AlertDescription>
+                </Alert>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

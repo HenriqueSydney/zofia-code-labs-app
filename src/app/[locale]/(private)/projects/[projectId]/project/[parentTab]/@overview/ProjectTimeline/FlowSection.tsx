@@ -108,7 +108,7 @@ export const FlowSection = ({
                     : `calc(${Math.max(
                         0,
                         Math.min(100, progressWidth)
-                      )}% - 16px)`,
+                      )}% - 50px)`,
                 }}
               />
 

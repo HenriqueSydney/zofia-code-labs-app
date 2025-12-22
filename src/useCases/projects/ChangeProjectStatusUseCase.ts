@@ -3,7 +3,7 @@ import {
   IProjectsRepository,
   ProjectWithDetails,
 } from "@/repositories/IProjectsRepository";
-import { Prisma, ProjectNote, ProjectStatus } from "@/generated/prisma/client";
+import { Prisma, ProjectStatus } from "@/generated/prisma/client";
 import { validateProjectTransition } from "@/domain/project/ProjectWorkflow";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { prisma } from "@/lib/prisma";
@@ -25,7 +25,10 @@ export class ChangeProjectStatusUseCase {
     private auditLogRepository: IAuditLogRepository
   ) {}
 
-  async execute({ projectId, newStatus, userId, data }: Request) {
+  async execute(
+    { projectId, newStatus, userId, data }: Request,
+    tx?: Prisma.TransactionClient
+  ) {
     const project = await this.projectsRepository.findById(projectId);
 
     if (!project) {
@@ -42,54 +45,81 @@ export class ChangeProjectStatusUseCase {
         `Transição inválida do status ${project.status} para ${newStatus}`
       );
     }
-
-    const result = await prisma.$transaction(async (tx) => {
-      const contextualNote = await this.handleTransitionData(
-        project,
-        newStatus,
-        data,
-        tx
-      );
-
-      const updatedProject = await this.projectsRepository.updateStatus(
+    if (tx) {
+      return this.performStatusChange(
         projectId,
         newStatus,
-        tx
+        userId,
+        data,
+        tx,
+        project
       );
+    }
 
-      let finalObservation = data?.observation;
-      if (contextualNote) {
-        finalObservation = `${finalObservation}\n\n${contextualNote}`;
-      }
-
-      let createdNoteId: string | null = null;
-      if (finalObservation) {
-        const observation = await this.projectNotesRepository.create(
-          { projectId, userId, content: finalObservation },
-          tx
-        );
-        createdNoteId = observation.id;
-      }
-
-      await this.auditLogRepository.create(
-        {
-          entityType: "Project",
-          entityId: projectId,
-          action: "STATUS_CHANGE",
-          userId,
-          changes: { status: { from: project.status, to: newStatus } },
-          metadata: {
-            observation: finalObservation ?? "Sem observações",
-            relatedNoteId: createdNoteId,
-          },
-        },
-        tx
+    // Se não existir, abre uma nova
+    return await prisma.$transaction(async (newTx) => {
+      return this.performStatusChange(
+        projectId,
+        newStatus,
+        userId,
+        data,
+        newTx,
+        project
       );
-
-      return updatedProject;
     });
+  }
 
-    return result;
+  private async performStatusChange(
+    projectId: string,
+    newStatus: ProjectStatus,
+    userId: string,
+    data: any,
+    tx: Prisma.TransactionClient,
+    project: ProjectWithDetails
+  ) {
+    const contextualNote = await this.handleTransitionData(
+      project,
+      newStatus,
+      data,
+      tx
+    );
+
+    const updatedProject = await this.projectsRepository.updateStatus(
+      projectId,
+      newStatus,
+      tx
+    );
+
+    let finalObservation = data?.observation;
+    if (contextualNote) {
+      finalObservation = `${finalObservation}\n\n${contextualNote}`;
+    }
+
+    let createdNoteId: string | null = null;
+    if (finalObservation) {
+      const observation = await this.projectNotesRepository.create(
+        { projectId, userId, content: finalObservation },
+        tx
+      );
+      createdNoteId = observation.id;
+    }
+
+    await this.auditLogRepository.create(
+      {
+        entityType: "Project",
+        entityId: projectId,
+        action: "STATUS_CHANGE",
+        userId,
+        changes: { status: { from: project.status, to: newStatus } },
+        metadata: {
+          observation: finalObservation ?? "Sem observações",
+          relatedNoteId: createdNoteId,
+        },
+      },
+      tx
+    );
+
+    return updatedProject;
   }
 
   private async handleTransitionData(
@@ -105,10 +135,7 @@ export class ChangeProjectStatusUseCase {
       case "PROPOSAL":
         return await this.handleToProposal(project, data, tx);
 
-      case "PROPOSAL_GENERATED":
-        // await this.handleToGenerated(projectId, data, tx);
-        break;
-
+    
       // Adicione outros casos conforme necessidade
       default:
         break;

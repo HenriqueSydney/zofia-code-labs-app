@@ -10,6 +10,8 @@ export function getServicesDiffMessage(
   const currentIds = new Set(currentServices.map((s) => s.serviceTypeId));
   const newIdsSet = new Set(newServiceIds);
 
+  if (!currentServices || !newServiceIds) return null;
+
   const removed = currentServices.filter(
     (s) => !newIdsSet.has(s.serviceTypeId)
   );
