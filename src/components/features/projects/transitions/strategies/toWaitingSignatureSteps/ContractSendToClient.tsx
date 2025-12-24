@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FileText, Eye, Send, ThumbsUp } from "lucide-react";
+import { FileText, Eye, Send, ThumbsUp, EyeClosed } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,6 +27,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
+import { getContractDownloadUrl } from "@/actions/contract/getContractDownloadUrl";
+import { Tooltip } from "@/components/Tooltip";
 
 // Schema atualizado para refletir as opções do rádio
 const toClientSchema = z.object({
@@ -92,26 +94,33 @@ export function ContractSendToClient({
 
   const selectedChannel = form.watch("communicationChannel");
 
+  const handleDownload = async (id: string) => {
+    const result = await getContractDownloadUrl(id);
+
+    if (result.error) {
+      toast.error(result.error);
+      return;
+    }
+
+    const { url } = result;
+
+    // Abre em nova aba ou inicia download
+    window.open(url, "_blank");
+  };
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       {/* Cabeçalho de Status */}
       <Alert className="bg-green-800/10 border-green-300/30">
         <ThumbsUp className="h-4 w-4" />
-        <AlertTitle>Contrato Pronta para Envio</AlertTitle>
+        <AlertTitle>Contrato Pronto para Envio</AlertTitle>
         <AlertDescription>
-          Esta contrato foi aprovada internamente em{" "}
-          <strong>
-            {date(contract.approvedAt).format("DD/MM/YYYY HH:mm")}
-          </strong>
-          . Selecione o canal abaixo para notificar o cliente.
+          Selecione o canal abaixo para notificar o cliente.
         </AlertDescription>
       </Alert>
 
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className=""
-        >          
+        <form onSubmit={form.handleSubmit(onSubmit)} className="">
           {/* Coluna Lateral - Configuração de Envio */}
           <div className="flex flex-col space-y-4">
             <Card>
@@ -139,7 +148,26 @@ export function ContractSendToClient({
                         </p>
                       </div>
                     </div>
-                    <Eye className="w-4 h-4 text-muted-foreground" />
+                    <Tooltip
+                      description={
+                        contract.fileKey
+                          ? "Baixar documento"
+                          : "Erro ao localizar o documento"
+                      }
+                    >
+                      <Button
+                        variant="ghost"
+                        type="button"
+                        disabled={!contract.fileKey}
+                        onClick={() => handleDownload(contract.id)}
+                      >
+                        {contract.fileKey ? (
+                          <Eye className="w-4 y-4" />
+                        ) : (
+                          <EyeClosed className="w-4 y-4" />
+                        )}
+                      </Button>
+                    </Tooltip>
                   </div>
                 </Link>
               </CardContent>

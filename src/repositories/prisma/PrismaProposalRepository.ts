@@ -49,7 +49,9 @@ export class PrismaProposalRepository implements IProposalRepository {
         createdBy: data.createdBy,
         validUntil: data.validUntil,
         totalValue: data.totalValue,
-        status: "DRAFT",
+        fileKey: data.fileStorageKey,
+        sourceType: data.sourceType,
+        status: data.status ?? "DRAFT",
         version: nextVersion,
         isCurrent: true,
         items: {
@@ -248,6 +250,7 @@ export class PrismaProposalRepository implements IProposalRepository {
     const client = tx || prisma;
     await client.proposal.update({
       data: {
+        isCurrent: false,
         status: "CANCELLED",
       },
       where: { id },

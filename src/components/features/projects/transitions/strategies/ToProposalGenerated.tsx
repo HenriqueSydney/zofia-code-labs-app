@@ -14,43 +14,36 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { changeProposalStatusAction } from "@/actions/proposal/changeProposalStatus";
-import { operationWrapper } from "@/lib/operationWrapper";
 import { getProposalAction } from "@/actions/proposal/getProposal";
 
 export function ToProposalGenerated({
   project,
   targetStatus,
   onSuccess,
-  onCancel
+  onCancel,
 }: TransitionStrategyProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [proposal, setProposal] = useState<ProposalWithDetails | null>(null);
 
   async function getProposalWithDetails() {
-    const [proposalError, proposalSuccess] =
-      await operationWrapper<ProposalWithDetails>(
-        "action",
-        "getProposalAction",
-        () => {
-          return getProposalAction(project.proposal.id);
-        },
-        {
-          cache: "no-cache",
-        }
-      );
+    if (!project.proposal) return null;
+    try {
+      const result = await getProposalAction(project.proposal.id);
 
-    if (proposalError) {
-      toast.error(proposalError.message);
-      return;
+      setProposal(result);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+        return;
+      }
+      toast.error("Erro ao tentar localizar dados da proposta");
     }
-
-    setProposal(proposalSuccess);
   }
 
   useEffect(() => {
-    setIsLoading(true)
+    setIsLoading(true);
     getProposalWithDetails();
-    setIsLoading(false)
+    setIsLoading(false);
   }, [project]);
 
   // ESTÁGIO 1: Criação

@@ -24,7 +24,12 @@ export class CancelProposalUseCase {
       throw new Error("Proposta não localizada");
     }
 
-    await checkUserPermissionForAsset("proposal", userId, proposal, "DELETE");
+    await checkUserPermissionForAsset(
+      "proposal",
+      userId,
+      { organizationId: proposal.project.organizationId },
+      "DELETE"
+    );
 
     // Regra de negócio: Talvez impedir deletar propostas já ACEITAS?
     if (proposal.status === "ACCEPTED") {

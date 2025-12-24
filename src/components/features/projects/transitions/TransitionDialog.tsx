@@ -1,4 +1,3 @@
-
 import {
   Dialog,
   DialogContent,
@@ -36,7 +35,10 @@ export function ProjectTransitionDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[800px] md:max-w-[1200px] ">
+      <DialogContent
+        className="sm:max-w-[800px] md:max-w-[1200px] "
+        aria-describedby="Formulário de avanço de etapa"
+      >
         <DialogHeader>
           <DialogTitle>Avançar para: {targetStatusLabel}</DialogTitle>
         </DialogHeader>

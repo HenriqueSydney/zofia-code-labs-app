@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FileText, Eye, Send, ThumbsUp } from "lucide-react";
+import { FileText, Eye, Send, ThumbsUp, EyeClosed } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,6 +27,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
+import { getProposalDownloadUrl } from "@/actions/proposal/getProposalDownloadUrl";
+import { Tooltip } from "@/components/Tooltip";
 
 // Schema atualizado para refletir as opções do rádio
 const toClientSchema = z.object({
@@ -92,6 +94,20 @@ export function ProposalSendToClient({
 
   const selectedChannel = form.watch("communicationChannel");
 
+  const handleDownload = async (id: string) => {
+    const result = await getProposalDownloadUrl(id);
+
+    if (result.error) {
+      toast.error(result.error);
+      return;
+    }
+
+    const { url } = result;
+
+    // Abre em nova aba ou inicia download
+    window.open(url, "_blank");
+  };
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       {/* Cabeçalho de Status */}
@@ -154,7 +170,26 @@ export function ProposalSendToClient({
                         </p>
                       </div>
                     </div>
-                    <Eye className="w-4 h-4 text-muted-foreground" />
+                    <Tooltip
+                      description={
+                        proposal.fileKey
+                          ? "Baixar documento"
+                          : "Erro ao localizar o documento"
+                      }
+                    >
+                      <Button
+                        variant="ghost"
+                        type="button"
+                        disabled={!proposal.fileKey}
+                        onClick={() => handleDownload(proposal.id)}
+                      >
+                        {proposal.fileKey ? (
+                          <Eye className="w-4 y-4" />
+                        ) : (
+                          <EyeClosed className="w-4 y-4" />
+                        )}
+                      </Button>
+                    </Tooltip>
                   </div>
                 </Link>
               </CardContent>

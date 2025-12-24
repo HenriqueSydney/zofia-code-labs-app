@@ -46,6 +46,6 @@ export async function createProjectAction(formData: FormData) {
   }
 
   if (projectId) {
-    redirect(`/projects/${projectId}/dashboard`);
+    redirect(`/projects/${projectId}/project/overview`);
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 // Importe o CSS do Tippy para os menus funcionarem!
 import "tippy.js/dist/tippy.css";
 
@@ -13,6 +13,7 @@ import {
 import { DOMParser as ProseMirrorDOMParser } from "prosemirror-model";
 import { Editor as CoreEditor, Range } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
+import TextAlign from "@tiptap/extension-text-align";
 import { Table } from "@tiptap/extension-table";
 import TableRow from "@tiptap/extension-table-row";
 import TableCell from "@tiptap/extension-table-cell";
@@ -34,6 +35,10 @@ import { getSuggestionOptions } from "./scripts/suggestion";
 import Image from "@tiptap/extension-image";
 import "./editor-styles.css";
 import { useImageUpload } from "@/hooks/use-image-upload";
+import { Toolbar } from "./Toolbar";
+import { Ruler } from "./Ruler";
+import { VerticalRuler } from "./VerticalRuler";
+import { PageBreak } from "./scripts/page-break-extension";
 
 // --- Extensão Slash Command ---
 const SlashCommand = Extension.create({
@@ -79,6 +84,12 @@ const Editor: React.FC<EditorProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { uploadFn } = useImageUpload();
+  const [margins, setMargins] = useState({
+    left: 3,
+    right: 2,
+    top: 3,
+    bottom: 2,
+  });
   const editor = useEditor({
     immediatelyRender: false,
     extensions: [
@@ -133,7 +144,11 @@ const Editor: React.FC<EditorProps> = ({
       FontSize,
       // NOVAS EXTENSÕES
       Link.configure({ openOnClick: false }),
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
+      }),
       Underline,
+      PageBreak,
       TextStyle,
       Strike,
       Color,
@@ -292,32 +307,62 @@ const Editor: React.FC<EditorProps> = ({
         <div className="text-xs text-gray-400">Rascunho salvo</div>
       </div>
 
-      <div
-        className="relative w-full max-w-[21cm] mx-auto perspective-1000"
-        ref={containerRef}
-      >
+      <div className="relative mx-auto">
         <EditorBubbleMenu editor={editor} />
 
-        {/* O PAPEL EM SI */}
-        <div
-          onClick={() => editor.chain().focus().run()}
-          className="
-            bg-white 
-            rounded-sm 
-            shadow-xl 
-            border border-gray-200/60
-            min-h-[21cm] 
-            max-h-[21cm] 
-            transition-all duration-200
-            cursor-text
-            pl-[3cm] pt-[3cm] pb-[2cm] pr-[2cm]
-            overflow-y-auto
-          "
-        >
-          {/* Se você tiver o DragHandle, ele deve ser posicionado relative a este container */}
-          {/* <DragHandle editor={editor} className="absolute left-2 top-0" /> */}
+        {/* 1. Toolbar Superior (Fora do grid de réguas) */}
 
-          <EditorContent editor={editor} />
+        <Toolbar editor={editor} variables={variables} />
+
+        {/* 2. Área de Trabalho (Réguas + Papel) */}
+        <div className="flex flex-row items-start overflow-y-auto max-h-[32cm] bg-background border-x border-b rounded-b-lg">
+          {/* COLUNA DA RÉGUA VERTICAL */}
+          <div className="flex flex-col flex-none items-center justify-center mt-6">
+            {/* O "CORNER": Espaço vazio onde as réguas se cruzariam. 
+          Deve ser transparente ou da cor da régua, NÃO bg-background. */}
+            <div className="h-8 w-8 border-l border-t border-transparent" />
+
+            <VerticalRuler
+              marginTop={margins.top}
+              marginBottom={margins.bottom}
+              onMarginChange={(top, bottom) =>
+                setMargins({ ...margins, top, bottom })
+              }
+            />
+          </div>
+
+          {/* COLUNA DA RÉGUA HORIZONTAL + FOLHA */}
+          <div className="flex flex-col flex-none items-center justify-center">
+            <Ruler
+              marginLeft={margins.left}
+              marginRight={margins.right}
+              onMarginChange={(left, right) =>
+                setMargins({ ...margins, left, right })
+              }
+            />
+
+            {/* O CONTAINER DA FOLHA: 
+          Aqui removemos o 'bg-background' do pai para evitar o ghost background. */}
+            <div className="p-6 ">
+              <div className="paginated-container">
+                <div
+                  className="prose-paper bg-white shadow-2xl border border-gray-200 cursor-text "
+                  style={
+                    {
+                      width: "21cm",
+                      height: "29.7cm",
+                      paddingLeft: `${margins.left}cm`,
+                      paddingRight: `${margins.right}cm`,
+                      paddingTop: `${margins.top}cm`,
+                      paddingBottom: `${margins.bottom}cm`,
+                    } as React.CSSProperties
+                  }
+                >
+                  <EditorContent editor={editor} />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

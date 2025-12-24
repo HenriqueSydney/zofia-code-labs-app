@@ -101,6 +101,15 @@ export function ProposalCreationForm({
       // const validUntil = addDays(new Date(), 30).toISOString();
       // formData.append("validUntil", validUntil);
 
+      const itemsPayload =
+        values.items?.map((item) => ({
+          serviceTypeId: item.serviceTypeId,
+          discountType: item.discountType,
+          discount: item.discount,
+        })) ?? [];
+
+      formData.append("items", JSON.stringify(itemsPayload));
+
       if (values.mode === "template") {
         if (!values.templateId) {
           toast.error("Selecione um modelo de documento.");
@@ -111,14 +120,6 @@ export function ProposalCreationForm({
 
         // Items precisam ir como string JSON para o FormData processar arrays complexos
         // Filtramos items para garantir que enviamos apenas o necessário
-        const itemsPayload =
-          values.items?.map((item) => ({
-            serviceTypeId: item.serviceTypeId,
-            discountType: item.discountType,
-            discount: item.discount,
-          })) ?? [];
-
-        formData.append("items", JSON.stringify(itemsPayload));
       } else {
         // Modo Upload
         if (file) {
@@ -208,138 +209,138 @@ export function ProposalCreationForm({
             </FormItem>
           )}
         />
-
-        {mode === "template" ? (
-          <div className="space-y-4 border p-4 rounded-md">
-            {/* Seleção do Template */}
-            <FormField
-              control={form.control}
-              name="templateId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Modelo de Documento</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione o template" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {availableTemplates.map((template) => (
-                        <SelectItem key={template.id} value={template.id}>
-                          {template.title}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="space-y-3">
-              <Label className="text-base font-semibold">
-                Configuração de Serviços
-              </Label>
-              <div className="grid gap-3 max-h-[300px] overflow-y-auto pr-2 mt-2">
-                {/* Itera sobre os items do array do formulário */}
-                {form.watch("items")?.map((item, index) => (
-                  <div
-                    key={item.serviceTypeId}
-                    className="grid grid-cols-12 gap-2 items-end border-b pb-3 last:border-0"
-                  >
-                    {/* Nome do Serviço */}
-                    <div className="h-full col-span-5 flex flex-col justify-between">
-                      <Label className="text-xs text-muted-foreground">
-                        Serviço
-                      </Label>
-                      <p
-                        className="text-sm font-medium mb-1 truncate"
-                        title={item.serviceName}
-                      >
-                        {item.serviceName}
-                      </p>
-                    </div>
-
-                    {/* Tipo de Desconto */}
-                    <div className="col-span-4">
-                      <FormField
-                        control={form.control}
-                        name={`items.${index}.discountType`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-[10px] uppercase text-muted-foreground">
-                              Tipo Desc.
-                            </FormLabel>
-                            <Select
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
-                            >
-                              <FormControl>
-                                <SelectTrigger className="h-8">
-                                  <SelectValue />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="PERCENTAGE">
-                                  Percentual (%)
-                                </SelectItem>
-                                <SelectItem value="FIXED">Fixo (R$)</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
-                    {/* Valor do Desconto (O NOVO CAMPO SOLICITADO) */}
-                    <div className="col-span-3">
-                      <FormField
-                        control={form.control}
-                        name={`items.${index}.discount`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-[10px] uppercase text-muted-foreground">
-                              Valor
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                type="number"
-                                className="h-8"
-                                placeholder="0"
-                                min="0"
-                                step="0.01"
-                                {...field}
-                                onChange={(e) => {
-                                  const value = e.target.value;
-                                  field.onChange(
-                                    value === "" ? 0 : parseFloat(value)
-                                  );
-                                }}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+        <div className="space-y-4 border p-4 rounded-md">
+          {mode === "template" ? (
+            <>
+              {/* Seleção do Template */}
+              <FormField
+                control={form.control}
+                name="templateId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Modelo de Documento</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione o template" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {availableTemplates.map((template) => (
+                          <SelectItem key={template.id} value={template.id}>
+                            {template.title}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </>
+          ) : (
+            <div className="space-y-2 border p-4 rounded-md bg-muted/20">
+              <Label>Anexar Proposta Elaborada</Label>
+              <Input
+                type="file"
+                accept=".pdf"
+                onChange={(e) => setFile(e.target.files?.[0] || null)}
+              />
+            </div>
+          )}
+          <div className="space-y-3">
+            <Label className="text-base font-semibold">
+              Configuração de Serviços
+            </Label>
+            <div className="grid gap-3 max-h-[300px] overflow-y-auto pr-2 mt-2">
+              {/* Itera sobre os items do array do formulário */}
+              {form.watch("items")?.map((item, index) => (
+                <div
+                  key={item.serviceTypeId}
+                  className="grid grid-cols-12 gap-2 items-end border-b pb-3 last:border-0"
+                >
+                  {/* Nome do Serviço */}
+                  <div className="h-full col-span-5 flex flex-col justify-between">
+                    <Label className="text-xs text-muted-foreground">
+                      Serviço
+                    </Label>
+                    <p
+                      className="text-sm font-medium mb-1 truncate"
+                      title={item.serviceName}
+                    >
+                      {item.serviceName}
+                    </p>
                   </div>
-                ))}
-              </div>
+
+                  {/* Tipo de Desconto */}
+                  <div className="col-span-4">
+                    <FormField
+                      control={form.control}
+                      name={`items.${index}.discountType`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-[10px] uppercase text-muted-foreground">
+                            Tipo Desc.
+                          </FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="h-8">
+                                <SelectValue />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="PERCENTAGE">
+                                Percentual (%)
+                              </SelectItem>
+                              <SelectItem value="FIXED">Fixo (R$)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Valor do Desconto (O NOVO CAMPO SOLICITADO) */}
+                  <div className="col-span-3">
+                    <FormField
+                      control={form.control}
+                      name={`items.${index}.discount`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-[10px] uppercase text-muted-foreground">
+                            Valor
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              className="h-8"
+                              placeholder="0"
+                              min="0"
+                              step="0.01"
+                              {...field}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                field.onChange(
+                                  value === "" ? 0 : parseFloat(value)
+                                );
+                              }}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        ) : (
-          <div className="space-y-2 border p-4 rounded-md bg-muted/20">
-            <Label>Anexar Proposta Elaborada</Label>
-            <Input
-              type="file"
-              accept=".pdf"
-              onChange={(e) => setFile(e.target.files?.[0] || null)}
-            />
-          </div>
-        )}
+        </div>
 
         <div className="flex justify-end gap-2 pt-4">
           <Button type="button" variant="outline" onClick={onCancel}>

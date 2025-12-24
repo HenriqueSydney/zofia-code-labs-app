@@ -39,71 +39,92 @@ export class R2StorageService implements IS3StorageService {
   }
 
   /**
-   * Upload de arquivo para o R2
-   * @param file - Arquivo ou Buffer para upload
-   * @param key - Caminho/nome do arquivo no bucket
-   * @param contentType - MIME type do arquivo
-   * @returns URL pública do arquivo
+   * Recupera o conteúdo de um arquivo do R2 como Buffer
    */
+  async getFileBuffer(key: string): Promise<Buffer> {
+    const command = new GetObjectCommand({
+      Bucket: this.bucketName,
+      Key: key,
+    });
+
+    try {
+      const response = await this.client.send(command);
+
+      if (!response.Body) {
+        throw new Error("Corpo do arquivo vazio.");
+      }
+
+      // Converte o stream de resposta em um array de bytes e depois em Buffer
+      const bytes = await response.Body.transformToByteArray();
+      return Buffer.from(bytes);
+    } catch (error) {
+      console.error(`Erro ao baixar buffer (Key: ${key}):`, error);
+      throw new Error("Não foi possível recuperar o conteúdo do arquivo.");
+    }
+  }
+
   async upload(
     file: File | Buffer,
     key: string,
     contentType: string
-  ): Promise<string> {
+  ): Promise<{ key: string }> {
     const command = new PutObjectCommand({
       Bucket: this.bucketName,
       Key: key,
       Body: file,
       ContentType: contentType,
+      Metadata: { "original-content-type": contentType },
     });
 
-    await this.client.send(command);
-
-    return this.publicUrl
-      ? `https://${this.publicUrl}/${key}`
-      : `https://${this.bucketName}.r2.dev/${key}`;
+    try {
+      await this.client.send(command);
+      return { key };
+    } catch (error) {
+      console.error(`Erro no upload (Key: ${key}):`, error);
+      throw new Error("Falha ao carregar arquivo para o storage.");
+    }
   }
 
-  /**
-   * Gerar URL assinada temporária
-   * @param key - Caminho/nome do arquivo
-   * @param expiresIn - Tempo de expiração em segundos (padrão: 1 hora)
-   * @returns URL assinada
-   */
   async getSignedUrl(key: string, expiresIn: number = 3600): Promise<string> {
     const command = new GetObjectCommand({
       Bucket: this.bucketName,
       Key: key,
     });
 
-    return await getSignedUrl(this.client, command, { expiresIn });
+    try {
+      return await getSignedUrl(this.client, command, { expiresIn });
+    } catch (error) {
+      console.error(`Erro ao gerar URL assinada (Key: ${key}):`, error);
+      throw new Error("Falha ao gerar link temporário.");
+    }
   }
 
-  /**
-   * Deletar arquivo do R2
-   * @param key - Caminho/nome do arquivo
-   */
   async delete(key: string): Promise<void> {
     const command = new DeleteObjectCommand({
       Bucket: this.bucketName,
       Key: key,
     });
 
-    await this.client.send(command);
+    try {
+      await this.client.send(command);
+    } catch (error) {
+      console.error(`Erro ao deletar (Key: ${key}):`, error);
+      throw new Error("Falha ao excluir arquivo do storage.");
+    }
   }
 
-  /**
-   * Listar arquivos no bucket
-   * @param prefix - Prefixo para filtrar arquivos (opcional)
-   * @returns Lista de objetos
-   */
   async list(prefix?: string): Promise<R2Object[]> {
     const command = new ListObjectsV2Command({
       Bucket: this.bucketName,
       Prefix: prefix,
     });
 
-    const response = await this.client.send(command);
-    return (response.Contents || []) as R2Object[];
+    try {
+      const response = await this.client.send(command);
+      return (response.Contents || []) as R2Object[];
+    } catch (error) {
+      console.error(`Erro ao listar objetos (Prefix: ${prefix}):`, error);
+      throw new Error("Falha ao listar arquivos do storage.");
+    }
   }
 }

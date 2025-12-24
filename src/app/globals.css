@@ -217,6 +217,10 @@
       hsl(262, 83%, 58%),
       hsl(271, 91%, 65%)
     );
+
+    --page-height: 29.7cm;
+    --page-gap: 20px; /* Espaço entre as folhas */
+    --mesa-bg: #1f2937; /* Cinza escuro da "mesa" */
   }
 
   .dark {
@@ -312,5 +316,75 @@
   }
   .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: rgb(148 163 184 / 0.4);
+  }
+
+  .clip-path-v-triangle-top {
+    clip-path: polygon(100% 50%, 0% 0%, 0% 100%);
+  }
+
+  .clip-path-v-triangle-bottom {
+    clip-path: polygon(100% 50%, 0% 0%, 0% 100%);
+  }
+
+  .clip-path-triangle {
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  }
+
+  .paginated-container {
+    padding: 0 0 40px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Garante que o scroll do papel não quebre o layout das réguas */
+    overflow: visible;
+  }
+
+  .prose-paper {
+    width: 21cm;
+    /* A MÁGICA: Um gradiente que cria o intervalo entre as páginas */
+    background: repeating-linear-gradient(
+      to bottom,
+      #ffffff 0,
+      #ffffff var(--page-height),
+      transparent var(--page-height),
+      transparent calc(var(--page-height) + var(--page-gap))
+    );
+    /* Sombra para dar profundidade às "folhas" */
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+
+    /* Ajuste das margens que você já criou nas réguas */
+    padding-left: var(--document-margin-left);
+    padding-right: var(--document-margin-right);
+    padding-top: var(--document-margin-top);
+    padding-bottom: var(--document-margin-bottom);
+
+    line-height: 1.5;
+    outline: none;
+  }
+
+  .prose-paper .tiptap {
+    min-height: 100%;
+    outline: none;
+  }
+
+  .page-break-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2rem 0;
+    border-top: 2px dashed #6366f1; /* Cor roxa da sua régua */
+    position: relative;
+    user-select: none;
+    page-break-after: always; /* Crucial para o PDF */
+  }
+
+  .page-break-divider span {
+    background: #6366f1;
+    color: white;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    position: absolute;
   }
 }

@@ -4,7 +4,7 @@ import { z } from "zod";
 export const discoutTypes: DiscountType[] = ["FIXED", "PERCENTAGE"];
 
 export const createProposalSchema = z.object({
-  documentTemplateId: z.cuid(),
+  documentTemplateId: z.cuid().nullable(),
   projectId: z.cuid(),
   documents: z
     .custom<File>((val) => val instanceof File, "Arquivo inválido")

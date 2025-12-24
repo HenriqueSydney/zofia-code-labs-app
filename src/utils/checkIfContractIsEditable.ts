@@ -1,13 +1,17 @@
-import { ContractStatus } from "@/generated/prisma/enums";
 
-export function checkIfContractIsEditable(contractStatus: ContractStatus) {
-  if (contractStatus) {
+import { ContractStatus } from "@/generated/prisma/enums";
+import { ContractWithDetails } from "@/repositories/IContractRepository";
+
+export function checkIfContractIsEditable(contract: ContractWithDetails) {
+  if (!contract) {
     return {
       isContractInactive: true,
       isContractEditable: true,
       canBeCancelled: true,
     };
   }
+
+  const contractStatus = contract.status
 
   const inactiveContracts: ContractStatus[] = ["CANCELLED"];
   const editableContracts: ContractStatus[] = ["DRAFT", "REVIEW"];

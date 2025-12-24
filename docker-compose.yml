@@ -12,6 +12,28 @@ services:
     volumes:
       - zofia_postgres_data:/var/lib/postgresql/data
 
+  inbucket:
+    image: inbucket/inbucket
+    container_name: mailserver
+    ports:
+      - 9000:9000
+      - 2500:2500
+      - 1100:1100
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+      - 9002:9002
+      - 9001:9001
+    volumes:
+      - minio:/data
+    environment:
+      MINIO_ROOT_USER: documenso
+      MINIO_ROOT_PASSWORD: password
+    entrypoint: sh
+    command: -c 'mkdir -p /data/documenso && minio server /data --console-address ":9001" --address ":9002"'
+
   # Zipkin
   # zipkin-all-in-one:
   #   image: openzipkin/zipkin:latest
@@ -49,3 +71,5 @@ services:
 
 volumes:
   zofia_postgres_data:
+  minio:
+  documenso_database:

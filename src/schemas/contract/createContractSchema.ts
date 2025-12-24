@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const createContractSchema = z.object({
-  documentTemplateId: z.cuid(),
+  documentTemplateId: z.cuid().nullable(),
   projectId: z.cuid(),
   documents: z
     .custom<File>((val) => val instanceof File, "Arquivo inválido")

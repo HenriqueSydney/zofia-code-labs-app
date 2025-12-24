@@ -44,6 +44,7 @@ export type ContractMinAggregateOutputType = {
   sourceType: $Enums.ContractSource | null
   fileKey: string | null
   fileUrl: string | null
+  externalSignId: string | null
   projectId: string | null
   reviewedAt: Date | null
   reviewedBy: string | null
@@ -63,6 +64,7 @@ export type ContractMaxAggregateOutputType = {
   sourceType: $Enums.ContractSource | null
   fileKey: string | null
   fileUrl: string | null
+  externalSignId: string | null
   projectId: string | null
   reviewedAt: Date | null
   reviewedBy: string | null
@@ -82,6 +84,7 @@ export type ContractCountAggregateOutputType = {
   sourceType: number
   fileKey: number
   fileUrl: number
+  externalSignId: number
   projectId: number
   reviewedAt: number
   reviewedBy: number
@@ -111,6 +114,7 @@ export type ContractMinAggregateInputType = {
   sourceType?: true
   fileKey?: true
   fileUrl?: true
+  externalSignId?: true
   projectId?: true
   reviewedAt?: true
   reviewedBy?: true
@@ -130,6 +134,7 @@ export type ContractMaxAggregateInputType = {
   sourceType?: true
   fileKey?: true
   fileUrl?: true
+  externalSignId?: true
   projectId?: true
   reviewedAt?: true
   reviewedBy?: true
@@ -149,6 +154,7 @@ export type ContractCountAggregateInputType = {
   sourceType?: true
   fileKey?: true
   fileUrl?: true
+  externalSignId?: true
   projectId?: true
   reviewedAt?: true
   reviewedBy?: true
@@ -255,6 +261,7 @@ export type ContractGroupByOutputType = {
   sourceType: $Enums.ContractSource
   fileKey: string | null
   fileUrl: string | null
+  externalSignId: string | null
   projectId: string
   reviewedAt: Date | null
   reviewedBy: string | null
@@ -297,6 +304,7 @@ export type ContractWhereInput = {
   sourceType?: Prisma.EnumContractSourceFilter<"Contract"> | $Enums.ContractSource
   fileKey?: Prisma.StringNullableFilter<"Contract"> | string | null
   fileUrl?: Prisma.StringNullableFilter<"Contract"> | string | null
+  externalSignId?: Prisma.StringNullableFilter<"Contract"> | string | null
   projectId?: Prisma.StringFilter<"Contract"> | string
   reviewedAt?: Prisma.DateTimeNullableFilter<"Contract"> | Date | string | null
   reviewedBy?: Prisma.StringNullableFilter<"Contract"> | string | null
@@ -322,6 +330,7 @@ export type ContractOrderByWithRelationInput = {
   sourceType?: Prisma.SortOrder
   fileKey?: Prisma.SortOrderInput | Prisma.SortOrder
   fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  externalSignId?: Prisma.SortOrderInput | Prisma.SortOrder
   projectId?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -351,6 +360,7 @@ export type ContractWhereUniqueInput = Prisma.AtLeast<{
   sourceType?: Prisma.EnumContractSourceFilter<"Contract"> | $Enums.ContractSource
   fileKey?: Prisma.StringNullableFilter<"Contract"> | string | null
   fileUrl?: Prisma.StringNullableFilter<"Contract"> | string | null
+  externalSignId?: Prisma.StringNullableFilter<"Contract"> | string | null
   projectId?: Prisma.StringFilter<"Contract"> | string
   reviewedAt?: Prisma.DateTimeNullableFilter<"Contract"> | Date | string | null
   reviewedBy?: Prisma.StringNullableFilter<"Contract"> | string | null
@@ -376,6 +386,7 @@ export type ContractOrderByWithAggregationInput = {
   sourceType?: Prisma.SortOrder
   fileKey?: Prisma.SortOrderInput | Prisma.SortOrder
   fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  externalSignId?: Prisma.SortOrderInput | Prisma.SortOrder
   projectId?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -403,6 +414,7 @@ export type ContractScalarWhereWithAggregatesInput = {
   sourceType?: Prisma.EnumContractSourceWithAggregatesFilter<"Contract"> | $Enums.ContractSource
   fileKey?: Prisma.StringNullableWithAggregatesFilter<"Contract"> | string | null
   fileUrl?: Prisma.StringNullableWithAggregatesFilter<"Contract"> | string | null
+  externalSignId?: Prisma.StringNullableWithAggregatesFilter<"Contract"> | string | null
   projectId?: Prisma.StringWithAggregatesFilter<"Contract"> | string
   reviewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Contract"> | Date | string | null
   reviewedBy?: Prisma.StringNullableWithAggregatesFilter<"Contract"> | string | null
@@ -420,6 +432,7 @@ export type ContractCreateInput = {
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
   fileUrl?: string | null
+  externalSignId?: string | null
   reviewedAt?: Date | string | null
   approvedAt?: Date | string | null
   createdAt?: Date | string
@@ -442,6 +455,7 @@ export type ContractUncheckedCreateInput = {
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
   fileUrl?: string | null
+  externalSignId?: string | null
   projectId: string
   reviewedAt?: Date | string | null
   reviewedBy?: string | null
@@ -460,6 +474,7 @@ export type ContractUpdateInput = {
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -482,6 +497,7 @@ export type ContractUncheckedUpdateInput = {
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -502,6 +518,7 @@ export type ContractCreateManyInput = {
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
   fileUrl?: string | null
+  externalSignId?: string | null
   projectId: string
   reviewedAt?: Date | string | null
   reviewedBy?: string | null
@@ -519,6 +536,7 @@ export type ContractUpdateManyMutationInput = {
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -535,6 +553,7 @@ export type ContractUncheckedUpdateManyInput = {
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -569,6 +588,7 @@ export type ContractCountOrderByAggregateInput = {
   sourceType?: Prisma.SortOrder
   fileKey?: Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
+  externalSignId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
   reviewedBy?: Prisma.SortOrder
@@ -592,6 +612,7 @@ export type ContractMaxOrderByAggregateInput = {
   sourceType?: Prisma.SortOrder
   fileKey?: Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
+  externalSignId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
   reviewedBy?: Prisma.SortOrder
@@ -611,6 +632,7 @@ export type ContractMinOrderByAggregateInput = {
   sourceType?: Prisma.SortOrder
   fileKey?: Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
+  externalSignId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
   reviewedBy?: Prisma.SortOrder
@@ -869,6 +891,7 @@ export type ContractCreateWithoutCreatedUserInput = {
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
   fileUrl?: string | null
+  externalSignId?: string | null
   reviewedAt?: Date | string | null
   approvedAt?: Date | string | null
   createdAt?: Date | string
@@ -889,6 +912,7 @@ export type ContractUncheckedCreateWithoutCreatedUserInput = {
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
   fileUrl?: string | null
+  externalSignId?: string | null
   projectId: string
   reviewedAt?: Date | string | null
   reviewedBy?: string | null
@@ -917,6 +941,7 @@ export type ContractCreateWithoutApprovedUserInput = {
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
   fileUrl?: string | null
+  externalSignId?: string | null
   reviewedAt?: Date | string | null
   approvedAt?: Date | string | null
   createdAt?: Date | string
@@ -938,6 +963,7 @@ export type ContractUncheckedCreateWithoutApprovedUserInput = {
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
   fileUrl?: string | null
+  externalSignId?: string | null
   projectId: string
   reviewedAt?: Date | string | null
   reviewedBy?: string | null
@@ -965,6 +991,7 @@ export type ContractCreateWithoutReviewUserInput = {
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
   fileUrl?: string | null
+  externalSignId?: string | null
   reviewedAt?: Date | string | null
   approvedAt?: Date | string | null
   createdAt?: Date | string
@@ -986,6 +1013,7 @@ export type ContractUncheckedCreateWithoutReviewUserInput = {
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
   fileUrl?: string | null
+  externalSignId?: string | null
   projectId: string
   reviewedAt?: Date | string | null
   approvedAt?: Date | string | null
@@ -1034,6 +1062,7 @@ export type ContractScalarWhereInput = {
   sourceType?: Prisma.EnumContractSourceFilter<"Contract"> | $Enums.ContractSource
   fileKey?: Prisma.StringNullableFilter<"Contract"> | string | null
   fileUrl?: Prisma.StringNullableFilter<"Contract"> | string | null
+  externalSignId?: Prisma.StringNullableFilter<"Contract"> | string | null
   projectId?: Prisma.StringFilter<"Contract"> | string
   reviewedAt?: Prisma.DateTimeNullableFilter<"Contract"> | Date | string | null
   reviewedBy?: Prisma.StringNullableFilter<"Contract"> | string | null
@@ -1083,6 +1112,7 @@ export type ContractCreateWithoutProposalInput = {
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
   fileUrl?: string | null
+  externalSignId?: string | null
   reviewedAt?: Date | string | null
   approvedAt?: Date | string | null
   createdAt?: Date | string
@@ -1103,6 +1133,7 @@ export type ContractUncheckedCreateWithoutProposalInput = {
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
   fileUrl?: string | null
+  externalSignId?: string | null
   projectId: string
   reviewedAt?: Date | string | null
   reviewedBy?: string | null
@@ -1147,6 +1178,7 @@ export type ContractCreateWithoutContractTemplateInput = {
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
   fileUrl?: string | null
+  externalSignId?: string | null
   reviewedAt?: Date | string | null
   approvedAt?: Date | string | null
   createdAt?: Date | string
@@ -1168,6 +1200,7 @@ export type ContractUncheckedCreateWithoutContractTemplateInput = {
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
   fileUrl?: string | null
+  externalSignId?: string | null
   projectId: string
   reviewedAt?: Date | string | null
   reviewedBy?: string | null
@@ -1201,6 +1234,7 @@ export type ContractUpdateWithoutContractTemplateInput = {
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1222,6 +1256,7 @@ export type ContractUncheckedUpdateWithoutContractTemplateInput = {
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1239,6 +1274,7 @@ export type ContractCreateWithoutProjectInput = {
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
   fileUrl?: string | null
+  externalSignId?: string | null
   reviewedAt?: Date | string | null
   approvedAt?: Date | string | null
   createdAt?: Date | string
@@ -1260,6 +1296,7 @@ export type ContractUncheckedCreateWithoutProjectInput = {
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
   fileUrl?: string | null
+  externalSignId?: string | null
   reviewedAt?: Date | string | null
   reviewedBy?: string | null
   approvedAt?: Date | string | null
@@ -1304,6 +1341,7 @@ export type ContractCreateManyCreatedUserInput = {
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
   fileUrl?: string | null
+  externalSignId?: string | null
   projectId: string
   reviewedAt?: Date | string | null
   reviewedBy?: string | null
@@ -1323,6 +1361,7 @@ export type ContractCreateManyApprovedUserInput = {
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
   fileUrl?: string | null
+  externalSignId?: string | null
   projectId: string
   reviewedAt?: Date | string | null
   reviewedBy?: string | null
@@ -1341,6 +1380,7 @@ export type ContractCreateManyReviewUserInput = {
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
   fileUrl?: string | null
+  externalSignId?: string | null
   projectId: string
   reviewedAt?: Date | string | null
   approvedAt?: Date | string | null
@@ -1357,6 +1397,7 @@ export type ContractUpdateWithoutCreatedUserInput = {
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1377,6 +1418,7 @@ export type ContractUncheckedUpdateWithoutCreatedUserInput = {
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1396,6 +1438,7 @@ export type ContractUncheckedUpdateManyWithoutCreatedUserInput = {
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1413,6 +1456,7 @@ export type ContractUpdateWithoutApprovedUserInput = {
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1434,6 +1478,7 @@ export type ContractUncheckedUpdateWithoutApprovedUserInput = {
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1453,6 +1498,7 @@ export type ContractUncheckedUpdateManyWithoutApprovedUserInput = {
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1469,6 +1515,7 @@ export type ContractUpdateWithoutReviewUserInput = {
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1490,6 +1537,7 @@ export type ContractUncheckedUpdateWithoutReviewUserInput = {
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1509,6 +1557,7 @@ export type ContractUncheckedUpdateManyWithoutReviewUserInput = {
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1526,6 +1575,7 @@ export type ContractCreateManyProposalInput = {
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
   fileUrl?: string | null
+  externalSignId?: string | null
   projectId: string
   reviewedAt?: Date | string | null
   reviewedBy?: string | null
@@ -1543,6 +1593,7 @@ export type ContractUpdateWithoutProposalInput = {
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1563,6 +1614,7 @@ export type ContractUncheckedUpdateWithoutProposalInput = {
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1582,6 +1634,7 @@ export type ContractUncheckedUpdateManyWithoutProposalInput = {
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1601,6 +1654,7 @@ export type ContractCreateManyProjectInput = {
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
   fileUrl?: string | null
+  externalSignId?: string | null
   reviewedAt?: Date | string | null
   reviewedBy?: string | null
   approvedAt?: Date | string | null
@@ -1617,6 +1671,7 @@ export type ContractUpdateWithoutProjectInput = {
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1638,6 +1693,7 @@ export type ContractUncheckedUpdateWithoutProjectInput = {
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1657,6 +1713,7 @@ export type ContractUncheckedUpdateManyWithoutProjectInput = {
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalSignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1677,6 +1734,7 @@ export type ContractSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   sourceType?: boolean
   fileKey?: boolean
   fileUrl?: boolean
+  externalSignId?: boolean
   projectId?: boolean
   reviewedAt?: boolean
   reviewedBy?: boolean
@@ -1702,6 +1760,7 @@ export type ContractSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   sourceType?: boolean
   fileKey?: boolean
   fileUrl?: boolean
+  externalSignId?: boolean
   projectId?: boolean
   reviewedAt?: boolean
   reviewedBy?: boolean
@@ -1726,6 +1785,7 @@ export type ContractSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   sourceType?: boolean
   fileKey?: boolean
   fileUrl?: boolean
+  externalSignId?: boolean
   projectId?: boolean
   reviewedAt?: boolean
   reviewedBy?: boolean
@@ -1750,6 +1810,7 @@ export type ContractSelectScalar = {
   sourceType?: boolean
   fileKey?: boolean
   fileUrl?: boolean
+  externalSignId?: boolean
   projectId?: boolean
   reviewedAt?: boolean
   reviewedBy?: boolean
@@ -1759,7 +1820,7 @@ export type ContractSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ContractOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "version" | "isCurrent" | "proposalId" | "status" | "createdBy" | "sourceType" | "fileKey" | "fileUrl" | "projectId" | "reviewedAt" | "reviewedBy" | "approvedAt" | "approvedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["contract"]>
+export type ContractOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "version" | "isCurrent" | "proposalId" | "status" | "createdBy" | "sourceType" | "fileKey" | "fileUrl" | "externalSignId" | "projectId" | "reviewedAt" | "reviewedBy" | "approvedAt" | "approvedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["contract"]>
 export type ContractInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   proposal?: boolean | Prisma.ProposalDefaultArgs<ExtArgs>
   createdUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1803,6 +1864,7 @@ export type $ContractPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     sourceType: $Enums.ContractSource
     fileKey: string | null
     fileUrl: string | null
+    externalSignId: string | null
     projectId: string
     reviewedAt: Date | null
     reviewedBy: string | null
@@ -2248,6 +2310,7 @@ export interface ContractFieldRefs {
   readonly sourceType: Prisma.FieldRef<"Contract", 'ContractSource'>
   readonly fileKey: Prisma.FieldRef<"Contract", 'String'>
   readonly fileUrl: Prisma.FieldRef<"Contract", 'String'>
+  readonly externalSignId: Prisma.FieldRef<"Contract", 'String'>
   readonly projectId: Prisma.FieldRef<"Contract", 'String'>
   readonly reviewedAt: Prisma.FieldRef<"Contract", 'DateTime'>
   readonly reviewedBy: Prisma.FieldRef<"Contract", 'String'>

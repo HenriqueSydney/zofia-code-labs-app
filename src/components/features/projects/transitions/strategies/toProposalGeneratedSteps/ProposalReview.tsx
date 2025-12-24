@@ -1,5 +1,13 @@
+"use client";
+
 import { useState } from "react";
-import { FileText, CheckCircle2, AlertCircle, Eye } from "lucide-react";
+import {
+  FileText,
+  CheckCircle2,
+  AlertCircle,
+  Eye,
+  EyeClosed,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,6 +21,8 @@ import { AttachmentIcon } from "@/components/AttachmentIcon";
 import { changeProposalStatusAction } from "@/actions/proposal/changeProposalStatus";
 import { toast } from "sonner";
 import { formatCurrency } from "@/utils/formatCurrency";
+import { getProposalDownloadUrl } from "@/actions/proposal/getProposalDownloadUrl";
+import { Tooltip } from "@/components/Tooltip";
 
 interface ProposalReviewProps {
   proposal: any;
@@ -45,6 +55,20 @@ export function ProposalReview({
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDownload = async (id: string) => {
+    const result = await getProposalDownloadUrl(id);
+
+    if (result.error) {
+      toast.error(result.error);
+      return;
+    }
+
+    const { url } = result;
+
+    // Abre em nova aba ou inicia download
+    window.open(url, "_blank");
   };
 
   const isTemplate = proposal.sourceType === "SYSTEM_TEMPLATE";
@@ -94,29 +118,39 @@ export function ProposalReview({
                 </div>
                 <Separator />
                 <div className="space-y-4">
-                  <Link
-                    href={proposal.fileUrl ?? ""}
-                    className="cursor-pointer"
-                  >
-                    <div className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
-                      <div className="flex items-center gap-3">
-                        <AttachmentIcon extension="pdf" />
-                        <div>
-                          <p className="text-sm font-medium line-clamp-1">
-                            Proposta Comercial Gerada
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {date(proposal.createdAt).format(
-                              "DD/MM/YYYY HH:mm"
-                            )}
-                          </p>
-                        </div>
+                  <div className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
+                    <div className="flex items-center gap-3">
+                      <AttachmentIcon extension="pdf" />
+                      <div>
+                        <p className="text-sm font-medium line-clamp-1">
+                          Proposta Comercial Gerada
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {date(proposal.createdAt).format("DD/MM/YYYY HH:mm")}
+                        </p>
                       </div>
-                      <Button variant="ghost">
-                        <Eye className="w-4 y-4" />
-                      </Button>
                     </div>
-                  </Link>
+                    <Tooltip
+                      description={
+                        proposal.fileKey
+                          ? "Baixar documento"
+                          : "Erro ao localizar o documento"
+                      }
+                    >
+                      <Button
+                        variant="ghost"
+                        type="button"
+                        disabled={!proposal.fileKey}
+                        onClick={() => handleDownload(proposal.id)}
+                      >
+                        {proposal.fileKey ? (
+                          <Eye className="w-4 y-4" />
+                        ) : (
+                          <EyeClosed className="w-4 y-4" />
+                        )}
+                      </Button>
+                    </Tooltip>
+                  </div>
                 </div>
               </div>
             </CardContent>

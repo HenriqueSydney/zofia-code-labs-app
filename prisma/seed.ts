@@ -1,5 +1,6 @@
 import { Prisma, Role } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
+import { hash } from "bcryptjs";
 
 async function main() {
   console.log("🌱 Iniciando seed Zofia Code Labs...");
@@ -18,11 +19,14 @@ async function main() {
     });
   }
 
+  const passwordHash = await hash("123456", 6);
+
   const users: Prisma.UserUncheckedCreateInput[] = [
     {
       organizationId: organization.id,
       name: "Henrique Sydney Ribeiro Lima",
       email: "henriquesydneylima@gmail.com",
+      passwordHash,
       emailVerified: new Date(),
       role: Role.OWNER,
     },

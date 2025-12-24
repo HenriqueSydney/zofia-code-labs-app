@@ -8,6 +8,7 @@ import {
   Eye,
   FileEdit,
   Send,
+  Signature,
   User,
 } from "lucide-react";
 import { ProposalDetailsModal } from "../@proposals/ProposalDetailsModal";
@@ -22,6 +23,8 @@ import { getContractNextStepLabel } from "@/utils/getNextStageLabel";
 import { Tooltip } from "@/components/Tooltip";
 import { ContractWithDetails } from "@/repositories/IContractRepository";
 import { checkIfContractIsEditable } from "@/utils/checkIfContractIsEditable";
+import { getContractDownloadUrl } from "@/actions/contract/getContractDownloadUrl";
+import { toast } from "sonner";
 
 interface IContractHistoryList {
   contract: ContractWithDetails;
@@ -33,8 +36,22 @@ export function ContractHistoryList({
   project,
 }: IContractHistoryList) {
   const [showAdvanceDialog, setShowAdvanceDialog] = useState(false);
-  const { isContractEditable } = checkIfContractIsEditable(contract.status);
+  const { isContractEditable } = checkIfContractIsEditable(contract);
   const nextStageContractLabel = getContractNextStepLabel(project.contract);
+
+  const handleDownload = async (id: string) => {
+    const result = await getContractDownloadUrl(id);
+
+    if (result.error) {
+      toast.error(result.error);
+      return;
+    }
+
+    const { url } = result;
+
+    // Abre em nova aba ou inicia download
+    window.open(url, "_blank");
+  };
 
   return (
     <div key={contract.id} className="border rounded-lg p-4 space-y-3">
@@ -80,7 +97,7 @@ export function ContractHistoryList({
           </div>
         )}
       </div>
-       <div className="flex items-start justify-end">
+      <div className="flex items-start justify-end">
         <div className="flex items-center gap-2">
           {getProposalStatusBadge(project.proposal.status)}
           {/* <ProposalDetailsModal proposal={project.proposal} /> */}
@@ -91,10 +108,32 @@ export function ContractHistoryList({
               </Button>
             </Link>
           )}
+
+          {contract.externalSignId && (
+            <Tooltip description="Visualizar assinaturas">
+              <Link href={`signature/${contract.id}`}>
+                <Button variant="ghost" size="icon">
+                  <Signature className="h-4 w-4" />
+                </Button>
+              </Link>
+            </Tooltip>
+          )}
           {(contract.fileUrl || contract.fileKey) && (
-            <Button variant="ghost" size="icon">
-              <Download className="h-4 w-4" />
-            </Button>
+            <Tooltip
+              description={
+                contract.fileKey
+                  ? "Baixar documento"
+                  : "Erro ao localizar o documento"
+              }
+            >
+              <Button
+                variant="ghost"
+                disabled={!contract.fileKey}
+                onClick={() => handleDownload(contract.id)}
+              >
+                <Download className="w-4 y-4" />
+              </Button>
+            </Tooltip>
           )}
           {isContractEditable && contract.isCurrent && (
             <>

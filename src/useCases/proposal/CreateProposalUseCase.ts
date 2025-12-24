@@ -24,7 +24,7 @@ type CreateProposalUseCaseParams = {
   validUntil?: Date;
   items: Omit<CreateProposalItemDTO, "totalValue" | "price" | "finalPrice">[];
   organizationId: string;
-  documentTemplateId?: string;
+  documentTemplateId?: string | null;
   file?: File;
 };
 
@@ -74,7 +74,7 @@ export class CreateProposalUseCase {
     const calculatedTotal = calculateProposalTotal(processedItems);
 
     let proposalContent: any = null;
-    let proposalFileUrl: string | null = null;
+    let proposalStorageKey: string | null = null;
     let contentType: string = "application/json"; // Default para Web Template
 
     // --- CENÁRIO A: Upload de Arquivo (PDF/Doc) ---
@@ -88,12 +88,12 @@ export class CreateProposalUseCase {
       const buffer = Buffer.from(arrayBuffer);
 
       // Upload para o R2 usando sua classe existente
-      proposalFileUrl = await this.storageService.upload(
+      const uploadResult = await this.storageService.upload(
         buffer as any,
         key,
         data.file.type
       );
-
+      proposalStorageKey = uploadResult.key;
       contentType = data.file.type;
     } else if (data.documentTemplateId) {
       const sourceTemplate =
@@ -117,10 +117,11 @@ export class CreateProposalUseCase {
         ...data,
         items: processedItems,
         totalValue: calculatedTotal,
-        fileUrl: proposalFileUrl,
+        fileStorageKey: proposalStorageKey,
         sourceType: data.documentTemplateId
           ? ProposalSource.SYSTEM_TEMPLATE
           : ProposalSource.MANUAL_UPLOAD,
+        status: data.documentTemplateId ? undefined : ProposalStatus.REVIEW,
       };
 
       const proposal = await this.proposalRepository.create(proposalData, tx);

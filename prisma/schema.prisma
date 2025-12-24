@@ -395,8 +395,9 @@ model Contract {
   createdUser User           @relation(name: "create_user", fields: [createdBy], references: [id])
   sourceType  ContractSource @default(SYSTEM_TEMPLATE) @map("source_type")
 
-  fileKey String? @map("file_key")
-  fileUrl String? @map("file_url") // Opcional: Cache da URL pública se for bucket público
+  fileKey        String? @map("file_key")
+  fileUrl        String? @map("file_url") // Opcional: Cache da URL pública se for bucket público
+  externalSignId String? @map("external_sign_id")
 
   contractTemplate ContractTemplate?
 

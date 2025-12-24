@@ -47,7 +47,9 @@ export class PrismaContractRepository implements IContractRepository {
       data: {
         projectId: data.projectId,
         createdBy: data.createdBy,
-        status: "DRAFT",
+        fileKey: data.fileStorageKey,
+        sourceType: data.sourceType,
+        status: data.status ?? "DRAFT",
         version: nextVersion,
         isCurrent: true,
         proposalId: data.proposalId,

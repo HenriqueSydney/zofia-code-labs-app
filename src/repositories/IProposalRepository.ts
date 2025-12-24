@@ -5,7 +5,11 @@ import {
   Proposal,
   ProposalItem,
 } from "@/generated/prisma/client";
-import { DiscountType, ProposalStatus } from "@/generated/prisma/enums";
+import {
+  DiscountType,
+  ProposalSource,
+  ProposalStatus,
+} from "@/generated/prisma/enums";
 
 export interface CreateProposalItemDTO {
   serviceTypeId: string;
@@ -17,8 +21,10 @@ export interface CreateProposalItemDTO {
 
 export interface CreateProposalDTO {
   projectId: string;
+  status?: ProposalStatus;
+  sourceType: ProposalSource;
   templateId?: string | null;
-  fileUrl?: string | null;
+  fileStorageKey?: string | null;
   createdBy: string;
   validUntil?: Date;
   totalValue: number;

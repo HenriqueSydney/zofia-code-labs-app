@@ -10,11 +10,14 @@ export interface R2Object {
 
 export interface IS3StorageService {
   getInstance(): S3Client;
+
+  getFileBuffer(key: string): Promise<Buffer>;
+
   upload(
     file: File | Buffer,
     key: string,
     contentType: string
-  ): Promise<string>;
+  ): Promise<{ key: string }>;
 
   getSignedUrl(key: string, expiresIn?: number): Promise<string>;
 

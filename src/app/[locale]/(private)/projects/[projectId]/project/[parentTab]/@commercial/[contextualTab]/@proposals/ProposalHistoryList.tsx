@@ -23,6 +23,8 @@ import { date } from "@/lib/dayjs";
 import { useState } from "react";
 import { getProposalNextStepLabel } from "@/utils/getNextStageLabel";
 import { Tooltip } from "@/components/Tooltip";
+import { getProposalDownloadUrl } from "@/actions/proposal/getProposalDownloadUrl";
+import { toast } from "sonner";
 
 interface IProposalHistoryList {
   proposal: ProposalWithDetails;
@@ -36,6 +38,20 @@ export function ProposalHistoryList({
   const [showAdvanceDialog, setShowAdvanceDialog] = useState(false);
   const { isProposalEditable } = checkIfProposalIsEditable(proposal.status);
   const nextStageProposalLabel = getProposalNextStepLabel(project.proposal);
+
+  const handleDownload = async (id: string) => {
+    const result = await getProposalDownloadUrl(id);
+
+    if (result.error) {
+      toast.error(result.error);
+      return;
+    }
+
+    const { url } = result;
+
+    // Abre em nova aba ou inicia download
+    window.open(url, "_blank");
+  };
 
   return (
     <div key={proposal.id} className="border rounded-lg p-4 space-y-3">
@@ -56,42 +72,60 @@ export function ProposalHistoryList({
         <div className="flex items-center gap-2">
           {getProposalStatusBadge(proposal.status)}
           <ProposalDetailsModal proposal={proposal} />
-          {isProposalEditable && proposal.isCurrent && (
-            <Link href={proposal.id}>
-              <Button variant="ghost" size="icon">
-                <FileEdit className="h-4 w-4" />
-              </Button>
-            </Link>
-          )}
-          {(proposal.fileUrl || proposal.fileKey) && (
-            <Button variant="ghost" size="icon">
-              <Download className="h-4 w-4" />
-            </Button>
-          )}
-          {isProposalEditable && proposal.isCurrent && (
-            <>
-              <Tooltip description={nextStageProposalLabel}>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="bg-primary/20"
-                  onClick={() => setShowAdvanceDialog(true)}
-                  aria-label={nextStageProposalLabel}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
+          {isProposalEditable &&
+            proposal.isCurrent &&
+            proposal.sourceType === "SYSTEM_TEMPLATE" && (
+              <Tooltip description="Editar proposta">
+                <Link href={proposal.id}>
+                  <Button variant="ghost" size="icon">
+                    <FileEdit className="h-4 w-4" />
+                  </Button>
+                </Link>
               </Tooltip>
-              <ProjectTransitionDialog
-                currentStatusLabel={project.status}
-                isOpen={showAdvanceDialog}
-                onOpenChange={setShowAdvanceDialog}
-                project={project}
-                targetStatus="PROPOSAL_GENERATED"
-                targetStatusLabel="Análise de Proposta"
-                contextData={proposal}
-              />
-            </>
+            )}
+          {(proposal.fileUrl || proposal.fileKey) && (
+            <Tooltip
+              description={
+                proposal.fileKey
+                  ? "Baixar documento"
+                  : "Erro ao localizar o documento"
+              }
+            >
+              <Button
+                variant="ghost"
+                disabled={!proposal.fileKey}
+                onClick={() => handleDownload(proposal.id)}
+              >
+                <Download className="w-4 y-4" />
+              </Button>
+            </Tooltip>
           )}
+          {isProposalEditable &&
+            proposal.isCurrent &&
+            project.status === "PROPOSAL" && (
+              <>
+                <Tooltip description={nextStageProposalLabel}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="bg-primary/20"
+                    onClick={() => setShowAdvanceDialog(true)}
+                    aria-label={nextStageProposalLabel}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </Tooltip>
+                <ProjectTransitionDialog
+                  currentStatusLabel={project.status}
+                  isOpen={showAdvanceDialog}
+                  onOpenChange={setShowAdvanceDialog}
+                  project={project}
+                  targetStatus="PROPOSAL_GENERATED"
+                  targetStatusLabel="Análise de Proposta"
+                  contextData={proposal}
+                />
+              </>
+            )}
         </div>
       </div>
 

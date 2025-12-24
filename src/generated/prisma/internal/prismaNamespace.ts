@@ -2589,6 +2589,7 @@ export const ContractScalarFieldEnum = {
   sourceType: 'sourceType',
   fileKey: 'fileKey',
   fileUrl: 'fileUrl',
+  externalSignId: 'externalSignId',
   projectId: 'projectId',
   reviewedAt: 'reviewedAt',
   reviewedBy: 'reviewedBy',

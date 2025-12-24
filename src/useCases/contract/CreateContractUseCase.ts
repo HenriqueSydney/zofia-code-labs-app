@@ -18,7 +18,7 @@ type CreateContractUseCaseParams = {
   fileUrl?: string | null;
   createdBy: string;
   organizationId: string;
-  documentTemplateId?: string;
+  documentTemplateId?: string | null;
   file?: File;
 };
 
@@ -56,7 +56,7 @@ export class CreateContractUseCase {
     }
 
     let contractContent: any = null;
-    let contractFileUrl: string | null = null;
+    let contractStorageKey: string | null = null;
     let contentType: string = "application/json"; // Default para Web Template
 
     // --- CENÁRIO A: Upload de Arquivo (PDF/Doc) ---
@@ -70,12 +70,13 @@ export class CreateContractUseCase {
       const buffer = Buffer.from(arrayBuffer);
 
       // Upload para o R2 usando sua classe existente
-      contractFileUrl = await this.storageService.upload(
+      const result = await this.storageService.upload(
         buffer as any,
         key,
         data.file.type
       );
 
+      contractStorageKey = result.key;
       contentType = data.file.type;
     } else if (data.documentTemplateId) {
       const sourceTemplate =
@@ -98,11 +99,14 @@ export class CreateContractUseCase {
       const contractData = {
         ...data,
         proposalId: lastAcceptedProposal.id,
-        fileUrl: contractFileUrl,
+        fileStorageKey: contractStorageKey,
         sourceType: data.documentTemplateId
           ? ContractSource.SYSTEM_TEMPLATE
           : ContractSource.MANUAL_UPLOAD,
+        status: data.documentTemplateId ? undefined : ContractStatus.REVIEW,
       };
+
+      console.log(contractData);
 
       const contract = await this.contractRepository.create(contractData, tx);
 

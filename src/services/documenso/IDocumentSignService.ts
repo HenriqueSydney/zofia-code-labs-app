@@ -13,9 +13,19 @@ export interface DocumentStatus {
   signedAt?: Date;
 }
 
+export interface DocumentTokenResponse {
+  email: string;
+  token: string;
+  signingUrl: string;
+}
+
 export interface IDocumentSignService {
   /** Cria um novo documento no provedor */
-  createDocument(file: Buffer, title: string): Promise<string>;
+  createDocument(
+    file: Buffer,
+    title: string,
+    signers: SignerRequest[]
+  ): Promise<string>;
 
   /** Define quem deve assinar e onde (campos) */
   addSigners(documentId: string, signers: SignerRequest[]): Promise<void>;
@@ -28,4 +38,6 @@ export interface IDocumentSignService {
 
   /** Obtém a URL ou Buffer do arquivo final assinado */
   getSignedDocument(documentId: string): Promise<string | Buffer>;
+
+  getSigningTokens(documentId: string): Promise<DocumentTokenResponse[]>;
 }

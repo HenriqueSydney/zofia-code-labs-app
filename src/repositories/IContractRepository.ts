@@ -1,5 +1,9 @@
 import { Prisma, Contract } from "@/generated/prisma/client";
-import { DiscountType, ContractStatus } from "@/generated/prisma/enums";
+import {
+  DiscountType,
+  ContractStatus,
+  ContractSource,
+} from "@/generated/prisma/enums";
 
 export interface CreateContractItemDTO {
   serviceTypeId: string;
@@ -11,9 +15,11 @@ export interface CreateContractItemDTO {
 
 export interface CreateContractDTO {
   proposalId: string;
+  sourceType: ContractSource;
   projectId: string;
   templateId?: string | null;
-  fileUrl?: string | null;
+  fileStorageKey?: string | null;
+  status?: ContractStatus;
   createdBy: string;
 }
 

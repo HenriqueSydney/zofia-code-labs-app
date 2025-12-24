@@ -6,6 +6,8 @@ import { prisma } from "@/lib/prisma";
 import { IAuditLogRepository } from "@/repositories/IAuditLogRepository";
 import { IContractRepository } from "@/repositories/IContractRepository";
 import { ChangeProjectStatusUseCase } from "../projects/ChangeProjectStatusUseCase";
+import { IS3StorageService } from "@/services/s3Client/IS3StorageService";
+import { IDocumentSignService } from "@/services/documenso/IDocumentSignService";
 
 interface ChangeContractStatusRequest {
   contractId: string;
@@ -18,7 +20,9 @@ export class ChangeContractStatusUseCase {
   constructor(
     private contractRepository: IContractRepository,
     private chageProjectStatusUseCase: ChangeProjectStatusUseCase,
-    private auditLogRepository: IAuditLogRepository
+    private auditLogRepository: IAuditLogRepository,
+    private storageService: IS3StorageService,
+    private documentSignService: IDocumentSignService
   ) {}
 
   async execute({
@@ -48,16 +52,67 @@ export class ChangeContractStatusUseCase {
     );
 
     const updatedContract = await prisma.$transaction(async (tx) => {
-      const contract = await this.contractRepository.updateStatus(
+      const updatedContract = await this.contractRepository.updateStatus(
         contractId,
         newStatus,
         tx
       );
 
       if (newStatus === "SENT") {
+        const fileKey = updatedContract.fileKey;
+
+        if (!fileKey) {
+          throw new AppError(
+            "Arquivo do contrato não existe. retorne para o início da fase e gere um novo documento"
+          );
+        }
+
+        // 2. Baixar o arquivo do R2 para Buffer
+        // Você precisará de um método no seu StorageService que retorne o Buffer
+        const fileBuffer = await this.storageService.getFileBuffer(fileKey);
+
+        // 3. Criar o documento no Documenso
+        const documentId = await this.documentSignService.createDocument(
+          fileBuffer,
+          `Contrato - ${contract.project.client.tradeName}`,
+          [
+            {
+              email: contract.project.client.email,
+              name: contract.project.client.tradeName,
+              role: "SIGNER",
+            },
+            {
+              email: "henriquesydneylima@gmail.com",
+              name: "Henrique Sydney Ribeiro Lima",
+              role: "SIGNER",
+            },
+          ]
+        );
+
+        // 4. Adicionar os signatários (Cliente e talvez você/empresa)
+        // await this.documentSignService.addSigners(documentId, [
+        //   {
+        //     email: contract.project.client.email,
+        //     name: contract.project.client.tradeName,
+        //     role: "SIGNER",
+        //   },
+        //   {
+        //     email: "henriquesydneylima@gmail.com",
+        //     name: "Henrique Sydney Ribeiro Lima",
+        //     role: "SIGNER",
+        //   },
+        // ]);
+
+        await this.documentSignService.sendForSignature(documentId);
+
+        await tx.contract.update({
+          where: { id: updatedContract.id },
+          data: { externalSignId: String(documentId) },
+        });
+
         await this.chageProjectStatusUseCase.execute(
           {
-            projectId: contract.projectId,
+            projectId: updatedContract.projectId,
             newStatus: "WAITING_SIGNATURE",
             data: {
               observation: "Contrato enviado ao cliente para assinatura.",
@@ -71,7 +126,7 @@ export class ChangeContractStatusUseCase {
       await this.auditLogRepository.create(
         {
           entityType: "Project",
-          entityId: contract.projectId ?? "",
+          entityId: updatedContract.projectId ?? "",
           action: "CONTRACT_STATUS_CHANGE",
           userId,
           changes: { status: { from: contract.status, to: newStatus } },
@@ -97,7 +152,11 @@ export class ChangeContractStatusUseCase {
 
     const allowedTransitions: Record<ContractStatus, ContractStatus[]> = {
       [ContractStatus.DRAFT]: [ContractStatus.REVIEW, ContractStatus.CANCELLED],
-      [ContractStatus.REVIEW]: [ContractStatus.DRAFT, ContractStatus.CANCELLED],
+      [ContractStatus.REVIEW]: [
+        ContractStatus.DRAFT,
+        ContractStatus.SENT,
+        ContractStatus.CANCELLED,
+      ],
 
       [ContractStatus.SENT]: [ContractStatus.CANCELLED, ContractStatus.DRAFT],
       [ContractStatus.SIGNED]: [ContractStatus.CANCELLED],

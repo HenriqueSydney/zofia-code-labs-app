@@ -12,6 +12,8 @@ export const envSchema = z.object({
   R2_BUCKET_NAME: z.string(),
   JWT_TOKEN_SECRET: z.string(),
   R2_PUBLIC_URL: z.string(),
+  DOCUMENSO_API_KEY: z.string(),
+  DOCUMENSO_API_URL: z.string(),
 });
 
 const env = envSchema.safeParse(process.env);

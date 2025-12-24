@@ -1,7 +1,9 @@
+import { envVariables } from "@/env";
 import {
   IDocumentSignService,
   SignerRequest,
   DocumentStatus,
+  DocumentTokenResponse,
 } from "./IDocumentSignService";
 
 export class DocumensoDocumentSign implements IDocumentSignService {
@@ -10,36 +12,69 @@ export class DocumensoDocumentSign implements IDocumentSignService {
 
   constructor() {
     this.baseUrl =
-      process.env.DOCUMENSO_API_URL || "http://localhost:3001/api/v1";
-    this.apiKey = process.env.DOCUMENSO_API_KEY || "";
+      envVariables.DOCUMENSO_API_URL || "http://localhost:3001/api/v2";
+    this.apiKey = envVariables.DOCUMENSO_API_KEY || "";
   }
 
   private async request(endpoint: string, options: RequestInit) {
+    const headers: Record<string, string> = {
+      Authorization: `Bearer ${this.apiKey}`,
+      "X-API-KEY": this.apiKey,
+      ...(options.headers as any),
+    };
+
+    // Só adiciona JSON se não for FormData
+    if (options.body instanceof FormData) {
+      delete headers["Content-Type"];
+    } else {
+      headers["Content-Type"] = "application/json";
+    }
+
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
       ...options,
-      headers: {
-        "X-API-KEY": this.apiKey,
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
+      headers,
     });
 
     if (!response.ok) {
+      console.log(response);
+      const errorBody = await response.json(); // O Documenso costuma retornar um JSON com o erro
+      console.error(
+        "DETALHE DO ERRO DOCUMENSO:",
+        JSON.stringify(errorBody, null, 2)
+      );
       throw new Error(`Documenso API Error: ${response.statusText}`);
     }
 
     return response.json();
   }
 
-  async createDocument(file: Buffer, title: string): Promise<string> {
-    // No Documenso, o upload geralmente é via multipart/form-data
+  async createDocument(
+    file: Buffer,
+    title: string,
+    signers: SignerRequest[]
+  ): Promise<string> {
     const formData = new FormData();
-    const blob = new Blob([new Uint8Array(file)], { type: "application/pdf" });
-    formData.append("file", blob, title);
 
-    const data = await this.request("/documents", {
+    // Na v2, o payload deve ser um objeto JSON stringificado
+    const payload = {
+      title: title,
+      recipients: signers,
+    };
+
+    formData.append("payload", JSON.stringify(payload));
+
+    // O arquivo binário
+    const blob = new Blob([new Uint8Array(file)], { type: "application/pdf" });
+    formData.append(
+      "file",
+      blob,
+      title.endsWith(".pdf") ? title : `${title}.pdf`
+    );
+
+    // Tente esta rota (o padrão da v2)
+    const data = await this.request("/document/create", {
       method: "POST",
-      body: formData, // Ajustar headers para multipart se necessário
+      body: formData,
     });
 
     return data.id;
@@ -78,8 +113,9 @@ export class DocumensoDocumentSign implements IDocumentSignService {
   }
 
   async sendForSignature(documentId: string): Promise<void> {
-    await this.request(`/documents/${documentId}/send`, {
+    await this.request(`/document/distribute`, {
       method: "POST",
+      body: JSON.stringify({ documentId }),
     });
   }
 
@@ -105,5 +141,18 @@ export class DocumensoDocumentSign implements IDocumentSignService {
     );
 
     return Buffer.from(await response.arrayBuffer());
+  }
+
+  async getSigningTokens(documentId: string): Promise<DocumentTokenResponse[]> {
+    // Na v2, buscamos os detalhes do documento para pegar os recipients
+    const data = await this.request(`/document/${documentId}`, {
+      method: "GET",
+    });
+
+    return data.recipients.map((r: any) => ({
+      email: r.email,
+      token: r.token, // Este é o token que você extrai da URL ou o campo direto
+      signingUrl: r.signingUrl,
+    }));
   }
 }

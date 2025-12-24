@@ -56,6 +56,7 @@ export default async function ContractTab({ params }: IContractTab) {
 
   const project = projectSuccess.project;
 
+
   return (
     <TabsContent value="contracts" className="mt-6">
       <SuccessToastComponent />
