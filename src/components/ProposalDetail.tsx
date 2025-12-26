@@ -102,15 +102,39 @@ export function ProposalDetails({ proposal }: IProposalDetails) {
       </ScrollArea>
 
       {/* Rodapé com Totalização */}
-      <div className="mt-4 flex justify-end pr-4">
-        <div className="bg-primary/5 rounded-lg p-4 w-full sm:w-[300px] border border-primary/10">
+      <div className="mt-6 flex justify-end pr-4">
+        <div className="bg-muted/30 rounded-xl border p-6 w-full sm:w-[350px] space-y-4">
+          {/* Linha da Entrada */}
+          <div className="flex justify-between items-start">
+            <div className="space-y-0.5">
+              <span className="text-xs uppercase tracking-wider font-bold text-muted-foreground">
+                Entrada
+              </span>
+              <p className="text-xs text-muted-foreground/80">
+                Percentual de {Number(proposal.downPaymentPercentage)}%
+              </p>
+            </div>
+            <span className="text-lg font-semibold text-foreground">
+              {formatCurrency(
+                (Number(proposal.totalValue) *
+                  Number(proposal.downPaymentPercentage)) /
+                  100
+              )}
+            </span>
+          </div>
+
+          <Separator className="bg-border/50" />
+
+          {/* Linha do Total */}
           <div className="flex justify-between items-center">
-            <span className="text-sm font-medium text-muted-foreground">
-              Valor Total da Proposta
+            <span className="text-sm font-bold uppercase tracking-tight text-primary">
+              Valor Total
             </span>
-            <span className="text-2xl font-bold text-primary">
-              {formatCurrency(Number(proposal.totalValue))}
-            </span>
+            <div className="text-right">
+              <span className="text-3xl font-black text-primary tracking-tighter">
+                {formatCurrency(Number(proposal.totalValue))}
+              </span>
+            </div>
           </div>
         </div>
       </div>

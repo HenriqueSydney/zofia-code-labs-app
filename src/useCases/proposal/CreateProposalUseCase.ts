@@ -25,6 +25,7 @@ type CreateProposalUseCaseParams = {
   items: Omit<CreateProposalItemDTO, "totalValue" | "price" | "finalPrice">[];
   organizationId: string;
   documentTemplateId?: string | null;
+  downPaymentPercentage: number
   file?: File;
 };
 

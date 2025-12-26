@@ -32,7 +32,8 @@ export async function createProposalAction(formData: FormData) {
     projectId: formData.get("projectId"),
     document: file,
     items: itemsParsed,
-    validUntil: date().add(3, "days").toDate(), //formData.get("validUntil"),
+    downPaymentPercentage: Number(formData.get("downPaymentPercentage")),
+    validUntil: date(String(formData.get("validUntil"))).toDate(),
   };
 
   // 2. Validação Zod
@@ -49,6 +50,7 @@ export async function createProposalAction(formData: FormData) {
       projectId: validation.data.projectId,
       documentTemplateId: validation.data.documentTemplateId,
       createdBy: session.user.id,
+      downPaymentPercentage: validation.data.downPaymentPercentage,
       organizationId: session.user.organizationId,
       validUntil: validation.data.validUntil,
       items: validation.data.items,
@@ -63,7 +65,9 @@ export async function createProposalAction(formData: FormData) {
 
   if (success) {
     revalidatePath(`/projects/${success.projectId}/project`);
-    revalidatePath(`/projects/${success.projectId}/project/commercial/proposal`);
+    revalidatePath(
+      `/projects/${success.projectId}/project/commercial/proposal`
+    );
     redirect(
       `/projects/${success.projectId}/project/commercial/proposals?success=true`,
       RedirectType.push

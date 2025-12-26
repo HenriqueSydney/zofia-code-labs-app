@@ -17,23 +17,49 @@ export default auth(async (req) => {
   const isLoggedIn = !!req.auth;
   const isApiRoute = nextUrl.pathname.startsWith("/api");
   const isAuthRoute = nextUrl.pathname.startsWith("/api/auth"); // Rotas internas do NextAuth
+  const isDocumentSignRoute = nextUrl.pathname.includes(
+    "document-sign/webhook"
+  );
 
   // ------------------------------------------------------------------
   // 1. PROTEÇÃO DE API (Bearer Token customizado)
   // ------------------------------------------------------------------
   if (isApiRoute && !isAuthRoute) {
     // Se a API for pública, adicione exceção aqui.
-    // Caso contrário, verifica o Bearer Token:
-    const authHeader = req.headers.get("authorization");
+    let token: string;
+    if (isDocumentSignRoute) {
+      const authHeader = req.headers.get("x-documenso-secret");
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return new NextResponse(
-        JSON.stringify({ error: "Unauthorized: Missing token" }),
-        { status: 401, headers: { "content-type": "application/json" } }
-      );
+      if (!authHeader) {
+        return new NextResponse(
+          JSON.stringify({ error: "Unauthorized: Missing token" }),
+          { status: 401, headers: { "content-type": "application/json" } }
+        );
+      }
+
+      token = authHeader;
+
+      if (token !== process.env.DOCUMENSO_WEBHOOK_KEY) {
+        return new NextResponse(
+          JSON.stringify({ error: "Unauthorized: Invalid token" }),
+          { status: 403, headers: { "content-type": "application/json" } }
+        );
+      }
+
+      return NextResponse.next();
+    } else {
+      // Caso contrário, verifica o Bearer Token:
+      const authHeader = req.headers.get("authorization");
+
+      if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return new NextResponse(
+          JSON.stringify({ error: "Unauthorized: Missing token" }),
+          { status: 401, headers: { "content-type": "application/json" } }
+        );
+      }
+
+      token = authHeader.split(" ")[1];
     }
-
-    const token = authHeader.split(" ")[1];
 
     try {
       const secret = new TextEncoder().encode(process.env.JWT_TOKEN_SECRET!);

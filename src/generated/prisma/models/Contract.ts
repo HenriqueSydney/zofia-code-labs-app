@@ -38,6 +38,7 @@ export type ContractMinAggregateOutputType = {
   id: string | null
   version: number | null
   isCurrent: boolean | null
+  isActive: boolean | null
   proposalId: string | null
   status: $Enums.ContractStatus | null
   createdBy: string | null
@@ -58,6 +59,7 @@ export type ContractMaxAggregateOutputType = {
   id: string | null
   version: number | null
   isCurrent: boolean | null
+  isActive: boolean | null
   proposalId: string | null
   status: $Enums.ContractStatus | null
   createdBy: string | null
@@ -78,6 +80,7 @@ export type ContractCountAggregateOutputType = {
   id: number
   version: number
   isCurrent: number
+  isActive: number
   proposalId: number
   status: number
   createdBy: number
@@ -108,6 +111,7 @@ export type ContractMinAggregateInputType = {
   id?: true
   version?: true
   isCurrent?: true
+  isActive?: true
   proposalId?: true
   status?: true
   createdBy?: true
@@ -128,6 +132,7 @@ export type ContractMaxAggregateInputType = {
   id?: true
   version?: true
   isCurrent?: true
+  isActive?: true
   proposalId?: true
   status?: true
   createdBy?: true
@@ -148,6 +153,7 @@ export type ContractCountAggregateInputType = {
   id?: true
   version?: true
   isCurrent?: true
+  isActive?: true
   proposalId?: true
   status?: true
   createdBy?: true
@@ -255,6 +261,7 @@ export type ContractGroupByOutputType = {
   id: string
   version: number
   isCurrent: boolean
+  isActive: boolean
   proposalId: string
   status: $Enums.ContractStatus
   createdBy: string
@@ -298,6 +305,7 @@ export type ContractWhereInput = {
   id?: Prisma.StringFilter<"Contract"> | string
   version?: Prisma.IntFilter<"Contract"> | number
   isCurrent?: Prisma.BoolFilter<"Contract"> | boolean
+  isActive?: Prisma.BoolFilter<"Contract"> | boolean
   proposalId?: Prisma.StringFilter<"Contract"> | string
   status?: Prisma.EnumContractStatusFilter<"Contract"> | $Enums.ContractStatus
   createdBy?: Prisma.StringFilter<"Contract"> | string
@@ -324,6 +332,7 @@ export type ContractOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   version?: Prisma.SortOrder
   isCurrent?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   proposalId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -354,6 +363,7 @@ export type ContractWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ContractWhereInput | Prisma.ContractWhereInput[]
   version?: Prisma.IntFilter<"Contract"> | number
   isCurrent?: Prisma.BoolFilter<"Contract"> | boolean
+  isActive?: Prisma.BoolFilter<"Contract"> | boolean
   proposalId?: Prisma.StringFilter<"Contract"> | string
   status?: Prisma.EnumContractStatusFilter<"Contract"> | $Enums.ContractStatus
   createdBy?: Prisma.StringFilter<"Contract"> | string
@@ -380,6 +390,7 @@ export type ContractOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   version?: Prisma.SortOrder
   isCurrent?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   proposalId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -408,6 +419,7 @@ export type ContractScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Contract"> | string
   version?: Prisma.IntWithAggregatesFilter<"Contract"> | number
   isCurrent?: Prisma.BoolWithAggregatesFilter<"Contract"> | boolean
+  isActive?: Prisma.BoolWithAggregatesFilter<"Contract"> | boolean
   proposalId?: Prisma.StringWithAggregatesFilter<"Contract"> | string
   status?: Prisma.EnumContractStatusWithAggregatesFilter<"Contract"> | $Enums.ContractStatus
   createdBy?: Prisma.StringWithAggregatesFilter<"Contract"> | string
@@ -428,6 +440,7 @@ export type ContractCreateInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ContractStatus
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
@@ -449,6 +462,7 @@ export type ContractUncheckedCreateInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   proposalId: string
   status?: $Enums.ContractStatus
   createdBy: string
@@ -470,6 +484,7 @@ export type ContractUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumContractStatusFieldUpdateOperationsInput | $Enums.ContractStatus
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -491,6 +506,7 @@ export type ContractUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   proposalId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumContractStatusFieldUpdateOperationsInput | $Enums.ContractStatus
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -512,6 +528,7 @@ export type ContractCreateManyInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   proposalId: string
   status?: $Enums.ContractStatus
   createdBy: string
@@ -532,6 +549,7 @@ export type ContractUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumContractStatusFieldUpdateOperationsInput | $Enums.ContractStatus
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -547,6 +565,7 @@ export type ContractUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   proposalId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumContractStatusFieldUpdateOperationsInput | $Enums.ContractStatus
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -582,6 +601,7 @@ export type ContractCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   version?: Prisma.SortOrder
   isCurrent?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   proposalId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -606,6 +626,7 @@ export type ContractMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   version?: Prisma.SortOrder
   isCurrent?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   proposalId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -626,6 +647,7 @@ export type ContractMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   version?: Prisma.SortOrder
   isCurrent?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   proposalId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -887,6 +909,7 @@ export type ContractCreateWithoutCreatedUserInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ContractStatus
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
@@ -907,6 +930,7 @@ export type ContractUncheckedCreateWithoutCreatedUserInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   proposalId: string
   status?: $Enums.ContractStatus
   sourceType?: $Enums.ContractSource
@@ -937,6 +961,7 @@ export type ContractCreateWithoutApprovedUserInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ContractStatus
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
@@ -957,6 +982,7 @@ export type ContractUncheckedCreateWithoutApprovedUserInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   proposalId: string
   status?: $Enums.ContractStatus
   createdBy: string
@@ -987,6 +1013,7 @@ export type ContractCreateWithoutReviewUserInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ContractStatus
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
@@ -1007,6 +1034,7 @@ export type ContractUncheckedCreateWithoutReviewUserInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   proposalId: string
   status?: $Enums.ContractStatus
   createdBy: string
@@ -1056,6 +1084,7 @@ export type ContractScalarWhereInput = {
   id?: Prisma.StringFilter<"Contract"> | string
   version?: Prisma.IntFilter<"Contract"> | number
   isCurrent?: Prisma.BoolFilter<"Contract"> | boolean
+  isActive?: Prisma.BoolFilter<"Contract"> | boolean
   proposalId?: Prisma.StringFilter<"Contract"> | string
   status?: Prisma.EnumContractStatusFilter<"Contract"> | $Enums.ContractStatus
   createdBy?: Prisma.StringFilter<"Contract"> | string
@@ -1108,6 +1137,7 @@ export type ContractCreateWithoutProposalInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ContractStatus
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
@@ -1128,6 +1158,7 @@ export type ContractUncheckedCreateWithoutProposalInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ContractStatus
   createdBy: string
   sourceType?: $Enums.ContractSource
@@ -1174,6 +1205,7 @@ export type ContractCreateWithoutContractTemplateInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ContractStatus
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
@@ -1194,6 +1226,7 @@ export type ContractUncheckedCreateWithoutContractTemplateInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   proposalId: string
   status?: $Enums.ContractStatus
   createdBy: string
@@ -1230,6 +1263,7 @@ export type ContractUpdateWithoutContractTemplateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumContractStatusFieldUpdateOperationsInput | $Enums.ContractStatus
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1250,6 +1284,7 @@ export type ContractUncheckedUpdateWithoutContractTemplateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   proposalId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumContractStatusFieldUpdateOperationsInput | $Enums.ContractStatus
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1270,6 +1305,7 @@ export type ContractCreateWithoutProjectInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ContractStatus
   sourceType?: $Enums.ContractSource
   fileKey?: string | null
@@ -1290,6 +1326,7 @@ export type ContractUncheckedCreateWithoutProjectInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   proposalId: string
   status?: $Enums.ContractStatus
   createdBy: string
@@ -1336,6 +1373,7 @@ export type ContractCreateManyCreatedUserInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   proposalId: string
   status?: $Enums.ContractStatus
   sourceType?: $Enums.ContractSource
@@ -1355,6 +1393,7 @@ export type ContractCreateManyApprovedUserInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   proposalId: string
   status?: $Enums.ContractStatus
   createdBy: string
@@ -1374,6 +1413,7 @@ export type ContractCreateManyReviewUserInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   proposalId: string
   status?: $Enums.ContractStatus
   createdBy: string
@@ -1393,6 +1433,7 @@ export type ContractUpdateWithoutCreatedUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumContractStatusFieldUpdateOperationsInput | $Enums.ContractStatus
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1413,6 +1454,7 @@ export type ContractUncheckedUpdateWithoutCreatedUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   proposalId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumContractStatusFieldUpdateOperationsInput | $Enums.ContractStatus
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
@@ -1433,6 +1475,7 @@ export type ContractUncheckedUpdateManyWithoutCreatedUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   proposalId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumContractStatusFieldUpdateOperationsInput | $Enums.ContractStatus
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
@@ -1452,6 +1495,7 @@ export type ContractUpdateWithoutApprovedUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumContractStatusFieldUpdateOperationsInput | $Enums.ContractStatus
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1472,6 +1516,7 @@ export type ContractUncheckedUpdateWithoutApprovedUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   proposalId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumContractStatusFieldUpdateOperationsInput | $Enums.ContractStatus
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1492,6 +1537,7 @@ export type ContractUncheckedUpdateManyWithoutApprovedUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   proposalId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumContractStatusFieldUpdateOperationsInput | $Enums.ContractStatus
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1511,6 +1557,7 @@ export type ContractUpdateWithoutReviewUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumContractStatusFieldUpdateOperationsInput | $Enums.ContractStatus
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1531,6 +1578,7 @@ export type ContractUncheckedUpdateWithoutReviewUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   proposalId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumContractStatusFieldUpdateOperationsInput | $Enums.ContractStatus
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1551,6 +1599,7 @@ export type ContractUncheckedUpdateManyWithoutReviewUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   proposalId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumContractStatusFieldUpdateOperationsInput | $Enums.ContractStatus
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1570,6 +1619,7 @@ export type ContractCreateManyProposalInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ContractStatus
   createdBy: string
   sourceType?: $Enums.ContractSource
@@ -1589,6 +1639,7 @@ export type ContractUpdateWithoutProposalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumContractStatusFieldUpdateOperationsInput | $Enums.ContractStatus
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1609,6 +1660,7 @@ export type ContractUncheckedUpdateWithoutProposalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumContractStatusFieldUpdateOperationsInput | $Enums.ContractStatus
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
@@ -1629,6 +1681,7 @@ export type ContractUncheckedUpdateManyWithoutProposalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumContractStatusFieldUpdateOperationsInput | $Enums.ContractStatus
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
@@ -1648,6 +1701,7 @@ export type ContractCreateManyProjectInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   proposalId: string
   status?: $Enums.ContractStatus
   createdBy: string
@@ -1667,6 +1721,7 @@ export type ContractUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumContractStatusFieldUpdateOperationsInput | $Enums.ContractStatus
   sourceType?: Prisma.EnumContractSourceFieldUpdateOperationsInput | $Enums.ContractSource
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1687,6 +1742,7 @@ export type ContractUncheckedUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   proposalId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumContractStatusFieldUpdateOperationsInput | $Enums.ContractStatus
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1707,6 +1763,7 @@ export type ContractUncheckedUpdateManyWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   proposalId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumContractStatusFieldUpdateOperationsInput | $Enums.ContractStatus
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1728,6 +1785,7 @@ export type ContractSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   id?: boolean
   version?: boolean
   isCurrent?: boolean
+  isActive?: boolean
   proposalId?: boolean
   status?: boolean
   createdBy?: boolean
@@ -1754,6 +1812,7 @@ export type ContractSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   id?: boolean
   version?: boolean
   isCurrent?: boolean
+  isActive?: boolean
   proposalId?: boolean
   status?: boolean
   createdBy?: boolean
@@ -1779,6 +1838,7 @@ export type ContractSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   id?: boolean
   version?: boolean
   isCurrent?: boolean
+  isActive?: boolean
   proposalId?: boolean
   status?: boolean
   createdBy?: boolean
@@ -1804,6 +1864,7 @@ export type ContractSelectScalar = {
   id?: boolean
   version?: boolean
   isCurrent?: boolean
+  isActive?: boolean
   proposalId?: boolean
   status?: boolean
   createdBy?: boolean
@@ -1820,7 +1881,7 @@ export type ContractSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ContractOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "version" | "isCurrent" | "proposalId" | "status" | "createdBy" | "sourceType" | "fileKey" | "fileUrl" | "externalSignId" | "projectId" | "reviewedAt" | "reviewedBy" | "approvedAt" | "approvedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["contract"]>
+export type ContractOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "version" | "isCurrent" | "isActive" | "proposalId" | "status" | "createdBy" | "sourceType" | "fileKey" | "fileUrl" | "externalSignId" | "projectId" | "reviewedAt" | "reviewedBy" | "approvedAt" | "approvedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["contract"]>
 export type ContractInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   proposal?: boolean | Prisma.ProposalDefaultArgs<ExtArgs>
   createdUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1858,6 +1919,7 @@ export type $ContractPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     id: string
     version: number
     isCurrent: boolean
+    isActive: boolean
     proposalId: string
     status: $Enums.ContractStatus
     createdBy: string
@@ -2304,6 +2366,7 @@ export interface ContractFieldRefs {
   readonly id: Prisma.FieldRef<"Contract", 'String'>
   readonly version: Prisma.FieldRef<"Contract", 'Int'>
   readonly isCurrent: Prisma.FieldRef<"Contract", 'Boolean'>
+  readonly isActive: Prisma.FieldRef<"Contract", 'Boolean'>
   readonly proposalId: Prisma.FieldRef<"Contract", 'String'>
   readonly status: Prisma.FieldRef<"Contract", 'ContractStatus'>
   readonly createdBy: Prisma.FieldRef<"Contract", 'String'>

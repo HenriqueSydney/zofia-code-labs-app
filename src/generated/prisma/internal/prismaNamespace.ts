@@ -409,6 +409,7 @@ export const ModelName = {
   IntegrationType: 'IntegrationType',
   OrganizationIntegration: 'OrganizationIntegration',
   ProjectIntegration: 'ProjectIntegration',
+  WebhookLog: 'WebhookLog',
   AuditLog: 'AuditLog'
 } as const
 
@@ -425,7 +426,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "organization" | "user" | "account" | "loginHistory" | "session" | "verificationToken" | "serviceCategory" | "serviceType" | "documentTemplate" | "client" | "proposal" | "proposalTemplate" | "proposalItem" | "contract" | "contractTemplate" | "project" | "projectDocuments" | "projectServices" | "projectNote" | "sprint" | "backlogItem" | "invoice" | "integrationType" | "organizationIntegration" | "projectIntegration" | "auditLog"
+    modelProps: "organization" | "user" | "account" | "loginHistory" | "session" | "verificationToken" | "serviceCategory" | "serviceType" | "documentTemplate" | "client" | "proposal" | "proposalTemplate" | "proposalItem" | "contract" | "contractTemplate" | "project" | "projectDocuments" | "projectServices" | "projectNote" | "sprint" | "backlogItem" | "invoice" | "integrationType" | "organizationIntegration" | "projectIntegration" | "webhookLog" | "auditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2279,6 +2280,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WebhookLog: {
+      payload: Prisma.$WebhookLogPayload<ExtArgs>
+      fields: Prisma.WebhookLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WebhookLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WebhookLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookLogPayload>
+        }
+        findFirst: {
+          args: Prisma.WebhookLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WebhookLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookLogPayload>
+        }
+        findMany: {
+          args: Prisma.WebhookLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookLogPayload>[]
+        }
+        create: {
+          args: Prisma.WebhookLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookLogPayload>
+        }
+        createMany: {
+          args: Prisma.WebhookLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WebhookLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookLogPayload>[]
+        }
+        delete: {
+          args: Prisma.WebhookLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookLogPayload>
+        }
+        update: {
+          args: Prisma.WebhookLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.WebhookLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WebhookLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WebhookLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.WebhookLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WebhookLogPayload>
+        }
+        aggregate: {
+          args: Prisma.WebhookLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWebhookLog>
+        }
+        groupBy: {
+          args: Prisma.WebhookLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WebhookLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WebhookLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WebhookLogCountAggregateOutputType> | number
+        }
+      }
+    }
     AuditLog: {
       payload: Prisma.$AuditLogPayload<ExtArgs>
       fields: Prisma.AuditLogFieldRefs
@@ -2533,11 +2608,13 @@ export const ProposalScalarFieldEnum = {
   id: 'id',
   version: 'version',
   isCurrent: 'isCurrent',
+  isActive: 'isActive',
   status: 'status',
   totalValue: 'totalValue',
   validUntil: 'validUntil',
   createdBy: 'createdBy',
   sourceType: 'sourceType',
+  downPaymentPercentage: 'downPaymentPercentage',
   fileKey: 'fileKey',
   fileUrl: 'fileUrl',
   projectId: 'projectId',
@@ -2583,6 +2660,7 @@ export const ContractScalarFieldEnum = {
   id: 'id',
   version: 'version',
   isCurrent: 'isCurrent',
+  isActive: 'isActive',
   proposalId: 'proposalId',
   status: 'status',
   createdBy: 'createdBy',
@@ -2707,13 +2785,16 @@ export const InvoiceScalarFieldEnum = {
   organizationId: 'organizationId',
   projectId: 'projectId',
   clientId: 'clientId',
+  internetBankingProvider: 'internetBankingProvider',
+  paymentType: 'paymentType',
   amount: 'amount',
   dueDate: 'dueDate',
   status: 'status',
   description: 'description',
   nfseNumber: 'nfseNumber',
   nfseLink: 'nfseLink',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeof InvoiceScalarFieldEnum]
@@ -2758,6 +2839,19 @@ export const ProjectIntegrationScalarFieldEnum = {
 } as const
 
 export type ProjectIntegrationScalarFieldEnum = (typeof ProjectIntegrationScalarFieldEnum)[keyof typeof ProjectIntegrationScalarFieldEnum]
+
+
+export const WebhookLogScalarFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  eventId: 'eventId',
+  payload: 'payload',
+  status: 'status',
+  error: 'error',
+  createdAt: 'createdAt'
+} as const
+
+export type WebhookLogScalarFieldEnum = (typeof WebhookLogScalarFieldEnum)[keyof typeof WebhookLogScalarFieldEnum]
 
 
 export const AuditLogScalarFieldEnum = {
@@ -3032,6 +3126,34 @@ export type ListEnumProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
+ * Reference to a field of type 'InternetBankingProvider'
+ */
+export type EnumInternetBankingProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InternetBankingProvider'>
+    
+
+
+/**
+ * Reference to a field of type 'InternetBankingProvider[]'
+ */
+export type ListEnumInternetBankingProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InternetBankingProvider[]'>
+    
+
+
+/**
+ * Reference to a field of type 'PaymentType'
+ */
+export type EnumPaymentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentType'>
+    
+
+
+/**
+ * Reference to a field of type 'PaymentType[]'
+ */
+export type ListEnumPaymentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentType[]'>
+    
+
+
+/**
  * Reference to a field of type 'FinancialStatus'
  */
 export type EnumFinancialStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FinancialStatus'>
@@ -3192,6 +3314,7 @@ export type GlobalOmitConfig = {
   integrationType?: Prisma.IntegrationTypeOmit
   organizationIntegration?: Prisma.OrganizationIntegrationOmit
   projectIntegration?: Prisma.ProjectIntegrationOmit
+  webhookLog?: Prisma.WebhookLogOmit
   auditLog?: Prisma.AuditLogOmit
 }
 

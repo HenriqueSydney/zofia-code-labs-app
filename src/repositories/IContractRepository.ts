@@ -4,6 +4,7 @@ import {
   ContractStatus,
   ContractSource,
 } from "@/generated/prisma/enums";
+import { Decimal } from "@prisma/client/runtime/client";
 
 export interface CreateContractItemDTO {
   serviceTypeId: string;
@@ -37,6 +38,9 @@ export type ContractWithDetails = Contract & {
   project: {
     organizationId: string;
     client: { tradeName: string; email: string };
+  };
+  proposal: {
+    totalValue: Decimal;
   };
   createdUser: { name: string | null } | null;
   approvedUser: { name: string | null } | null;

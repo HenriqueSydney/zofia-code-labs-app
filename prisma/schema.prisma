@@ -284,6 +284,7 @@ model Proposal {
   id        String  @id @default(cuid())
   version   Int     @default(1)
   isCurrent Boolean @default(true) @map("is_current")
+  isActive  Boolean @default(true) @map("is_active")
 
   status     ProposalStatus @default(DRAFT)
   totalValue Decimal        @map("total_value") @db.Decimal(10, 2)
@@ -292,6 +293,8 @@ model Proposal {
   createdBy   String         @map("created_by")
   createdUser User           @relation(name: "create_user", fields: [createdBy], references: [id])
   sourceType  ProposalSource @default(SYSTEM_TEMPLATE) @map("source_type")
+
+  downPaymentPercentage Int @default(30) @db.SmallInt
 
   fileKey String? @map("file_key")
   fileUrl String? @map("file_url") // Opcional: Cache da URL pública se for bucket público
@@ -369,6 +372,7 @@ enum ContractStatus {
   REVIEW
   SENT
   SIGNED
+  REJECTED
   CANCELLED
 
   @@schema("crm")
@@ -385,6 +389,7 @@ model Contract {
   id        String  @id @default(cuid())
   version   Int     @default(1)
   isCurrent Boolean @default(true) @map("is_current")
+  isActive  Boolean @default(true) @map("is_active")
 
   proposal   Proposal @relation(fields: [proposalId], references: [id])
   proposalId String
@@ -617,6 +622,24 @@ enum FinancialStatus {
   @@schema("financial")
 }
 
+enum InternetBankingProvider {
+  CORA
+  PAYPAL
+  MERCADO_PAGO
+  STRIPE
+
+  @@schema("financial")
+}
+
+enum PaymentType {
+  PIX
+  BOLETO
+  CREDIT_CARD
+  DEBIT_CARD
+
+  @@schema("financial")
+}
+
 model Invoice {
   id             String       @id @default(cuid())
   organizationId String       @map("organization_id")
@@ -628,6 +651,10 @@ model Invoice {
   clientId String @map("client_id")
   client   Client @relation(fields: [clientId], references: [id])
 
+  internetBankingProvider InternetBankingProvider
+
+  paymentType PaymentType
+
   amount  Decimal         @db.Decimal(10, 2)
   dueDate DateTime        @map("due_date")
   status  FinancialStatus @default(PENDING)
@@ -637,6 +664,7 @@ model Invoice {
   nfseLink    String? @map("nfse_link") @db.VarChar(500)
 
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("invoices")
   @@schema("financial")
@@ -739,6 +767,19 @@ model ProjectIntegration {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("project_integrations")
+  @@schema("integrations")
+}
+
+model WebhookLog {
+  id        String   @id @default(cuid())
+  provider  String // "DOCUMENSO"
+  eventId   String   @unique // ID do evento que vem no header/body
+  payload   Json
+  status    String // "PROCESSED", "FAILED"
+  error     String?
+  createdAt DateTime @default(now())
+
+  @@map("webhook_logs")
   @@schema("integrations")
 }
 

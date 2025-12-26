@@ -64,8 +64,12 @@ export const FlowSection = ({
   const firstIndex = allStages.findIndex((s) => s.key === stages[0].key);
   // Calculate progress relative to this section
   const progressStart = Math.max(0, currentIndex - firstIndex);
+
+  const arbitrarySum = isActiveFlow ? 100 / stages.length / 2 : 0;
+
   const progressWidth =
-    (Math.min(stages.length - 1, progressStart) / (stages.length - 1)) * 100;
+    (Math.min(stages.length, progressStart) / stages.length) * 100 +
+    arbitrarySum;
 
   return (
     <>
@@ -96,63 +100,80 @@ export const FlowSection = ({
         </div>
 
         <CollapsibleContent>
-          <div className="px-4 pb-4 pt-0">
-            <div className="relative mt-2">
+          <div className="px-4 pb-4 pt-0 ">
+            <div className="relative mt-2 ">
               {/* Progress Line */}
               <div className="absolute top-4 left-4 right-4 h-0.5 bg-muted-foreground/20 rounded-full" />
               <div
                 className="absolute top-4 left-4 h-0.5 bg-primary rounded-full transition-all duration-500"
                 style={{
-                  width: isCancelled
-                    ? "0%"
-                    : `calc(${Math.max(
-                        0,
-                        Math.min(100, progressWidth)
-                      )}% - 50px)`,
+                  width: isCancelled ? "0%" : `calc(${progressWidth}%)`,
                 }}
               />
 
               {/* Stage Points */}
-              <div className="relative flex justify-between">
-                {stages.map((stage) => {
+              <div className="flex justify-between w-full items-start">
+                {stages.map((stage, index) => {
                   const status = getStageStatus(stage);
-                  const Icon = stage.icon;
+                  const isLast = index === stages.length - 1;
+                  const isFirst = index === 0;
+
                   return (
                     <div
                       key={stage.key}
-                      className={`flex flex-col items-center ${
-                        compact ? "w-16" : "flex-1"
-                      }`}
+                      className="relative flex-1 flex flex-col items-center"
                     >
+                      {/* Container da Linha (Background) */}
+                      <div className="absolute top-5 w-full flex items-center">
+                        {/* Linha da Esquerda */}
+                        <div
+                          className={cn(
+                            "h-0.5 flex-1",
+                            isFirst
+                              ? "bg-transparent"
+                              : status === "completed" || status === "current"
+                              ? "bg-primary"
+                              : "bg-muted-foreground/20"
+                          )}
+                        />
+
+                        {/* Espaço do Ícone (para a linha não atravessar o desenho) */}
+                        <div className="w-10" />
+
+                        {/* Linha da Direita */}
+                        <div
+                          className={cn(
+                            "h-0.5 flex-1",
+                            isLast
+                              ? "bg-transparent"
+                              : status === "completed"
+                              ? "bg-primary"
+                              : "bg-muted-foreground/20"
+                          )}
+                        />
+                      </div>
+
+                      {/* Ícone */}
                       <div
                         className={cn(
-                          "relative z-10 rounded-full flex items-center justify-center transition-all duration-300 border-2",
-                          compact ? "w-8 h-8" : "w-10 h-10",
+                          "relative z-10 w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all",
                           status === "completed" &&
-                            "bg-primary border-primary text-primary-foreground",
+                            "bg-primary border-primary text-white",
                           status === "current" &&
-                            `${stage.color} border-primary text-white ring-4 ring-primary/20`,
+                            "bg-background border-primary text-primary ring-4 ring-primary/20",
                           status === "pending" &&
                             "bg-background border-muted-foreground/30 text-muted-foreground"
                         )}
                       >
                         {status === "completed" ? (
-                          <CheckCheck
-                            className={compact ? "h-4 w-4" : "h-5 w-5"}
-                          />
+                          <CheckCheck size={20} />
                         ) : (
-                          <Icon className={compact ? "h-3 w-3" : "h-4 w-4"} />
+                          <stage.icon size={18} />
                         )}
                       </div>
-                      <span
-                        className={cn(
-                          "mt-2 text-center font-medium line-clamp-2 px-1",
-                          compact ? "text-[10px]" : "text-xs",
-                          status === "current"
-                            ? "text-primary"
-                            : "text-muted-foreground"
-                        )}
-                      >
+
+                      {/* Label */}
+                      <span className="mt-2 text-xs text-center font-medium">
                         {stage.label}
                       </span>
                     </div>

@@ -39,6 +39,8 @@ export type InvoiceMinAggregateOutputType = {
   organizationId: string | null
   projectId: string | null
   clientId: string | null
+  internetBankingProvider: $Enums.InternetBankingProvider | null
+  paymentType: $Enums.PaymentType | null
   amount: runtime.Decimal | null
   dueDate: Date | null
   status: $Enums.FinancialStatus | null
@@ -46,6 +48,7 @@ export type InvoiceMinAggregateOutputType = {
   nfseNumber: string | null
   nfseLink: string | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type InvoiceMaxAggregateOutputType = {
@@ -53,6 +56,8 @@ export type InvoiceMaxAggregateOutputType = {
   organizationId: string | null
   projectId: string | null
   clientId: string | null
+  internetBankingProvider: $Enums.InternetBankingProvider | null
+  paymentType: $Enums.PaymentType | null
   amount: runtime.Decimal | null
   dueDate: Date | null
   status: $Enums.FinancialStatus | null
@@ -60,6 +65,7 @@ export type InvoiceMaxAggregateOutputType = {
   nfseNumber: string | null
   nfseLink: string | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type InvoiceCountAggregateOutputType = {
@@ -67,6 +73,8 @@ export type InvoiceCountAggregateOutputType = {
   organizationId: number
   projectId: number
   clientId: number
+  internetBankingProvider: number
+  paymentType: number
   amount: number
   dueDate: number
   status: number
@@ -74,6 +82,7 @@ export type InvoiceCountAggregateOutputType = {
   nfseNumber: number
   nfseLink: number
   createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -91,6 +100,8 @@ export type InvoiceMinAggregateInputType = {
   organizationId?: true
   projectId?: true
   clientId?: true
+  internetBankingProvider?: true
+  paymentType?: true
   amount?: true
   dueDate?: true
   status?: true
@@ -98,6 +109,7 @@ export type InvoiceMinAggregateInputType = {
   nfseNumber?: true
   nfseLink?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type InvoiceMaxAggregateInputType = {
@@ -105,6 +117,8 @@ export type InvoiceMaxAggregateInputType = {
   organizationId?: true
   projectId?: true
   clientId?: true
+  internetBankingProvider?: true
+  paymentType?: true
   amount?: true
   dueDate?: true
   status?: true
@@ -112,6 +126,7 @@ export type InvoiceMaxAggregateInputType = {
   nfseNumber?: true
   nfseLink?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type InvoiceCountAggregateInputType = {
@@ -119,6 +134,8 @@ export type InvoiceCountAggregateInputType = {
   organizationId?: true
   projectId?: true
   clientId?: true
+  internetBankingProvider?: true
+  paymentType?: true
   amount?: true
   dueDate?: true
   status?: true
@@ -126,6 +143,7 @@ export type InvoiceCountAggregateInputType = {
   nfseNumber?: true
   nfseLink?: true
   createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -220,6 +238,8 @@ export type InvoiceGroupByOutputType = {
   organizationId: string
   projectId: string
   clientId: string
+  internetBankingProvider: $Enums.InternetBankingProvider
+  paymentType: $Enums.PaymentType
   amount: runtime.Decimal
   dueDate: Date
   status: $Enums.FinancialStatus
@@ -227,6 +247,7 @@ export type InvoiceGroupByOutputType = {
   nfseNumber: string | null
   nfseLink: string | null
   createdAt: Date
+  updatedAt: Date
   _count: InvoiceCountAggregateOutputType | null
   _avg: InvoiceAvgAggregateOutputType | null
   _sum: InvoiceSumAggregateOutputType | null
@@ -257,6 +278,8 @@ export type InvoiceWhereInput = {
   organizationId?: Prisma.StringFilter<"Invoice"> | string
   projectId?: Prisma.StringFilter<"Invoice"> | string
   clientId?: Prisma.StringFilter<"Invoice"> | string
+  internetBankingProvider?: Prisma.EnumInternetBankingProviderFilter<"Invoice"> | $Enums.InternetBankingProvider
+  paymentType?: Prisma.EnumPaymentTypeFilter<"Invoice"> | $Enums.PaymentType
   amount?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFilter<"Invoice"> | Date | string
   status?: Prisma.EnumFinancialStatusFilter<"Invoice"> | $Enums.FinancialStatus
@@ -264,6 +287,7 @@ export type InvoiceWhereInput = {
   nfseNumber?: Prisma.StringNullableFilter<"Invoice"> | string | null
   nfseLink?: Prisma.StringNullableFilter<"Invoice"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
@@ -274,6 +298,8 @@ export type InvoiceOrderByWithRelationInput = {
   organizationId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
+  internetBankingProvider?: Prisma.SortOrder
+  paymentType?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   dueDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -281,6 +307,7 @@ export type InvoiceOrderByWithRelationInput = {
   nfseNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   nfseLink?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   organization?: Prisma.OrganizationOrderByWithRelationInput
   project?: Prisma.ProjectOrderByWithRelationInput
   client?: Prisma.ClientOrderByWithRelationInput
@@ -294,6 +321,8 @@ export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
   organizationId?: Prisma.StringFilter<"Invoice"> | string
   projectId?: Prisma.StringFilter<"Invoice"> | string
   clientId?: Prisma.StringFilter<"Invoice"> | string
+  internetBankingProvider?: Prisma.EnumInternetBankingProviderFilter<"Invoice"> | $Enums.InternetBankingProvider
+  paymentType?: Prisma.EnumPaymentTypeFilter<"Invoice"> | $Enums.PaymentType
   amount?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFilter<"Invoice"> | Date | string
   status?: Prisma.EnumFinancialStatusFilter<"Invoice"> | $Enums.FinancialStatus
@@ -301,6 +330,7 @@ export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
   nfseNumber?: Prisma.StringNullableFilter<"Invoice"> | string | null
   nfseLink?: Prisma.StringNullableFilter<"Invoice"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
@@ -311,6 +341,8 @@ export type InvoiceOrderByWithAggregationInput = {
   organizationId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
+  internetBankingProvider?: Prisma.SortOrder
+  paymentType?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   dueDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -318,6 +350,7 @@ export type InvoiceOrderByWithAggregationInput = {
   nfseNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   nfseLink?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.InvoiceCountOrderByAggregateInput
   _avg?: Prisma.InvoiceAvgOrderByAggregateInput
   _max?: Prisma.InvoiceMaxOrderByAggregateInput
@@ -333,6 +366,8 @@ export type InvoiceScalarWhereWithAggregatesInput = {
   organizationId?: Prisma.StringWithAggregatesFilter<"Invoice"> | string
   projectId?: Prisma.StringWithAggregatesFilter<"Invoice"> | string
   clientId?: Prisma.StringWithAggregatesFilter<"Invoice"> | string
+  internetBankingProvider?: Prisma.EnumInternetBankingProviderWithAggregatesFilter<"Invoice"> | $Enums.InternetBankingProvider
+  paymentType?: Prisma.EnumPaymentTypeWithAggregatesFilter<"Invoice"> | $Enums.PaymentType
   amount?: Prisma.DecimalWithAggregatesFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeWithAggregatesFilter<"Invoice"> | Date | string
   status?: Prisma.EnumFinancialStatusWithAggregatesFilter<"Invoice"> | $Enums.FinancialStatus
@@ -340,10 +375,13 @@ export type InvoiceScalarWhereWithAggregatesInput = {
   nfseNumber?: Prisma.StringNullableWithAggregatesFilter<"Invoice"> | string | null
   nfseLink?: Prisma.StringNullableWithAggregatesFilter<"Invoice"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Invoice"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Invoice"> | Date | string
 }
 
 export type InvoiceCreateInput = {
   id?: string
+  internetBankingProvider: $Enums.InternetBankingProvider
+  paymentType: $Enums.PaymentType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
   status?: $Enums.FinancialStatus
@@ -351,6 +389,7 @@ export type InvoiceCreateInput = {
   nfseNumber?: string | null
   nfseLink?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutInvoicesInput
   project: Prisma.ProjectCreateNestedOneWithoutInvoicesInput
   client: Prisma.ClientCreateNestedOneWithoutInvoicesInput
@@ -361,6 +400,8 @@ export type InvoiceUncheckedCreateInput = {
   organizationId: string
   projectId: string
   clientId: string
+  internetBankingProvider: $Enums.InternetBankingProvider
+  paymentType: $Enums.PaymentType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
   status?: $Enums.FinancialStatus
@@ -368,10 +409,13 @@ export type InvoiceUncheckedCreateInput = {
   nfseNumber?: string | null
   nfseLink?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type InvoiceUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  internetBankingProvider?: Prisma.EnumInternetBankingProviderFieldUpdateOperationsInput | $Enums.InternetBankingProvider
+  paymentType?: Prisma.EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
@@ -379,6 +423,7 @@ export type InvoiceUpdateInput = {
   nfseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nfseLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutInvoicesNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutInvoicesNestedInput
   client?: Prisma.ClientUpdateOneRequiredWithoutInvoicesNestedInput
@@ -389,6 +434,8 @@ export type InvoiceUncheckedUpdateInput = {
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  internetBankingProvider?: Prisma.EnumInternetBankingProviderFieldUpdateOperationsInput | $Enums.InternetBankingProvider
+  paymentType?: Prisma.EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
@@ -396,6 +443,7 @@ export type InvoiceUncheckedUpdateInput = {
   nfseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nfseLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type InvoiceCreateManyInput = {
@@ -403,6 +451,8 @@ export type InvoiceCreateManyInput = {
   organizationId: string
   projectId: string
   clientId: string
+  internetBankingProvider: $Enums.InternetBankingProvider
+  paymentType: $Enums.PaymentType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
   status?: $Enums.FinancialStatus
@@ -410,10 +460,13 @@ export type InvoiceCreateManyInput = {
   nfseNumber?: string | null
   nfseLink?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type InvoiceUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  internetBankingProvider?: Prisma.EnumInternetBankingProviderFieldUpdateOperationsInput | $Enums.InternetBankingProvider
+  paymentType?: Prisma.EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
@@ -421,6 +474,7 @@ export type InvoiceUpdateManyMutationInput = {
   nfseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nfseLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type InvoiceUncheckedUpdateManyInput = {
@@ -428,6 +482,8 @@ export type InvoiceUncheckedUpdateManyInput = {
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  internetBankingProvider?: Prisma.EnumInternetBankingProviderFieldUpdateOperationsInput | $Enums.InternetBankingProvider
+  paymentType?: Prisma.EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
@@ -435,6 +491,7 @@ export type InvoiceUncheckedUpdateManyInput = {
   nfseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nfseLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type InvoiceListRelationFilter = {
@@ -452,6 +509,8 @@ export type InvoiceCountOrderByAggregateInput = {
   organizationId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
+  internetBankingProvider?: Prisma.SortOrder
+  paymentType?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   dueDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -459,6 +518,7 @@ export type InvoiceCountOrderByAggregateInput = {
   nfseNumber?: Prisma.SortOrder
   nfseLink?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type InvoiceAvgOrderByAggregateInput = {
@@ -470,6 +530,8 @@ export type InvoiceMaxOrderByAggregateInput = {
   organizationId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
+  internetBankingProvider?: Prisma.SortOrder
+  paymentType?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   dueDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -477,6 +539,7 @@ export type InvoiceMaxOrderByAggregateInput = {
   nfseNumber?: Prisma.SortOrder
   nfseLink?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type InvoiceMinOrderByAggregateInput = {
@@ -484,6 +547,8 @@ export type InvoiceMinOrderByAggregateInput = {
   organizationId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
+  internetBankingProvider?: Prisma.SortOrder
+  paymentType?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   dueDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -491,6 +556,7 @@ export type InvoiceMinOrderByAggregateInput = {
   nfseNumber?: Prisma.SortOrder
   nfseLink?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type InvoiceSumOrderByAggregateInput = {
@@ -623,12 +689,22 @@ export type InvoiceUncheckedUpdateManyWithoutProjectNestedInput = {
   deleteMany?: Prisma.InvoiceScalarWhereInput | Prisma.InvoiceScalarWhereInput[]
 }
 
+export type EnumInternetBankingProviderFieldUpdateOperationsInput = {
+  set?: $Enums.InternetBankingProvider
+}
+
+export type EnumPaymentTypeFieldUpdateOperationsInput = {
+  set?: $Enums.PaymentType
+}
+
 export type EnumFinancialStatusFieldUpdateOperationsInput = {
   set?: $Enums.FinancialStatus
 }
 
 export type InvoiceCreateWithoutOrganizationInput = {
   id?: string
+  internetBankingProvider: $Enums.InternetBankingProvider
+  paymentType: $Enums.PaymentType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
   status?: $Enums.FinancialStatus
@@ -636,6 +712,7 @@ export type InvoiceCreateWithoutOrganizationInput = {
   nfseNumber?: string | null
   nfseLink?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutInvoicesInput
   client: Prisma.ClientCreateNestedOneWithoutInvoicesInput
 }
@@ -644,6 +721,8 @@ export type InvoiceUncheckedCreateWithoutOrganizationInput = {
   id?: string
   projectId: string
   clientId: string
+  internetBankingProvider: $Enums.InternetBankingProvider
+  paymentType: $Enums.PaymentType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
   status?: $Enums.FinancialStatus
@@ -651,6 +730,7 @@ export type InvoiceUncheckedCreateWithoutOrganizationInput = {
   nfseNumber?: string | null
   nfseLink?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type InvoiceCreateOrConnectWithoutOrganizationInput = {
@@ -687,6 +767,8 @@ export type InvoiceScalarWhereInput = {
   organizationId?: Prisma.StringFilter<"Invoice"> | string
   projectId?: Prisma.StringFilter<"Invoice"> | string
   clientId?: Prisma.StringFilter<"Invoice"> | string
+  internetBankingProvider?: Prisma.EnumInternetBankingProviderFilter<"Invoice"> | $Enums.InternetBankingProvider
+  paymentType?: Prisma.EnumPaymentTypeFilter<"Invoice"> | $Enums.PaymentType
   amount?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFilter<"Invoice"> | Date | string
   status?: Prisma.EnumFinancialStatusFilter<"Invoice"> | $Enums.FinancialStatus
@@ -694,10 +776,13 @@ export type InvoiceScalarWhereInput = {
   nfseNumber?: Prisma.StringNullableFilter<"Invoice"> | string | null
   nfseLink?: Prisma.StringNullableFilter<"Invoice"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
 }
 
 export type InvoiceCreateWithoutClientInput = {
   id?: string
+  internetBankingProvider: $Enums.InternetBankingProvider
+  paymentType: $Enums.PaymentType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
   status?: $Enums.FinancialStatus
@@ -705,6 +790,7 @@ export type InvoiceCreateWithoutClientInput = {
   nfseNumber?: string | null
   nfseLink?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutInvoicesInput
   project: Prisma.ProjectCreateNestedOneWithoutInvoicesInput
 }
@@ -713,6 +799,8 @@ export type InvoiceUncheckedCreateWithoutClientInput = {
   id?: string
   organizationId: string
   projectId: string
+  internetBankingProvider: $Enums.InternetBankingProvider
+  paymentType: $Enums.PaymentType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
   status?: $Enums.FinancialStatus
@@ -720,6 +808,7 @@ export type InvoiceUncheckedCreateWithoutClientInput = {
   nfseNumber?: string | null
   nfseLink?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type InvoiceCreateOrConnectWithoutClientInput = {
@@ -750,6 +839,8 @@ export type InvoiceUpdateManyWithWhereWithoutClientInput = {
 
 export type InvoiceCreateWithoutProjectInput = {
   id?: string
+  internetBankingProvider: $Enums.InternetBankingProvider
+  paymentType: $Enums.PaymentType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
   status?: $Enums.FinancialStatus
@@ -757,6 +848,7 @@ export type InvoiceCreateWithoutProjectInput = {
   nfseNumber?: string | null
   nfseLink?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutInvoicesInput
   client: Prisma.ClientCreateNestedOneWithoutInvoicesInput
 }
@@ -765,6 +857,8 @@ export type InvoiceUncheckedCreateWithoutProjectInput = {
   id?: string
   organizationId: string
   clientId: string
+  internetBankingProvider: $Enums.InternetBankingProvider
+  paymentType: $Enums.PaymentType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
   status?: $Enums.FinancialStatus
@@ -772,6 +866,7 @@ export type InvoiceUncheckedCreateWithoutProjectInput = {
   nfseNumber?: string | null
   nfseLink?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type InvoiceCreateOrConnectWithoutProjectInput = {
@@ -804,6 +899,8 @@ export type InvoiceCreateManyOrganizationInput = {
   id?: string
   projectId: string
   clientId: string
+  internetBankingProvider: $Enums.InternetBankingProvider
+  paymentType: $Enums.PaymentType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
   status?: $Enums.FinancialStatus
@@ -811,10 +908,13 @@ export type InvoiceCreateManyOrganizationInput = {
   nfseNumber?: string | null
   nfseLink?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type InvoiceUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  internetBankingProvider?: Prisma.EnumInternetBankingProviderFieldUpdateOperationsInput | $Enums.InternetBankingProvider
+  paymentType?: Prisma.EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
@@ -822,6 +922,7 @@ export type InvoiceUpdateWithoutOrganizationInput = {
   nfseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nfseLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutInvoicesNestedInput
   client?: Prisma.ClientUpdateOneRequiredWithoutInvoicesNestedInput
 }
@@ -830,6 +931,8 @@ export type InvoiceUncheckedUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  internetBankingProvider?: Prisma.EnumInternetBankingProviderFieldUpdateOperationsInput | $Enums.InternetBankingProvider
+  paymentType?: Prisma.EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
@@ -837,12 +940,15 @@ export type InvoiceUncheckedUpdateWithoutOrganizationInput = {
   nfseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nfseLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type InvoiceUncheckedUpdateManyWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  internetBankingProvider?: Prisma.EnumInternetBankingProviderFieldUpdateOperationsInput | $Enums.InternetBankingProvider
+  paymentType?: Prisma.EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
@@ -850,12 +956,15 @@ export type InvoiceUncheckedUpdateManyWithoutOrganizationInput = {
   nfseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nfseLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type InvoiceCreateManyClientInput = {
   id?: string
   organizationId: string
   projectId: string
+  internetBankingProvider: $Enums.InternetBankingProvider
+  paymentType: $Enums.PaymentType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
   status?: $Enums.FinancialStatus
@@ -863,10 +972,13 @@ export type InvoiceCreateManyClientInput = {
   nfseNumber?: string | null
   nfseLink?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type InvoiceUpdateWithoutClientInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  internetBankingProvider?: Prisma.EnumInternetBankingProviderFieldUpdateOperationsInput | $Enums.InternetBankingProvider
+  paymentType?: Prisma.EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
@@ -874,6 +986,7 @@ export type InvoiceUpdateWithoutClientInput = {
   nfseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nfseLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutInvoicesNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutInvoicesNestedInput
 }
@@ -882,6 +995,8 @@ export type InvoiceUncheckedUpdateWithoutClientInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  internetBankingProvider?: Prisma.EnumInternetBankingProviderFieldUpdateOperationsInput | $Enums.InternetBankingProvider
+  paymentType?: Prisma.EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
@@ -889,12 +1004,15 @@ export type InvoiceUncheckedUpdateWithoutClientInput = {
   nfseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nfseLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type InvoiceUncheckedUpdateManyWithoutClientInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  internetBankingProvider?: Prisma.EnumInternetBankingProviderFieldUpdateOperationsInput | $Enums.InternetBankingProvider
+  paymentType?: Prisma.EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
@@ -902,12 +1020,15 @@ export type InvoiceUncheckedUpdateManyWithoutClientInput = {
   nfseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nfseLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type InvoiceCreateManyProjectInput = {
   id?: string
   organizationId: string
   clientId: string
+  internetBankingProvider: $Enums.InternetBankingProvider
+  paymentType: $Enums.PaymentType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate: Date | string
   status?: $Enums.FinancialStatus
@@ -915,10 +1036,13 @@ export type InvoiceCreateManyProjectInput = {
   nfseNumber?: string | null
   nfseLink?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type InvoiceUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  internetBankingProvider?: Prisma.EnumInternetBankingProviderFieldUpdateOperationsInput | $Enums.InternetBankingProvider
+  paymentType?: Prisma.EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
@@ -926,6 +1050,7 @@ export type InvoiceUpdateWithoutProjectInput = {
   nfseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nfseLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutInvoicesNestedInput
   client?: Prisma.ClientUpdateOneRequiredWithoutInvoicesNestedInput
 }
@@ -934,6 +1059,8 @@ export type InvoiceUncheckedUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  internetBankingProvider?: Prisma.EnumInternetBankingProviderFieldUpdateOperationsInput | $Enums.InternetBankingProvider
+  paymentType?: Prisma.EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
@@ -941,12 +1068,15 @@ export type InvoiceUncheckedUpdateWithoutProjectInput = {
   nfseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nfseLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type InvoiceUncheckedUpdateManyWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  internetBankingProvider?: Prisma.EnumInternetBankingProviderFieldUpdateOperationsInput | $Enums.InternetBankingProvider
+  paymentType?: Prisma.EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumFinancialStatusFieldUpdateOperationsInput | $Enums.FinancialStatus
@@ -954,6 +1084,7 @@ export type InvoiceUncheckedUpdateManyWithoutProjectInput = {
   nfseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nfseLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -963,6 +1094,8 @@ export type InvoiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   organizationId?: boolean
   projectId?: boolean
   clientId?: boolean
+  internetBankingProvider?: boolean
+  paymentType?: boolean
   amount?: boolean
   dueDate?: boolean
   status?: boolean
@@ -970,6 +1103,7 @@ export type InvoiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   nfseNumber?: boolean
   nfseLink?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
@@ -980,6 +1114,8 @@ export type InvoiceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   organizationId?: boolean
   projectId?: boolean
   clientId?: boolean
+  internetBankingProvider?: boolean
+  paymentType?: boolean
   amount?: boolean
   dueDate?: boolean
   status?: boolean
@@ -987,6 +1123,7 @@ export type InvoiceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   nfseNumber?: boolean
   nfseLink?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
@@ -997,6 +1134,8 @@ export type InvoiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   organizationId?: boolean
   projectId?: boolean
   clientId?: boolean
+  internetBankingProvider?: boolean
+  paymentType?: boolean
   amount?: boolean
   dueDate?: boolean
   status?: boolean
@@ -1004,6 +1143,7 @@ export type InvoiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   nfseNumber?: boolean
   nfseLink?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
@@ -1014,6 +1154,8 @@ export type InvoiceSelectScalar = {
   organizationId?: boolean
   projectId?: boolean
   clientId?: boolean
+  internetBankingProvider?: boolean
+  paymentType?: boolean
   amount?: boolean
   dueDate?: boolean
   status?: boolean
@@ -1021,9 +1163,10 @@ export type InvoiceSelectScalar = {
   nfseNumber?: boolean
   nfseLink?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type InvoiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "projectId" | "clientId" | "amount" | "dueDate" | "status" | "description" | "nfseNumber" | "nfseLink" | "createdAt", ExtArgs["result"]["invoice"]>
+export type InvoiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "projectId" | "clientId" | "internetBankingProvider" | "paymentType" | "amount" | "dueDate" | "status" | "description" | "nfseNumber" | "nfseLink" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
 export type InvoiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
@@ -1052,6 +1195,8 @@ export type $InvoicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     organizationId: string
     projectId: string
     clientId: string
+    internetBankingProvider: $Enums.InternetBankingProvider
+    paymentType: $Enums.PaymentType
     amount: runtime.Decimal
     dueDate: Date
     status: $Enums.FinancialStatus
@@ -1059,6 +1204,7 @@ export type $InvoicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     nfseNumber: string | null
     nfseLink: string | null
     createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["invoice"]>
   composites: {}
 }
@@ -1489,6 +1635,8 @@ export interface InvoiceFieldRefs {
   readonly organizationId: Prisma.FieldRef<"Invoice", 'String'>
   readonly projectId: Prisma.FieldRef<"Invoice", 'String'>
   readonly clientId: Prisma.FieldRef<"Invoice", 'String'>
+  readonly internetBankingProvider: Prisma.FieldRef<"Invoice", 'InternetBankingProvider'>
+  readonly paymentType: Prisma.FieldRef<"Invoice", 'PaymentType'>
   readonly amount: Prisma.FieldRef<"Invoice", 'Decimal'>
   readonly dueDate: Prisma.FieldRef<"Invoice", 'DateTime'>
   readonly status: Prisma.FieldRef<"Invoice", 'FinancialStatus'>
@@ -1496,6 +1644,7 @@ export interface InvoiceFieldRefs {
   readonly nfseNumber: Prisma.FieldRef<"Invoice", 'String'>
   readonly nfseLink: Prisma.FieldRef<"Invoice", 'String'>
   readonly createdAt: Prisma.FieldRef<"Invoice", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Invoice", 'DateTime'>
 }
     
 

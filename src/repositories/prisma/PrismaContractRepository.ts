@@ -72,6 +72,9 @@ export class PrismaContractRepository implements IContractRepository {
             client: { select: { tradeName: true, email: true } },
           }, // Otimização: trazer só o necessário
         },
+        proposal: {
+          select: { totalValue: true },
+        },
         createdUser: {
           select: { name: true },
         },

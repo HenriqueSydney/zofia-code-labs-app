@@ -1,6 +1,5 @@
 "use client";
 
-import { getProposalStatusBadge } from "@/mappers/proposalStatusBadge";
 import {
   CheckCircle,
   ChevronRight,
@@ -11,7 +10,6 @@ import {
   Signature,
   User,
 } from "lucide-react";
-import { ProposalDetailsModal } from "../@proposals/ProposalDetailsModal";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { ProjectTransitionDialog } from "@/components/features/projects/transitions/TransitionDialog";
@@ -25,6 +23,7 @@ import { ContractWithDetails } from "@/repositories/IContractRepository";
 import { checkIfContractIsEditable } from "@/utils/checkIfContractIsEditable";
 import { getContractDownloadUrl } from "@/actions/contract/getContractDownloadUrl";
 import { toast } from "sonner";
+import { contractStatusBadge } from "@/mappers/contractStatusBadge";
 
 interface IContractHistoryList {
   contract: ContractWithDetails;
@@ -99,7 +98,7 @@ export function ContractHistoryList({
       </div>
       <div className="flex items-start justify-end">
         <div className="flex items-center gap-2">
-          {getProposalStatusBadge(project.proposal.status)}
+          {contractStatusBadge(project.contract.status)}
           {/* <ProposalDetailsModal proposal={project.proposal} /> */}
           {isContractEditable && contract.isCurrent && (
             <Link href={contract.id}>

@@ -169,6 +169,11 @@ export type OrganizationIntegration = Prisma.OrganizationIntegrationModel
  */
 export type ProjectIntegration = Prisma.ProjectIntegrationModel
 /**
+ * Model WebhookLog
+ * 
+ */
+export type WebhookLog = Prisma.WebhookLogModel
+/**
  * Model AuditLog
  * 
  */

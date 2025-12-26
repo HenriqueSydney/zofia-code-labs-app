@@ -74,6 +74,7 @@ export const ContractStatus = {
   REVIEW: 'REVIEW',
   SENT: 'SENT',
   SIGNED: 'SIGNED',
+  REJECTED: 'REJECTED',
   CANCELLED: 'CANCELLED'
 } as const
 
@@ -117,6 +118,26 @@ export const FinancialStatus = {
 } as const
 
 export type FinancialStatus = (typeof FinancialStatus)[keyof typeof FinancialStatus]
+
+
+export const InternetBankingProvider = {
+  CORA: 'CORA',
+  PAYPAL: 'PAYPAL',
+  MERCADO_PAGO: 'MERCADO_PAGO',
+  STRIPE: 'STRIPE'
+} as const
+
+export type InternetBankingProvider = (typeof InternetBankingProvider)[keyof typeof InternetBankingProvider]
+
+
+export const PaymentType = {
+  PIX: 'PIX',
+  BOLETO: 'BOLETO',
+  CREDIT_CARD: 'CREDIT_CARD',
+  DEBIT_CARD: 'DEBIT_CARD'
+} as const
+
+export type PaymentType = (typeof PaymentType)[keyof typeof PaymentType]
 
 
 export const JobType = {

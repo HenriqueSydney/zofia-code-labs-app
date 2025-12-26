@@ -4,8 +4,14 @@ import { z } from "zod";
 export const discoutTypes: DiscountType[] = ["FIXED", "PERCENTAGE"];
 
 export const createProposalSchema = z.object({
-  documentTemplateId: z.cuid().nullable(),
+  documentTemplateId: z.cuid().nullable().optional(),
   projectId: z.cuid(),
+  downPaymentPercentage: z
+    .number({
+      error: "Percentual de entrada para início do projeto é obrigatório",
+    })
+    .positive({ error: "O percentual de entrada deve ser um número positivo" })
+    .max(100, { error: "O valor máximo da entrada é 100%" }),
   documents: z
     .custom<File>((val) => val instanceof File, "Arquivo inválido")
     .nullable()

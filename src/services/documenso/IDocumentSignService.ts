@@ -1,4 +1,9 @@
-export type SignerStatus = "PENDING" | "SIGNED" | "DECLINED" | "CANCELLED";
+export type SignerStatus =
+  | "PENDING"
+  | "SIGNED"
+  | "DECLINED"
+  | "CANCELLED"
+  | "COMPLETED";
 
 export interface SignerRequest {
   name: string;

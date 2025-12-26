@@ -54,7 +54,7 @@ export class AddProjectDocumentUseCase {
 
       // Retorna o objeto formatado para o Repository
       return {
-        url: url,
+        url: url.key,
         originalName: file.name,
         extension: extension,
       };

@@ -120,7 +120,7 @@ export class DocumensoDocumentSign implements IDocumentSignService {
   }
 
   async getDocumentStatus(documentId: string): Promise<DocumentStatus> {
-    const data = await this.request(`/documents/${documentId}`, {
+    const data = await this.request(`/document/${documentId}`, {
       method: "GET",
     });
 
@@ -133,10 +133,14 @@ export class DocumensoDocumentSign implements IDocumentSignService {
   }
 
   async getSignedDocument(documentId: string): Promise<Buffer> {
+    const headers: Record<string, string> = {
+      Authorization: `Bearer ${this.apiKey}`,
+      "X-API-KEY": this.apiKey,
+    };
     const response = await fetch(
-      `${this.baseUrl}/documents/${documentId}/download`,
+      `${this.baseUrl}/document/${documentId}/download?version=signed`,
       {
-        headers: { "X-API-KEY": this.apiKey },
+        headers,
       }
     );
 

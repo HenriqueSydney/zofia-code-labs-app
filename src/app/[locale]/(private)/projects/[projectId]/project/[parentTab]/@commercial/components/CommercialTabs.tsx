@@ -24,7 +24,7 @@ export function CommercialTabs({
   children,
 }: IProjectTabs) {
   return (
-    <Tabs value={currentTab ?? "proposals"} className="w-full">
+    <Tabs value={currentTab ?? "proposals"} className="w-full ">
       <TabsList className="w-full h-full flex-col md:flex-row flex mb-2 items-center !justify-evenly glass-effect">
         <TabsTrigger
           className="cursor-pointer w-full flex items-center gap-2"

@@ -19,7 +19,7 @@ interface ChangeContractStatusRequest {
 export class ChangeContractStatusUseCase {
   constructor(
     private contractRepository: IContractRepository,
-    private chageProjectStatusUseCase: ChangeProjectStatusUseCase,
+    private changeProjectStatusUseCase: ChangeProjectStatusUseCase,
     private auditLogRepository: IAuditLogRepository,
     private storageService: IS3StorageService,
     private documentSignService: IDocumentSignService
@@ -89,20 +89,6 @@ export class ChangeContractStatusUseCase {
           ]
         );
 
-        // 4. Adicionar os signatários (Cliente e talvez você/empresa)
-        // await this.documentSignService.addSigners(documentId, [
-        //   {
-        //     email: contract.project.client.email,
-        //     name: contract.project.client.tradeName,
-        //     role: "SIGNER",
-        //   },
-        //   {
-        //     email: "henriquesydneylima@gmail.com",
-        //     name: "Henrique Sydney Ribeiro Lima",
-        //     role: "SIGNER",
-        //   },
-        // ]);
-
         await this.documentSignService.sendForSignature(documentId);
 
         await tx.contract.update({
@@ -110,12 +96,43 @@ export class ChangeContractStatusUseCase {
           data: { externalSignId: String(documentId) },
         });
 
-        await this.chageProjectStatusUseCase.execute(
+        await this.changeProjectStatusUseCase.execute(
           {
             projectId: updatedContract.projectId,
             newStatus: "WAITING_SIGNATURE",
             data: {
               observation: "Contrato enviado ao cliente para assinatura.",
+            },
+            userId: userId,
+          },
+          tx
+        );
+      }
+
+      if (newStatus === "SIGNED") {
+        // 1. Atualizar o projeto para fase de pagamento
+        await this.changeProjectStatusUseCase.execute(
+          {
+            projectId: updatedContract.projectId,
+            newStatus: "WAITING_DOWN_PAYMENT", // Exemplo de status
+            data: {
+              observation:
+                "Contrato assinado. Aguardando processamento de pagamento.",
+            },
+            userId: userId,
+          },
+          tx
+        );
+      }
+
+      if (newStatus === "CANCELLED" || newStatus === "REJECTED") {
+        // Lógica de limpeza ou notificação se necessário
+        await this.changeProjectStatusUseCase.execute(
+          {
+            projectId: updatedContract.projectId,
+            newStatus: "PROPOSAL_GENERATED",
+            data: {
+              observation: `Contrato ${newStatus.toLowerCase()} via Documenso.`,
             },
             userId: userId,
           },
@@ -151,16 +168,29 @@ export class ChangeContractStatusUseCase {
     if (current === next) return true;
 
     const allowedTransitions: Record<ContractStatus, ContractStatus[]> = {
-      [ContractStatus.DRAFT]: [ContractStatus.REVIEW, ContractStatus.CANCELLED],
+      [ContractStatus.DRAFT]: [
+        ContractStatus.REVIEW,
+        ContractStatus.CANCELLED,
+        ContractStatus.REJECTED,
+      ],
       [ContractStatus.REVIEW]: [
         ContractStatus.DRAFT,
         ContractStatus.SENT,
         ContractStatus.CANCELLED,
+        ContractStatus.REJECTED,
       ],
 
-      [ContractStatus.SENT]: [ContractStatus.CANCELLED, ContractStatus.DRAFT],
-      [ContractStatus.SIGNED]: [ContractStatus.CANCELLED],
+      [ContractStatus.SENT]: [
+        ContractStatus.CANCELLED,
+        ContractStatus.DRAFT,
+        ContractStatus.REJECTED,
+      ],
+      [ContractStatus.SIGNED]: [
+        ContractStatus.CANCELLED,
+        ContractStatus.REJECTED,
+      ],
       [ContractStatus.CANCELLED]: [],
+      [ContractStatus.REJECTED]: [],
     };
 
     return allowedTransitions[current]?.includes(next) ?? false;

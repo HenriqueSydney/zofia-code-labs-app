@@ -76,6 +76,7 @@ export const ModelName = {
   IntegrationType: 'IntegrationType',
   OrganizationIntegration: 'OrganizationIntegration',
   ProjectIntegration: 'ProjectIntegration',
+  WebhookLog: 'WebhookLog',
   AuditLog: 'AuditLog'
 } as const
 
@@ -236,11 +237,13 @@ export const ProposalScalarFieldEnum = {
   id: 'id',
   version: 'version',
   isCurrent: 'isCurrent',
+  isActive: 'isActive',
   status: 'status',
   totalValue: 'totalValue',
   validUntil: 'validUntil',
   createdBy: 'createdBy',
   sourceType: 'sourceType',
+  downPaymentPercentage: 'downPaymentPercentage',
   fileKey: 'fileKey',
   fileUrl: 'fileUrl',
   projectId: 'projectId',
@@ -286,6 +289,7 @@ export const ContractScalarFieldEnum = {
   id: 'id',
   version: 'version',
   isCurrent: 'isCurrent',
+  isActive: 'isActive',
   proposalId: 'proposalId',
   status: 'status',
   createdBy: 'createdBy',
@@ -410,13 +414,16 @@ export const InvoiceScalarFieldEnum = {
   organizationId: 'organizationId',
   projectId: 'projectId',
   clientId: 'clientId',
+  internetBankingProvider: 'internetBankingProvider',
+  paymentType: 'paymentType',
   amount: 'amount',
   dueDate: 'dueDate',
   status: 'status',
   description: 'description',
   nfseNumber: 'nfseNumber',
   nfseLink: 'nfseLink',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeof InvoiceScalarFieldEnum]
@@ -461,6 +468,19 @@ export const ProjectIntegrationScalarFieldEnum = {
 } as const
 
 export type ProjectIntegrationScalarFieldEnum = (typeof ProjectIntegrationScalarFieldEnum)[keyof typeof ProjectIntegrationScalarFieldEnum]
+
+
+export const WebhookLogScalarFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  eventId: 'eventId',
+  payload: 'payload',
+  status: 'status',
+  error: 'error',
+  createdAt: 'createdAt'
+} as const
+
+export type WebhookLogScalarFieldEnum = (typeof WebhookLogScalarFieldEnum)[keyof typeof WebhookLogScalarFieldEnum]
 
 
 export const AuditLogScalarFieldEnum = {

@@ -29,22 +29,26 @@ export type AggregateProposal = {
 export type ProposalAvgAggregateOutputType = {
   version: number | null
   totalValue: runtime.Decimal | null
+  downPaymentPercentage: number | null
 }
 
 export type ProposalSumAggregateOutputType = {
   version: number | null
   totalValue: runtime.Decimal | null
+  downPaymentPercentage: number | null
 }
 
 export type ProposalMinAggregateOutputType = {
   id: string | null
   version: number | null
   isCurrent: boolean | null
+  isActive: boolean | null
   status: $Enums.ProposalStatus | null
   totalValue: runtime.Decimal | null
   validUntil: Date | null
   createdBy: string | null
   sourceType: $Enums.ProposalSource | null
+  downPaymentPercentage: number | null
   fileKey: string | null
   fileUrl: string | null
   projectId: string | null
@@ -60,11 +64,13 @@ export type ProposalMaxAggregateOutputType = {
   id: string | null
   version: number | null
   isCurrent: boolean | null
+  isActive: boolean | null
   status: $Enums.ProposalStatus | null
   totalValue: runtime.Decimal | null
   validUntil: Date | null
   createdBy: string | null
   sourceType: $Enums.ProposalSource | null
+  downPaymentPercentage: number | null
   fileKey: string | null
   fileUrl: string | null
   projectId: string | null
@@ -80,11 +86,13 @@ export type ProposalCountAggregateOutputType = {
   id: number
   version: number
   isCurrent: number
+  isActive: number
   status: number
   totalValue: number
   validUntil: number
   createdBy: number
   sourceType: number
+  downPaymentPercentage: number
   fileKey: number
   fileUrl: number
   projectId: number
@@ -101,22 +109,26 @@ export type ProposalCountAggregateOutputType = {
 export type ProposalAvgAggregateInputType = {
   version?: true
   totalValue?: true
+  downPaymentPercentage?: true
 }
 
 export type ProposalSumAggregateInputType = {
   version?: true
   totalValue?: true
+  downPaymentPercentage?: true
 }
 
 export type ProposalMinAggregateInputType = {
   id?: true
   version?: true
   isCurrent?: true
+  isActive?: true
   status?: true
   totalValue?: true
   validUntil?: true
   createdBy?: true
   sourceType?: true
+  downPaymentPercentage?: true
   fileKey?: true
   fileUrl?: true
   projectId?: true
@@ -132,11 +144,13 @@ export type ProposalMaxAggregateInputType = {
   id?: true
   version?: true
   isCurrent?: true
+  isActive?: true
   status?: true
   totalValue?: true
   validUntil?: true
   createdBy?: true
   sourceType?: true
+  downPaymentPercentage?: true
   fileKey?: true
   fileUrl?: true
   projectId?: true
@@ -152,11 +166,13 @@ export type ProposalCountAggregateInputType = {
   id?: true
   version?: true
   isCurrent?: true
+  isActive?: true
   status?: true
   totalValue?: true
   validUntil?: true
   createdBy?: true
   sourceType?: true
+  downPaymentPercentage?: true
   fileKey?: true
   fileUrl?: true
   projectId?: true
@@ -259,11 +275,13 @@ export type ProposalGroupByOutputType = {
   id: string
   version: number
   isCurrent: boolean
+  isActive: boolean
   status: $Enums.ProposalStatus
   totalValue: runtime.Decimal
   validUntil: Date | null
   createdBy: string
   sourceType: $Enums.ProposalSource
+  downPaymentPercentage: number
   fileKey: string | null
   fileUrl: string | null
   projectId: string
@@ -302,11 +320,13 @@ export type ProposalWhereInput = {
   id?: Prisma.StringFilter<"Proposal"> | string
   version?: Prisma.IntFilter<"Proposal"> | number
   isCurrent?: Prisma.BoolFilter<"Proposal"> | boolean
+  isActive?: Prisma.BoolFilter<"Proposal"> | boolean
   status?: Prisma.EnumProposalStatusFilter<"Proposal"> | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFilter<"Proposal"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.DateTimeNullableFilter<"Proposal"> | Date | string | null
   createdBy?: Prisma.StringFilter<"Proposal"> | string
   sourceType?: Prisma.EnumProposalSourceFilter<"Proposal"> | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFilter<"Proposal"> | number
   fileKey?: Prisma.StringNullableFilter<"Proposal"> | string | null
   fileUrl?: Prisma.StringNullableFilter<"Proposal"> | string | null
   projectId?: Prisma.StringFilter<"Proposal"> | string
@@ -329,11 +349,13 @@ export type ProposalOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   version?: Prisma.SortOrder
   isCurrent?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalValue?: Prisma.SortOrder
   validUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
+  downPaymentPercentage?: Prisma.SortOrder
   fileKey?: Prisma.SortOrderInput | Prisma.SortOrder
   fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   projectId?: Prisma.SortOrder
@@ -360,11 +382,13 @@ export type ProposalWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ProposalWhereInput | Prisma.ProposalWhereInput[]
   version?: Prisma.IntFilter<"Proposal"> | number
   isCurrent?: Prisma.BoolFilter<"Proposal"> | boolean
+  isActive?: Prisma.BoolFilter<"Proposal"> | boolean
   status?: Prisma.EnumProposalStatusFilter<"Proposal"> | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFilter<"Proposal"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.DateTimeNullableFilter<"Proposal"> | Date | string | null
   createdBy?: Prisma.StringFilter<"Proposal"> | string
   sourceType?: Prisma.EnumProposalSourceFilter<"Proposal"> | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFilter<"Proposal"> | number
   fileKey?: Prisma.StringNullableFilter<"Proposal"> | string | null
   fileUrl?: Prisma.StringNullableFilter<"Proposal"> | string | null
   projectId?: Prisma.StringFilter<"Proposal"> | string
@@ -387,11 +411,13 @@ export type ProposalOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   version?: Prisma.SortOrder
   isCurrent?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalValue?: Prisma.SortOrder
   validUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
+  downPaymentPercentage?: Prisma.SortOrder
   fileKey?: Prisma.SortOrderInput | Prisma.SortOrder
   fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   projectId?: Prisma.SortOrder
@@ -415,11 +441,13 @@ export type ProposalScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Proposal"> | string
   version?: Prisma.IntWithAggregatesFilter<"Proposal"> | number
   isCurrent?: Prisma.BoolWithAggregatesFilter<"Proposal"> | boolean
+  isActive?: Prisma.BoolWithAggregatesFilter<"Proposal"> | boolean
   status?: Prisma.EnumProposalStatusWithAggregatesFilter<"Proposal"> | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalWithAggregatesFilter<"Proposal"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"Proposal"> | Date | string | null
   createdBy?: Prisma.StringWithAggregatesFilter<"Proposal"> | string
   sourceType?: Prisma.EnumProposalSourceWithAggregatesFilter<"Proposal"> | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntWithAggregatesFilter<"Proposal"> | number
   fileKey?: Prisma.StringNullableWithAggregatesFilter<"Proposal"> | string | null
   fileUrl?: Prisma.StringNullableWithAggregatesFilter<"Proposal"> | string | null
   projectId?: Prisma.StringWithAggregatesFilter<"Proposal"> | string
@@ -435,10 +463,12 @@ export type ProposalCreateInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
+  downPaymentPercentage?: number
   fileKey?: string | null
   fileUrl?: string | null
   reviewedAt?: Date | string | null
@@ -458,11 +488,13 @@ export type ProposalUncheckedCreateInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   createdBy: string
   sourceType?: $Enums.ProposalSource
+  downPaymentPercentage?: number
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -481,10 +513,12 @@ export type ProposalUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -504,11 +538,13 @@ export type ProposalUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -527,11 +563,13 @@ export type ProposalCreateManyInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   createdBy: string
   sourceType?: $Enums.ProposalSource
+  downPaymentPercentage?: number
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -547,10 +585,12 @@ export type ProposalUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -563,11 +603,13 @@ export type ProposalUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -598,11 +640,13 @@ export type ProposalCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   version?: Prisma.SortOrder
   isCurrent?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalValue?: Prisma.SortOrder
   validUntil?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
+  downPaymentPercentage?: Prisma.SortOrder
   fileKey?: Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
@@ -617,17 +661,20 @@ export type ProposalCountOrderByAggregateInput = {
 export type ProposalAvgOrderByAggregateInput = {
   version?: Prisma.SortOrder
   totalValue?: Prisma.SortOrder
+  downPaymentPercentage?: Prisma.SortOrder
 }
 
 export type ProposalMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   version?: Prisma.SortOrder
   isCurrent?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalValue?: Prisma.SortOrder
   validUntil?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
+  downPaymentPercentage?: Prisma.SortOrder
   fileKey?: Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
@@ -643,11 +690,13 @@ export type ProposalMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   version?: Prisma.SortOrder
   isCurrent?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalValue?: Prisma.SortOrder
   validUntil?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
+  downPaymentPercentage?: Prisma.SortOrder
   fileKey?: Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
@@ -662,6 +711,7 @@ export type ProposalMinOrderByAggregateInput = {
 export type ProposalSumOrderByAggregateInput = {
   version?: Prisma.SortOrder
   totalValue?: Prisma.SortOrder
+  downPaymentPercentage?: Prisma.SortOrder
 }
 
 export type ProposalScalarRelationFilter = {
@@ -907,10 +957,12 @@ export type ProposalCreateWithoutCreatedUserInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
+  downPaymentPercentage?: number
   fileKey?: string | null
   fileUrl?: string | null
   reviewedAt?: Date | string | null
@@ -929,10 +981,12 @@ export type ProposalUncheckedCreateWithoutCreatedUserInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
+  downPaymentPercentage?: number
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -961,10 +1015,12 @@ export type ProposalCreateWithoutApprovedUserInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
+  downPaymentPercentage?: number
   fileKey?: string | null
   fileUrl?: string | null
   reviewedAt?: Date | string | null
@@ -983,11 +1039,13 @@ export type ProposalUncheckedCreateWithoutApprovedUserInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   createdBy: string
   sourceType?: $Enums.ProposalSource
+  downPaymentPercentage?: number
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -1015,10 +1073,12 @@ export type ProposalCreateWithoutReviewUserInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
+  downPaymentPercentage?: number
   fileKey?: string | null
   fileUrl?: string | null
   reviewedAt?: Date | string | null
@@ -1037,11 +1097,13 @@ export type ProposalUncheckedCreateWithoutReviewUserInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   createdBy: string
   sourceType?: $Enums.ProposalSource
+  downPaymentPercentage?: number
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -1088,11 +1150,13 @@ export type ProposalScalarWhereInput = {
   id?: Prisma.StringFilter<"Proposal"> | string
   version?: Prisma.IntFilter<"Proposal"> | number
   isCurrent?: Prisma.BoolFilter<"Proposal"> | boolean
+  isActive?: Prisma.BoolFilter<"Proposal"> | boolean
   status?: Prisma.EnumProposalStatusFilter<"Proposal"> | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFilter<"Proposal"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.DateTimeNullableFilter<"Proposal"> | Date | string | null
   createdBy?: Prisma.StringFilter<"Proposal"> | string
   sourceType?: Prisma.EnumProposalSourceFilter<"Proposal"> | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFilter<"Proposal"> | number
   fileKey?: Prisma.StringNullableFilter<"Proposal"> | string | null
   fileUrl?: Prisma.StringNullableFilter<"Proposal"> | string | null
   projectId?: Prisma.StringFilter<"Proposal"> | string
@@ -1140,10 +1204,12 @@ export type ProposalCreateWithoutProposalTemplateInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
+  downPaymentPercentage?: number
   fileKey?: string | null
   fileUrl?: string | null
   reviewedAt?: Date | string | null
@@ -1162,11 +1228,13 @@ export type ProposalUncheckedCreateWithoutProposalTemplateInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   createdBy: string
   sourceType?: $Enums.ProposalSource
+  downPaymentPercentage?: number
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -1200,10 +1268,12 @@ export type ProposalUpdateWithoutProposalTemplateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1222,11 +1292,13 @@ export type ProposalUncheckedUpdateWithoutProposalTemplateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1244,10 +1316,12 @@ export type ProposalCreateWithoutItemsInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
+  downPaymentPercentage?: number
   fileKey?: string | null
   fileUrl?: string | null
   reviewedAt?: Date | string | null
@@ -1266,11 +1340,13 @@ export type ProposalUncheckedCreateWithoutItemsInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   createdBy: string
   sourceType?: $Enums.ProposalSource
+  downPaymentPercentage?: number
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -1304,10 +1380,12 @@ export type ProposalUpdateWithoutItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1326,11 +1404,13 @@ export type ProposalUncheckedUpdateWithoutItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1348,10 +1428,12 @@ export type ProposalCreateWithoutContractsInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
+  downPaymentPercentage?: number
   fileKey?: string | null
   fileUrl?: string | null
   reviewedAt?: Date | string | null
@@ -1370,11 +1452,13 @@ export type ProposalUncheckedCreateWithoutContractsInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   createdBy: string
   sourceType?: $Enums.ProposalSource
+  downPaymentPercentage?: number
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -1408,10 +1492,12 @@ export type ProposalUpdateWithoutContractsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1430,11 +1516,13 @@ export type ProposalUncheckedUpdateWithoutContractsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1452,10 +1540,12 @@ export type ProposalCreateWithoutProjectInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
+  downPaymentPercentage?: number
   fileKey?: string | null
   fileUrl?: string | null
   reviewedAt?: Date | string | null
@@ -1474,11 +1564,13 @@ export type ProposalUncheckedCreateWithoutProjectInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   createdBy: string
   sourceType?: $Enums.ProposalSource
+  downPaymentPercentage?: number
   fileKey?: string | null
   fileUrl?: string | null
   reviewedAt?: Date | string | null
@@ -1522,10 +1614,12 @@ export type ProposalCreateManyCreatedUserInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
+  downPaymentPercentage?: number
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -1541,11 +1635,13 @@ export type ProposalCreateManyApprovedUserInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   createdBy: string
   sourceType?: $Enums.ProposalSource
+  downPaymentPercentage?: number
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -1560,11 +1656,13 @@ export type ProposalCreateManyReviewUserInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   createdBy: string
   sourceType?: $Enums.ProposalSource
+  downPaymentPercentage?: number
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -1579,10 +1677,12 @@ export type ProposalUpdateWithoutCreatedUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1601,10 +1701,12 @@ export type ProposalUncheckedUpdateWithoutCreatedUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1623,10 +1725,12 @@ export type ProposalUncheckedUpdateManyWithoutCreatedUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1642,10 +1746,12 @@ export type ProposalUpdateWithoutApprovedUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1664,11 +1770,13 @@ export type ProposalUncheckedUpdateWithoutApprovedUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1686,11 +1794,13 @@ export type ProposalUncheckedUpdateManyWithoutApprovedUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1705,10 +1815,12 @@ export type ProposalUpdateWithoutReviewUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1727,11 +1839,13 @@ export type ProposalUncheckedUpdateWithoutReviewUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1749,11 +1863,13 @@ export type ProposalUncheckedUpdateManyWithoutReviewUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1768,11 +1884,13 @@ export type ProposalCreateManyProjectInput = {
   id?: string
   version?: number
   isCurrent?: boolean
+  isActive?: boolean
   status?: $Enums.ProposalStatus
   totalValue: runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Date | string | null
   createdBy: string
   sourceType?: $Enums.ProposalSource
+  downPaymentPercentage?: number
   fileKey?: string | null
   fileUrl?: string | null
   reviewedAt?: Date | string | null
@@ -1787,10 +1905,12 @@ export type ProposalUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1809,11 +1929,13 @@ export type ProposalUncheckedUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1831,11 +1953,13 @@ export type ProposalUncheckedUpdateManyWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   version?: Prisma.IntFieldUpdateOperationsInput | number
   isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   totalValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
+  downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1890,11 +2014,13 @@ export type ProposalSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   id?: boolean
   version?: boolean
   isCurrent?: boolean
+  isActive?: boolean
   status?: boolean
   totalValue?: boolean
   validUntil?: boolean
   createdBy?: boolean
   sourceType?: boolean
+  downPaymentPercentage?: boolean
   fileKey?: boolean
   fileUrl?: boolean
   projectId?: boolean
@@ -1918,11 +2044,13 @@ export type ProposalSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   id?: boolean
   version?: boolean
   isCurrent?: boolean
+  isActive?: boolean
   status?: boolean
   totalValue?: boolean
   validUntil?: boolean
   createdBy?: boolean
   sourceType?: boolean
+  downPaymentPercentage?: boolean
   fileKey?: boolean
   fileUrl?: boolean
   projectId?: boolean
@@ -1942,11 +2070,13 @@ export type ProposalSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   id?: boolean
   version?: boolean
   isCurrent?: boolean
+  isActive?: boolean
   status?: boolean
   totalValue?: boolean
   validUntil?: boolean
   createdBy?: boolean
   sourceType?: boolean
+  downPaymentPercentage?: boolean
   fileKey?: boolean
   fileUrl?: boolean
   projectId?: boolean
@@ -1966,11 +2096,13 @@ export type ProposalSelectScalar = {
   id?: boolean
   version?: boolean
   isCurrent?: boolean
+  isActive?: boolean
   status?: boolean
   totalValue?: boolean
   validUntil?: boolean
   createdBy?: boolean
   sourceType?: boolean
+  downPaymentPercentage?: boolean
   fileKey?: boolean
   fileUrl?: boolean
   projectId?: boolean
@@ -1982,7 +2114,7 @@ export type ProposalSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ProposalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "version" | "isCurrent" | "status" | "totalValue" | "validUntil" | "createdBy" | "sourceType" | "fileKey" | "fileUrl" | "projectId" | "reviewedAt" | "reviewedBy" | "approvedAt" | "approvedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["proposal"]>
+export type ProposalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "version" | "isCurrent" | "isActive" | "status" | "totalValue" | "validUntil" | "createdBy" | "sourceType" | "downPaymentPercentage" | "fileKey" | "fileUrl" | "projectId" | "reviewedAt" | "reviewedBy" | "approvedAt" | "approvedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["proposal"]>
 export type ProposalInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   createdUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   items?: boolean | Prisma.Proposal$itemsArgs<ExtArgs>
@@ -2021,11 +2153,13 @@ export type $ProposalPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     id: string
     version: number
     isCurrent: boolean
+    isActive: boolean
     status: $Enums.ProposalStatus
     totalValue: runtime.Decimal
     validUntil: Date | null
     createdBy: string
     sourceType: $Enums.ProposalSource
+    downPaymentPercentage: number
     fileKey: string | null
     fileUrl: string | null
     projectId: string
@@ -2468,11 +2602,13 @@ export interface ProposalFieldRefs {
   readonly id: Prisma.FieldRef<"Proposal", 'String'>
   readonly version: Prisma.FieldRef<"Proposal", 'Int'>
   readonly isCurrent: Prisma.FieldRef<"Proposal", 'Boolean'>
+  readonly isActive: Prisma.FieldRef<"Proposal", 'Boolean'>
   readonly status: Prisma.FieldRef<"Proposal", 'ProposalStatus'>
   readonly totalValue: Prisma.FieldRef<"Proposal", 'Decimal'>
   readonly validUntil: Prisma.FieldRef<"Proposal", 'DateTime'>
   readonly createdBy: Prisma.FieldRef<"Proposal", 'String'>
   readonly sourceType: Prisma.FieldRef<"Proposal", 'ProposalSource'>
+  readonly downPaymentPercentage: Prisma.FieldRef<"Proposal", 'Int'>
   readonly fileKey: Prisma.FieldRef<"Proposal", 'String'>
   readonly fileUrl: Prisma.FieldRef<"Proposal", 'String'>
   readonly projectId: Prisma.FieldRef<"Proposal", 'String'>
