@@ -15,8 +15,10 @@ export async function cancelProposalAction(proposalId: string) {
       userId: session.user.id,
     });
 
-    revalidatePath(`/projects/${projectId}/project`);
-    revalidatePath(`/projects/${projectId}/project/commercial/proposal`);
+    revalidatePath(`/clients/${client.slug}/projects/${slug}`);
+    revalidatePath(
+      `/clients/${client.slug}/projects/${slug}/commercial/proposal`
+    );
     return { success: true, message: "Proposta removida com sucesso." };
   } catch (error) {
     console.error(error);

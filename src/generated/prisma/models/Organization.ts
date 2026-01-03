@@ -211,6 +211,11 @@ export type OrganizationWhereInput = {
   invoices?: Prisma.InvoiceListRelationFilter
   availableIntegrations?: Prisma.OrganizationIntegrationListRelationFilter
   serviceCategories?: Prisma.ServiceCategoryListRelationFilter
+  backlogItems?: Prisma.BacklogItemListRelationFilter
+  clientEmployees?: Prisma.ClientEmployeesListRelationFilter
+  expenseCategories?: Prisma.ExpenseCategoryListRelationFilter
+  expenses?: Prisma.ExpenseListRelationFilter
+  budgetEntries?: Prisma.BudgetEntryListRelationFilter
 }
 
 export type OrganizationOrderByWithRelationInput = {
@@ -230,6 +235,11 @@ export type OrganizationOrderByWithRelationInput = {
   invoices?: Prisma.InvoiceOrderByRelationAggregateInput
   availableIntegrations?: Prisma.OrganizationIntegrationOrderByRelationAggregateInput
   serviceCategories?: Prisma.ServiceCategoryOrderByRelationAggregateInput
+  backlogItems?: Prisma.BacklogItemOrderByRelationAggregateInput
+  clientEmployees?: Prisma.ClientEmployeesOrderByRelationAggregateInput
+  expenseCategories?: Prisma.ExpenseCategoryOrderByRelationAggregateInput
+  expenses?: Prisma.ExpenseOrderByRelationAggregateInput
+  budgetEntries?: Prisma.BudgetEntryOrderByRelationAggregateInput
 }
 
 export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
@@ -252,6 +262,11 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   invoices?: Prisma.InvoiceListRelationFilter
   availableIntegrations?: Prisma.OrganizationIntegrationListRelationFilter
   serviceCategories?: Prisma.ServiceCategoryListRelationFilter
+  backlogItems?: Prisma.BacklogItemListRelationFilter
+  clientEmployees?: Prisma.ClientEmployeesListRelationFilter
+  expenseCategories?: Prisma.ExpenseCategoryListRelationFilter
+  expenses?: Prisma.ExpenseListRelationFilter
+  budgetEntries?: Prisma.BudgetEntryListRelationFilter
 }, "id" | "slug">
 
 export type OrganizationOrderByWithAggregationInput = {
@@ -299,6 +314,11 @@ export type OrganizationCreateInput = {
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateInput = {
@@ -318,6 +338,11 @@ export type OrganizationUncheckedCreateInput = {
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUpdateInput = {
@@ -337,6 +362,11 @@ export type OrganizationUpdateInput = {
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateInput = {
@@ -356,6 +386,11 @@ export type OrganizationUncheckedUpdateInput = {
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateManyInput = {
@@ -513,6 +548,20 @@ export type OrganizationUpdateOneRequiredWithoutClientsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutClientsInput, Prisma.OrganizationUpdateWithoutClientsInput>, Prisma.OrganizationUncheckedUpdateWithoutClientsInput>
 }
 
+export type OrganizationCreateNestedOneWithoutClientEmployeesInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutClientEmployeesInput, Prisma.OrganizationUncheckedCreateWithoutClientEmployeesInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutClientEmployeesInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutClientEmployeesNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutClientEmployeesInput, Prisma.OrganizationUncheckedCreateWithoutClientEmployeesInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutClientEmployeesInput
+  upsert?: Prisma.OrganizationUpsertWithoutClientEmployeesInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutClientEmployeesInput, Prisma.OrganizationUpdateWithoutClientEmployeesInput>, Prisma.OrganizationUncheckedUpdateWithoutClientEmployeesInput>
+}
+
 export type OrganizationCreateNestedOneWithoutProjectsInput = {
   create?: Prisma.XOR<Prisma.OrganizationCreateWithoutProjectsInput, Prisma.OrganizationUncheckedCreateWithoutProjectsInput>
   connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutProjectsInput
@@ -525,6 +574,62 @@ export type OrganizationUpdateOneRequiredWithoutProjectsNestedInput = {
   upsert?: Prisma.OrganizationUpsertWithoutProjectsInput
   connect?: Prisma.OrganizationWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutProjectsInput, Prisma.OrganizationUpdateWithoutProjectsInput>, Prisma.OrganizationUncheckedUpdateWithoutProjectsInput>
+}
+
+export type OrganizationCreateNestedOneWithoutBacklogItemsInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutBacklogItemsInput, Prisma.OrganizationUncheckedCreateWithoutBacklogItemsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutBacklogItemsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutBacklogItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutBacklogItemsInput, Prisma.OrganizationUncheckedCreateWithoutBacklogItemsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutBacklogItemsInput
+  upsert?: Prisma.OrganizationUpsertWithoutBacklogItemsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutBacklogItemsInput, Prisma.OrganizationUpdateWithoutBacklogItemsInput>, Prisma.OrganizationUncheckedUpdateWithoutBacklogItemsInput>
+}
+
+export type OrganizationCreateNestedOneWithoutBudgetEntriesInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutBudgetEntriesInput, Prisma.OrganizationUncheckedCreateWithoutBudgetEntriesInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutBudgetEntriesInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutBudgetEntriesNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutBudgetEntriesInput, Prisma.OrganizationUncheckedCreateWithoutBudgetEntriesInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutBudgetEntriesInput
+  upsert?: Prisma.OrganizationUpsertWithoutBudgetEntriesInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutBudgetEntriesInput, Prisma.OrganizationUpdateWithoutBudgetEntriesInput>, Prisma.OrganizationUncheckedUpdateWithoutBudgetEntriesInput>
+}
+
+export type OrganizationCreateNestedOneWithoutExpenseCategoriesInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutExpenseCategoriesInput, Prisma.OrganizationUncheckedCreateWithoutExpenseCategoriesInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutExpenseCategoriesInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutExpenseCategoriesNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutExpenseCategoriesInput, Prisma.OrganizationUncheckedCreateWithoutExpenseCategoriesInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutExpenseCategoriesInput
+  upsert?: Prisma.OrganizationUpsertWithoutExpenseCategoriesInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutExpenseCategoriesInput, Prisma.OrganizationUpdateWithoutExpenseCategoriesInput>, Prisma.OrganizationUncheckedUpdateWithoutExpenseCategoriesInput>
+}
+
+export type OrganizationCreateNestedOneWithoutExpensesInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutExpensesInput, Prisma.OrganizationUncheckedCreateWithoutExpensesInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutExpensesInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutExpensesNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutExpensesInput, Prisma.OrganizationUncheckedCreateWithoutExpensesInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutExpensesInput
+  upsert?: Prisma.OrganizationUpsertWithoutExpensesInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutExpensesInput, Prisma.OrganizationUpdateWithoutExpensesInput>, Prisma.OrganizationUncheckedUpdateWithoutExpensesInput>
 }
 
 export type OrganizationCreateNestedOneWithoutInvoicesInput = {
@@ -571,6 +676,11 @@ export type OrganizationCreateWithoutUsersInput = {
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutUsersInput = {
@@ -589,6 +699,11 @@ export type OrganizationUncheckedCreateWithoutUsersInput = {
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutUsersInput = {
@@ -623,6 +738,11 @@ export type OrganizationUpdateWithoutUsersInput = {
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutUsersInput = {
@@ -641,6 +761,11 @@ export type OrganizationUncheckedUpdateWithoutUsersInput = {
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutServiceCategoriesInput = {
@@ -659,6 +784,11 @@ export type OrganizationCreateWithoutServiceCategoriesInput = {
   templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutServiceCategoriesInput = {
@@ -677,6 +807,11 @@ export type OrganizationUncheckedCreateWithoutServiceCategoriesInput = {
   templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutServiceCategoriesInput = {
@@ -711,6 +846,11 @@ export type OrganizationUpdateWithoutServiceCategoriesInput = {
   templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutServiceCategoriesInput = {
@@ -729,6 +869,11 @@ export type OrganizationUncheckedUpdateWithoutServiceCategoriesInput = {
   templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutServiceTypesInput = {
@@ -747,6 +892,11 @@ export type OrganizationCreateWithoutServiceTypesInput = {
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutServiceTypesInput = {
@@ -765,6 +915,11 @@ export type OrganizationUncheckedCreateWithoutServiceTypesInput = {
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutServiceTypesInput = {
@@ -799,6 +954,11 @@ export type OrganizationUpdateWithoutServiceTypesInput = {
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutServiceTypesInput = {
@@ -817,6 +977,11 @@ export type OrganizationUncheckedUpdateWithoutServiceTypesInput = {
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutTemplatesInput = {
@@ -835,6 +1000,11 @@ export type OrganizationCreateWithoutTemplatesInput = {
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutTemplatesInput = {
@@ -853,6 +1023,11 @@ export type OrganizationUncheckedCreateWithoutTemplatesInput = {
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutTemplatesInput = {
@@ -887,6 +1062,11 @@ export type OrganizationUpdateWithoutTemplatesInput = {
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutTemplatesInput = {
@@ -905,6 +1085,11 @@ export type OrganizationUncheckedUpdateWithoutTemplatesInput = {
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutClientsInput = {
@@ -923,6 +1108,11 @@ export type OrganizationCreateWithoutClientsInput = {
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutClientsInput = {
@@ -941,6 +1131,11 @@ export type OrganizationUncheckedCreateWithoutClientsInput = {
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutClientsInput = {
@@ -975,6 +1170,11 @@ export type OrganizationUpdateWithoutClientsInput = {
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutClientsInput = {
@@ -993,6 +1193,119 @@ export type OrganizationUncheckedUpdateWithoutClientsInput = {
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutClientEmployeesInput = {
+  id?: string
+  name: string
+  slug: string
+  cnpj?: string | null
+  industry?: $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
+  serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
+  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
+  availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
+  serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutClientEmployeesInput = {
+  id?: string
+  name: string
+  slug: string
+  cnpj?: string | null
+  industry?: $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+  serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
+  availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
+  serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutClientEmployeesInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutClientEmployeesInput, Prisma.OrganizationUncheckedCreateWithoutClientEmployeesInput>
+}
+
+export type OrganizationUpsertWithoutClientEmployeesInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutClientEmployeesInput, Prisma.OrganizationUncheckedUpdateWithoutClientEmployeesInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutClientEmployeesInput, Prisma.OrganizationUncheckedCreateWithoutClientEmployeesInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutClientEmployeesInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutClientEmployeesInput, Prisma.OrganizationUncheckedUpdateWithoutClientEmployeesInput>
+}
+
+export type OrganizationUpdateWithoutClientEmployeesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
+  serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
+  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
+  availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
+  serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutClientEmployeesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
+  availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
+  serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutProjectsInput = {
@@ -1011,6 +1324,11 @@ export type OrganizationCreateWithoutProjectsInput = {
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutProjectsInput = {
@@ -1029,6 +1347,11 @@ export type OrganizationUncheckedCreateWithoutProjectsInput = {
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutProjectsInput = {
@@ -1063,6 +1386,11 @@ export type OrganizationUpdateWithoutProjectsInput = {
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutProjectsInput = {
@@ -1081,6 +1409,443 @@ export type OrganizationUncheckedUpdateWithoutProjectsInput = {
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutBacklogItemsInput = {
+  id?: string
+  name: string
+  slug: string
+  cnpj?: string | null
+  industry?: $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
+  serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
+  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
+  availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
+  serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutBacklogItemsInput = {
+  id?: string
+  name: string
+  slug: string
+  cnpj?: string | null
+  industry?: $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+  serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
+  availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
+  serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutBacklogItemsInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutBacklogItemsInput, Prisma.OrganizationUncheckedCreateWithoutBacklogItemsInput>
+}
+
+export type OrganizationUpsertWithoutBacklogItemsInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutBacklogItemsInput, Prisma.OrganizationUncheckedUpdateWithoutBacklogItemsInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutBacklogItemsInput, Prisma.OrganizationUncheckedCreateWithoutBacklogItemsInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutBacklogItemsInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutBacklogItemsInput, Prisma.OrganizationUncheckedUpdateWithoutBacklogItemsInput>
+}
+
+export type OrganizationUpdateWithoutBacklogItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
+  serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
+  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
+  availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
+  serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutBacklogItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
+  availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
+  serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutBudgetEntriesInput = {
+  id?: string
+  name: string
+  slug: string
+  cnpj?: string | null
+  industry?: $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
+  serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
+  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
+  availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
+  serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutBudgetEntriesInput = {
+  id?: string
+  name: string
+  slug: string
+  cnpj?: string | null
+  industry?: $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+  serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
+  availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
+  serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutBudgetEntriesInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutBudgetEntriesInput, Prisma.OrganizationUncheckedCreateWithoutBudgetEntriesInput>
+}
+
+export type OrganizationUpsertWithoutBudgetEntriesInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutBudgetEntriesInput, Prisma.OrganizationUncheckedUpdateWithoutBudgetEntriesInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutBudgetEntriesInput, Prisma.OrganizationUncheckedCreateWithoutBudgetEntriesInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutBudgetEntriesInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutBudgetEntriesInput, Prisma.OrganizationUncheckedUpdateWithoutBudgetEntriesInput>
+}
+
+export type OrganizationUpdateWithoutBudgetEntriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
+  serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
+  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
+  availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
+  serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutBudgetEntriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
+  availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
+  serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutExpenseCategoriesInput = {
+  id?: string
+  name: string
+  slug: string
+  cnpj?: string | null
+  industry?: $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
+  serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
+  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
+  availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
+  serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutExpenseCategoriesInput = {
+  id?: string
+  name: string
+  slug: string
+  cnpj?: string | null
+  industry?: $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+  serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
+  availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
+  serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutExpenseCategoriesInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutExpenseCategoriesInput, Prisma.OrganizationUncheckedCreateWithoutExpenseCategoriesInput>
+}
+
+export type OrganizationUpsertWithoutExpenseCategoriesInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutExpenseCategoriesInput, Prisma.OrganizationUncheckedUpdateWithoutExpenseCategoriesInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutExpenseCategoriesInput, Prisma.OrganizationUncheckedCreateWithoutExpenseCategoriesInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutExpenseCategoriesInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutExpenseCategoriesInput, Prisma.OrganizationUncheckedUpdateWithoutExpenseCategoriesInput>
+}
+
+export type OrganizationUpdateWithoutExpenseCategoriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
+  serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
+  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
+  availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
+  serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutExpenseCategoriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
+  availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
+  serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutExpensesInput = {
+  id?: string
+  name: string
+  slug: string
+  cnpj?: string | null
+  industry?: $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
+  serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
+  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
+  availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
+  serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutExpensesInput = {
+  id?: string
+  name: string
+  slug: string
+  cnpj?: string | null
+  industry?: $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+  serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
+  availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
+  serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutExpensesInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutExpensesInput, Prisma.OrganizationUncheckedCreateWithoutExpensesInput>
+}
+
+export type OrganizationUpsertWithoutExpensesInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutExpensesInput, Prisma.OrganizationUncheckedUpdateWithoutExpensesInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutExpensesInput, Prisma.OrganizationUncheckedCreateWithoutExpensesInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutExpensesInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutExpensesInput, Prisma.OrganizationUncheckedUpdateWithoutExpensesInput>
+}
+
+export type OrganizationUpdateWithoutExpensesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
+  serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
+  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
+  availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
+  serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutExpensesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
+  availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
+  serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutInvoicesInput = {
@@ -1099,6 +1864,11 @@ export type OrganizationCreateWithoutInvoicesInput = {
   templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutInvoicesInput = {
@@ -1117,6 +1887,11 @@ export type OrganizationUncheckedCreateWithoutInvoicesInput = {
   templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutInvoicesInput = {
@@ -1151,6 +1926,11 @@ export type OrganizationUpdateWithoutInvoicesInput = {
   templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutInvoicesInput = {
@@ -1169,6 +1949,11 @@ export type OrganizationUncheckedUpdateWithoutInvoicesInput = {
   templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutAvailableIntegrationsInput = {
@@ -1187,6 +1972,11 @@ export type OrganizationCreateWithoutAvailableIntegrationsInput = {
   templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutAvailableIntegrationsInput = {
@@ -1205,6 +1995,11 @@ export type OrganizationUncheckedCreateWithoutAvailableIntegrationsInput = {
   templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutAvailableIntegrationsInput = {
@@ -1239,6 +2034,11 @@ export type OrganizationUpdateWithoutAvailableIntegrationsInput = {
   templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutAvailableIntegrationsInput = {
@@ -1257,6 +2057,11 @@ export type OrganizationUncheckedUpdateWithoutAvailableIntegrationsInput = {
   templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 
@@ -1273,6 +2078,11 @@ export type OrganizationCountOutputType = {
   invoices: number
   availableIntegrations: number
   serviceCategories: number
+  backlogItems: number
+  clientEmployees: number
+  expenseCategories: number
+  expenses: number
+  budgetEntries: number
 }
 
 export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1284,6 +2094,11 @@ export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Exte
   invoices?: boolean | OrganizationCountOutputTypeCountInvoicesArgs
   availableIntegrations?: boolean | OrganizationCountOutputTypeCountAvailableIntegrationsArgs
   serviceCategories?: boolean | OrganizationCountOutputTypeCountServiceCategoriesArgs
+  backlogItems?: boolean | OrganizationCountOutputTypeCountBacklogItemsArgs
+  clientEmployees?: boolean | OrganizationCountOutputTypeCountClientEmployeesArgs
+  expenseCategories?: boolean | OrganizationCountOutputTypeCountExpenseCategoriesArgs
+  expenses?: boolean | OrganizationCountOutputTypeCountExpensesArgs
+  budgetEntries?: boolean | OrganizationCountOutputTypeCountBudgetEntriesArgs
 }
 
 /**
@@ -1352,6 +2167,41 @@ export type OrganizationCountOutputTypeCountServiceCategoriesArgs<ExtArgs extend
   where?: Prisma.ServiceCategoryWhereInput
 }
 
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountBacklogItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BacklogItemWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountClientEmployeesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ClientEmployeesWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountExpenseCategoriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExpenseCategoryWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountExpensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExpenseWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountBudgetEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BudgetEntryWhereInput
+}
+
 
 export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1370,6 +2220,11 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   invoices?: boolean | Prisma.Organization$invoicesArgs<ExtArgs>
   availableIntegrations?: boolean | Prisma.Organization$availableIntegrationsArgs<ExtArgs>
   serviceCategories?: boolean | Prisma.Organization$serviceCategoriesArgs<ExtArgs>
+  backlogItems?: boolean | Prisma.Organization$backlogItemsArgs<ExtArgs>
+  clientEmployees?: boolean | Prisma.Organization$clientEmployeesArgs<ExtArgs>
+  expenseCategories?: boolean | Prisma.Organization$expenseCategoriesArgs<ExtArgs>
+  expenses?: boolean | Prisma.Organization$expensesArgs<ExtArgs>
+  budgetEntries?: boolean | Prisma.Organization$budgetEntriesArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["organization"]>
 
@@ -1416,6 +2271,11 @@ export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.Interna
   invoices?: boolean | Prisma.Organization$invoicesArgs<ExtArgs>
   availableIntegrations?: boolean | Prisma.Organization$availableIntegrationsArgs<ExtArgs>
   serviceCategories?: boolean | Prisma.Organization$serviceCategoriesArgs<ExtArgs>
+  backlogItems?: boolean | Prisma.Organization$backlogItemsArgs<ExtArgs>
+  clientEmployees?: boolean | Prisma.Organization$clientEmployeesArgs<ExtArgs>
+  expenseCategories?: boolean | Prisma.Organization$expenseCategoriesArgs<ExtArgs>
+  expenses?: boolean | Prisma.Organization$expensesArgs<ExtArgs>
+  budgetEntries?: boolean | Prisma.Organization$budgetEntriesArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1432,6 +2292,11 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     invoices: Prisma.$InvoicePayload<ExtArgs>[]
     availableIntegrations: Prisma.$OrganizationIntegrationPayload<ExtArgs>[]
     serviceCategories: Prisma.$ServiceCategoryPayload<ExtArgs>[]
+    backlogItems: Prisma.$BacklogItemPayload<ExtArgs>[]
+    clientEmployees: Prisma.$ClientEmployeesPayload<ExtArgs>[]
+    expenseCategories: Prisma.$ExpenseCategoryPayload<ExtArgs>[]
+    expenses: Prisma.$ExpensePayload<ExtArgs>[]
+    budgetEntries: Prisma.$BudgetEntryPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1847,6 +2712,11 @@ export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends run
   invoices<T extends Prisma.Organization$invoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   availableIntegrations<T extends Prisma.Organization$availableIntegrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$availableIntegrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrganizationIntegrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   serviceCategories<T extends Prisma.Organization$serviceCategoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$serviceCategoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServiceCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  backlogItems<T extends Prisma.Organization$backlogItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$backlogItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BacklogItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  clientEmployees<T extends Prisma.Organization$clientEmployeesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$clientEmployeesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClientEmployeesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  expenseCategories<T extends Prisma.Organization$expenseCategoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$expenseCategoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpenseCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  expenses<T extends Prisma.Organization$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  budgetEntries<T extends Prisma.Organization$budgetEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$budgetEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BudgetEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2461,6 +3331,126 @@ export type Organization$serviceCategoriesArgs<ExtArgs extends runtime.Types.Ext
   take?: number
   skip?: number
   distinct?: Prisma.ServiceCategoryScalarFieldEnum | Prisma.ServiceCategoryScalarFieldEnum[]
+}
+
+/**
+ * Organization.backlogItems
+ */
+export type Organization$backlogItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BacklogItem
+   */
+  select?: Prisma.BacklogItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BacklogItem
+   */
+  omit?: Prisma.BacklogItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BacklogItemInclude<ExtArgs> | null
+  where?: Prisma.BacklogItemWhereInput
+  orderBy?: Prisma.BacklogItemOrderByWithRelationInput | Prisma.BacklogItemOrderByWithRelationInput[]
+  cursor?: Prisma.BacklogItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BacklogItemScalarFieldEnum | Prisma.BacklogItemScalarFieldEnum[]
+}
+
+/**
+ * Organization.clientEmployees
+ */
+export type Organization$clientEmployeesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ClientEmployees
+   */
+  select?: Prisma.ClientEmployeesSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ClientEmployees
+   */
+  omit?: Prisma.ClientEmployeesOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClientEmployeesInclude<ExtArgs> | null
+  where?: Prisma.ClientEmployeesWhereInput
+  orderBy?: Prisma.ClientEmployeesOrderByWithRelationInput | Prisma.ClientEmployeesOrderByWithRelationInput[]
+  cursor?: Prisma.ClientEmployeesWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ClientEmployeesScalarFieldEnum | Prisma.ClientEmployeesScalarFieldEnum[]
+}
+
+/**
+ * Organization.expenseCategories
+ */
+export type Organization$expenseCategoriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExpenseCategory
+   */
+  select?: Prisma.ExpenseCategorySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExpenseCategory
+   */
+  omit?: Prisma.ExpenseCategoryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExpenseCategoryInclude<ExtArgs> | null
+  where?: Prisma.ExpenseCategoryWhereInput
+  orderBy?: Prisma.ExpenseCategoryOrderByWithRelationInput | Prisma.ExpenseCategoryOrderByWithRelationInput[]
+  cursor?: Prisma.ExpenseCategoryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExpenseCategoryScalarFieldEnum | Prisma.ExpenseCategoryScalarFieldEnum[]
+}
+
+/**
+ * Organization.expenses
+ */
+export type Organization$expensesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Expense
+   */
+  select?: Prisma.ExpenseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Expense
+   */
+  omit?: Prisma.ExpenseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExpenseInclude<ExtArgs> | null
+  where?: Prisma.ExpenseWhereInput
+  orderBy?: Prisma.ExpenseOrderByWithRelationInput | Prisma.ExpenseOrderByWithRelationInput[]
+  cursor?: Prisma.ExpenseWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExpenseScalarFieldEnum | Prisma.ExpenseScalarFieldEnum[]
+}
+
+/**
+ * Organization.budgetEntries
+ */
+export type Organization$budgetEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BudgetEntry
+   */
+  select?: Prisma.BudgetEntrySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BudgetEntry
+   */
+  omit?: Prisma.BudgetEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BudgetEntryInclude<ExtArgs> | null
+  where?: Prisma.BudgetEntryWhereInput
+  orderBy?: Prisma.BudgetEntryOrderByWithRelationInput | Prisma.BudgetEntryOrderByWithRelationInput[]
+  cursor?: Prisma.BudgetEntryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BudgetEntryScalarFieldEnum | Prisma.BudgetEntryScalarFieldEnum[]
 }
 
 /**

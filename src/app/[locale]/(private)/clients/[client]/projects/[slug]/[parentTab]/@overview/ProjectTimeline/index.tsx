@@ -1,0 +1,353 @@
+"use client";
+
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  ChevronRight,
+  Wrench,
+  XCircle,
+  AlertTriangle,
+  AlertCircle,
+} from "lucide-react";
+import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { cn } from "@/lib/utils";
+import { FlowSection } from "./FlowSection";
+import {
+  allStages,
+  cancelledStage,
+  commercialClosingStages,
+  commercialStages,
+  operationalStages,
+} from "@/mappers/projectStageMapper";
+import { changeProjectStatusAction } from "@/actions/projects/changeProjectStatus";
+import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
+import { cancelProjectAction } from "@/actions/projects/cancelProject";
+import { ProjectTransitionDialog } from "@/components/features/projects/transitions/TransitionDialog";
+import { cancelProposalAction } from "@/actions/proposal/cancelProposal";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Separator } from "@/components/ui/separator";
+import { checkIfProposalIsEditable } from "@/utils/checkIfProposalIsEditable";
+import { getProposalNextStepLabel } from "@/utils/getNextStageLabel";
+
+interface ProjectTimelineProps {
+  project: ProjectWithDetails;
+  contextData?: any;
+}
+
+const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
+  const [showAdvanceDialog, setShowAdvanceDialog] = useState(false);
+  const [showRegressDialog, setShowRegressDialog] = useState(false);
+  const currentStage = project.status;
+  const currentIndex = allStages.findIndex((s) => s.key === currentStage);
+  const isCancelled = currentStage === "CANCELLED";
+  const isMaintenanceSupport = currentStage === "MAINTENANCE";
+  const currentStageConfig = isCancelled
+    ? cancelledStage
+    : allStages[currentIndex];
+
+  const nextStage =
+    !isCancelled && currentIndex < allStages.length - 1
+      ? allStages[currentIndex + 1]
+      : null;
+  const prevStage =
+    !isCancelled && currentIndex > 0 ? allStages[currentIndex - 1] : null;
+
+  // Determine flow context
+  const isInCommercial = commercialStages.some((s) => s.key === currentStage);
+  const isInOperational = operationalStages.some((s) => s.key === currentStage);
+  const isInCommercialClosing = commercialClosingStages.some(
+    (s) => s.key === currentStage
+  );
+
+  const handleRegress = async () => {
+    if (prevStage) {
+      if (currentStageConfig.key === "PROPOSAL" && project.proposal) {
+        const result = await cancelProposalAction(project.proposal.id);
+
+        if (result.error) {
+          toast.error(result.error);
+          return;
+        }
+      }
+      const result = await changeProjectStatusAction({
+        projectId: project.id,
+        newStatus: prevStage.key,
+        data: contextData,
+      });
+
+      if (result.error) {
+        toast.error(result.error);
+        return;
+      }
+      toast.info(`Projeto retornado para: ${prevStage.label}`);
+    }
+    setShowRegressDialog(false);
+  };
+
+  const handleCancel = async () => {
+    const result = await cancelProjectAction(project.id);
+
+    if (result.error) {
+      toast.error(result.error);
+      return;
+    }
+
+    toast.success(result.message);
+    setShowCancelDialog(false);
+  };
+
+  const { canBeCancelled } = checkIfProposalIsEditable(
+    project.proposal?.status
+  );
+
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-lg">Fluxo do Projeto</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {/* Maintenance & Support */}
+        {(isMaintenanceSupport || currentStage === "COMPLETED") && (
+          <div
+            className={cn(
+              "p-4 rounded-lg flex items-center gap-4",
+              isMaintenanceSupport
+                ? "bg-teal-500/10 border border-teal-500/20"
+                : "bg-muted/30"
+            )}
+          >
+            <div
+              className={cn(
+                "p-2 rounded-full",
+                isMaintenanceSupport
+                  ? "bg-teal-500 text-white"
+                  : "bg-muted text-muted-foreground"
+              )}
+            >
+              <Wrench className="h-5 w-5" />
+            </div>
+            <div>
+              <h4
+                className={cn(
+                  "font-semibold",
+                  isMaintenanceSupport ? "text-teal-600 dark:text-teal-400" : ""
+                )}
+              >
+                Manutenção & Suporte
+              </h4>
+              <p className="text-sm text-muted-foreground">
+                {isMaintenanceSupport
+                  ? "Projeto em período de manutenção e suporte contínuo"
+                  : "Disponível após conclusão do projeto"}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Current Stage Info & Actions */}
+        {!isCancelled && currentStageConfig && (
+          <div className="p-4 rounded-lg bg-primary/5 border border-primary/20 mt-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className={`p-2 rounded-lg ${currentStageConfig.color}`}>
+                  <currentStageConfig.icon className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <h4 className="font-semibold">{currentStageConfig.label}</h4>
+                  <p className="text-sm text-muted-foreground">
+                    {currentStageConfig.description}
+                  </p>
+                </div>
+              </div>
+
+              {/* Inline Actions */}
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                {prevStage && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowRegressDialog(true)}
+                  >
+                    Retornar
+                  </Button>
+                )}
+
+                {nextStage && currentStageConfig?.nextAction && (
+                  <Button
+                    size="sm"
+                    onClick={() => setShowAdvanceDialog(true)}
+                    className="gap-1"
+                  >
+                    {currentStageConfig.key !== "PROPOSAL" &&
+                      currentStageConfig.nextAction}
+
+                    {currentStageConfig.key === "PROPOSAL" &&
+                      getProposalNextStepLabel(project.proposal)}
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                )}
+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowCancelDialog(true)}
+                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                >
+                  <XCircle className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Advance Dialog */}
+        {nextStage && (
+          <ProjectTransitionDialog
+            currentStatusLabel={project.status}
+            isOpen={showAdvanceDialog}
+            onOpenChange={setShowAdvanceDialog}
+            project={project}
+            targetStatus={nextStage.key}
+            targetStatusLabel={nextStage.label}
+            contextData={contextData}
+          />
+        )}
+        {/* Regress Dialog */}
+        <AlertDialog
+          open={showRegressDialog}
+          onOpenChange={setShowRegressDialog}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Retornar Etapa</AlertDialogTitle>
+              <AlertDialogDescription asChild>
+                <div className="flex flex-col space-y-6">
+                  {canBeCancelled && currentStageConfig.key === "PROPOSAL" && (
+                    <Alert className="bg-accent/10 border-accent/30">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertTitle>Projeto possui proposta ativa</AlertTitle>
+                      <AlertDescription>
+                        Caso retorne para o status anterior, a proposta será
+                        cancelada.
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                  <Separator />
+                  <div className="flex items-start gap-2">
+                    <AlertTriangle className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                    <span>
+                      Deseja retornar o projeto de{" "}
+                      <strong>{currentStageConfig?.label}</strong> para{" "}
+                      <strong>{prevStage?.label}</strong>?
+                    </span>
+                  </div>
+                </div>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="cursor-pointer">
+                Cancelar
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleRegress}
+                className="bg-secondary hover:bg-accent cursor-pointer"
+              >
+                Retornar
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Cancel Dialog */}
+        <AlertDialog open={showCancelDialog} onOpenChange={setShowCancelDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Cancelar Projeto</AlertDialogTitle>
+              <AlertDialogDescription asChild>
+                <div className="flex items-start gap-2">
+                  <AlertTriangle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
+                  <span>
+                    Tem certeza que deseja cancelar este projeto? Esta ação é
+                    irreversível.
+                  </span>
+                </div>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Voltar</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleCancel}
+                className="bg-destructive hover:bg-destructive/90"
+              >
+                Cancelar Projeto
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+        {/* Cancelled State */}
+        {isCancelled && (
+          <div className="p-4 rounded-lg bg-destructive/10 border border-destructive/20 flex items-center gap-3">
+            <XCircle className="h-5 w-5 text-destructive" />
+            <div>
+              <p className="font-medium text-destructive">Projeto Cancelado</p>
+              <p className="text-sm text-muted-foreground">
+                Este projeto foi cancelado.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Commercial Flow */}
+        <FlowSection
+          category="Fluxo Comercial"
+          title="Fluxo Comercial"
+          isInThisFlow={isInCommercial}
+          stages={commercialStages}
+          currentStage={currentStage}
+          bgColor="bg-muted/30"
+          isCancelled={isCancelled}
+          allStages={allStages}
+        />
+
+        {/* Operational Flow */}
+        <FlowSection
+          category="Fluxo Operacional"
+          title="Desenvolvimento"
+          isInThisFlow={isInOperational}
+          stages={operationalStages}
+          currentStage={currentStage}
+          bgColor="bg-primary/5 border border-primary/10"
+          isCancelled={isCancelled}
+          allStages={allStages}
+          compact={true}
+        />
+
+        {/* Commercial Closing Flow */}
+        <FlowSection
+          category="Encerramento"
+          isInThisFlow={isInCommercialClosing}
+          title="Fluxo Comercial - Entrega"
+          stages={commercialClosingStages}
+          currentStage={currentStage}
+          bgColor="bg-muted/30"
+          isCancelled={isCancelled}
+          allStages={allStages}
+        />
+      </CardContent>
+    </Card>
+  );
+};
+
+export default ProjectTimeline;

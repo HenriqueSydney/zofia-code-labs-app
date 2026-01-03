@@ -15,18 +15,82 @@ import { Badge } from "./ui/badge";
 import { UserAvatar } from "./UserAvatar";
 import { toast } from "sonner";
 import { httpClient } from "@/lib/httpClient";
+import {
+  Document,
+  ReadStatus,
+  RecipientRole,
+  SigningStatus,
+} from "@/services/documenso/IDocumentSignService";
+import { date } from "@/lib/dayjs";
+import PDFViewer from "./PDFViewer";
+import { cn } from "@/lib/utils";
+import { generateDocumentActivity } from "@/utils/generateDocumentActivity";
 
-export function ContractSigningDetails() {
-  const activity = [
-    { label: "Documento criado", date: "há 37 min", icon: Circle },
-    { label: "Enviado para assinatura", date: "há 37 min", icon: Send },
-    { label: "Visualizado pelo cliente", date: "há 15 min", icon: Eye },
+interface IContractSigningDetails {
+  signingDocument: Document;
+}
+
+export function ContractSigningDetails({
+  signingDocument,
+}: IContractSigningDetails) {
+  const activity = generateDocumentActivity(signingDocument);
+
+  const basicInformation = [
     {
-      label: "Assinado por Gelateria Filo Di Latte",
-      date: "há 13 min",
-      icon: CheckCircle2,
+      label: "Criado por",
+      value: "Zofia Code Labs",
+    },
+    {
+      label: "Criado em",
+      value: date(signingDocument.createdAt).format("DD/MM/YYYY HH:mm"),
+    },
+    {
+      label: "Última modificação em",
+      value: date(signingDocument.createdAt).fromNow(),
+    },
+    {
+      label: "Identificador do documento",
+      value: signingDocument.id,
     },
   ];
+
+  const recipients = signingDocument.recipients.map((recipient) => ({
+    email: recipient.email,
+    name: recipient.name,
+    baseRole: recipient.role,
+    role: getDocumentRoleMapper(recipient.role),
+    signingStatus: getSigningStatusMapper(recipient.signingStatus),
+    readingStatus: getReadingStatusMapper(recipient.readStatus),
+  }));
+
+  function getDocumentRoleMapper(role: RecipientRole) {
+    const roles: Record<RecipientRole, string> = {
+      APPROVER: "Aprovador",
+      SIGNER: "Assinador",
+      CC: "Cópia",
+      VIEWER: "Visualizador",
+    };
+
+    return roles[role] || "Visualizador";
+  }
+
+  function getSigningStatusMapper(signingStatus: SigningStatus) {
+    const signingStatuses: Record<SigningStatus, string> = {
+      NOT_SIGNED: "Pendente",
+      SIGNED: "Assinado",
+    };
+
+    return signingStatuses[signingStatus] || "Pendente";
+  }
+
+  function getReadingStatusMapper(readStatus: ReadStatus) {
+    const readStatuses: Record<ReadStatus, string> = {
+      NOT_OPENED: "Não visualizado",
+      OPENED: "Visualizado",
+    };
+
+    return readStatuses[readStatus] || "Pendente";
+  }
 
   async function handleDownloadDocument() {
     // 1. Chame a sua rota de API ou Server Action que executa o getSignedDocument
@@ -69,7 +133,9 @@ export function ContractSigningDetails() {
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-          <div className="p-4 border rounded-md col-span-3">DOCUMENTO</div>
+          <div className="p-4 border rounded-md col-span-3">
+            <PDFViewer base64Data={signingDocument.documentData.data} />
+          </div>
           <div className="space-y-6 col-span-2">
             <div className="p-4 border rounded-md space-y-4">
               <div className="space-y-4">
@@ -96,67 +162,59 @@ export function ContractSigningDetails() {
               <div className="p-4 pb-4 border-b">
                 <h5 className="text-lg font-medium">Informações</h5>
               </div>
-              <div className="px-4 py-3 flex items-center justify-between border-b ">
-                <span className="text-muted-foreground">Criado por</span>
-                <strong>Zofia Code Labs</strong>
-              </div>
-
-              <div className="px-4 py-3 flex items-center justify-between border-b">
-                <span className="text-muted-foreground">Criado em</span>
-                <strong>28/04/2025</strong>
-              </div>
-
-              <div className="px-4 py-3 flex items-center justify-between border-b ">
-                <span className="text-muted-foreground">
-                  Última modificação em
-                </span>
-                <strong>há 2 dias atrás</strong>
-              </div>
-
-              <div className="px-4 py-3 flex items-center justify-between">
-                <span className="text-muted-foreground">
-                  Identificador do Documento
-                </span>
-                <strong>19</strong>
-              </div>
+              {basicInformation.map((info, index) => (
+                <div
+                  key={`information-${index}`}
+                  className={cn(
+                    "px-4 py-3 flex items-center justify-between",
+                    basicInformation.length > index + 1 && "border-b"
+                  )}
+                >
+                  <span className="text-muted-foreground">{info.label}</span>
+                  <strong>{info.value}</strong>
+                </div>
+              ))}
             </div>
             {/* Assinantes */}
             <div className="border rounded-md">
               <div className="p-4 pb-4 border-b">
                 <h5 className="text-lg font-medium">Interessados</h5>
               </div>
-              <div className="px-4 py-3 flex items-center justify-between border-b ">
-                <div className="flex items-center gap-2">
-                  <UserAvatar size="tiny" />
-                  <div className="flex flex-col">
-                    <strong className="text-muted-foreground">
-                      henriquesydney@hotmail.com
-                    </strong>
-                    <span className="text-muted-foreground text-sm">
-                      Assinante
-                    </span>
+              {recipients.map((recipient, index) => {
+                return (
+                  <div
+                    key={`recipients-${index}`}
+                    className="px-4 py-3 flex items-center justify-between border-b "
+                  >
+                    <div className="flex items-center gap-2">
+                      <UserAvatar size="small" />
+                      <div className="flex flex-col">
+                        <strong className="text-muted-foreground">
+                          {recipient.name}
+                        </strong>
+                        <span className="text-muted-foreground">
+                          {recipient.email}
+                        </span>
+                        <span className="text-muted-foreground text-sm">
+                          {recipient.role}
+                        </span>
+                      </div>
+                    </div>
+
+                    {recipient.baseRole === "SIGNER" && (
+                      <Badge className="gap-2">
+                        <Signature className="w-4 h-4" />{" "}
+                        {recipient.signingStatus}
+                      </Badge>
+                    )}
+                    {recipient.baseRole !== "SIGNER" && (
+                      <Badge className="gap-2">
+                        <Eye className="w-4 h-4" /> {recipient.readingStatus}
+                      </Badge>
+                    )}
                   </div>
-                </div>
-                <Badge className="gap-2">
-                  <Signature className="w-4 h-4" /> Assinado
-                </Badge>
-              </div>
-              <div className="px-4 py-3 flex items-center justify-between ">
-                <div className="flex items-center gap-2">
-                  <UserAvatar size="tiny" />
-                  <div className="flex flex-col">
-                    <strong className="text-muted-foreground">
-                      henriquesydney@hotmail.com
-                    </strong>
-                    <span className="text-muted-foreground text-sm">
-                      Assinante
-                    </span>
-                  </div>
-                </div>
-                <Badge className="gap-2">
-                  <Signature className="w-4 h-4" /> Assinado
-                </Badge>
-              </div>
+                );
+              })}
             </div>
 
             {/* Atividades */}

@@ -1,3 +1,4 @@
+import { Pagination } from "@/@types/Pagination";
 import { Prisma, Contract } from "@/generated/prisma/client";
 import {
   DiscountType,
@@ -37,6 +38,7 @@ export type ContractWithDetails = Contract & {
   } | null;
   project: {
     organizationId: string;
+    name: string;
     client: { tradeName: string; email: string };
   };
   proposal: {
@@ -47,14 +49,29 @@ export type ContractWithDetails = Contract & {
   reviewUser: { name: string | null } | null;
 };
 
+export type ListContractParams = {
+  organizationId: string;
+  query?: string;
+};
+
 export interface IContractRepository {
   create(
     data: CreateContractDTO,
     tx?: Prisma.TransactionClient
   ): Promise<Contract>;
   findById(id: string): Promise<ContractWithDetails | null>;
-  findAllByClient(clientId: string): Promise<Contract[]>;
-  getHistory(projectId: string): Promise<ContractWithDetails[]>;
+  findAllByClient(
+    clientId: string,
+    pagination: Pagination
+  ): Promise<{ contracts: ContractWithDetails[]; totalOfRegister: number }>;
+  list(
+    filter: ListContractParams,
+    pagination: Pagination
+  ): Promise<{ contracts: ContractWithDetails[]; totalOfRegister: number }>;
+  getHistory(
+    projectId: string,
+    pagination: Pagination
+  ): Promise<{ contracts: ContractWithDetails[]; totalOfRegister: number }>;
   update(
     id: string,
     data: UpdateContractDTO,

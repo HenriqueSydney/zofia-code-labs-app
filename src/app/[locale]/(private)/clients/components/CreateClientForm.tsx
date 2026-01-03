@@ -34,7 +34,7 @@ export function CreateClientForm() {
       </DialogTrigger>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>{"Novo Serviço"}</DialogTitle>
+          <DialogTitle>Novo cliente</DialogTitle>
           <DialogDescription>Preencha os dados do cliente</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4"></div>

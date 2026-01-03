@@ -5,6 +5,8 @@ interface ListContractsByProjectIdUseCaseParams {
   projectId: string;
   userId: string;
   organizationId: string;
+  page?: number;
+  numberPerPage?: number;
 }
 
 export class ListContractsByProjectIdUseCase {
@@ -14,6 +16,8 @@ export class ListContractsByProjectIdUseCase {
     projectId,
     userId,
     organizationId,
+    numberPerPage,
+    page,
   }: ListContractsByProjectIdUseCaseParams) {
     await checkUserPermissionForAsset(
       "contract",
@@ -21,6 +25,9 @@ export class ListContractsByProjectIdUseCase {
       { organizationId },
       "READ"
     );
-    return await this.contractRepository.getHistory(projectId);
+    return await this.contractRepository.getHistory(projectId, {
+      numberPerPage,
+      page,
+    });
   }
 }

@@ -6,8 +6,24 @@ import {
   UserWithAllInfo,
 } from "../IUsersRepository";
 import { Pagination } from "@/@types/Pagination";
+import { getPaginationQuery } from "@/utils/getPaginationQuery";
 
 export class PrismaUsersRepository implements IUserRepository {
+  async create(
+    data: Prisma.UserUncheckedCreateInput,
+    tx?: Prisma.TransactionClient
+  ): Promise<UserSafe> {
+    const client = tx || prisma;
+
+    const user = await client.user.create({
+      data: {
+        ...data,
+      },
+    });
+
+    return this.mapToSafeUser(user);
+  }
+
   async updateAvatar(userId: string, avatarUrl: string): Promise<UserSafe> {
     const user = await prisma.user.update({
       where: { id: userId },
@@ -21,6 +37,18 @@ export class PrismaUsersRepository implements IUserRepository {
     const user = await prisma.user.findUnique({
       where: {
         id: userId,
+      },
+    });
+
+    if (!user) return null;
+
+    return this.mapToSafeUser(user);
+  }
+
+  async findUserByEmail(email: string): Promise<UserSafe | null> {
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
       },
     });
 
@@ -100,6 +128,30 @@ export class PrismaUsersRepository implements IUserRepository {
         };
       }
     }
+
+    const [totalOfRecords, users] = await Promise.all([
+      prisma.user.count({ where }),
+      prisma.user.findMany({
+        where,
+        ...paginationDefinition,
+      }),
+    ]);
+
+    // Mapeia todos os usuários da lista para o formato seguro
+    const safeUsers = users.map((user) => this.mapToSafeUser(user));
+
+    return { totalOfRecords, users: safeUsers };
+  }
+
+  async fetchUsersByOrganizationId(
+    organizationId: string,
+    pagination?: Pagination
+  ): Promise<{ totalOfRecords: number; users: UserSafe[] }> {
+    let where: Prisma.UserWhereInput = {
+      organizationId,
+    };
+
+    const paginationDefinition = getPaginationQuery(pagination);
 
     const [totalOfRecords, users] = await Promise.all([
       prisma.user.count({ where }),

@@ -40,6 +40,24 @@ export const TemplateType = {
 export type TemplateType = (typeof TemplateType)[keyof typeof TemplateType]
 
 
+export const ClientEmployeeRole = {
+  ADMIN: 'ADMIN',
+  USER: 'USER',
+  VIEWER: 'VIEWER'
+} as const
+
+export type ClientEmployeeRole = (typeof ClientEmployeeRole)[keyof typeof ClientEmployeeRole]
+
+
+export const ClientEmployeeStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  PENDING: 'PENDING'
+} as const
+
+export type ClientEmployeeStatus = (typeof ClientEmployeeStatus)[keyof typeof ClientEmployeeStatus]
+
+
 export const ProposalStatus = {
   DRAFT: 'DRAFT',
   REVIEW: 'REVIEW',
@@ -108,6 +126,47 @@ export const ProjectStatus = {
 } as const
 
 export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus]
+
+
+export const BacklogPriority = {
+  URGENT: 'URGENT',
+  HIGH: 'HIGH',
+  MEDIUM: 'MEDIUM',
+  LOW: 'LOW'
+} as const
+
+export type BacklogPriority = (typeof BacklogPriority)[keyof typeof BacklogPriority]
+
+
+export const BacklogStatus = {
+  TODO: 'TODO',
+  IN_PROGRESS: 'IN_PROGRESS',
+  REVIEW: 'REVIEW',
+  DONE: 'DONE',
+  CANCELED: 'CANCELED'
+} as const
+
+export type BacklogStatus = (typeof BacklogStatus)[keyof typeof BacklogStatus]
+
+
+export const BudgetEntryType = {
+  INITIAL: 'INITIAL',
+  ADJUSTMENT: 'ADJUSTMENT',
+  REDUCTION: 'REDUCTION',
+  REFUND: 'REFUND'
+} as const
+
+export type BudgetEntryType = (typeof BudgetEntryType)[keyof typeof BudgetEntryType]
+
+
+export const ExpenseNature = {
+  OPERATIONAL: 'OPERATIONAL',
+  DIRECT_PROJECT: 'DIRECT_PROJECT',
+  INVESTMENT: 'INVESTMENT',
+  PERSONAL: 'PERSONAL'
+} as const
+
+export type ExpenseNature = (typeof ExpenseNature)[keyof typeof ExpenseNature]
 
 
 export const FinancialStatus = {

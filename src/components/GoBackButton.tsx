@@ -1,18 +1,20 @@
 "use client";
 
 import { ArrowLeft } from "lucide-react";
-
+import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
-import { useTranslations } from "next-intl";
 
 export function GoBackButton() {
-  const t = useTranslations("errorAndNotFoundPage");
+  const router = useRouter();
+
   return (
-    <Button asChild variant="outline" size="lg" className="group">
-      <button onClick={() => window.history.back()}>
-        <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-        {t("goBackButton")}
-      </button>
+    <Button
+      variant="link"
+      className="group p-0 h-auto text-muted-foreground hover:text-primary hover:no-underline font-medium transition-colors"
+      onClick={() => router.back()}
+    >
+      <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+      Voltar
     </Button>
   );
 }

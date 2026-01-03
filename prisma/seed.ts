@@ -1,5 +1,6 @@
 import { Prisma, Role } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
+import { generateSlug } from "@/utils/generateSlug";
 import { hash } from "bcryptjs";
 
 async function main() {
@@ -225,11 +226,15 @@ async function main() {
     }
   }
 
+  // ============================================================
+  // 3. CADASTRANDO CLIENTES
+  // ============================================================
   console.log("🛠️ Sincronizando Clientes...");
 
   const clients: Prisma.ClientUncheckedCreateInput[] = [
     {
       organizationId: organization.id,
+      slug: generateSlug({ title: "Gelateria Filo Di Latte" }),
       companyName: "Shake Show Doces Alimentos LTDA",
       tradeName: "Gelateria Filo Di Latte",
       cnpj: "39.311.323/0003-01",
@@ -239,6 +244,7 @@ async function main() {
     },
     {
       organizationId: organization.id,
+      slug: generateSlug({ title: "Acolhe Kids" }),
       companyName: "Clínica de Psicologia Infantil LTDA",
       tradeName: "Acolhe Kids",
       cnpj: "63.051.717/0001-82",
@@ -262,6 +268,152 @@ async function main() {
     } else {
       console.log(`🔄 Usuário já existe: ${client.companyName}`);
     }
+  }
+
+  // ============================================================
+  // 4. LISTA DE CATEGORIAS DE DESPESAS (FINANCIAL)
+  // ============================================================
+
+  const expenseCategories = [
+    // --- OPERATIONAL (Recorrentes da Operação) ---
+    {
+      nature: "OPERATIONAL",
+      name: "Infraestrutura Cloud & Servidores",
+      description:
+        "Custos com Oracle Cloud, AWS, Vercel ou instâncias de bancos de dados.",
+    },
+    {
+      nature: "OPERATIONAL",
+      name: "Assinaturas de Software (SaaS)",
+      description:
+        "Ferramentas de produtividade: GitHub, Slack, Notion, e licenças de IDEs.",
+    },
+    {
+      nature: "OPERATIONAL",
+      name: "Marketing & Anúncios",
+      description:
+        "Gastos com Google Ads, LinkedIn Ads e ferramentas de e-mail marketing.",
+    },
+    {
+      nature: "OPERATIONAL",
+      name: "Serviços Contábeis e Taxas",
+      description:
+        "Mensalidade da contabilidade, taxas bancárias e renovação de certificados digitais.",
+    },
+
+    // --- DIRECT_PROJECT (Custos Diretos de Projetos) ---
+    {
+      nature: "DIRECT_PROJECT",
+      name: "Subcontratação (Freelancers)",
+      description:
+        "Pagamentos feitos a terceiros para execução de partes específicas de um projeto.",
+    },
+    {
+      nature: "DIRECT_PROJECT",
+      name: "APIs e Serviços de Terceiros (Consumo)",
+      description:
+        "Custos variáveis de APIs para projetos: OpenAI, Google Maps, Gateways de SMS/WhatsApp.",
+    },
+
+    // --- INVESTMENT (Ativos e Crescimento) ---
+    {
+      nature: "INVESTMENT",
+      name: "Hardware e Equipamentos",
+      description:
+        "Compra de laptops, servidores ARM, periféricos e mobiliário de escritório.",
+    },
+    {
+      nature: "INVESTMENT",
+      name: "Educação e Certificações",
+      description:
+        "Cursos, pós-graduação (CEUB), e exames de certificação (AWS, Azure, GCP).",
+    },
+
+    // --- PERSONAL (Sócios e Retiradas) ---
+    {
+      nature: "PERSONAL",
+      name: "Pró-labore e Dividendos",
+      description: "Retiradas mensais dos sócios e distribuição de lucros.",
+    },
+    {
+      nature: "PERSONAL",
+      name: "Despesas de Representação",
+      description: "Almoços de negócios, viagens para eventos e networking.",
+    },
+  ];
+
+  console.log("💸 Sincronizando Categorias de Despesas...");
+
+  for (const category of expenseCategories) {
+    const existing = await prisma.expenseCategory.findFirst({
+      where: {
+        organizationId: organization.id,
+        name: category.name,
+      },
+    });
+
+    if (!existing) {
+      await prisma.expenseCategory.create({
+        data: {
+          organizationId: organization.id,
+          name: category.name,
+          description: category.description,
+          nature: category.nature as any, // Cast para o Enum do Prisma
+        },
+      });
+      console.log(`   ✅ Criada: ${category.name} [${category.nature}]`);
+    } else {
+      // Opcional: Atualizar a natureza se for diferente
+      if (existing.nature !== category.nature) {
+        await prisma.expenseCategory.update({
+          where: { id: existing.id },
+          data: { nature: category.nature as any },
+        });
+        console.log(`   🔄 Atualizada Natureza: ${category.name}`);
+      } else {
+        console.log(`   ⏭️ Já existe: ${category.name}`);
+      }
+    }
+  }
+
+  // ============================================================
+  // 5. CATÁLOGO GLOBAL DE INTEGRAÇÕES (OWNER ONLY)
+  // ============================================================
+  const globalIntegrations = [
+    {
+      name: "Stripe",
+      slug: "stripe",
+      description: "Gateway de pagamentos para faturamento e assinaturas.",
+      logo: "https://authjs.dev/img/providers/stripe.svg",
+    },
+    {
+      name: "GitHub",
+      slug: "github",
+      description:
+        "Conexão para extração de métricas de produtividade (Commits/PRs).",
+      logo: "/icons/github.svg",
+    },
+    {
+      name: "SonarQube",
+      slug: "sonarqube",
+      description: "Análise de qualidade de código e dívida técnica.",
+      logo: "/icons/sonarqube.svg",
+    },
+    {
+      name: "SendGrid",
+      slug: "sendgrid",
+      description: "Envio de e-mails transacionais e notificações do sistema.",
+      logo: "/icons/sendgrid.svg",
+    },
+  ];
+
+  console.log("💸 Sincronizando Catálogo de Integrações...");
+  for (const it of globalIntegrations) {
+    await prisma.integrationType.upsert({
+      where: { slug: it.slug },
+      update: it,
+      create: it,
+    });
   }
 
   console.log("🏁 Seed ajustado para Zofia Code Labs finalizado!");

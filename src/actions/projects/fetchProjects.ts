@@ -5,8 +5,14 @@ import { AppError } from "@/errors/AppError";
 
 import { makeFetchProjectUseCase } from "@/useCases/projects/factories/makeFetchProjectUseCase";
 
+interface FetchProjectsFilter {
+  query?: string;
+  clientId?: string;
+  clientSlug?: string;
+}
+
 export async function fetchProjects(
-  query?: string,
+  filter?: FetchProjectsFilter,
   pagination?: { page?: number; numberPerPage?: number }
 ) {
   const session = await auth();
@@ -15,7 +21,7 @@ export async function fetchProjects(
   const useCase = makeFetchProjectUseCase();
 
   return await useCase.execute({
-    query,
+    filter,
     userId: session.user.id,
     organizationId: session.user.organizationId,
     page: pagination?.page,

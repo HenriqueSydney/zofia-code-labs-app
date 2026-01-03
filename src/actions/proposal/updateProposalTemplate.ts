@@ -28,5 +28,5 @@ export async function updateProposalTemplateAction(formData: FormData) {
     proposalId: validation.data.proposalId,
   });
 
-  revalidatePath(`/projects/${projectId}/project`);
+  revalidatePath(`/clients/${client.slug}/projects/${slug}`);
 }

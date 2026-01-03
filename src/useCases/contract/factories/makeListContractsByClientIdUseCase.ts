@@ -1,15 +1,18 @@
-import { ListContractsByClientIdUseCase } from "../ListContractsByClientIdUseCase";
+import { makeClientRepository } from "@/repositories/factories/makeClientRepository";
+import { ListContractsByClientSlugUseCase } from "../ListContractsByClientSlugUseCase";
 import { makeContractRepository } from "@/repositories/factories/makeContractRepository";
 
-let listContractsByClientIdUseCase: ListContractsByClientIdUseCase;
+let listContractsByClientSlugUseCase: ListContractsByClientSlugUseCase;
 
-export function makeListContractsByClientIdUseCase() {
-  if (!listContractsByClientIdUseCase) {
+export function makeListContractsByClientSlugUseCase() {
+  if (!listContractsByClientSlugUseCase) {
+    const clientRepository = makeClientRepository();
     const contractRepository = makeContractRepository();
-    listContractsByClientIdUseCase = new ListContractsByClientIdUseCase(
+    listContractsByClientSlugUseCase = new ListContractsByClientSlugUseCase(
+      clientRepository,
       contractRepository
     );
   }
 
-  return listContractsByClientIdUseCase;
+  return listContractsByClientSlugUseCase;
 }

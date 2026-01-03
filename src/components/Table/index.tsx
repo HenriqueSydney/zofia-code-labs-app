@@ -3,7 +3,7 @@ import React, { HTMLAttributes, useState } from "react";
 import { HeaderActions } from "./TableHeader.tsx/TableHeaderActions";
 import { tableFormAction } from "./tableFormAction";
 import { toast } from "@/hooks/use-toast";
-import { CheckCircle, Clipboard, XCircle } from "lucide-react";
+import { CheckCircle, Clipboard, LucideIcon, XCircle } from "lucide-react";
 import { TableHeader } from "./TableHeader.tsx";
 import { EmptyState } from "../EmptyState";
 import { Button } from "../ui/button";
@@ -63,7 +63,7 @@ interface ITableProps extends HTMLAttributes<HTMLDivElement> {
   emptyState?: {
     title: string;
     description: string;
-    Icon: React.ReactNode;
+    icon: LucideIcon;
   };
 }
 
@@ -180,9 +180,7 @@ export function Table({
                 ? emptyState.description
                 : "Isso pode ter ocorrido por causa de algum filtro aplicado ou por não existir nenhum registro cadastrado"
             }
-            Icon={
-              emptyState ? emptyState.Icon : <Clipboard className="w-16 h-16" />
-            }
+            icon={emptyState ? emptyState.icon : Clipboard}
           />
         </div>
       )}

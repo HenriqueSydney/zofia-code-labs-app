@@ -17,11 +17,17 @@ export async function createClientAction(formData: FormData) {
     // Validação
     const validatedData = clientFormSchema.parse(rawData);
 
+    const logoFile = formData.get("logo") as File | null;
+
+    const file =
+      logoFile instanceof File && logoFile.size > 0 ? logoFile : undefined;
+
     const useCase = makeCreateClientUseCase();
 
     await useCase.execute({
       organizationId: "cmizei37c00008del0bo3sbsq",
       ...validatedData,
+      file,
     });
 
     revalidatePath("/clients");

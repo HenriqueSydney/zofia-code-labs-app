@@ -1,11 +1,11 @@
-import { PrismaClientsRepository } from "@/repositories/prisma/PrismaClientRepository";
 import { DeleteClientUseCase } from "../DeleteClientUseCase";
+import { makeClientRepository } from "@/repositories/factories/makeClientRepository";
 
 let deleteClientUseCase: DeleteClientUseCase;
 
 export function makeDeleteClientUseCase() {
   if (!deleteClientUseCase) {
-    const clientRepository = new PrismaClientsRepository();
+    const clientRepository = makeClientRepository();
     deleteClientUseCase = new DeleteClientUseCase(clientRepository);
   }
 

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Package } from "lucide-react";
+import { Boxes, Package } from "lucide-react";
 
 import { SectionHeading } from "@/components/SectionHeading";
 import { CreateServiceCategoryForm } from "./components/CreateServiceCategoryForm";
@@ -95,7 +95,11 @@ const ServiceCategory = async ({ searchParams }: IParams) => {
       </div>
 
       {serviceCategories.length === 0 && (
-        <EmptyState title="Nenhum serviço localizado" />
+        <EmptyState
+          icon={Boxes}
+          title="Nenhuma categoria de serviço localizada"
+          description="Cadastre categorias de serviços e vincule-as a serviços para que possa integrar com sistemas de emissão de Notas Fiscais, bem como agrupá-los por contexto"
+        />
       )}
     </div>
   );

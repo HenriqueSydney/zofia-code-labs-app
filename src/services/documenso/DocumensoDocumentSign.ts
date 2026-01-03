@@ -4,7 +4,10 @@ import {
   SignerRequest,
   DocumentStatus,
   DocumentTokenResponse,
+  Document,
 } from "./IDocumentSignService";
+import { handleErrors } from "@/errors/handleErrors";
+import { AppError } from "@/errors/AppError";
 
 export class DocumensoDocumentSign implements IDocumentSignService {
   private readonly baseUrl: string;
@@ -53,110 +56,170 @@ export class DocumensoDocumentSign implements IDocumentSignService {
     title: string,
     signers: SignerRequest[]
   ): Promise<string> {
-    const formData = new FormData();
+    try {
+      const formData = new FormData();
 
-    // Na v2, o payload deve ser um objeto JSON stringificado
-    const payload = {
-      title: title,
-      recipients: signers,
-    };
+      // Na v2, o payload deve ser um objeto JSON stringificado
+      const payload = {
+        title: title,
+        recipients: signers,
+      };
 
-    formData.append("payload", JSON.stringify(payload));
+      formData.append("payload", JSON.stringify(payload));
 
-    // O arquivo binário
-    const blob = new Blob([new Uint8Array(file)], { type: "application/pdf" });
-    formData.append(
-      "file",
-      blob,
-      title.endsWith(".pdf") ? title : `${title}.pdf`
-    );
+      // O arquivo binário
+      const blob = new Blob([new Uint8Array(file)], {
+        type: "application/pdf",
+      });
+      formData.append(
+        "file",
+        blob,
+        title.endsWith(".pdf") ? title : `${title}.pdf`
+      );
 
-    // Tente esta rota (o padrão da v2)
-    const data = await this.request("/document/create", {
-      method: "POST",
-      body: formData,
-    });
+      // Tente esta rota (o padrão da v2)
+      const data = await this.request("/document/create", {
+        method: "POST",
+        body: formData,
+      });
 
-    return data.id;
+      return data.id;
+    } catch (error) {
+      const message = handleErrors(error, null, {
+        message: "Erro ao tentar criar o documento",
+      });
+      throw new AppError(message);
+    }
   }
 
   async addSigners(
     documentId: string,
     signers: SignerRequest[]
   ): Promise<void> {
-    for (const signer of signers) {
-      // 1. Adiciona o destinatário
-      const recipient = await this.request(
-        `/documents/${documentId}/recipients`,
-        {
+    try {
+      for (const signer of signers) {
+        // 1. Adiciona o destinatário
+        const recipient = await this.request(
+          `/documents/${documentId}/recipients`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              email: signer.email,
+              name: signer.name,
+              role: signer.role,
+            }),
+          }
+        );
+
+        // 2. Cria um campo de assinatura automático (ex: no fim da primeira página)
+        await this.request(`/documents/${documentId}/fields`, {
           method: "POST",
           body: JSON.stringify({
-            email: signer.email,
-            name: signer.name,
-            role: signer.role,
+            type: "SIGNATURE",
+            recipientId: recipient.id,
+            pageNumber: 1, // Lógica para definir página pode ser expandida
+            pageX: 10,
+            pageY: 10,
           }),
-        }
-      );
-
-      // 2. Cria um campo de assinatura automático (ex: no fim da primeira página)
-      await this.request(`/documents/${documentId}/fields`, {
-        method: "POST",
-        body: JSON.stringify({
-          type: "SIGNATURE",
-          recipientId: recipient.id,
-          pageNumber: 1, // Lógica para definir página pode ser expandida
-          pageX: 10,
-          pageY: 10,
-        }),
+        });
+      }
+    } catch (error) {
+      const message = handleErrors(error, null, {
+        message: "Erro ao tentar adicionar assinaturas ao documento",
       });
+      throw new AppError(message);
     }
   }
 
   async sendForSignature(documentId: string): Promise<void> {
-    await this.request(`/document/distribute`, {
-      method: "POST",
-      body: JSON.stringify({ documentId }),
-    });
+    try {
+      await this.request(`/document/distribute`, {
+        method: "POST",
+        body: JSON.stringify({ documentId }),
+      });
+    } catch (error) {
+      const message = handleErrors(error, null, {
+        message:
+          "Erro ao tentar encaminhar o documento para assinatura das partes interessadas",
+      });
+      throw new AppError(message);
+    }
   }
 
   async getDocumentStatus(documentId: string): Promise<DocumentStatus> {
-    const data = await this.request(`/document/${documentId}`, {
-      method: "GET",
-    });
+    try {
+      const data = await this.request(`/document/${documentId}`, {
+        method: "GET",
+      });
 
-    return {
-      id: data.id,
-      status: data.status, // Mapear para o enum da interface se necessário
-      isCompleted: data.status === "COMPLETED",
-      signedAt: data.completedAt ? new Date(data.completedAt) : undefined,
-    };
+      return {
+        id: data.id,
+        status: data.status, // Mapear para o enum da interface se necessário
+        isCompleted: data.status === "COMPLETED",
+        signedAt: data.completedAt ? new Date(data.completedAt) : undefined,
+      };
+    } catch (error) {
+      const message = handleErrors(error, null, {
+        message: "Erro ao tentar recuperar o status do documento",
+      });
+      throw new AppError(message);
+    }
   }
 
   async getSignedDocument(documentId: string): Promise<Buffer> {
-    const headers: Record<string, string> = {
-      Authorization: `Bearer ${this.apiKey}`,
-      "X-API-KEY": this.apiKey,
-    };
-    const response = await fetch(
-      `${this.baseUrl}/document/${documentId}/download?version=signed`,
-      {
-        headers,
-      }
-    );
+    try {
+      const headers: Record<string, string> = {
+        Authorization: `Bearer ${this.apiKey}`,
+        "X-API-KEY": this.apiKey,
+      };
+      const response = await fetch(
+        `${this.baseUrl}/document/${documentId}/download?version=signed`,
+        {
+          headers,
+        }
+      );
 
-    return Buffer.from(await response.arrayBuffer());
+      return Buffer.from(await response.arrayBuffer());
+    } catch (error) {
+      const message = handleErrors(error, null, {
+        message: "Erro ao tentar recuperar o documento assinado",
+      });
+      throw new AppError(message);
+    }
+  }
+
+  async getDocumentInfo(documentId: string): Promise<Document> {
+    try {
+      const data = await this.request(`/document/${documentId}`, {
+        method: "GET",
+      });
+
+      return data;
+    } catch (error) {
+      const message = handleErrors(error, null, {
+        message: "Erro ao tentar recuperar os dados do documento",
+      });
+      throw new AppError(message);
+    }
   }
 
   async getSigningTokens(documentId: string): Promise<DocumentTokenResponse[]> {
-    // Na v2, buscamos os detalhes do documento para pegar os recipients
-    const data = await this.request(`/document/${documentId}`, {
-      method: "GET",
-    });
+    try {
+      // Na v2, buscamos os detalhes do documento para pegar os recipients
+      const data = await this.request(`/document/${documentId}`, {
+        method: "GET",
+      });
 
-    return data.recipients.map((r: any) => ({
-      email: r.email,
-      token: r.token, // Este é o token que você extrai da URL ou o campo direto
-      signingUrl: r.signingUrl,
-    }));
+      return data.recipients.map((r: any) => ({
+        email: r.email,
+        token: r.token, // Este é o token que você extrai da URL ou o campo direto
+        signingUrl: r.signingUrl,
+      }));
+    } catch (error) {
+      const message = handleErrors(error, null, {
+        message: "Erro ao tentar recuperar os dados de token do documento",
+      });
+      throw new AppError(message);
+    }
   }
 }

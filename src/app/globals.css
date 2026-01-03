@@ -221,6 +221,12 @@
     --page-height: 29.7cm;
     --page-gap: 20px; /* Espaço entre as folhas */
     --mesa-bg: #1f2937; /* Cinza escuro da "mesa" */
+
+    --chart-1: 262 83% 58%; /* Roxo Principal (--primary) */
+    --chart-2: 25 95% 53%; /* Laranja Vibrante (--accent) */
+    --chart-3: 271 91% 65%; /* Roxo Secundário (--secondary) */
+    --chart-4: 200 80% 45%; /* Azul (Complementar para contraste) */
+    --chart-5: 25 95% 75%; /* Laranja Suave */
   }
 
   .dark {
@@ -266,6 +272,12 @@
       hsl(271, 91%, 65%),
       hsl(260, 90%, 60%)
     );
+
+    --chart-1: 271 91% 65%; /* Roxo Brilhante (seu --primary no dark) */
+    --chart-2: 25 95% 53%; /* Laranja (mantido --accent) */
+    --chart-3: 262 83% 70%; /* Roxo Lavanda */
+    --chart-4: 190 90% 60%; /* Ciano para leitura técnica */
+    --chart-5: 330 80% 60%; /* Rosa/Magenta para alertas de métricas */
   }
 
   * {

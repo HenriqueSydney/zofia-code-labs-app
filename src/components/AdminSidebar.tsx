@@ -12,6 +12,7 @@ import {
   LayoutDashboard,
   UsersRound,
   Boxes,
+  Cable,
 } from "lucide-react";
 import {
   Sidebar,
@@ -45,16 +46,26 @@ const settingsMenuItems = [
     icon: Package,
   },
   {
+    title: "Tipos de Despesas",
+    url: "/settings/expenses-category",
+    icon: Tags,
+  },
+  {
     title: "Modelos de Documentos",
     url: "/settings/templates",
     icon: FileStack,
   },
+
   {
-    title: "Tipos de Despesa/Receita",
-    url: "/settings/expense-types",
-    icon: Tags,
+    title: "Catálogo de Integrações",
+    url: "/settings/integrations/catalog",
+    icon: Cable,
   },
-  { title: "Integrações", url: "/settings/integrations", icon: Key },
+  {
+    title: "Configurar Integrações",
+    url: "/settings/integrations/config",
+    icon: Key,
+  },
 ];
 
 export function AdminSidebar() {

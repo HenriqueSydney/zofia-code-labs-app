@@ -1,5 +1,5 @@
 import { makeProjectRepository } from "@/repositories/factories/makeProjectRepository";
-import { CancelProjectUseCase } from "../cancelProjectUseCase";
+import { CancelProjectUseCase } from "../CancelProjectUseCase";
 
 let cancelProjectUseCase: CancelProjectUseCase;
 

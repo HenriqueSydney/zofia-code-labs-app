@@ -1,19 +1,21 @@
+import { ProjectStatus } from "@/generated/prisma/enums";
 import { Badge } from "./ui/badge";
+import { allStages } from "@/mappers/projectStageMapper";
+import { cn } from "@/lib/utils";
 
 interface IStatusBadge {
-  status: "completed" | "inProgress" | "planning";
+  status: ProjectStatus;
 }
 
 export function StatusBadge({ status }: IStatusBadge) {
-  const variants: Record<string, "default" | "secondary" | "outline"> = {
-    completed: "default",
-    inProgress: "secondary",
-    planning: "outline",
-  };
-  const labels: Record<string, string> = {
-    completed: "Concluído",
-    inProgress: "Em Andamento",
-    planning: "Planejamento",
-  };
-  return <Badge variant={variants[status]}>{labels[status]}</Badge>;
+  const stage = allStages.find((stage) => stage.key === status);
+
+  return (
+    <Badge
+      className={cn(stage?.color, "flex items-center justify-between gap-1")}
+    >
+      {stage?.icon && <stage.icon className="h-3 w-3 text-white" />}
+      {stage?.shortLabel}
+    </Badge>
+  );
 }

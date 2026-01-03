@@ -1,6 +1,6 @@
 import { Pagination } from "../@types/Pagination";
 
-export function getPaginationQuery(pagination: Pagination) {
+export function getPaginationQuery(pagination?: Pagination) {
   let paginationQuery = {};
   if (pagination) {
     if (pagination.page) {

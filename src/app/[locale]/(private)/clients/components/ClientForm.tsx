@@ -1,10 +1,10 @@
 "use client";
 
-import { useTransition } from "react";
+import { useTransition, useState } from "react"; // Adicionado useState
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Mail, Phone, Building2, FileText } from "lucide-react";
+import { Mail, Phone, Building2, ImagePlus, X } from "lucide-react"; // Novos ícones
 
 import {
   Form,
@@ -16,11 +16,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
-// Importe o InputMask ajustado anteriormente
 import { InputMask } from "@/components/InputMask";
+import { Label } from "@/components/ui/label";
 
-// Importe o Schema de validação
 import {
   clientFormSchema,
   ClientFormSchemaType,
@@ -28,7 +26,6 @@ import {
 import { updateClientAction } from "@/actions/clients/updateClientAction";
 import { createClientAction } from "@/actions/clients/createClientAction";
 
-// Tipagem baseada no seu DTO de cliente
 interface IClientFormProps {
   client?: {
     id: string;
@@ -37,12 +34,18 @@ interface IClientFormProps {
     cnpj?: string | null;
     email?: string | null;
     phone?: string | null;
+    logoUrl?: string | null; // Adicionado para exibir logo existente na edição
   };
   handleCloseModal: () => void;
 }
 
 export function ClientForm({ client, handleCloseModal }: IClientFormProps) {
   const [isPending, startTransition] = useTransition();
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(
+    client?.logoUrl || null
+  );
+
   const isEditing = !!client;
 
   const form = useForm<ClientFormSchemaType>({
@@ -56,9 +59,18 @@ export function ClientForm({ client, handleCloseModal }: IClientFormProps) {
     },
   });
 
+  // Função para lidar com a seleção da imagem
+  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setLogoFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    }
+  };
+
   const onSubmit = (data: ClientFormSchemaType) => {
     startTransition(async () => {
-      // Converta o objeto data para FormData pois suas actions esperam FormData
       const formData = new FormData();
       formData.append("companyName", data.companyName);
       formData.append("tradeName", data.tradeName || "");
@@ -66,8 +78,12 @@ export function ClientForm({ client, handleCloseModal }: IClientFormProps) {
       formData.append("email", data.email || "");
       formData.append("phone", data.phone || "");
 
-      let result;
+      // Adiciona o arquivo do logo ao FormData
+      if (logoFile) {
+        formData.append("logo", logoFile);
+      }
 
+      let result;
       if (isEditing) {
         result = await updateClientAction(client.id, formData);
       } else {
@@ -80,11 +96,7 @@ export function ClientForm({ client, handleCloseModal }: IClientFormProps) {
       }
 
       toast.success(result.message);
-
-      if (!isEditing) {
-        form.reset();
-      }
-
+      if (!isEditing) form.reset();
       handleCloseModal();
     });
   };
@@ -95,6 +107,50 @@ export function ClientForm({ client, handleCloseModal }: IClientFormProps) {
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-4 max-w-lg"
       >
+        {/* Campo de Logo com Preview */}
+        <div className="space-y-3 border p-4 rounded-md bg-muted/20 border-dashed">
+          <Label className="text-sm font-medium">Logo da Empresa</Label>
+
+          <div className="flex items-center gap-4">
+            {previewUrl ? (
+              <div className="relative h-20 w-20 border rounded-md overflow-hidden bg-white">
+                <img
+                  src={previewUrl}
+                  alt="Preview"
+                  className="h-full w-full object-contain"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLogoFile(null);
+                    setPreviewUrl(null);
+                  }}
+                  className="absolute top-0 right-0 bg-destructive text-destructive-foreground p-0.5 rounded-bl-md"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
+            ) : (
+              <div className="h-20 w-20 border-2 border-dashed rounded-md flex items-center justify-center bg-background">
+                <ImagePlus className="h-8 w-8 text-muted-foreground/40" />
+              </div>
+            )}
+
+            <div className="flex-1">
+              <Input
+                type="file"
+                accept="image/png, image/jpeg, image/webp"
+                className="cursor-pointer"
+                onChange={handleLogoChange}
+                disabled={isPending}
+              />
+              <p className="text-[10px] text-muted-foreground mt-2">
+                Formatos aceitos: PNG, JPG ou WebP. Máx 2MB.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Razão Social */}
         <FormField
           control={form.control}
@@ -135,14 +191,11 @@ export function ClientForm({ client, handleCloseModal }: IClientFormProps) {
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* CNPJ com MÁSCARA */}
           <FormField
             control={form.control}
             name="cnpj"
             render={({ field }) => (
               <FormItem>
-                {/* Nota: O InputMask já tem Label interno, mas dentro do FormField 
-                    é melhor usarmos a estrutura do FormItem para manter padrão visual e acessibilidade */}
                 <FormControl>
                   <InputMask
                     label="CNPJ"
@@ -150,18 +203,14 @@ export function ClientForm({ client, handleCloseModal }: IClientFormProps) {
                     placeholder="00.000.000/0001-99"
                     icon={<Building2 className="h-4 w-4" />}
                     disabled={isPending}
-                    // Repassa as props do react-hook-form (onChange, value, ref, etc)
                     {...field}
-                    // Passamos o erro explicitamente para o InputMask pintar a borda vermelha
                     inputError={form.formState.errors.cnpj}
                   />
                 </FormControl>
-                {/* Se o InputMask já exibe mensagem de erro interna, remova o FormMessage abaixo */}
               </FormItem>
             )}
           />
 
-          {/* Telefone com MÁSCARA */}
           <FormField
             control={form.control}
             name="phone"
@@ -170,7 +219,7 @@ export function ClientForm({ client, handleCloseModal }: IClientFormProps) {
                 <FormControl>
                   <InputMask
                     label="Telefone"
-                    mask="(00) 00000-0000" // Ou máscara dinâmica se seu mask util suportar
+                    mask="(00) 00000-0000"
                     placeholder="(61) 99999-9999"
                     icon={<Phone className="h-4 w-4" />}
                     disabled={isPending}
@@ -183,7 +232,6 @@ export function ClientForm({ client, handleCloseModal }: IClientFormProps) {
           />
         </div>
 
-        {/* Email */}
         <FormField
           control={form.control}
           name="email"

@@ -1,4 +1,4 @@
-import { UpdateProjectUseCase } from "../updateProjectUseCase";
+import { UpdateProjectUseCase } from "../UpdateProjectUseCase";
 import { makeS3StorageService } from "@/services/s3Client/makeS3StorageService";
 import { makeProjectRepository } from "@/repositories/factories/makeProjectRepository";
 

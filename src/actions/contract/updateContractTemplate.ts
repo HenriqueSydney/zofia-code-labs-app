@@ -28,5 +28,5 @@ export async function updateContractTemplateAction(formData: FormData) {
     contractId: validation.data.contractId,
   });
 
-  revalidatePath(`/projects/${projectId}/project`);
+  revalidatePath(`/clients/${client.slug}/projects/${slug}`);
 }

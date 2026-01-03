@@ -1,13 +1,15 @@
 import { prisma } from "@/lib/prisma";
 import {
   CreateContractDTO,
-  CreateContractItemDTO,
   IContractRepository,
   ContractWithDetails,
   UpdateContractDTO,
+  ListContractParams,
 } from "../IContractRepository";
 import { Prisma, Contract, ContractStatus } from "@/generated/prisma/client";
 import { normalizePrisma } from "@/utils/normalizePrisma";
+import { Pagination } from "@/@types/Pagination";
+import { getPaginationQuery } from "@/utils/getPaginationQuery";
 
 export class PrismaContractRepository implements IContractRepository {
   async create(
@@ -68,6 +70,7 @@ export class PrismaContractRepository implements IContractRepository {
         },
         project: {
           select: {
+            name: true,
             organizationId: true,
             client: { select: { tradeName: true, email: true } },
           }, // Otimização: trazer só o necessário
@@ -90,43 +93,176 @@ export class PrismaContractRepository implements IContractRepository {
     return normalizePrisma(contract);
   }
 
-  async getHistory(projectId: string): Promise<ContractWithDetails[]> {
-    const history = await prisma.contract.findMany({
-      where: { projectId },
-      include: {
-        project: {
-          select: { client: { select: { tradeName: true, email: true } } }, // Otimização: trazer só o necessário
-        },
-        contractTemplate: {
-          include: { template: { select: { title: true } } },
-        },
-        createdUser: {
-          select: { name: true },
-        },
-        approvedUser: {
-          select: { name: true },
-        },
-        reviewUser: {
-          select: { name: true },
-        },
-      },
-      orderBy: { version: "desc" },
-    });
+  async list(
+    { organizationId, query }: ListContractParams,
+    pagination: Pagination
+  ): Promise<{ contracts: ContractWithDetails[]; totalOfRegister: number }> {
+    const where: Prisma.ContractWhereInput = query
+      ? {
+          OR: [
+            {
+              project: {
+                name: {
+                  contains: query,
+                  mode: "insensitive",
+                },
+              },
+            },
+            {
+              project: {
+                description: {
+                  contains: query,
+                  mode: "insensitive",
+                },
+              },
+            },
+            {
+              project: {
+                client: {
+                  companyName: {
+                    contains: query,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+            {
+              project: {
+                client: {
+                  tradeName: {
+                    contains: query,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+          ],
+          project: { organizationId },
+        }
+      : { project: { organizationId } };
 
-    const plain = history.map(normalizePrisma);
+    const paginationDef = getPaginationQuery(pagination);
 
-    return plain as any;
-  }
-
-  async findAllByClient(clientId: string): Promise<Contract[]> {
-    const contracts = await prisma.contract.findMany({
-      where: { project: { clientId }, isCurrent: true },
-      orderBy: { version: "desc" },
-    });
+    const [totalOfRegister, contracts] = await Promise.all([
+      prisma.contract.count({ where }),
+      prisma.contract.findMany({
+        include: {
+          contractTemplate: {
+            include: { template: { select: { title: true } } },
+          },
+          project: {
+            select: {
+              name: true,
+              organizationId: true,
+              client: { select: { tradeName: true, email: true } },
+            },
+          },
+          proposal: {
+            select: { totalValue: true },
+          },
+          createdUser: {
+            select: { name: true },
+          },
+          approvedUser: {
+            select: { name: true },
+          },
+          reviewUser: {
+            select: { name: true },
+          },
+        },
+        ...paginationDef,
+        where,
+        orderBy: {
+          createdAt: "desc",
+        },
+      }),
+    ]);
 
     const plain = contracts.map(normalizePrisma);
 
-    return plain as any;
+    return { totalOfRegister, contracts: plain as any };
+  }
+
+  async getHistory(
+    projectId: string,
+    pagination: Pagination
+  ): Promise<{ contracts: ContractWithDetails[]; totalOfRegister: number }> {
+    const paginationDef = getPaginationQuery(pagination);
+    const [totalOfRegister, contracts] = await Promise.all([
+      prisma.contract.count({ where: { projectId } }),
+      prisma.contract.findMany({
+        where: { projectId },
+        include: {
+          project: {
+            select: {
+              name: true,
+              organizationId: true,
+              client: { select: { tradeName: true, email: true } },
+            }, // Otimização: trazer só o necessário
+          },
+          contractTemplate: {
+            include: { template: { select: { title: true } } },
+          },
+          createdUser: {
+            select: { name: true },
+          },
+          approvedUser: {
+            select: { name: true },
+          },
+          reviewUser: {
+            select: { name: true },
+          },
+        },
+        ...paginationDef,
+        orderBy: { version: "desc" },
+      }),
+    ]);
+
+    const plain = contracts.map(normalizePrisma);
+
+    return { totalOfRegister, contracts: plain as any };
+  }
+
+  async findAllByClient(
+    clientId: string,
+    pagination: Pagination
+  ): Promise<{ contracts: ContractWithDetails[]; totalOfRegister: number }> {
+    const paginationDef = getPaginationQuery(pagination);
+    const [totalOfRegister, contracts] = await Promise.all([
+      prisma.contract.count({
+        where: { project: { clientId }, isCurrent: true },
+      }),
+      prisma.contract.findMany({
+        where: { project: { clientId }, isCurrent: true },
+        include: {
+          project: {
+            select: {
+              name: true,
+              organizationId: true,
+              client: { select: { tradeName: true, email: true } },
+            },
+          },
+          contractTemplate: {
+            include: { template: { select: { title: true } } },
+          },
+          createdUser: {
+            select: { name: true },
+          },
+          approvedUser: {
+            select: { name: true },
+          },
+          reviewUser: {
+            select: { name: true },
+          },
+        },
+        ...paginationDef,
+        orderBy: { version: "desc" },
+      }),
+    ]);
+
+    const plain = contracts.map(normalizePrisma);
+
+    return { totalOfRegister, contracts: plain as any };
   }
 
   async update(

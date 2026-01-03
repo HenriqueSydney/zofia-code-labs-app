@@ -91,6 +91,11 @@ export type DocumentTemplate = Prisma.DocumentTemplateModel
  */
 export type Client = Prisma.ClientModel
 /**
+ * Model ClientEmployees
+ * 
+ */
+export type ClientEmployees = Prisma.ClientEmployeesModel
+/**
  * Model Proposal
  * 
  */
@@ -145,6 +150,21 @@ export type Sprint = Prisma.SprintModel
  * 
  */
 export type BacklogItem = Prisma.BacklogItemModel
+/**
+ * Model BudgetEntry
+ * 
+ */
+export type BudgetEntry = Prisma.BudgetEntryModel
+/**
+ * Model ExpenseCategory
+ * 
+ */
+export type ExpenseCategory = Prisma.ExpenseCategoryModel
+/**
+ * Model Expense
+ * 
+ */
+export type Expense = Prisma.ExpenseModel
 /**
  * Model Invoice
  * 

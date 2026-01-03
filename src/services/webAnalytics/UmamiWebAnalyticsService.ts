@@ -1,0 +1,126 @@
+import { AnalyticsStats, IWebAnalyticsService } from "./IWebAnalyticsService";
+
+export class UmamiWebAnalyticsService implements IWebAnalyticsService {
+  private baseUrl: string;
+  private token: string | null = null;
+
+  constructor() {
+    // DNS interno do Docker para performance ARM ou URL do túnel
+    this.baseUrl = (
+      process.env.UMAMI_API_URL || "http://umami:3000/api"
+    ).replace(/\/$/, "");
+  }
+
+  /**
+   * Helper privado para chamadas fetch com autenticação e tratamento de erros
+   */
+  private async request<T>(
+    endpoint: string,
+    options: RequestInit = {}
+  ): Promise<T> {
+    await this.authenticate();
+
+    const url = `${this.baseUrl}${endpoint}`;
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${this.token}`,
+      ...options.headers,
+    };
+
+    const response = await fetch(url, { ...options, headers });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        `[Umami API Error] ${response.status} - ${JSON.stringify(errorData)}`
+      );
+    }
+
+    return response.json() as Promise<T>;
+  }
+
+  private async authenticate(): Promise<void> {
+    if (this.token) return;
+
+    const response = await fetch(`${this.baseUrl}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: process.env.UMAMI_ADMIN_USER,
+        password: process.env.UMAMI_ADMIN_PASSWORD,
+      }),
+    });
+
+    if (!response.ok) throw new Error("Falha na autenticação com Umami");
+
+    const data = await response.json();
+    this.token = data.token;
+  }
+
+  async getWebsiteStats(
+    websiteId: string,
+    startAt: number,
+    endAt: number
+  ): Promise<AnalyticsStats> {
+    return this.request<AnalyticsStats>(
+      `/websites/${websiteId}/stats?startAt=${startAt}&endAt=${endAt}`
+    );
+  }
+
+  async createWebsite(
+    name: string,
+    domain: string,
+    enableShare: boolean = true
+  ): Promise<any> {
+    return this.request("/websites", {
+      method: "POST",
+      body: JSON.stringify({
+        name,
+        domain,
+        shareId: enableShare ? crypto.randomUUID() : null, 
+      }),
+    });
+  }
+
+  async createUser(
+    username: string,
+    password: string,
+    role: "admin" | "user" = "user"
+  ): Promise<any> {
+    return this.request("/admin/users", {
+      method: "POST",
+      body: JSON.stringify({ username, password, role }),
+    });
+  }
+
+  async createTeam(name: string): Promise<any> {
+    return this.request("/teams", {
+      method: "POST",
+      body: JSON.stringify({ name }),
+    });
+  }
+
+  async assignTeamToWebsites(
+    teamId: string,
+    websiteIds: string[]
+  ): Promise<void> {
+    // O Umami associa enviando requisições individuais por site
+    for (const websiteId of websiteIds) {
+      await this.request(`/teams/${teamId}/websites`, {
+        method: "POST",
+        body: JSON.stringify({ websiteId }),
+      });
+    }
+  }
+
+  async addMemberToTeam(
+    teamId: string,
+    userId: string,
+    role: "member" | "admin" = "member"
+  ): Promise<void> {
+    await this.request(`/teams/${teamId}/users`, {
+      method: "POST",
+      body: JSON.stringify({ userId, role }),
+    });
+  }
+}

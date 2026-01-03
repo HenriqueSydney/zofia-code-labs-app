@@ -15,8 +15,10 @@ export async function cancelContractAction(contractId: string) {
       userId: session.user.id,
     });
 
-    revalidatePath(`/projects/${projectId}/project`);
-    revalidatePath(`/projects/${projectId}/project/commercial/contract`);
+    revalidatePath(`/clients/${client.slug}/projects/${slug}`);
+    revalidatePath(
+      `/clients/${client.slug}/projects/${slug}/commercial/contract`
+    );
     return { success: true, message: "Contrato removida com sucesso." };
   } catch (error) {
     console.error(error);

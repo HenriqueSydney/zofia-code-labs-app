@@ -24,12 +24,7 @@ export function CreateServiceTypeForm({ categories }: ServiceFormProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
-    <Dialog
-      open={isDialogOpen}
-      onOpenChange={(open) => {
-        setIsDialogOpen(open);
-      }}
-    >
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <Button size="lg">
           <Plus className="h-4 w-4 mr-2" />
@@ -38,7 +33,7 @@ export function CreateServiceTypeForm({ categories }: ServiceFormProps) {
       </DialogTrigger>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>{"Novo Serviço"}</DialogTitle>
+          <DialogTitle>"Novo Serviço</DialogTitle>
           <DialogDescription>Preencha os dados do serviço</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4"></div>

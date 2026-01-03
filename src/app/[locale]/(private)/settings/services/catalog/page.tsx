@@ -21,8 +21,8 @@ interface IParams {
 const ServiceCatalog = async ({ searchParams }: IParams) => {
   const { query } = await getParams(searchParams, ["query"]);
 
-  const [serviceCategoriesError, serviceCategoriesSuccess] =
-    await operationWrapper(
+  const [serviceCategoriesResponse, serviceTypeResponse] = await Promise.all([
+    operationWrapper(
       "action",
       "fetchServiceCategoryAction",
       () => {
@@ -31,18 +31,23 @@ const ServiceCatalog = async ({ searchParams }: IParams) => {
       {
         cache: "no-cache",
       }
-    );
+    ),
+    operationWrapper(
+      "action",
+      "fetchServiceTypeAction",
+      () => {
+        return fetchServiceTypeAction(query);
+      },
+      {
+        cache: "no-cache",
+      }
+    ),
+  ]);
 
-  const [serviceTypesError, serviceTypesSuccess] = await operationWrapper(
-    "action",
-    "fetchServiceTypeAction",
-    () => {
-      return fetchServiceTypeAction(query);
-    },
-    {
-      cache: "no-cache",
-    }
-  );
+  const [serviceCategoriesError, serviceCategoriesSuccess] =
+    serviceCategoriesResponse;
+
+  const [serviceTypesError, serviceTypesSuccess] = serviceTypeResponse;
 
   const serviceTypes = serviceTypesError
     ? []
@@ -117,7 +122,11 @@ const ServiceCatalog = async ({ searchParams }: IParams) => {
       </div>
 
       {serviceTypes.length === 0 && (
-        <EmptyState title="Nenhum serviço localizado" />
+        <EmptyState
+          icon={Package}
+          title="Nenhum serviço localizado"
+          description="Cadastre os serviços que sua empresa fornece para que você possa montar propostas contextualizadas e com valor agregado"
+        />
       )}
     </div>
   );

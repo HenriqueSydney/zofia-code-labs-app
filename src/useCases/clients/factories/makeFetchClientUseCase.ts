@@ -1,11 +1,12 @@
 import { PrismaClientsRepository } from "@/repositories/prisma/PrismaClientRepository";
 import { FetchClientUseCase } from "../FetchClientUseCase";
+import { makeClientRepository } from "@/repositories/factories/makeClientRepository";
 
 let fetchClientUseCase: FetchClientUseCase;
 
 export function makeFetchClientUseCase() {
   if (!fetchClientUseCase) {
-    const clientRepository = new PrismaClientsRepository();
+    const clientRepository = makeClientRepository();
     fetchClientUseCase = new FetchClientUseCase(clientRepository);
   }
 

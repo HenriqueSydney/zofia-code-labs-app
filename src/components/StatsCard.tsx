@@ -6,7 +6,13 @@ interface IStatsCard {
   label: string;
   mainInformation: string;
   Icon: LucideIcon;
-  iconColor?: "bg-primary/10" | "bg-accent/10";
+  iconColor?:
+    | "bg-primary/10"
+    | "bg-accent/10"
+    | "bg-blue-500/10"
+    | "bg-orange-500/10"
+    | "bg-green-500/10"
+    | "bg-destructive/10";
 }
 
 export function StatsCard({

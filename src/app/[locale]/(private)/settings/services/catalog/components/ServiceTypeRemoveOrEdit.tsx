@@ -41,12 +41,7 @@ export function ServiceTypeRemoveOrEdit({
 
   return (
     <div className="flex">
-      <Dialog
-        open={isDialogOpen}
-        onOpenChange={(open) => {
-          setIsDialogOpen(open);
-        }}
-      >
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
           <Button
             variant="ghost"

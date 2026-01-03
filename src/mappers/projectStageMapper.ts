@@ -21,6 +21,7 @@ export type ProjectStage = ProjectStatus;
 interface StageConfig {
   key: ProjectStage;
   label: string;
+  shortLabel: string;
   icon: React.ElementType;
   color: string;
   description: string;
@@ -32,6 +33,7 @@ export const commercialStages: StageConfig[] = [
   {
     key: "DRAFT",
     label: "Rascunho",
+    shortLabel: "Rascunho",
     icon: FileText,
     color: "bg-slate-500",
     description: "Projeto em elaboração inicial",
@@ -40,6 +42,7 @@ export const commercialStages: StageConfig[] = [
   {
     key: "TECH_ANALYSIS",
     label: "Análise de Viabilidade",
+    shortLabel: "Viabilidade",
     icon: Search,
     color: "bg-blue-500",
     description: "Avaliando viabilidade técnica e comercial",
@@ -48,6 +51,7 @@ export const commercialStages: StageConfig[] = [
   {
     key: "PROPOSAL",
     label: "Proposta Comercial",
+    shortLabel: "Proposta",
     icon: FileSignature,
     color: "bg-indigo-500",
     description: "Analisando proposta comercial",
@@ -56,6 +60,7 @@ export const commercialStages: StageConfig[] = [
   {
     key: "PROPOSAL_GENERATED",
     label: "Preparação do Contrato",
+    shortLabel: "Contrato",
     icon: ClipboardCheck,
     color: "bg-purple-500",
     description: "Cliente analisando proposta",
@@ -64,6 +69,7 @@ export const commercialStages: StageConfig[] = [
   {
     key: "WAITING_SIGNATURE",
     label: "Assinatura do Contrato",
+    shortLabel: "Assinatura",
     icon: PenTool,
     color: "bg-violet-500",
     description: "Aguardando assinatura do contrato",
@@ -72,6 +78,7 @@ export const commercialStages: StageConfig[] = [
   {
     key: "WAITING_DOWN_PAYMENT",
     label: "Aguardando Pagamento",
+    shortLabel: "Pag. Entrada",
     icon: CreditCard,
     color: "bg-amber-500",
     description: "Aguardando pagamento da entrada",
@@ -84,6 +91,7 @@ export const operationalStages: StageConfig[] = [
   {
     key: "PLANNED",
     label: "Planejado",
+    shortLabel: "Planejado",
     icon: Calendar,
     color: "bg-cyan-500",
     description: "Projeto planejado, pronto para iniciar",
@@ -92,6 +100,7 @@ export const operationalStages: StageConfig[] = [
   {
     key: "IN_PROGRESS",
     label: "Em Andamento",
+    shortLabel: "Em Andamento",
     icon: Play,
     color: "bg-green-500",
     description: "Desenvolvimento em progresso",
@@ -100,6 +109,7 @@ export const operationalStages: StageConfig[] = [
   {
     key: "REVIEW",
     label: "Em Avaliação",
+    shortLabel: "Em Avaliação",
     icon: Eye,
     color: "bg-orange-500",
     description: "Cliente avaliando entregas",
@@ -112,6 +122,7 @@ export const commercialClosingStages: StageConfig[] = [
   {
     key: "DELIVERED",
     label: "Produto Entregue",
+    shortLabel: "Entregue",
     icon: Package,
     color: "bg-emerald-500",
     description: "Produto entregue ao cliente",
@@ -120,6 +131,7 @@ export const commercialClosingStages: StageConfig[] = [
   {
     key: "FINAL_PAYMENT",
     label: "Pagamento Final",
+    shortLabel: "Pagamento Final",
     icon: Banknote,
     color: "bg-amber-600",
     description: "Aguardando pagamento final",
@@ -128,6 +140,7 @@ export const commercialClosingStages: StageConfig[] = [
   {
     key: "COMPLETED",
     label: "Concluído",
+    shortLabel: "Concluído",
     icon: CheckCircle2,
     color: "bg-primary",
     description: "Projeto concluído com sucesso",
@@ -139,6 +152,7 @@ export const commercialClosingStages: StageConfig[] = [
 export const postProjectStage: StageConfig = {
   key: "MAINTENANCE",
   label: "Manutenção & Suporte",
+  shortLabel: "Suporte",
   icon: Wrench,
   color: "bg-teal-500",
   description: "Em período de manutenção e suporte contínuo",
@@ -147,6 +161,7 @@ export const postProjectStage: StageConfig = {
 export const cancelledStage: StageConfig = {
   key: "CANCELLED",
   label: "Cancelado",
+  shortLabel: "Cancelado",
   icon: XCircle,
   color: "bg-destructive",
   description: "Projeto cancelado",

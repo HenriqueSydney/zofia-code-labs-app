@@ -43,7 +43,7 @@ export async function changeProjectStatusAction(formData: {
     });
 
     // 5. Revalidar cache do Next.js (atualiza a UI)
-    revalidatePath(`/projects/${projectId}/dashboard`);
+    revalidatePath(`/clients/${client.slug}/projects/${slug}`);
     revalidatePath("/projects");
 
     return { success: true, message: "Status atualizado com sucesso." };

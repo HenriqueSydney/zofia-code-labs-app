@@ -1,5 +1,5 @@
 import { makeProjectRepository } from "@/repositories/factories/makeProjectRepository";
-import { FetchProjectUseCase } from "../fetchProjectUseCase";
+import { FetchProjectUseCase } from "../FetchProjectUseCase";
 
 let fetchProjectUseCase: FetchProjectUseCase;
 

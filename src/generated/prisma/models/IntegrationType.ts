@@ -31,6 +31,8 @@ export type IntegrationTypeMinAggregateOutputType = {
   slug: string | null
   logo: string | null
   description: string | null
+  externalDocsUrl: string | null
+  deletedAt: Date | null
 }
 
 export type IntegrationTypeMaxAggregateOutputType = {
@@ -39,6 +41,8 @@ export type IntegrationTypeMaxAggregateOutputType = {
   slug: string | null
   logo: string | null
   description: string | null
+  externalDocsUrl: string | null
+  deletedAt: Date | null
 }
 
 export type IntegrationTypeCountAggregateOutputType = {
@@ -47,6 +51,9 @@ export type IntegrationTypeCountAggregateOutputType = {
   slug: number
   logo: number
   description: number
+  externalDocsUrl: number
+  fieldsSchema: number
+  deletedAt: number
   _all: number
 }
 
@@ -57,6 +64,8 @@ export type IntegrationTypeMinAggregateInputType = {
   slug?: true
   logo?: true
   description?: true
+  externalDocsUrl?: true
+  deletedAt?: true
 }
 
 export type IntegrationTypeMaxAggregateInputType = {
@@ -65,6 +74,8 @@ export type IntegrationTypeMaxAggregateInputType = {
   slug?: true
   logo?: true
   description?: true
+  externalDocsUrl?: true
+  deletedAt?: true
 }
 
 export type IntegrationTypeCountAggregateInputType = {
@@ -73,6 +84,9 @@ export type IntegrationTypeCountAggregateInputType = {
   slug?: true
   logo?: true
   description?: true
+  externalDocsUrl?: true
+  fieldsSchema?: true
+  deletedAt?: true
   _all?: true
 }
 
@@ -154,6 +168,9 @@ export type IntegrationTypeGroupByOutputType = {
   slug: string
   logo: string | null
   description: string | null
+  externalDocsUrl: string | null
+  fieldsSchema: runtime.JsonValue | null
+  deletedAt: Date | null
   _count: IntegrationTypeCountAggregateOutputType | null
   _min: IntegrationTypeMinAggregateOutputType | null
   _max: IntegrationTypeMaxAggregateOutputType | null
@@ -183,6 +200,9 @@ export type IntegrationTypeWhereInput = {
   slug?: Prisma.StringFilter<"IntegrationType"> | string
   logo?: Prisma.StringNullableFilter<"IntegrationType"> | string | null
   description?: Prisma.StringNullableFilter<"IntegrationType"> | string | null
+  externalDocsUrl?: Prisma.StringNullableFilter<"IntegrationType"> | string | null
+  fieldsSchema?: Prisma.JsonNullableFilter<"IntegrationType">
+  deletedAt?: Prisma.DateTimeNullableFilter<"IntegrationType"> | Date | string | null
   organizationConfig?: Prisma.OrganizationIntegrationListRelationFilter
   projectConfig?: Prisma.ProjectIntegrationListRelationFilter
 }
@@ -193,6 +213,9 @@ export type IntegrationTypeOrderByWithRelationInput = {
   slug?: Prisma.SortOrder
   logo?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  externalDocsUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  fieldsSchema?: Prisma.SortOrderInput | Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   organizationConfig?: Prisma.OrganizationIntegrationOrderByRelationAggregateInput
   projectConfig?: Prisma.ProjectIntegrationOrderByRelationAggregateInput
 }
@@ -206,6 +229,9 @@ export type IntegrationTypeWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"IntegrationType"> | string
   logo?: Prisma.StringNullableFilter<"IntegrationType"> | string | null
   description?: Prisma.StringNullableFilter<"IntegrationType"> | string | null
+  externalDocsUrl?: Prisma.StringNullableFilter<"IntegrationType"> | string | null
+  fieldsSchema?: Prisma.JsonNullableFilter<"IntegrationType">
+  deletedAt?: Prisma.DateTimeNullableFilter<"IntegrationType"> | Date | string | null
   organizationConfig?: Prisma.OrganizationIntegrationListRelationFilter
   projectConfig?: Prisma.ProjectIntegrationListRelationFilter
 }, "id" | "slug">
@@ -216,6 +242,9 @@ export type IntegrationTypeOrderByWithAggregationInput = {
   slug?: Prisma.SortOrder
   logo?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  externalDocsUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  fieldsSchema?: Prisma.SortOrderInput | Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.IntegrationTypeCountOrderByAggregateInput
   _max?: Prisma.IntegrationTypeMaxOrderByAggregateInput
   _min?: Prisma.IntegrationTypeMinOrderByAggregateInput
@@ -230,6 +259,9 @@ export type IntegrationTypeScalarWhereWithAggregatesInput = {
   slug?: Prisma.StringWithAggregatesFilter<"IntegrationType"> | string
   logo?: Prisma.StringNullableWithAggregatesFilter<"IntegrationType"> | string | null
   description?: Prisma.StringNullableWithAggregatesFilter<"IntegrationType"> | string | null
+  externalDocsUrl?: Prisma.StringNullableWithAggregatesFilter<"IntegrationType"> | string | null
+  fieldsSchema?: Prisma.JsonNullableWithAggregatesFilter<"IntegrationType">
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"IntegrationType"> | Date | string | null
 }
 
 export type IntegrationTypeCreateInput = {
@@ -238,6 +270,9 @@ export type IntegrationTypeCreateInput = {
   slug: string
   logo?: string | null
   description?: string | null
+  externalDocsUrl?: string | null
+  fieldsSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  deletedAt?: Date | string | null
   organizationConfig?: Prisma.OrganizationIntegrationCreateNestedManyWithoutIntegrationTypeInput
   projectConfig?: Prisma.ProjectIntegrationCreateNestedManyWithoutIntegrationTypeInput
 }
@@ -248,6 +283,9 @@ export type IntegrationTypeUncheckedCreateInput = {
   slug: string
   logo?: string | null
   description?: string | null
+  externalDocsUrl?: string | null
+  fieldsSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  deletedAt?: Date | string | null
   organizationConfig?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutIntegrationTypeInput
   projectConfig?: Prisma.ProjectIntegrationUncheckedCreateNestedManyWithoutIntegrationTypeInput
 }
@@ -258,6 +296,9 @@ export type IntegrationTypeUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalDocsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fieldsSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   organizationConfig?: Prisma.OrganizationIntegrationUpdateManyWithoutIntegrationTypeNestedInput
   projectConfig?: Prisma.ProjectIntegrationUpdateManyWithoutIntegrationTypeNestedInput
 }
@@ -268,6 +309,9 @@ export type IntegrationTypeUncheckedUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalDocsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fieldsSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   organizationConfig?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutIntegrationTypeNestedInput
   projectConfig?: Prisma.ProjectIntegrationUncheckedUpdateManyWithoutIntegrationTypeNestedInput
 }
@@ -278,6 +322,9 @@ export type IntegrationTypeCreateManyInput = {
   slug: string
   logo?: string | null
   description?: string | null
+  externalDocsUrl?: string | null
+  fieldsSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  deletedAt?: Date | string | null
 }
 
 export type IntegrationTypeUpdateManyMutationInput = {
@@ -286,6 +333,9 @@ export type IntegrationTypeUpdateManyMutationInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalDocsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fieldsSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type IntegrationTypeUncheckedUpdateManyInput = {
@@ -294,6 +344,9 @@ export type IntegrationTypeUncheckedUpdateManyInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalDocsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fieldsSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type IntegrationTypeCountOrderByAggregateInput = {
@@ -302,6 +355,9 @@ export type IntegrationTypeCountOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   logo?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  externalDocsUrl?: Prisma.SortOrder
+  fieldsSchema?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type IntegrationTypeMaxOrderByAggregateInput = {
@@ -310,6 +366,8 @@ export type IntegrationTypeMaxOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   logo?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  externalDocsUrl?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type IntegrationTypeMinOrderByAggregateInput = {
@@ -318,6 +376,8 @@ export type IntegrationTypeMinOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   logo?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  externalDocsUrl?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type IntegrationTypeScalarRelationFilter = {
@@ -359,6 +419,9 @@ export type IntegrationTypeCreateWithoutOrganizationConfigInput = {
   slug: string
   logo?: string | null
   description?: string | null
+  externalDocsUrl?: string | null
+  fieldsSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  deletedAt?: Date | string | null
   projectConfig?: Prisma.ProjectIntegrationCreateNestedManyWithoutIntegrationTypeInput
 }
 
@@ -368,6 +431,9 @@ export type IntegrationTypeUncheckedCreateWithoutOrganizationConfigInput = {
   slug: string
   logo?: string | null
   description?: string | null
+  externalDocsUrl?: string | null
+  fieldsSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  deletedAt?: Date | string | null
   projectConfig?: Prisma.ProjectIntegrationUncheckedCreateNestedManyWithoutIntegrationTypeInput
 }
 
@@ -393,6 +459,9 @@ export type IntegrationTypeUpdateWithoutOrganizationConfigInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalDocsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fieldsSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   projectConfig?: Prisma.ProjectIntegrationUpdateManyWithoutIntegrationTypeNestedInput
 }
 
@@ -402,6 +471,9 @@ export type IntegrationTypeUncheckedUpdateWithoutOrganizationConfigInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalDocsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fieldsSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   projectConfig?: Prisma.ProjectIntegrationUncheckedUpdateManyWithoutIntegrationTypeNestedInput
 }
 
@@ -411,6 +483,9 @@ export type IntegrationTypeCreateWithoutProjectConfigInput = {
   slug: string
   logo?: string | null
   description?: string | null
+  externalDocsUrl?: string | null
+  fieldsSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  deletedAt?: Date | string | null
   organizationConfig?: Prisma.OrganizationIntegrationCreateNestedManyWithoutIntegrationTypeInput
 }
 
@@ -420,6 +495,9 @@ export type IntegrationTypeUncheckedCreateWithoutProjectConfigInput = {
   slug: string
   logo?: string | null
   description?: string | null
+  externalDocsUrl?: string | null
+  fieldsSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  deletedAt?: Date | string | null
   organizationConfig?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutIntegrationTypeInput
 }
 
@@ -445,6 +523,9 @@ export type IntegrationTypeUpdateWithoutProjectConfigInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalDocsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fieldsSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   organizationConfig?: Prisma.OrganizationIntegrationUpdateManyWithoutIntegrationTypeNestedInput
 }
 
@@ -454,6 +535,9 @@ export type IntegrationTypeUncheckedUpdateWithoutProjectConfigInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalDocsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fieldsSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   organizationConfig?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutIntegrationTypeNestedInput
 }
 
@@ -503,6 +587,9 @@ export type IntegrationTypeSelect<ExtArgs extends runtime.Types.Extensions.Inter
   slug?: boolean
   logo?: boolean
   description?: boolean
+  externalDocsUrl?: boolean
+  fieldsSchema?: boolean
+  deletedAt?: boolean
   organizationConfig?: boolean | Prisma.IntegrationType$organizationConfigArgs<ExtArgs>
   projectConfig?: boolean | Prisma.IntegrationType$projectConfigArgs<ExtArgs>
   _count?: boolean | Prisma.IntegrationTypeCountOutputTypeDefaultArgs<ExtArgs>
@@ -514,6 +601,9 @@ export type IntegrationTypeSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   slug?: boolean
   logo?: boolean
   description?: boolean
+  externalDocsUrl?: boolean
+  fieldsSchema?: boolean
+  deletedAt?: boolean
 }, ExtArgs["result"]["integrationType"]>
 
 export type IntegrationTypeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -522,6 +612,9 @@ export type IntegrationTypeSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   slug?: boolean
   logo?: boolean
   description?: boolean
+  externalDocsUrl?: boolean
+  fieldsSchema?: boolean
+  deletedAt?: boolean
 }, ExtArgs["result"]["integrationType"]>
 
 export type IntegrationTypeSelectScalar = {
@@ -530,9 +623,12 @@ export type IntegrationTypeSelectScalar = {
   slug?: boolean
   logo?: boolean
   description?: boolean
+  externalDocsUrl?: boolean
+  fieldsSchema?: boolean
+  deletedAt?: boolean
 }
 
-export type IntegrationTypeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "logo" | "description", ExtArgs["result"]["integrationType"]>
+export type IntegrationTypeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "logo" | "description" | "externalDocsUrl" | "fieldsSchema" | "deletedAt", ExtArgs["result"]["integrationType"]>
 export type IntegrationTypeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organizationConfig?: boolean | Prisma.IntegrationType$organizationConfigArgs<ExtArgs>
   projectConfig?: boolean | Prisma.IntegrationType$projectConfigArgs<ExtArgs>
@@ -556,6 +652,9 @@ export type $IntegrationTypePayload<ExtArgs extends runtime.Types.Extensions.Int
     slug: string
     logo: string | null
     description: string | null
+    externalDocsUrl: string | null
+    fieldsSchema: runtime.JsonValue | null
+    deletedAt: Date | null
   }, ExtArgs["result"]["integrationType"]>
   composites: {}
 }
@@ -986,6 +1085,9 @@ export interface IntegrationTypeFieldRefs {
   readonly slug: Prisma.FieldRef<"IntegrationType", 'String'>
   readonly logo: Prisma.FieldRef<"IntegrationType", 'String'>
   readonly description: Prisma.FieldRef<"IntegrationType", 'String'>
+  readonly externalDocsUrl: Prisma.FieldRef<"IntegrationType", 'String'>
+  readonly fieldsSchema: Prisma.FieldRef<"IntegrationType", 'Json'>
+  readonly deletedAt: Prisma.FieldRef<"IntegrationType", 'DateTime'>
 }
     
 

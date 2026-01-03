@@ -1,3 +1,4 @@
+import { DocumentInput } from "@/@types/DocumentInput";
 import { Pagination } from "@/@types/Pagination";
 import { PrismaToPlain } from "@/@types/PrismaToPlain";
 import {
@@ -12,7 +13,7 @@ import {
 } from "@/generated/prisma/client";
 
 export type ProjectWithDetails = PrismaToPlain<Project> & {
-  client: { id: string; companyName: string };
+  client: { id: string; companyName: string; slug: string; tradeName: string };
   projectDocuments: ProjectDocuments[];
   proposal: PrismaToPlain<Proposal>;
   contract: Contract;
@@ -23,19 +24,17 @@ export type ProjectWithDetails = PrismaToPlain<Project> & {
 
 export type FindAllParams = {
   query?: string;
+  cliendId?: string;
+  clientSlug?: string;
   organizationId: string;
 };
 
 // NOVO: Tipo auxiliar para o documento
-export type DocumentInput = {
-  url: string;
-  originalName: string;
-  extension: string;
-};
 
 export interface ICreateProjectDTO {
   name: string;
   description: string;
+  slug: string;
   clientId: string;
   createdBy: string;
   organizationId: string;
@@ -54,9 +53,11 @@ export interface IUpdateProjectDTO {
 
 export interface IProjectsRepository {
   create(
-    data: ICreateProjectDTO
+    data: ICreateProjectDTO,
+    tx?: Prisma.TransactionClient
   ): Promise<Omit<ProjectWithDetails, "projectServices" | "proposal">>;
   findById(id: string): Promise<ProjectWithDetails | null>;
+  findBySlug(slug: string): Promise<ProjectWithDetails | null>;
   findAll(
     params: FindAllParams,
     pagination?: Pagination
@@ -65,7 +66,8 @@ export interface IProjectsRepository {
     projects: Omit<ProjectWithDetails, "projectServices" | "proposal">[];
   }>;
   update(
-    data: IUpdateProjectDTO
+    data: IUpdateProjectDTO,
+    tx?: Prisma.TransactionClient
   ): Promise<Omit<ProjectWithDetails, "projectServices" | "proposal">>;
   updateStatus(
     id: string,

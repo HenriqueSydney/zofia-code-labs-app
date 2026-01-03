@@ -16,14 +16,19 @@ export async function updateClientAction(clientId: string, formData: FormData) {
     };
 
     // Cria um schema parcial para update (organizationId não é necessário aqui)
-    const updateSchema = clientFormSchema.omit({ organizationId: true });
-    const validatedData = updateSchema.parse(rawData);
+    const validatedData = clientFormSchema.parse(rawData);
+
+    const logoFile = formData.get("logo") as File | null;
+
+    const file =
+      logoFile instanceof File && logoFile.size > 0 ? logoFile : undefined;
 
     const useCase = makeUpdateClientUseCase();
 
     await useCase.execute({
       id: clientId,
       ...validatedData,
+      file,
     });
 
     revalidatePath("/clients");

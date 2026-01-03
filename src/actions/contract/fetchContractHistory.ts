@@ -1,25 +1,23 @@
 "use server";
 
 import { auth } from "@/auth";
-import { ContractWithDetails } from "@/repositories/IContractRepository";
+import { AppError } from "@/errors/AppError";
 import { makeListContractsByProjectIdUseCase } from "@/useCases/contract/factories/makeListContractsByProjectIdUseCase";
 
 export async function fetchContractHistory(
-  projectId: string
-): Promise<ContractWithDetails[]> {
+  projectId: string,
+  pagination?: { page?: number; numberPerPage?: number }
+) {
   const session = await auth();
-  if (!session?.user) return [];
+  if (!session?.user) throw new AppError("Usuário não autenticado");
   const contractUseCase = makeListContractsByProjectIdUseCase();
 
-  try {
-    const contractHistory = await contractUseCase.execute({
-      projectId,
-      userId: session.user.id,
-      organizationId: session.user.organizationId,
-    });
-    
-    return contractHistory;
-  } catch (error) {
-    return [];
-  }
+  const contractHistory = await contractUseCase.execute({
+    projectId,
+    userId: session.user.id,
+    organizationId: session.user.organizationId,
+    ...pagination,
+  });
+
+  return contractHistory;
 }

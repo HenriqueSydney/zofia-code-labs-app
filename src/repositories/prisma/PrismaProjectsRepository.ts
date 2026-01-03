@@ -5,7 +5,6 @@ import {
   IUpdateProjectDTO,
   ProjectWithDetails,
   FindAllParams,
-  DocumentInput,
 } from "../IProjectsRepository";
 import { Pagination } from "@/@types/Pagination";
 import {
@@ -17,11 +16,14 @@ import {
 import { getPaginationQuery } from "@/utils/getPaginationQuery";
 import { normalizePrisma } from "@/utils/normalizePrisma";
 import { PrismaToPlain } from "@/@types/PrismaToPlain";
+import { DocumentInput } from "@/@types/DocumentInput";
 
 export class PrismaProjectsRepository implements IProjectsRepository {
   async create(
-    data: ICreateProjectDTO
+    data: ICreateProjectDTO,
+    tx?: Prisma.TransactionClient
   ): Promise<Omit<ProjectWithDetails, "projectServices" | "proposal">> {
+    const client = tx || prisma;
     // Desestrutura 'documents' ao invés de 'documentUrls'
     const { documents, ...projectData } = data;
 
@@ -40,7 +42,7 @@ export class PrismaProjectsRepository implements IProjectsRepository {
           }
         : {};
 
-    const project = await prisma.project.create({
+    const project = await client.project.create({
       data: {
         ...projectData,
         status: "DRAFT",
@@ -59,7 +61,51 @@ export class PrismaProjectsRepository implements IProjectsRepository {
     const project = await prisma.project.findUnique({
       where: { id },
       include: {
-        client: { select: { id: true, companyName: true } },
+        client: {
+          select: { id: true, companyName: true, slug: true, tradeName: true },
+        },
+        projectDocuments: true,
+        proposal: {
+          where: { isCurrent: true },
+          take: 1, // Otimização para pegar apenas a atual
+          include: {
+            items: true,
+            proposalTemplate: true,
+          },
+        },
+        contracts: {
+          where: { isCurrent: true },
+          take: 1,
+          include: {
+            contractTemplate: true,
+          },
+        },
+        projectServices: {
+          include: {
+            serviceType: true,
+          },
+        },
+      },
+    });
+
+    if (!project) return null;
+
+    const plain = normalizePrisma({
+      ...project,
+      proposal: project.proposal[0] || null,
+      contract: project.contracts[0] || null,
+    });
+
+    return plain as ProjectWithDetails;
+  }
+
+  async findBySlug(slug: string): Promise<ProjectWithDetails | null> {
+    const project = await prisma.project.findUnique({
+      where: { slug },
+      include: {
+        client: {
+          select: { id: true, companyName: true, slug: true, tradeName: true },
+        },
         projectDocuments: true,
         proposal: {
           where: { isCurrent: true },
@@ -102,7 +148,7 @@ export class PrismaProjectsRepository implements IProjectsRepository {
     totalOfRegisters: number;
     projects: Omit<ProjectWithDetails, "projectServices">[];
   }> {
-    const where: Prisma.ProjectWhereInput = params.query
+    let where: Prisma.ProjectWhereInput = params.query
       ? {
           OR: [
             { name: { contains: params.query, mode: "insensitive" } },
@@ -114,6 +160,22 @@ export class PrismaProjectsRepository implements IProjectsRepository {
           organizationId: params.organizationId,
         };
 
+    if (params.cliendId) {
+      where = {
+        ...where,
+        clientId: params.cliendId,
+      };
+    }
+
+    if (params.cliendId) {
+      where = {
+        ...where,
+        client: {
+          slug: params.clientSlug,
+        },
+      };
+    }
+
     const paginationDef = pagination ? getPaginationQuery(pagination) : {};
 
     const [totalOfRegisters, projects] = await Promise.all([
@@ -122,7 +184,14 @@ export class PrismaProjectsRepository implements IProjectsRepository {
         where,
         ...paginationDef,
         include: {
-          client: { select: { id: true, companyName: true } },
+          client: {
+            select: {
+              id: true,
+              companyName: true,
+              slug: true,
+              tradeName: true,
+            },
+          },
           projectDocuments: true,
         },
         orderBy: { createdAt: "desc" },
@@ -138,8 +207,10 @@ export class PrismaProjectsRepository implements IProjectsRepository {
   }
 
   async update(
-    data: IUpdateProjectDTO
+    data: IUpdateProjectDTO,
+    tx?: Prisma.TransactionClient
   ): Promise<Omit<ProjectWithDetails, "projectServices" | "proposal">> {
+    const client = tx || prisma;
     // Ajuste para receber documents
     const { id, documents, ...updateData } = data;
 
@@ -154,7 +225,7 @@ export class PrismaProjectsRepository implements IProjectsRepository {
           }
         : undefined;
 
-    const project = await prisma.project.update({
+    const project = await client.project.update({
       where: { id },
       data: {
         ...updateData,

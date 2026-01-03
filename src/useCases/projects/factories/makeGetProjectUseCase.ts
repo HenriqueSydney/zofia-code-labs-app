@@ -1,5 +1,5 @@
 import { makeProjectRepository } from "@/repositories/factories/makeProjectRepository";
-import { GetProjectUseCase } from "../getProjectUseCase";
+import { GetProjectUseCase } from "../GetProjectUseCase";
 
 let getProjectUseCase: GetProjectUseCase;
 

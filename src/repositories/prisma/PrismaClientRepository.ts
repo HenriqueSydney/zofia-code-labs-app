@@ -6,20 +6,30 @@ import {
 } from "../IClientsRepository";
 import { Client, Prisma } from "@/generated/prisma/client";
 import { date } from "@/lib/dayjs";
+import { DocumentInput } from "@/@types/DocumentInput";
 
 export class PrismaClientsRepository implements IClientsRepository {
-  async create(data: ICreateClientDTO): Promise<Client> {
+  async create(
+    data: ICreateClientDTO,
+    document?: DocumentInput
+  ): Promise<Client> {
     const client = await prisma.client.create({
-      data,
+      data: {
+        ...data,
+        logoReference: document?.url,
+      },
     });
     return client;
   }
 
-  async update(data: IUpdateClientDTO): Promise<Client> {
+  async update(
+    data: IUpdateClientDTO,
+    document?: DocumentInput
+  ): Promise<Client> {
     const { id, ...updateData } = data;
     const client = await prisma.client.update({
       where: { id },
-      data: updateData,
+      data: { ...updateData, logoReference: document?.url },
     });
     return client;
   }
@@ -36,6 +46,13 @@ export class PrismaClientsRepository implements IClientsRepository {
   async findById(id: string): Promise<Client | null> {
     const client = await prisma.client.findUnique({
       where: { id },
+    });
+    return client;
+  }
+
+  async findBySlug(slug: string): Promise<Client | null> {
+    const client = await prisma.client.findUnique({
+      where: { slug },
     });
     return client;
   }

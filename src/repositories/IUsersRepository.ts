@@ -3,6 +3,7 @@ import {
   Account,
   LoginHistory,
   Organization,
+  Prisma,
   User,
 } from "@/generated/prisma/client";
 
@@ -18,12 +19,17 @@ export type UserWithAllInfo = UserSafe & {
 };
 
 export interface IUserRepository {
+  create(
+    data: Prisma.UserUncheckedCreateInput,
+    tx?: Prisma.TransactionClient
+  ): Promise<UserSafe>;
   updateAvatar(userId: string, avatarUrl: string): Promise<UserSafe>;
   updatePassword(userId: string, newPasswordHash: string): Promise<void>;
   findUserByIdWithPassword(
     userId: string
   ): Promise<{ id: string; passwordHash: string | null } | null>;
   findUserById(userId: string): Promise<UserSafe | null>;
+  findUserByEmail(email: string): Promise<UserSafe | null>;
   findUserByIdAndReturnAllInfo(userId: string): Promise<UserWithAllInfo | null>;
   fetchUsers(
     query?: string,
@@ -31,4 +37,8 @@ export interface IUserRepository {
   ): Promise<{ totalOfRecords: number; users: UserSafe[] }>;
   deleteUser(userId: string): Promise<void>;
   countTotalUsers(): Promise<number>;
+  fetchUsersByOrganizationId(
+    organizationId: string,
+    pagination?: Pagination
+  ): Promise<{ totalOfRecords: number; users: UserSafe[] }>;
 }

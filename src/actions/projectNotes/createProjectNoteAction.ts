@@ -43,7 +43,7 @@ export async function createProjectNoteAction(
 
     // 5. Revalidação de cache (opcional, ajusta conforme sua rota)
     revalidatePath("/projects");
-    revalidatePath(`/projects/${projectId}/dashboard`);
+    revalidatePath(`/clients/${client.slug}/projects/${slug}`);
 
     return { success: true };
   } catch (error) {

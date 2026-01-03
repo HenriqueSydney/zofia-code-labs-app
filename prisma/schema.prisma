@@ -56,6 +56,11 @@ model Organization {
   invoices              Invoice[]
   availableIntegrations OrganizationIntegration[]
   serviceCategories     ServiceCategory[]
+  backlogItems          BacklogItem[]
+  clientEmployees       ClientEmployees[]
+  expenseCategories     ExpenseCategory[]
+  expenses              Expense[]
+  budgetEntries         BudgetEntry[]
 
   @@map("organizations")
   @@schema("identity")
@@ -88,11 +93,13 @@ model User {
   auditLogs        AuditLog[]
   createdProposals Proposal[]     @relation("create_user")
 
-  approvedProposals Proposal[] @relation("approve_user")
-  reviwedProposals  Proposal[] @relation("review_user")
-  createdcontracts  Contract[] @relation("create_user")
-  approvedcontracts Contract[] @relation("approve_user")
-  reviwedcontracts  Contract[] @relation("review_user")
+  approvedProposals Proposal[]        @relation("approve_user")
+  reviwedProposals  Proposal[]        @relation("review_user")
+  createdcontracts  Contract[]        @relation("create_user")
+  approvedcontracts Contract[]        @relation("approve_user")
+  reviwedcontracts  Contract[]        @relation("review_user")
+  backlogItems      BacklogItem[]
+  clientEmployees   ClientEmployees[]
 
   @@map("users")
   @@schema("identity")
@@ -194,7 +201,7 @@ model ServiceType {
 
   name        String   @db.VarChar(150)
   description String?  @db.Text
-  basePrice   Decimal? @map("base_price") @db.Decimal(10, 2)
+  basePrice   Decimal? @map("base_price") @db.Decimal(15, 2)
   active      Boolean  @default(true)
 
   proposals       ProposalItem[]
@@ -243,21 +250,67 @@ model Client {
 
   companyName String  @map("company_name") @db.VarChar(200)
   tradeName   String  @map("trade_name") @db.VarChar(200)
+  slug        String  @unique @db.VarChar(200)
   cnpj        String  @db.VarChar(18)
   email       String  @db.VarChar(255)
   phone       String  @db.VarChar(20)
   address     String? @db.Text
 
+  logoReference String?
+
   projects Project[]
   invoices Invoice[]
+
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  deletedAt       DateTime?
+  clientEmployees ClientEmployees[]
+
+  // Um cliente deve ser único POR organização (duas empresas diferentes podem ter o mesmo cliente)
+  @@unique([organizationId, cnpj])
+  @@map("clients")
+  @@schema("crm")
+}
+
+enum ClientEmployeeRole {
+  ADMIN
+  USER
+  VIEWER
+
+  @@schema("crm")
+}
+
+enum ClientEmployeeStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+
+  @@schema("crm")
+}
+
+model ClientEmployees {
+  id             String       @id @default(cuid())
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  client   Client @relation(fields: [clientId], references: [id])
+  clientId String @map("client_id")
+
+  permissionRole ClientEmployeeRole @map("permission_role")
+
+  jobTitle String @map("job_title") @db.VarChar(100)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  status ClientEmployeeStatus
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  // Um cliente deve ser único POR organização (duas empresas diferentes podem ter o mesmo cliente)
-  @@unique([organizationId, cnpj])
-  @@map("clients")
+  @@unique([clientId, userId])
+  @@map("client_employees")
   @@schema("crm")
 }
 
@@ -287,7 +340,7 @@ model Proposal {
   isActive  Boolean @default(true) @map("is_active")
 
   status     ProposalStatus @default(DRAFT)
-  totalValue Decimal        @map("total_value") @db.Decimal(10, 2)
+  totalValue Decimal        @map("total_value") @db.Decimal(15, 2)
   validUntil DateTime?      @map("valid_until")
 
   createdBy   String         @map("created_by")
@@ -358,10 +411,10 @@ model ProposalItem {
   serviceTypeId String      @map("service_type_id")
   serviceType   ServiceType @relation(fields: [serviceTypeId], references: [id])
 
-  price        Decimal      @db.Decimal(10, 2)
-  discount     Decimal      @default(0) @db.Decimal(10, 2)
+  price        Decimal      @db.Decimal(15, 2)
+  discount     Decimal      @default(0) @db.Decimal(15, 2)
   discountType DiscountType @default(FIXED) @map("discount_type")
-  finalPrice   Decimal      @db.Decimal(10, 2)
+  finalPrice   Decimal      @db.Decimal(15, 2)
 
   @@map("proposal_items")
   @@schema("crm")
@@ -471,11 +524,13 @@ enum ProjectStatus {
 }
 
 model Project {
-  id             String       @id @default(cuid())
+  id String @id @default(cuid())
+
   organizationId String       @map("organization_id")
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   name        String  @db.VarChar(200)
+  slug        String  @unique @db.VarChar(200)
   description String? @db.Text
 
   clientId String @map("client_id")
@@ -486,7 +541,10 @@ model Project {
   endDate       DateTime?     @map("end_date")
   repositoryUrl String?       @map("repository_url") @db.VarChar(500)
 
-  budget   Decimal   @db.Decimal(10, 2)
+  totalBudget     Decimal @default(0) @db.Decimal(15, 2)
+  totalSpent      Decimal @default(0) @db.Decimal(15, 2)
+  remainingBudget Decimal @default(0) @db.Decimal(15, 2)
+
   invoices Invoice[]
 
   notes   ProjectNote[]
@@ -505,6 +563,8 @@ model Project {
   projectServices  ProjectServices[]
   projectDocuments ProjectDocuments[]
   contracts        Contract[]
+  budgetEntries    BudgetEntry[]
+  expenses         Expense[]
 
   @@map("projects")
   @@schema("projects")
@@ -588,10 +648,34 @@ model Sprint {
   @@schema("projects")
 }
 
+enum BacklogPriority {
+  URGENT
+  HIGH
+  MEDIUM
+  LOW
+
+  @@schema("projects")
+}
+
+enum BacklogStatus {
+  TODO
+  IN_PROGRESS
+  REVIEW
+  DONE
+  CANCELED
+
+  @@schema("projects")
+}
+
 model BacklogItem {
-  id     String @id @default(cuid())
-  title  String @db.VarChar(255)
-  status String @default("TODO") @db.VarChar(20)
+  id          String        @id @default(cuid())
+  title       String        @db.VarChar(255)
+  description String
+  status      BacklogStatus @default(TODO)
+  order       Float         @default(0)
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
 
   projectId String  @map("project_id")
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
@@ -599,11 +683,16 @@ model BacklogItem {
   sprintId String?
   sprint   Sprint? @relation(fields: [sprintId], references: [id])
 
-  points     Int?    @default(0) // Story Points ou Horas
-  priority   String? @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
-  assigneeId String? @map("assignee_id") // Quem vai fazer (User)
+  points     Int             @default(0) // Story Points ou Horas
+  priority   BacklogPriority @default(LOW) // LOW, MEDIUM, HIGH, URGENT
+  assigneeId String?         @map("assignee_id") // Quem vai fazer (User)
+  assignee   User?           @relation(fields: [assigneeId], references: [id])
 
   externalLink String? @map("external_link") // Link pro card no Jira/Taiga original
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime?
 
   @@map("backlog_items")
   @@schema("projects")
@@ -612,6 +701,95 @@ model BacklogItem {
 // =========================================================================
 // 5. SCHEMA: FINANCIAL (Financeiro & Jobs AWS)
 // =========================================================================
+
+enum BudgetEntryType {
+  INITIAL // Aporte inicial do projeto
+  ADJUSTMENT // Ajuste positivo (aumento de verba)
+  REDUCTION // Redução/Bloqueio (valor negativo)
+  REFUND // Estorno de despesa
+
+  @@schema("financial")
+}
+
+model BudgetEntry {
+  id String @id @default(cuid())
+
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+
+  type        BudgetEntryType @default(INITIAL)
+  description String?
+
+  amount Decimal @db.Decimal(15, 2)
+
+  consumedAmount   Decimal @default(0) @db.Decimal(15, 2)
+  remainingBalance Decimal @default(0) @db.Decimal(15, 2)
+
+  createdBy String? // ID do usuário que realizou a operação
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+  @@map("project_budget_entries")
+  @@schema("financial")
+}
+
+enum ExpenseNature {
+  OPERATIONAL // Gastos recorrentes da empresa
+  DIRECT_PROJECT // Gastos diretos de um projeto
+  INVESTMENT // Compra de ativos (Laptops, etc)
+  PERSONAL // Gastos dos sócios/pessoais
+
+  @@schema("financial")
+}
+
+model ExpenseCategory {
+  id String @id @default(cuid())
+
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  name        String  @db.VarChar(100)
+  description String? @db.Text
+
+  nature ExpenseNature @default(OPERATIONAL)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  expenses Expense[]
+
+  @@map("expense_category")
+  @@schema("financial")
+}
+
+model Expense {
+  id             String       @id @default(cuid())
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+
+  description String
+  amount      Decimal @db.Decimal(15, 2)
+
+  expenseCategoryId String
+  expenseCategory   ExpenseCategory @relation(fields: [expenseCategoryId], references: [id])
+
+  date DateTime @default(now())
+
+  meta Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+  @@map("project_expenses")
+  @@schema("financial")
+}
 
 enum FinancialStatus {
   PENDING
@@ -655,7 +833,7 @@ model Invoice {
 
   paymentType PaymentType
 
-  amount  Decimal         @db.Decimal(10, 2)
+  amount  Decimal         @db.Decimal(15, 2)
   dueDate DateTime        @map("due_date")
   status  FinancialStatus @default(PENDING)
 
@@ -701,9 +879,15 @@ model IntegrationType {
 
   description String? @db.Text
 
+  externalDocsUrl String? @db.Text
+
+  fieldsSchema Json? @db.JsonB
+
   // Relações
   organizationConfig OrganizationIntegration[]
   projectConfig      ProjectIntegration[]
+
+  deletedAt DateTime?
 
   @@map("integration_types")
   @@schema("integrations")

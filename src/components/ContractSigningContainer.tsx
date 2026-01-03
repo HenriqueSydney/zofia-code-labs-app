@@ -60,19 +60,17 @@ export async function ContractSigningContainer({
 
   const signService = makeDocumentSignService();
 
-  const [tokens, status] = await Promise.all([
+  const [tokens, document] = await Promise.all([
     signService.getSigningTokens(success.externalSignId),
-    signService.getDocumentStatus(success.externalSignId),
+    signService.getDocumentInfo(success.externalSignId),
   ]);
-
-  console.log(status);
 
   const host = envVariables.DOCUMENSO_API_URL.split("/api")[0];
   return (
     <Card
       className={cn(
         "w-full shadow-lg border-t-4 border-t-primary",
-        status.status === "COMPLETED" ? "max-w-7xl" : "max-w-6xl"
+        document.status === "COMPLETED" ? "max-w-7xl" : "max-w-6xl"
       )}
     >
       <CardHeader className="text-center">
@@ -80,16 +78,15 @@ export async function ContractSigningContainer({
           Assinatura de Contrato
         </CardTitle>
         <CardDescription className="text-base">
-          <p>
-            Olá! Para iniciarmos nossa parceria no projeto{" "}
-            <strong>{success.project.client.tradeName}</strong>, por favor
-            revise e assine o contrato abaixo.
-          </p>
+          Olá! Para iniciarmos nossa parceria no projeto{" "}
+          <strong>{success.project.client.tradeName}</strong>, por favor revise
+          e assine o contrato abaixo.
           {proposalSuccess && (
-            <p className="text-muted-foreground">
+            <span className="text-muted-foreground">
+              <br />
               Ao final do documento, é apresentado o resumo da proposta que
               consta no contrato para facilitar a compreensão
-            </p>
+            </span>
           )}
         </CardDescription>
       </CardHeader>
@@ -99,14 +96,16 @@ export async function ContractSigningContainer({
         <div
           className={cn(
             "bg-background rounded-[var(--radius)] border overflow-hidden ",
-            status.status === "COMPLETED" ? "" : "h-[800px]"
+            document.status === "COMPLETED" ? "" : "h-[800px]"
           )}
         >
-          {status.status !== "COMPLETED" && (
+          {document.status !== "COMPLETED" && (
             <DocumensoEmbedding signingToken={tokens[1].token} host={host} />
           )}
 
-          {status.status === "COMPLETED" && <ContractSigningDetails />}
+          {document.status === "COMPLETED" && (
+            <ContractSigningDetails signingDocument={document} />
+          )}
         </div>
         <Separator />
         {proposalSuccess && (

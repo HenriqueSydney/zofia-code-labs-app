@@ -1,4 +1,4 @@
-import { CreateProjectUseCase } from "../createProjectUseCase";
+import { CreateProjectUseCase } from "../CreateProjectUseCase";
 import { makeS3StorageService } from "@/services/s3Client/makeS3StorageService";
 import { makeProjectRepository } from "@/repositories/factories/makeProjectRepository";
 

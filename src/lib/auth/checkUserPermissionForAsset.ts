@@ -16,6 +16,12 @@ const strategies = {
   documentTemplate: new AuthDocumentTemplateStrategy(),
   proposal: new AuthProposalStrategy(),
   contract: new AuthProposalStrategy(),
+  backlog: new AuthProposalStrategy(),
+  client: new AuthProposalStrategy(),
+  clientEmployee: new AuthProposalStrategy(),
+  expenseCategory: new AuthProposalStrategy(),
+  integrationType: new AuthProposalStrategy(),
+  organizationIntegration: new AuthProposalStrategy(),
   // comment: new CommentStrategy(),
 } as const; // 'as const' ajuda na tipagem
 
@@ -32,9 +38,10 @@ export async function checkUserPermissionForAsset<T extends ResourceType>(
 
   if (!user) throw new AppError("Usuário não localizado");
 
-  if (user.organizationId !== asset.organizationId) {
+  if (asset && user.organizationId !== asset.organizationId) {
     throw new AppError("Usuário não autorizado para atualizar recurso");
   }
+
   const strategy = strategies[resourceType];
 
   if (!strategy) {

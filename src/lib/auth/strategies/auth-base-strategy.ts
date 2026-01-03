@@ -11,7 +11,7 @@ export abstract class AuthBasePermissionStrategy<T extends TenantAsset>
 {
   validate(user: UserContext, asset: T, operation: Operation): void {
     // 1. Regra Global: Validação de Tenant (SaaS Isolation)
-    if (user.organizationId !== asset.organizationId) {
+    if (asset && user.organizationId !== asset.organizationId) {
       throw new AppError("Acesso negado: Recurso de outra organização.", 403);
     }
 
