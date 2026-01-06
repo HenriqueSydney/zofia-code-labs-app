@@ -8,8 +8,9 @@ import { z } from "zod";
 
 // Validamos que recebemos o ID do tipo e um objeto de segredos
 const connectSchema = z.object({
-  integrationTypeId: z.string().cuid(),
+  integrationTypeId: z.cuid(),
   secretValues: z.record(z.string(), z.string().min(1, "Campo obrigatório")),
+  enableByol: z.boolean().default(false),
 });
 
 export async function connectOrganizationIntegrationAction(data: unknown) {
@@ -34,7 +35,8 @@ export async function connectOrganizationIntegrationAction(data: unknown) {
       organizationId,
       userId: session.user.id,
       integrationTypeId: parsed.data.integrationTypeId,
-      secretValues: parsed.data.secretValues, // Objeto com múltiplos campos
+      secretValues: parsed.data.secretValues,
+      enableByol: parsed.data.enableByol,
     });
 
     revalidatePath("/settings/integration/config");

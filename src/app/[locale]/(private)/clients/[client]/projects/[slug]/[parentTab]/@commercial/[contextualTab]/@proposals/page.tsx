@@ -6,7 +6,6 @@ import { fetchProposalHistory } from "@/actions/proposal/fetchProposalHistory";
 import { SuccessToastComponent } from "@/components/SuccessToastComponent";
 import { getParams } from "@/utils/getParams";
 import { operationWrapper } from "@/lib/operationWrapper";
-import { getProjectAction } from "@/actions/projects/getProject";
 import { AppError } from "@/errors/AppError";
 import { ProposalWithDetails } from "@/repositories/IProposalRepository";
 import { ProposalHistoryList } from "./ProposalHistoryList";

@@ -17,6 +17,7 @@ import { ClientTabs } from "./components/ClientTabs";
 import { EditClientForm } from "./components/EditClientForm";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
+import { headers } from "next/headers";
 
 interface IClientLayout {
   children: React.ReactNode;
@@ -29,6 +30,11 @@ export default async function ClientLayout({
 }: IClientLayout) {
   const { client: slug } = await params;
 
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname") || "";
+  if (pathname.includes("/projects")) {
+    return <div className="space-y-6 mb-10">{children}</div>;
+  }
   const [error, success] = await operationWrapper("action", "getClient", () =>
     getClientAction(slug)
   );

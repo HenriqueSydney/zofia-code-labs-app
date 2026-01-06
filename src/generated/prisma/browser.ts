@@ -167,6 +167,16 @@ export type OrganizationIntegration = Prisma.OrganizationIntegrationModel
  */
 export type ProjectIntegration = Prisma.ProjectIntegrationModel
 /**
+ * Model SonarMetricSnapshot
+ * 
+ */
+export type SonarMetricSnapshot = Prisma.SonarMetricSnapshotModel
+/**
+ * Model SonarQualityGateCondition
+ * 
+ */
+export type SonarQualityGateCondition = Prisma.SonarQualityGateConditionModel
+/**
  * Model WebhookLog
  * 
  */

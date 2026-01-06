@@ -8,6 +8,8 @@ import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ProjectNotesActions } from "./ProjectNotesActions";
 import { auth } from "@/auth";
+import { EmptyState } from "@/components/EmptyState";
+import { Text } from "lucide-react";
 
 interface IProjectNotes {
   project: ProjectWithDetails;
@@ -44,6 +46,13 @@ export async function ProjectNotes({ project, query }: IProjectNotes) {
   const dateLocale = locale === "pt" ? "pt-BR" : "en";
   return (
     <div className="space-y-3 max-h-125 overflow-y-auto">
+      {notes.length === 0 && (
+        <EmptyState
+          title="Nenhuma observação incluída"
+          description="Até o momento, este projeto não possui observações."
+          icon={Text}
+        />
+      )}
       {notes.map((note) => (
         <div key={note.id} className="p-4 rounded-lg bg-muted/50 border">
           <div className="flex items-center justify-between gap-3">

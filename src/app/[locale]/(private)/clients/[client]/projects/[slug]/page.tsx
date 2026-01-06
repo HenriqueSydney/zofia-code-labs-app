@@ -7,13 +7,14 @@ import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 import { getProjectBySlugAction } from "@/actions/projects/getProjectBySlug";
 import { Client } from "@/generated/prisma/client";
 import { AppError } from "@/errors/AppError";
+import { getClientAction } from "@/actions/clients/getClientAction";
 
 interface IProjectFormPage {
   params?: Promise<{ [key: string]: string | undefined }>;
 }
 
 export default async function ProjectFormPage({ params }: IProjectFormPage) {
-  const { slug } = await getParams(params, ["slug"]);
+  const { client, slug } = await getParams(params, ["slug", "client"]);
 
   const [_, clientsSuccess] = await operationWrapper<{
     clients: Client[];
@@ -28,6 +29,24 @@ export default async function ProjectFormPage({ params }: IProjectFormPage) {
     }
   );
 
+  let clientId: string | undefined;
+  if (client) {
+    const [_, clientSuccess] = await operationWrapper<{
+      client: Client;
+    }>(
+      "action",
+      "getClientAction",
+      () => {
+        return getClientAction(client);
+      },
+      {
+        cache: "no-cache",
+      }
+    );
+
+    clientId = clientSuccess?.client.id;
+  }
+
   const newProject = slug === "new-project";
 
   if (newProject) {
@@ -40,7 +59,10 @@ export default async function ProjectFormPage({ params }: IProjectFormPage) {
           />
         </div>
         <div className="max-w-5xl">
-          <ProjectForm clients={clientsSuccess?.clients ?? []} />
+          <ProjectForm
+            clients={clientsSuccess?.clients ?? []}
+            clientId={clientId}
+          />
         </div>
       </div>
     );
@@ -75,7 +97,7 @@ export default async function ProjectFormPage({ params }: IProjectFormPage) {
         <ProjectForm
           projectId={success.project.id}
           description={success?.project.description}
-          clientId={success?.project.clientId}
+          clientId={success?.project.clientId ?? clientId}
           name={success?.project.name}
           clients={clientsSuccess?.clients ?? []}
         />

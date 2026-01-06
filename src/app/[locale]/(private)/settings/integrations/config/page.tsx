@@ -15,14 +15,16 @@ export interface Integration {
   orgIntegrationId?: string;
   name: string;
   description: string;
+  enableByol: boolean;
   logo: string;
   isConnected: boolean;
   apiKey?: string;
   lastSync?: string;
   externalDocsUrl?: string | null;
-  fieldsSchema: Array<{ key: string; label: string }>;
+  fieldsSchema: Array<{ key: string; label: string; dependsOnByol: boolean }>;
   isHealth: boolean;
   intergrationData: any;
+  orgIntegrationByol: boolean;
 }
 
 interface IParams {
@@ -71,15 +73,14 @@ const Integrations = async ({ searchParams }: IParams) => {
     const intergrationConfig = organizationIntegrationSuccess.data.find(
       (config) => config.integrationTypeId === integration.id
     );
-    console.log(intergrationConfig);
-
     return {
       id: integration.id,
       name: integration.name,
       description: integration.description ?? "",
       isConnected: intergrationConfig?.enabled ?? false,
+      enableByol: integration.enableByol,
       apiKey: "",
-      logo: integration.logo ?? "/zofia-logo.webp",
+      logo: integration.logo ?? "",
       lastSync: intergrationConfig?.lastHealthCheck
         ? date(intergrationConfig.lastHealthCheck).format("DD/MM/YYYY HH:mm")
         : undefined,
@@ -88,6 +89,7 @@ const Integrations = async ({ searchParams }: IParams) => {
       isHealth: intergrationConfig?.healthStatus === "HEALTHY",
       intergrationData: intergrationConfig?.config,
       orgIntegrationId: intergrationConfig?.id,
+      orgIntegrationByol: intergrationConfig?.enableByol ?? false,
     };
   });
 

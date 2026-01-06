@@ -379,40 +379,217 @@ async function main() {
   // ============================================================
   // 5. CATÁLOGO GLOBAL DE INTEGRAÇÕES (OWNER ONLY)
   // ============================================================
-  const globalIntegrations = [
+  const globalIntegrations: Omit<
+    Prisma.IntegrationTypeUncheckedCreateInput,
+    "slug"
+  >[] = [
     {
       name: "Stripe",
-      slug: "stripe",
-      description: "Gateway de pagamentos para faturamento e assinaturas.",
-      logo: "https://authjs.dev/img/providers/stripe.svg",
+      description:
+        "Gateway de pagamentos global para faturamento e assinaturas via Cartão, PIX e Boleto.",
+      logo: "/stripe.svg",
+      enableByol: false,
+      fieldsSchema: [
+        {
+          key: "STRIPE_SECRET_KEY",
+          type: "password",
+          label: "API Secret Key",
+          isSecret: true,
+          required: true,
+        },
+        {
+          key: "STRIPE_WEBHOOK_SECRET",
+          type: "password",
+          label: "Webhook Signing Secret",
+          isSecret: true,
+          required: false,
+        },
+      ],
     },
     {
-      name: "GitHub",
-      slug: "github",
+      name: "Mercado Pago",
       description:
-        "Conexão para extração de métricas de produtividade (Commits/PRs).",
-      logo: "/icons/github.svg",
+        "Líder em pagamentos na América Latina. Suporta Cartão, PIX e Boleto.",
+      logo: "/mercadopago.svg",
+      enableByol: false,
+      fieldsSchema: [
+        {
+          key: "MP_ACCESS_TOKEN",
+          type: "password",
+          label: "Access Token",
+          isSecret: true,
+          required: true,
+        },
+        {
+          key: "MP_PUBLIC_KEY",
+          type: "text",
+          label: "Public Key (Front-end)",
+          isSecret: false,
+          required: true,
+        },
+      ],
+    },
+    {
+      name: "Cora Payment",
+      description:
+        "Banco digital focado em empresas. Ideal para emissão de Boletos e PIX com taxas reduzidas.",
+      logo: "/logo-cora.svg",
+      enableByol: false,
+      externalDocsUrl:
+        "https://developers.cora.com.br/docs/instrucoes-iniciais",
+      fieldsSchema: [
+        {
+          key: "CORA_CLIENT_ID",
+          type: "text",
+          label: "Client ID",
+          isSecret: false,
+          required: true,
+        },
+        {
+          key: "CORA_CLIENT_SECRET",
+          type: "password",
+          label: "Client Secret",
+          isSecret: true,
+          required: true,
+        },
+      ],
+    },
+    {
+      name: "Umami Analytics",
+      description:
+        "Análise de web de código aberto, focada em privacidade e simples de usar.",
+      logo: "/umami.png",
+      enableByol: true,
+      externalDocsUrl: "https://umami.is/docs/api",
+      fieldsSchema: [
+        {
+          key: "UMAMI_API_URL",
+          type: "text",
+          label: "API URL",
+          isSecret: false,
+          required: true,
+          dependsOnByol: true,
+        },
+        {
+          key: "UMAMI_ADMIN_USER",
+          type: "text",
+          label: "Admin Username",
+          isSecret: false,
+          required: true,
+        },
+        {
+          key: "UMAMI_ADMIN_PASSWORD",
+          type: "password",
+          label: "Admin Password",
+          isSecret: true,
+          required: true,
+        },
+      ],
     },
     {
       name: "SonarQube",
-      slug: "sonarqube",
-      description: "Análise de qualidade de código e dívida técnica.",
-      logo: "/icons/sonarqube.svg",
+      description:
+        "Monitoramento de qualidade de código, bugs, vulnerabilidades e dívida técnica.",
+      logo: "/sonarqube.svg",
+      enableByol: true,
+      fieldsSchema: [
+        {
+          key: "SONARQUBE_URL",
+          type: "text",
+          label: "Sonar Instance URL",
+          isSecret: false,
+          required: true,
+          dependsOnByol: true,
+        },
+        {
+          key: "SONARQUBE_TOKEN",
+          type: "password",
+          label: "User Analysis Token",
+          isSecret: true,
+          required: true,
+        },
+      ],
     },
     {
-      name: "SendGrid",
-      slug: "sendgrid",
-      description: "Envio de e-mails transacionais e notificações do sistema.",
-      logo: "/icons/sendgrid.svg",
+      name: "DefectDojo",
+      description:
+        "Orquestração de segurança e agregação de vulnerabilidades (ASOC).",
+      logo: "/defectdojo.webp",
+      enableByol: true,
+      fieldsSchema: [
+        {
+          key: "DEFECTDOJO_URL",
+          type: "text",
+          label: "API V2 URL",
+          isSecret: false,
+          required: true,
+          dependsOnByol: true,
+        },
+        {
+          key: "DEFECTDOJO_API_KEY",
+          type: "password",
+          label: "API Key",
+          isSecret: true,
+          required: true,
+        },
+      ],
+    },
+    {
+      name: "GitHub",
+      description:
+        "Conexão para extração de métricas de produtividade e automação de repositórios.",
+      logo: "/github.png",
+      enableByol: false,
+      externalDocsUrl: "https://docs.github.com/en/rest",
+      fieldsSchema: [
+        {
+          key: "GITHUB_ACCESS_TOKEN",
+          type: "password",
+          label: "Personal Access Token",
+          isSecret: true,
+          required: true,
+        },
+        {
+          key: "GITHUB_ORG_NAME",
+          type: "text",
+          label: "Organization/User Name",
+          isSecret: false,
+          required: true,
+        },
+      ],
+    },
+    {
+      name: "Resend",
+      description:
+        "Plataforma de e-mails para desenvolvedores. Envio transacional com alta taxa de entrega.",
+      logo: "/icons/resend.svg",
+      enableByol: false,
+      fieldsSchema: [
+        {
+          key: "RESEND_API_KEY",
+          type: "password",
+          label: "API Key",
+          isSecret: true,
+          required: true,
+        },
+        {
+          key: "RESEND_FROM_EMAIL",
+          type: "text",
+          label: "E-mail de Remetente (Ex: no-reply@zofiacodelabs.com)",
+          isSecret: false,
+          required: true,
+        },
+      ],
     },
   ];
 
   console.log("💸 Sincronizando Catálogo de Integrações...");
   for (const it of globalIntegrations) {
+    const slug = generateSlug({ title: it.name });
     await prisma.integrationType.upsert({
-      where: { slug: it.slug },
+      where: { slug: slug },
       update: it,
-      create: it,
+      create: { ...it, slug },
     });
   }
 

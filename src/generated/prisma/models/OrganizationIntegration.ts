@@ -39,6 +39,7 @@ export type OrganizationIntegrationMinAggregateOutputType = {
   id: string | null
   organizationId: string | null
   integrationTypeId: string | null
+  enableByol: boolean | null
   lastHealthCheck: Date | null
   healthStatus: $Enums.IntegrationStatus | null
   lastError: string | null
@@ -52,6 +53,7 @@ export type OrganizationIntegrationMaxAggregateOutputType = {
   id: string | null
   organizationId: string | null
   integrationTypeId: string | null
+  enableByol: boolean | null
   lastHealthCheck: Date | null
   healthStatus: $Enums.IntegrationStatus | null
   lastError: string | null
@@ -65,6 +67,7 @@ export type OrganizationIntegrationCountAggregateOutputType = {
   id: number
   organizationId: number
   integrationTypeId: number
+  enableByol: number
   lastHealthCheck: number
   healthStatus: number
   lastError: number
@@ -89,6 +92,7 @@ export type OrganizationIntegrationMinAggregateInputType = {
   id?: true
   organizationId?: true
   integrationTypeId?: true
+  enableByol?: true
   lastHealthCheck?: true
   healthStatus?: true
   lastError?: true
@@ -102,6 +106,7 @@ export type OrganizationIntegrationMaxAggregateInputType = {
   id?: true
   organizationId?: true
   integrationTypeId?: true
+  enableByol?: true
   lastHealthCheck?: true
   healthStatus?: true
   lastError?: true
@@ -115,6 +120,7 @@ export type OrganizationIntegrationCountAggregateInputType = {
   id?: true
   organizationId?: true
   integrationTypeId?: true
+  enableByol?: true
   lastHealthCheck?: true
   healthStatus?: true
   lastError?: true
@@ -216,6 +222,7 @@ export type OrganizationIntegrationGroupByOutputType = {
   id: string
   organizationId: string
   integrationTypeId: string
+  enableByol: boolean
   lastHealthCheck: Date | null
   healthStatus: $Enums.IntegrationStatus | null
   lastError: string | null
@@ -253,6 +260,7 @@ export type OrganizationIntegrationWhereInput = {
   id?: Prisma.StringFilter<"OrganizationIntegration"> | string
   organizationId?: Prisma.StringFilter<"OrganizationIntegration"> | string
   integrationTypeId?: Prisma.StringFilter<"OrganizationIntegration"> | string
+  enableByol?: Prisma.BoolFilter<"OrganizationIntegration"> | boolean
   lastHealthCheck?: Prisma.DateTimeNullableFilter<"OrganizationIntegration"> | Date | string | null
   healthStatus?: Prisma.EnumIntegrationStatusNullableFilter<"OrganizationIntegration"> | $Enums.IntegrationStatus | null
   lastError?: Prisma.StringNullableFilter<"OrganizationIntegration"> | string | null
@@ -263,12 +271,14 @@ export type OrganizationIntegrationWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"OrganizationIntegration"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   integrationType?: Prisma.XOR<Prisma.IntegrationTypeScalarRelationFilter, Prisma.IntegrationTypeWhereInput>
+  projectIntegrations?: Prisma.ProjectIntegrationListRelationFilter
 }
 
 export type OrganizationIntegrationOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   integrationTypeId?: Prisma.SortOrder
+  enableByol?: Prisma.SortOrder
   lastHealthCheck?: Prisma.SortOrderInput | Prisma.SortOrder
   healthStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   lastError?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -279,6 +289,7 @@ export type OrganizationIntegrationOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   organization?: Prisma.OrganizationOrderByWithRelationInput
   integrationType?: Prisma.IntegrationTypeOrderByWithRelationInput
+  projectIntegrations?: Prisma.ProjectIntegrationOrderByRelationAggregateInput
 }
 
 export type OrganizationIntegrationWhereUniqueInput = Prisma.AtLeast<{
@@ -289,6 +300,7 @@ export type OrganizationIntegrationWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.OrganizationIntegrationWhereInput | Prisma.OrganizationIntegrationWhereInput[]
   organizationId?: Prisma.StringFilter<"OrganizationIntegration"> | string
   integrationTypeId?: Prisma.StringFilter<"OrganizationIntegration"> | string
+  enableByol?: Prisma.BoolFilter<"OrganizationIntegration"> | boolean
   lastHealthCheck?: Prisma.DateTimeNullableFilter<"OrganizationIntegration"> | Date | string | null
   healthStatus?: Prisma.EnumIntegrationStatusNullableFilter<"OrganizationIntegration"> | $Enums.IntegrationStatus | null
   lastError?: Prisma.StringNullableFilter<"OrganizationIntegration"> | string | null
@@ -299,12 +311,14 @@ export type OrganizationIntegrationWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"OrganizationIntegration"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   integrationType?: Prisma.XOR<Prisma.IntegrationTypeScalarRelationFilter, Prisma.IntegrationTypeWhereInput>
+  projectIntegrations?: Prisma.ProjectIntegrationListRelationFilter
 }, "id" | "organizationId_integrationTypeId">
 
 export type OrganizationIntegrationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   integrationTypeId?: Prisma.SortOrder
+  enableByol?: Prisma.SortOrder
   lastHealthCheck?: Prisma.SortOrderInput | Prisma.SortOrder
   healthStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   lastError?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -327,6 +341,7 @@ export type OrganizationIntegrationScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"OrganizationIntegration"> | string
   organizationId?: Prisma.StringWithAggregatesFilter<"OrganizationIntegration"> | string
   integrationTypeId?: Prisma.StringWithAggregatesFilter<"OrganizationIntegration"> | string
+  enableByol?: Prisma.BoolWithAggregatesFilter<"OrganizationIntegration"> | boolean
   lastHealthCheck?: Prisma.DateTimeNullableWithAggregatesFilter<"OrganizationIntegration"> | Date | string | null
   healthStatus?: Prisma.EnumIntegrationStatusNullableWithAggregatesFilter<"OrganizationIntegration"> | $Enums.IntegrationStatus | null
   lastError?: Prisma.StringNullableWithAggregatesFilter<"OrganizationIntegration"> | string | null
@@ -339,6 +354,7 @@ export type OrganizationIntegrationScalarWhereWithAggregatesInput = {
 
 export type OrganizationIntegrationCreateInput = {
   id?: string
+  enableByol?: boolean
   lastHealthCheck?: Date | string | null
   healthStatus?: $Enums.IntegrationStatus | null
   lastError?: string | null
@@ -349,12 +365,14 @@ export type OrganizationIntegrationCreateInput = {
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutAvailableIntegrationsInput
   integrationType: Prisma.IntegrationTypeCreateNestedOneWithoutOrganizationConfigInput
+  projectIntegrations?: Prisma.ProjectIntegrationCreateNestedManyWithoutOrganizationIntegrationInput
 }
 
 export type OrganizationIntegrationUncheckedCreateInput = {
   id?: string
   organizationId: string
   integrationTypeId: string
+  enableByol?: boolean
   lastHealthCheck?: Date | string | null
   healthStatus?: $Enums.IntegrationStatus | null
   lastError?: string | null
@@ -363,10 +381,12 @@ export type OrganizationIntegrationUncheckedCreateInput = {
   config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  projectIntegrations?: Prisma.ProjectIntegrationUncheckedCreateNestedManyWithoutOrganizationIntegrationInput
 }
 
 export type OrganizationIntegrationUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  enableByol?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastHealthCheck?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   healthStatus?: Prisma.NullableEnumIntegrationStatusFieldUpdateOperationsInput | $Enums.IntegrationStatus | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -377,12 +397,14 @@ export type OrganizationIntegrationUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutAvailableIntegrationsNestedInput
   integrationType?: Prisma.IntegrationTypeUpdateOneRequiredWithoutOrganizationConfigNestedInput
+  projectIntegrations?: Prisma.ProjectIntegrationUpdateManyWithoutOrganizationIntegrationNestedInput
 }
 
 export type OrganizationIntegrationUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   integrationTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  enableByol?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastHealthCheck?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   healthStatus?: Prisma.NullableEnumIntegrationStatusFieldUpdateOperationsInput | $Enums.IntegrationStatus | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -391,12 +413,14 @@ export type OrganizationIntegrationUncheckedUpdateInput = {
   config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  projectIntegrations?: Prisma.ProjectIntegrationUncheckedUpdateManyWithoutOrganizationIntegrationNestedInput
 }
 
 export type OrganizationIntegrationCreateManyInput = {
   id?: string
   organizationId: string
   integrationTypeId: string
+  enableByol?: boolean
   lastHealthCheck?: Date | string | null
   healthStatus?: $Enums.IntegrationStatus | null
   lastError?: string | null
@@ -409,6 +433,7 @@ export type OrganizationIntegrationCreateManyInput = {
 
 export type OrganizationIntegrationUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  enableByol?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastHealthCheck?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   healthStatus?: Prisma.NullableEnumIntegrationStatusFieldUpdateOperationsInput | $Enums.IntegrationStatus | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -423,6 +448,7 @@ export type OrganizationIntegrationUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   integrationTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  enableByol?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastHealthCheck?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   healthStatus?: Prisma.NullableEnumIntegrationStatusFieldUpdateOperationsInput | $Enums.IntegrationStatus | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -452,6 +478,7 @@ export type OrganizationIntegrationCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   integrationTypeId?: Prisma.SortOrder
+  enableByol?: Prisma.SortOrder
   lastHealthCheck?: Prisma.SortOrder
   healthStatus?: Prisma.SortOrder
   lastError?: Prisma.SortOrder
@@ -470,6 +497,7 @@ export type OrganizationIntegrationMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   integrationTypeId?: Prisma.SortOrder
+  enableByol?: Prisma.SortOrder
   lastHealthCheck?: Prisma.SortOrder
   healthStatus?: Prisma.SortOrder
   lastError?: Prisma.SortOrder
@@ -483,6 +511,7 @@ export type OrganizationIntegrationMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   integrationTypeId?: Prisma.SortOrder
+  enableByol?: Prisma.SortOrder
   lastHealthCheck?: Prisma.SortOrder
   healthStatus?: Prisma.SortOrder
   lastError?: Prisma.SortOrder
@@ -494,6 +523,11 @@ export type OrganizationIntegrationMinOrderByAggregateInput = {
 
 export type OrganizationIntegrationSumOrderByAggregateInput = {
   errorCount?: Prisma.SortOrder
+}
+
+export type OrganizationIntegrationScalarRelationFilter = {
+  is?: Prisma.OrganizationIntegrationWhereInput
+  isNot?: Prisma.OrganizationIntegrationWhereInput
 }
 
 export type OrganizationIntegrationCreateNestedManyWithoutOrganizationInput = {
@@ -584,8 +618,23 @@ export type NullableEnumIntegrationStatusFieldUpdateOperationsInput = {
   set?: $Enums.IntegrationStatus | null
 }
 
+export type OrganizationIntegrationCreateNestedOneWithoutProjectIntegrationsInput = {
+  create?: Prisma.XOR<Prisma.OrganizationIntegrationCreateWithoutProjectIntegrationsInput, Prisma.OrganizationIntegrationUncheckedCreateWithoutProjectIntegrationsInput>
+  connectOrCreate?: Prisma.OrganizationIntegrationCreateOrConnectWithoutProjectIntegrationsInput
+  connect?: Prisma.OrganizationIntegrationWhereUniqueInput
+}
+
+export type OrganizationIntegrationUpdateOneRequiredWithoutProjectIntegrationsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationIntegrationCreateWithoutProjectIntegrationsInput, Prisma.OrganizationIntegrationUncheckedCreateWithoutProjectIntegrationsInput>
+  connectOrCreate?: Prisma.OrganizationIntegrationCreateOrConnectWithoutProjectIntegrationsInput
+  upsert?: Prisma.OrganizationIntegrationUpsertWithoutProjectIntegrationsInput
+  connect?: Prisma.OrganizationIntegrationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationIntegrationUpdateToOneWithWhereWithoutProjectIntegrationsInput, Prisma.OrganizationIntegrationUpdateWithoutProjectIntegrationsInput>, Prisma.OrganizationIntegrationUncheckedUpdateWithoutProjectIntegrationsInput>
+}
+
 export type OrganizationIntegrationCreateWithoutOrganizationInput = {
   id?: string
+  enableByol?: boolean
   lastHealthCheck?: Date | string | null
   healthStatus?: $Enums.IntegrationStatus | null
   lastError?: string | null
@@ -595,11 +644,13 @@ export type OrganizationIntegrationCreateWithoutOrganizationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   integrationType: Prisma.IntegrationTypeCreateNestedOneWithoutOrganizationConfigInput
+  projectIntegrations?: Prisma.ProjectIntegrationCreateNestedManyWithoutOrganizationIntegrationInput
 }
 
 export type OrganizationIntegrationUncheckedCreateWithoutOrganizationInput = {
   id?: string
   integrationTypeId: string
+  enableByol?: boolean
   lastHealthCheck?: Date | string | null
   healthStatus?: $Enums.IntegrationStatus | null
   lastError?: string | null
@@ -608,6 +659,7 @@ export type OrganizationIntegrationUncheckedCreateWithoutOrganizationInput = {
   config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  projectIntegrations?: Prisma.ProjectIntegrationUncheckedCreateNestedManyWithoutOrganizationIntegrationInput
 }
 
 export type OrganizationIntegrationCreateOrConnectWithoutOrganizationInput = {
@@ -643,6 +695,7 @@ export type OrganizationIntegrationScalarWhereInput = {
   id?: Prisma.StringFilter<"OrganizationIntegration"> | string
   organizationId?: Prisma.StringFilter<"OrganizationIntegration"> | string
   integrationTypeId?: Prisma.StringFilter<"OrganizationIntegration"> | string
+  enableByol?: Prisma.BoolFilter<"OrganizationIntegration"> | boolean
   lastHealthCheck?: Prisma.DateTimeNullableFilter<"OrganizationIntegration"> | Date | string | null
   healthStatus?: Prisma.EnumIntegrationStatusNullableFilter<"OrganizationIntegration"> | $Enums.IntegrationStatus | null
   lastError?: Prisma.StringNullableFilter<"OrganizationIntegration"> | string | null
@@ -655,6 +708,7 @@ export type OrganizationIntegrationScalarWhereInput = {
 
 export type OrganizationIntegrationCreateWithoutIntegrationTypeInput = {
   id?: string
+  enableByol?: boolean
   lastHealthCheck?: Date | string | null
   healthStatus?: $Enums.IntegrationStatus | null
   lastError?: string | null
@@ -664,11 +718,13 @@ export type OrganizationIntegrationCreateWithoutIntegrationTypeInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutAvailableIntegrationsInput
+  projectIntegrations?: Prisma.ProjectIntegrationCreateNestedManyWithoutOrganizationIntegrationInput
 }
 
 export type OrganizationIntegrationUncheckedCreateWithoutIntegrationTypeInput = {
   id?: string
   organizationId: string
+  enableByol?: boolean
   lastHealthCheck?: Date | string | null
   healthStatus?: $Enums.IntegrationStatus | null
   lastError?: string | null
@@ -677,6 +733,7 @@ export type OrganizationIntegrationUncheckedCreateWithoutIntegrationTypeInput = 
   config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  projectIntegrations?: Prisma.ProjectIntegrationUncheckedCreateNestedManyWithoutOrganizationIntegrationInput
 }
 
 export type OrganizationIntegrationCreateOrConnectWithoutIntegrationTypeInput = {
@@ -705,9 +762,86 @@ export type OrganizationIntegrationUpdateManyWithWhereWithoutIntegrationTypeInpu
   data: Prisma.XOR<Prisma.OrganizationIntegrationUpdateManyMutationInput, Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutIntegrationTypeInput>
 }
 
+export type OrganizationIntegrationCreateWithoutProjectIntegrationsInput = {
+  id?: string
+  enableByol?: boolean
+  lastHealthCheck?: Date | string | null
+  healthStatus?: $Enums.IntegrationStatus | null
+  lastError?: string | null
+  errorCount?: number
+  enabled?: boolean
+  config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutAvailableIntegrationsInput
+  integrationType: Prisma.IntegrationTypeCreateNestedOneWithoutOrganizationConfigInput
+}
+
+export type OrganizationIntegrationUncheckedCreateWithoutProjectIntegrationsInput = {
+  id?: string
+  organizationId: string
+  integrationTypeId: string
+  enableByol?: boolean
+  lastHealthCheck?: Date | string | null
+  healthStatus?: $Enums.IntegrationStatus | null
+  lastError?: string | null
+  errorCount?: number
+  enabled?: boolean
+  config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type OrganizationIntegrationCreateOrConnectWithoutProjectIntegrationsInput = {
+  where: Prisma.OrganizationIntegrationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationIntegrationCreateWithoutProjectIntegrationsInput, Prisma.OrganizationIntegrationUncheckedCreateWithoutProjectIntegrationsInput>
+}
+
+export type OrganizationIntegrationUpsertWithoutProjectIntegrationsInput = {
+  update: Prisma.XOR<Prisma.OrganizationIntegrationUpdateWithoutProjectIntegrationsInput, Prisma.OrganizationIntegrationUncheckedUpdateWithoutProjectIntegrationsInput>
+  create: Prisma.XOR<Prisma.OrganizationIntegrationCreateWithoutProjectIntegrationsInput, Prisma.OrganizationIntegrationUncheckedCreateWithoutProjectIntegrationsInput>
+  where?: Prisma.OrganizationIntegrationWhereInput
+}
+
+export type OrganizationIntegrationUpdateToOneWithWhereWithoutProjectIntegrationsInput = {
+  where?: Prisma.OrganizationIntegrationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationIntegrationUpdateWithoutProjectIntegrationsInput, Prisma.OrganizationIntegrationUncheckedUpdateWithoutProjectIntegrationsInput>
+}
+
+export type OrganizationIntegrationUpdateWithoutProjectIntegrationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  enableByol?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastHealthCheck?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  healthStatus?: Prisma.NullableEnumIntegrationStatusFieldUpdateOperationsInput | $Enums.IntegrationStatus | null
+  lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  errorCount?: Prisma.IntFieldUpdateOperationsInput | number
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutAvailableIntegrationsNestedInput
+  integrationType?: Prisma.IntegrationTypeUpdateOneRequiredWithoutOrganizationConfigNestedInput
+}
+
+export type OrganizationIntegrationUncheckedUpdateWithoutProjectIntegrationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  integrationTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  enableByol?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastHealthCheck?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  healthStatus?: Prisma.NullableEnumIntegrationStatusFieldUpdateOperationsInput | $Enums.IntegrationStatus | null
+  lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  errorCount?: Prisma.IntFieldUpdateOperationsInput | number
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type OrganizationIntegrationCreateManyOrganizationInput = {
   id?: string
   integrationTypeId: string
+  enableByol?: boolean
   lastHealthCheck?: Date | string | null
   healthStatus?: $Enums.IntegrationStatus | null
   lastError?: string | null
@@ -720,6 +854,7 @@ export type OrganizationIntegrationCreateManyOrganizationInput = {
 
 export type OrganizationIntegrationUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  enableByol?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastHealthCheck?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   healthStatus?: Prisma.NullableEnumIntegrationStatusFieldUpdateOperationsInput | $Enums.IntegrationStatus | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -729,11 +864,13 @@ export type OrganizationIntegrationUpdateWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   integrationType?: Prisma.IntegrationTypeUpdateOneRequiredWithoutOrganizationConfigNestedInput
+  projectIntegrations?: Prisma.ProjectIntegrationUpdateManyWithoutOrganizationIntegrationNestedInput
 }
 
 export type OrganizationIntegrationUncheckedUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   integrationTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  enableByol?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastHealthCheck?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   healthStatus?: Prisma.NullableEnumIntegrationStatusFieldUpdateOperationsInput | $Enums.IntegrationStatus | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -742,11 +879,13 @@ export type OrganizationIntegrationUncheckedUpdateWithoutOrganizationInput = {
   config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  projectIntegrations?: Prisma.ProjectIntegrationUncheckedUpdateManyWithoutOrganizationIntegrationNestedInput
 }
 
 export type OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   integrationTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  enableByol?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastHealthCheck?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   healthStatus?: Prisma.NullableEnumIntegrationStatusFieldUpdateOperationsInput | $Enums.IntegrationStatus | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -760,6 +899,7 @@ export type OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationInput =
 export type OrganizationIntegrationCreateManyIntegrationTypeInput = {
   id?: string
   organizationId: string
+  enableByol?: boolean
   lastHealthCheck?: Date | string | null
   healthStatus?: $Enums.IntegrationStatus | null
   lastError?: string | null
@@ -772,6 +912,7 @@ export type OrganizationIntegrationCreateManyIntegrationTypeInput = {
 
 export type OrganizationIntegrationUpdateWithoutIntegrationTypeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  enableByol?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastHealthCheck?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   healthStatus?: Prisma.NullableEnumIntegrationStatusFieldUpdateOperationsInput | $Enums.IntegrationStatus | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -781,11 +922,13 @@ export type OrganizationIntegrationUpdateWithoutIntegrationTypeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutAvailableIntegrationsNestedInput
+  projectIntegrations?: Prisma.ProjectIntegrationUpdateManyWithoutOrganizationIntegrationNestedInput
 }
 
 export type OrganizationIntegrationUncheckedUpdateWithoutIntegrationTypeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  enableByol?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastHealthCheck?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   healthStatus?: Prisma.NullableEnumIntegrationStatusFieldUpdateOperationsInput | $Enums.IntegrationStatus | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -794,11 +937,13 @@ export type OrganizationIntegrationUncheckedUpdateWithoutIntegrationTypeInput = 
   config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  projectIntegrations?: Prisma.ProjectIntegrationUncheckedUpdateManyWithoutOrganizationIntegrationNestedInput
 }
 
 export type OrganizationIntegrationUncheckedUpdateManyWithoutIntegrationTypeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  enableByol?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastHealthCheck?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   healthStatus?: Prisma.NullableEnumIntegrationStatusFieldUpdateOperationsInput | $Enums.IntegrationStatus | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -809,12 +954,42 @@ export type OrganizationIntegrationUncheckedUpdateManyWithoutIntegrationTypeInpu
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type OrganizationIntegrationCountOutputType
+ */
+
+export type OrganizationIntegrationCountOutputType = {
+  projectIntegrations: number
+}
+
+export type OrganizationIntegrationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  projectIntegrations?: boolean | OrganizationIntegrationCountOutputTypeCountProjectIntegrationsArgs
+}
+
+/**
+ * OrganizationIntegrationCountOutputType without action
+ */
+export type OrganizationIntegrationCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrganizationIntegrationCountOutputType
+   */
+  select?: Prisma.OrganizationIntegrationCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * OrganizationIntegrationCountOutputType without action
+ */
+export type OrganizationIntegrationCountOutputTypeCountProjectIntegrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectIntegrationWhereInput
+}
 
 
 export type OrganizationIntegrationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   organizationId?: boolean
   integrationTypeId?: boolean
+  enableByol?: boolean
   lastHealthCheck?: boolean
   healthStatus?: boolean
   lastError?: boolean
@@ -825,12 +1000,15 @@ export type OrganizationIntegrationSelect<ExtArgs extends runtime.Types.Extensio
   updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   integrationType?: boolean | Prisma.IntegrationTypeDefaultArgs<ExtArgs>
+  projectIntegrations?: boolean | Prisma.OrganizationIntegration$projectIntegrationsArgs<ExtArgs>
+  _count?: boolean | Prisma.OrganizationIntegrationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["organizationIntegration"]>
 
 export type OrganizationIntegrationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   organizationId?: boolean
   integrationTypeId?: boolean
+  enableByol?: boolean
   lastHealthCheck?: boolean
   healthStatus?: boolean
   lastError?: boolean
@@ -847,6 +1025,7 @@ export type OrganizationIntegrationSelectUpdateManyAndReturn<ExtArgs extends run
   id?: boolean
   organizationId?: boolean
   integrationTypeId?: boolean
+  enableByol?: boolean
   lastHealthCheck?: boolean
   healthStatus?: boolean
   lastError?: boolean
@@ -863,6 +1042,7 @@ export type OrganizationIntegrationSelectScalar = {
   id?: boolean
   organizationId?: boolean
   integrationTypeId?: boolean
+  enableByol?: boolean
   lastHealthCheck?: boolean
   healthStatus?: boolean
   lastError?: boolean
@@ -873,10 +1053,12 @@ export type OrganizationIntegrationSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OrganizationIntegrationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "integrationTypeId" | "lastHealthCheck" | "healthStatus" | "lastError" | "errorCount" | "enabled" | "config" | "createdAt" | "updatedAt", ExtArgs["result"]["organizationIntegration"]>
+export type OrganizationIntegrationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "integrationTypeId" | "enableByol" | "lastHealthCheck" | "healthStatus" | "lastError" | "errorCount" | "enabled" | "config" | "createdAt" | "updatedAt", ExtArgs["result"]["organizationIntegration"]>
 export type OrganizationIntegrationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   integrationType?: boolean | Prisma.IntegrationTypeDefaultArgs<ExtArgs>
+  projectIntegrations?: boolean | Prisma.OrganizationIntegration$projectIntegrationsArgs<ExtArgs>
+  _count?: boolean | Prisma.OrganizationIntegrationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrganizationIntegrationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
@@ -892,11 +1074,16 @@ export type $OrganizationIntegrationPayload<ExtArgs extends runtime.Types.Extens
   objects: {
     organization: Prisma.$OrganizationPayload<ExtArgs>
     integrationType: Prisma.$IntegrationTypePayload<ExtArgs>
+    projectIntegrations: Prisma.$ProjectIntegrationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     organizationId: string
     integrationTypeId: string
+    /**
+     * Habilitar possibilidade de Trazer a própria licença
+     */
+    enableByol: boolean
     lastHealthCheck: Date | null
     healthStatus: $Enums.IntegrationStatus | null
     lastError: string | null
@@ -1305,6 +1492,7 @@ export interface Prisma__OrganizationIntegrationClient<T, Null = never, ExtArgs 
   readonly [Symbol.toStringTag]: "PrismaPromise"
   organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   integrationType<T extends Prisma.IntegrationTypeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.IntegrationTypeDefaultArgs<ExtArgs>>): Prisma.Prisma__IntegrationTypeClient<runtime.Types.Result.GetResult<Prisma.$IntegrationTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  projectIntegrations<T extends Prisma.OrganizationIntegration$projectIntegrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationIntegration$projectIntegrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectIntegrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1337,6 +1525,7 @@ export interface OrganizationIntegrationFieldRefs {
   readonly id: Prisma.FieldRef<"OrganizationIntegration", 'String'>
   readonly organizationId: Prisma.FieldRef<"OrganizationIntegration", 'String'>
   readonly integrationTypeId: Prisma.FieldRef<"OrganizationIntegration", 'String'>
+  readonly enableByol: Prisma.FieldRef<"OrganizationIntegration", 'Boolean'>
   readonly lastHealthCheck: Prisma.FieldRef<"OrganizationIntegration", 'DateTime'>
   readonly healthStatus: Prisma.FieldRef<"OrganizationIntegration", 'IntegrationStatus'>
   readonly lastError: Prisma.FieldRef<"OrganizationIntegration", 'String'>
@@ -1738,6 +1927,30 @@ export type OrganizationIntegrationDeleteManyArgs<ExtArgs extends runtime.Types.
    * Limit how many OrganizationIntegrations to delete.
    */
   limit?: number
+}
+
+/**
+ * OrganizationIntegration.projectIntegrations
+ */
+export type OrganizationIntegration$projectIntegrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProjectIntegration
+   */
+  select?: Prisma.ProjectIntegrationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProjectIntegration
+   */
+  omit?: Prisma.ProjectIntegrationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectIntegrationInclude<ExtArgs> | null
+  where?: Prisma.ProjectIntegrationWhereInput
+  orderBy?: Prisma.ProjectIntegrationOrderByWithRelationInput | Prisma.ProjectIntegrationOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectIntegrationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProjectIntegrationScalarFieldEnum | Prisma.ProjectIntegrationScalarFieldEnum[]
 }
 
 /**

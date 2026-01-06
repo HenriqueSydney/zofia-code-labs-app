@@ -4,6 +4,7 @@ export const integrationTypeSchema = z.object({
   name: z.string().min(2, "Nome é obrigatório"),
   logo: z.string().optional().or(z.literal("")).nullable(),
   description: z.string(),
+  enableByol: z.boolean().default(false),
   externalDocsUrl: z
     .url("O link para documentação externa deve ser uma URL válida")
     .optional(),
@@ -12,6 +13,7 @@ export const integrationTypeSchema = z.object({
       key: z.string().min(1, "Chave técnica"),
       label: z.string().min(1, "Rótulo amigável"),
       type: z.enum(["text", "password", "email", "url"]),
+      dependsOnByol: z.boolean().default(false),
       required: z.boolean().default(true),
       isSecret: z.boolean().default(false), // Define se vai para o Infisical
     })

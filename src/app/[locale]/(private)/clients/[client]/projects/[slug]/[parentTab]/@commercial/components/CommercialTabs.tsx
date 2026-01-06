@@ -14,11 +14,17 @@ import { ReactNode } from "react";
 
 interface IProjectTabs {
   slug: string;
+  client: string;
   currentTab: string;
   children: ReactNode;
 }
 
-export function CommercialTabs({ slug, currentTab, children }: IProjectTabs) {
+export function CommercialTabs({
+  client,
+  slug,
+  currentTab,
+  children,
+}: IProjectTabs) {
   return (
     <Tabs value={currentTab ?? "proposals"} className="w-full ">
       <TabsList className="w-full h-full flex-col md:flex-row flex mb-2 items-center !justify-evenly glass-effect">
@@ -28,7 +34,7 @@ export function CommercialTabs({ slug, currentTab, children }: IProjectTabs) {
           asChild
         >
           <Link
-            href={`/projects/${slug}/project/commercial/proposals`}
+            href={`/clients/${client}/projects/${slug}/commercial/proposals`}
             scroll={false}
           >
             <FileText className="h-4 w-4" />
@@ -42,7 +48,7 @@ export function CommercialTabs({ slug, currentTab, children }: IProjectTabs) {
           asChild
         >
           <Link
-            href={`/projects/${slug}/project/commercial/contracts`}
+            href={`/clients/${client}/projects/${slug}/commercial/contracts`}
             scroll={false}
           >
             <FileSignature className="h-4 w-4" />
@@ -56,7 +62,7 @@ export function CommercialTabs({ slug, currentTab, children }: IProjectTabs) {
           asChild
         >
           <Link
-            href={`/projects/${slug}/project/commercial/payments`}
+            href={`/clients/${client}/projects/${slug}/commercial/payments`}
             scroll={false}
           >
             <CreditCard className="h-4 w-4" />
@@ -70,7 +76,7 @@ export function CommercialTabs({ slug, currentTab, children }: IProjectTabs) {
           asChild
         >
           <Link
-            href={`/projects/${slug}/project/commercial/expenses`}
+            href={`/clients/${client}/projects/${slug}/commercial/expenses`}
             scroll={false}
           >
             <Receipt className="h-4 w-4" />
@@ -84,7 +90,7 @@ export function CommercialTabs({ slug, currentTab, children }: IProjectTabs) {
           asChild
         >
           <Link
-            href={`/projects/${slug}/project/commercial/notifications`}
+            href={`/clients/${client}/projects/${slug}/commercial/notifications`}
             scroll={false}
           >
             <Bell className="h-4 w-4" />

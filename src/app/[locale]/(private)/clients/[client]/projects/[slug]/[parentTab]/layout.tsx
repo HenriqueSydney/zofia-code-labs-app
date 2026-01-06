@@ -15,6 +15,7 @@ interface LayoutProps {
   overview: React.ReactNode;
   commercial: React.ReactNode;
   backlog: React.ReactNode;
+  metrics: React.ReactNode;
   params: Promise<{ parentTab: string }>;
 }
 
@@ -22,6 +23,7 @@ export default async function ProjectLayout({
   overview,
   commercial,
   backlog,
+  metrics,
   params,
 }: LayoutProps) {
   const { slug, parentTab } = await getParams<{
@@ -85,6 +87,7 @@ export default async function ProjectLayout({
         {parentTab === "overview" && overview}
         {parentTab === "commercial" && commercial}
         {parentTab === "backlog" && backlog}
+        {parentTab === "metrics" && metrics}
       </ProjectTabs>
     </div>
   );

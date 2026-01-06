@@ -32,6 +32,7 @@ import { Integration } from "../page";
 import { updateOrganizationIntegrationAction } from "@/actions/integrations/updateOrganizationIntegrationAction";
 import { toast } from "sonner";
 import { Tooltip } from "@/components/Tooltip";
+import { testIntegrationConnectionAction } from "@/actions/integrations/testIntegrationConnectionAction";
 
 export function IntegrationCard({ integration }: { integration: Integration }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -55,13 +56,32 @@ export function IntegrationCard({ integration }: { integration: Integration }) {
     });
   };
 
+  const handleTestConnection = async () => {
+    if (!integration.orgIntegrationId) {
+      toast.error("Serviço não configurado");
+      return;
+    }
+
+    toast.info("Iniciando teste de conexão com o serviço");
+    const result = await testIntegrationConnectionAction(
+      integration.orgIntegrationId
+    );
+
+    toast.dismiss();
+    if (!result.success) {
+      toast.error("Não foi possível acessar o serviço");
+      return;
+    }
+
+    toast.success("Serviço está saudável e comunicável");
+  };
   return (
     <>
       <Card className="group relative overflow-hidden">
         <CardHeader className="pb-4">
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-4">
-              <div className="relative w-24 h-24 rounded-xl bg-white flex items-center justify-center p-2 border">
+              <div className="relative min-w-24 min-h-24 max-w-24 max-h-24 rounded-xl bg-white flex items-center justify-center p-2 border">
                 <Image
                   src={integration.logo ?? "/zofia-logo.webp"}
                   alt={integration.name}
@@ -118,7 +138,7 @@ export function IntegrationCard({ integration }: { integration: Integration }) {
             {integration.isConnected && (
               <Button
                 variant="secondary"
-                onClick={() => setIsModalOpen(true)}
+                onClick={handleTestConnection}
                 title="Testar conexão"
               >
                 <TestTubeDiagonal className="w-4 h-4" />
@@ -145,7 +165,7 @@ export function IntegrationCard({ integration }: { integration: Integration }) {
 
       {/* Modal de Configuração Dinâmica */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="max-w-xl">
           <DialogHeader>
             <DialogTitle>Configurar {integration.name}</DialogTitle>
             <DialogDescription>

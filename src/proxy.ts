@@ -21,6 +21,8 @@ export default auth(async (req) => {
     "document-sign/webhook"
   );
 
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set("x-pathname", nextUrl.pathname);
   // ------------------------------------------------------------------
   // 1. PROTEÇÃO DE API (Bearer Token customizado)
   // ------------------------------------------------------------------
@@ -46,7 +48,11 @@ export default auth(async (req) => {
         );
       }
 
-      return NextResponse.next();
+      return NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
     } else {
       // Caso contrário, verifica o Bearer Token:
       const authHeader = req.headers.get("authorization");
@@ -72,7 +78,11 @@ export default auth(async (req) => {
     }
 
     // Se passou, permite a requisição API passar
-    return NextResponse.next();
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
   }
 
   // ------------------------------------------------------------------
@@ -132,7 +142,13 @@ export default auth(async (req) => {
   // 3. FINALIZA COM NEXT-INTL
   // ------------------------------------------------------------------
   // Se passou por tudo, deixa o next-intl lidar com localização e resposta
-  return intlMiddleware(req);
+  const response = intlMiddleware(req);
+
+  // 2. Injetar o pathname nos headers da RESPOSTA
+  // O Next.js propaga headers de resposta do middleware para o Server Component headers()
+  response.headers.set("x-pathname", nextUrl.pathname);
+
+  return response;
 });
 
 export const config = {

@@ -29,6 +29,7 @@ export type ProjectIntegrationMinAggregateOutputType = {
   id: string | null
   projectId: string | null
   integrationTypeId: string | null
+  organizationIntegrationId: string | null
   enabled: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -38,6 +39,7 @@ export type ProjectIntegrationMaxAggregateOutputType = {
   id: string | null
   projectId: string | null
   integrationTypeId: string | null
+  organizationIntegrationId: string | null
   enabled: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -47,6 +49,7 @@ export type ProjectIntegrationCountAggregateOutputType = {
   id: number
   projectId: number
   integrationTypeId: number
+  organizationIntegrationId: number
   config: number
   enabled: number
   createdAt: number
@@ -59,6 +62,7 @@ export type ProjectIntegrationMinAggregateInputType = {
   id?: true
   projectId?: true
   integrationTypeId?: true
+  organizationIntegrationId?: true
   enabled?: true
   createdAt?: true
   updatedAt?: true
@@ -68,6 +72,7 @@ export type ProjectIntegrationMaxAggregateInputType = {
   id?: true
   projectId?: true
   integrationTypeId?: true
+  organizationIntegrationId?: true
   enabled?: true
   createdAt?: true
   updatedAt?: true
@@ -77,6 +82,7 @@ export type ProjectIntegrationCountAggregateInputType = {
   id?: true
   projectId?: true
   integrationTypeId?: true
+  organizationIntegrationId?: true
   config?: true
   enabled?: true
   createdAt?: true
@@ -160,6 +166,7 @@ export type ProjectIntegrationGroupByOutputType = {
   id: string
   projectId: string
   integrationTypeId: string
+  organizationIntegrationId: string
   config: runtime.JsonValue | null
   enabled: boolean
   createdAt: Date
@@ -191,24 +198,28 @@ export type ProjectIntegrationWhereInput = {
   id?: Prisma.StringFilter<"ProjectIntegration"> | string
   projectId?: Prisma.StringFilter<"ProjectIntegration"> | string
   integrationTypeId?: Prisma.StringFilter<"ProjectIntegration"> | string
+  organizationIntegrationId?: Prisma.StringFilter<"ProjectIntegration"> | string
   config?: Prisma.JsonNullableFilter<"ProjectIntegration">
   enabled?: Prisma.BoolFilter<"ProjectIntegration"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ProjectIntegration"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ProjectIntegration"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   integrationType?: Prisma.XOR<Prisma.IntegrationTypeScalarRelationFilter, Prisma.IntegrationTypeWhereInput>
+  organizationIntegration?: Prisma.XOR<Prisma.OrganizationIntegrationScalarRelationFilter, Prisma.OrganizationIntegrationWhereInput>
 }
 
 export type ProjectIntegrationOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   integrationTypeId?: Prisma.SortOrder
+  organizationIntegrationId?: Prisma.SortOrder
   config?: Prisma.SortOrderInput | Prisma.SortOrder
   enabled?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
   integrationType?: Prisma.IntegrationTypeOrderByWithRelationInput
+  organizationIntegration?: Prisma.OrganizationIntegrationOrderByWithRelationInput
 }
 
 export type ProjectIntegrationWhereUniqueInput = Prisma.AtLeast<{
@@ -218,18 +229,21 @@ export type ProjectIntegrationWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ProjectIntegrationWhereInput | Prisma.ProjectIntegrationWhereInput[]
   projectId?: Prisma.StringFilter<"ProjectIntegration"> | string
   integrationTypeId?: Prisma.StringFilter<"ProjectIntegration"> | string
+  organizationIntegrationId?: Prisma.StringFilter<"ProjectIntegration"> | string
   config?: Prisma.JsonNullableFilter<"ProjectIntegration">
   enabled?: Prisma.BoolFilter<"ProjectIntegration"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ProjectIntegration"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ProjectIntegration"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   integrationType?: Prisma.XOR<Prisma.IntegrationTypeScalarRelationFilter, Prisma.IntegrationTypeWhereInput>
+  organizationIntegration?: Prisma.XOR<Prisma.OrganizationIntegrationScalarRelationFilter, Prisma.OrganizationIntegrationWhereInput>
 }, "id">
 
 export type ProjectIntegrationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   integrationTypeId?: Prisma.SortOrder
+  organizationIntegrationId?: Prisma.SortOrder
   config?: Prisma.SortOrderInput | Prisma.SortOrder
   enabled?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -246,6 +260,7 @@ export type ProjectIntegrationScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"ProjectIntegration"> | string
   projectId?: Prisma.StringWithAggregatesFilter<"ProjectIntegration"> | string
   integrationTypeId?: Prisma.StringWithAggregatesFilter<"ProjectIntegration"> | string
+  organizationIntegrationId?: Prisma.StringWithAggregatesFilter<"ProjectIntegration"> | string
   config?: Prisma.JsonNullableWithAggregatesFilter<"ProjectIntegration">
   enabled?: Prisma.BoolWithAggregatesFilter<"ProjectIntegration"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ProjectIntegration"> | Date | string
@@ -260,12 +275,14 @@ export type ProjectIntegrationCreateInput = {
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutIntegrationsInput
   integrationType: Prisma.IntegrationTypeCreateNestedOneWithoutProjectConfigInput
+  organizationIntegration: Prisma.OrganizationIntegrationCreateNestedOneWithoutProjectIntegrationsInput
 }
 
 export type ProjectIntegrationUncheckedCreateInput = {
   id?: string
   projectId: string
   integrationTypeId: string
+  organizationIntegrationId: string
   config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   enabled?: boolean
   createdAt?: Date | string
@@ -280,12 +297,14 @@ export type ProjectIntegrationUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutIntegrationsNestedInput
   integrationType?: Prisma.IntegrationTypeUpdateOneRequiredWithoutProjectConfigNestedInput
+  organizationIntegration?: Prisma.OrganizationIntegrationUpdateOneRequiredWithoutProjectIntegrationsNestedInput
 }
 
 export type ProjectIntegrationUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   integrationTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationIntegrationId?: Prisma.StringFieldUpdateOperationsInput | string
   config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -296,6 +315,7 @@ export type ProjectIntegrationCreateManyInput = {
   id?: string
   projectId: string
   integrationTypeId: string
+  organizationIntegrationId: string
   config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   enabled?: boolean
   createdAt?: Date | string
@@ -314,6 +334,7 @@ export type ProjectIntegrationUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   integrationTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationIntegrationId?: Prisma.StringFieldUpdateOperationsInput | string
   config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -334,6 +355,7 @@ export type ProjectIntegrationCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   integrationTypeId?: Prisma.SortOrder
+  organizationIntegrationId?: Prisma.SortOrder
   config?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -344,6 +366,7 @@ export type ProjectIntegrationMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   integrationTypeId?: Prisma.SortOrder
+  organizationIntegrationId?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -353,6 +376,7 @@ export type ProjectIntegrationMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   integrationTypeId?: Prisma.SortOrder
+  organizationIntegrationId?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -442,6 +466,48 @@ export type ProjectIntegrationUncheckedUpdateManyWithoutIntegrationTypeNestedInp
   deleteMany?: Prisma.ProjectIntegrationScalarWhereInput | Prisma.ProjectIntegrationScalarWhereInput[]
 }
 
+export type ProjectIntegrationCreateNestedManyWithoutOrganizationIntegrationInput = {
+  create?: Prisma.XOR<Prisma.ProjectIntegrationCreateWithoutOrganizationIntegrationInput, Prisma.ProjectIntegrationUncheckedCreateWithoutOrganizationIntegrationInput> | Prisma.ProjectIntegrationCreateWithoutOrganizationIntegrationInput[] | Prisma.ProjectIntegrationUncheckedCreateWithoutOrganizationIntegrationInput[]
+  connectOrCreate?: Prisma.ProjectIntegrationCreateOrConnectWithoutOrganizationIntegrationInput | Prisma.ProjectIntegrationCreateOrConnectWithoutOrganizationIntegrationInput[]
+  createMany?: Prisma.ProjectIntegrationCreateManyOrganizationIntegrationInputEnvelope
+  connect?: Prisma.ProjectIntegrationWhereUniqueInput | Prisma.ProjectIntegrationWhereUniqueInput[]
+}
+
+export type ProjectIntegrationUncheckedCreateNestedManyWithoutOrganizationIntegrationInput = {
+  create?: Prisma.XOR<Prisma.ProjectIntegrationCreateWithoutOrganizationIntegrationInput, Prisma.ProjectIntegrationUncheckedCreateWithoutOrganizationIntegrationInput> | Prisma.ProjectIntegrationCreateWithoutOrganizationIntegrationInput[] | Prisma.ProjectIntegrationUncheckedCreateWithoutOrganizationIntegrationInput[]
+  connectOrCreate?: Prisma.ProjectIntegrationCreateOrConnectWithoutOrganizationIntegrationInput | Prisma.ProjectIntegrationCreateOrConnectWithoutOrganizationIntegrationInput[]
+  createMany?: Prisma.ProjectIntegrationCreateManyOrganizationIntegrationInputEnvelope
+  connect?: Prisma.ProjectIntegrationWhereUniqueInput | Prisma.ProjectIntegrationWhereUniqueInput[]
+}
+
+export type ProjectIntegrationUpdateManyWithoutOrganizationIntegrationNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectIntegrationCreateWithoutOrganizationIntegrationInput, Prisma.ProjectIntegrationUncheckedCreateWithoutOrganizationIntegrationInput> | Prisma.ProjectIntegrationCreateWithoutOrganizationIntegrationInput[] | Prisma.ProjectIntegrationUncheckedCreateWithoutOrganizationIntegrationInput[]
+  connectOrCreate?: Prisma.ProjectIntegrationCreateOrConnectWithoutOrganizationIntegrationInput | Prisma.ProjectIntegrationCreateOrConnectWithoutOrganizationIntegrationInput[]
+  upsert?: Prisma.ProjectIntegrationUpsertWithWhereUniqueWithoutOrganizationIntegrationInput | Prisma.ProjectIntegrationUpsertWithWhereUniqueWithoutOrganizationIntegrationInput[]
+  createMany?: Prisma.ProjectIntegrationCreateManyOrganizationIntegrationInputEnvelope
+  set?: Prisma.ProjectIntegrationWhereUniqueInput | Prisma.ProjectIntegrationWhereUniqueInput[]
+  disconnect?: Prisma.ProjectIntegrationWhereUniqueInput | Prisma.ProjectIntegrationWhereUniqueInput[]
+  delete?: Prisma.ProjectIntegrationWhereUniqueInput | Prisma.ProjectIntegrationWhereUniqueInput[]
+  connect?: Prisma.ProjectIntegrationWhereUniqueInput | Prisma.ProjectIntegrationWhereUniqueInput[]
+  update?: Prisma.ProjectIntegrationUpdateWithWhereUniqueWithoutOrganizationIntegrationInput | Prisma.ProjectIntegrationUpdateWithWhereUniqueWithoutOrganizationIntegrationInput[]
+  updateMany?: Prisma.ProjectIntegrationUpdateManyWithWhereWithoutOrganizationIntegrationInput | Prisma.ProjectIntegrationUpdateManyWithWhereWithoutOrganizationIntegrationInput[]
+  deleteMany?: Prisma.ProjectIntegrationScalarWhereInput | Prisma.ProjectIntegrationScalarWhereInput[]
+}
+
+export type ProjectIntegrationUncheckedUpdateManyWithoutOrganizationIntegrationNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectIntegrationCreateWithoutOrganizationIntegrationInput, Prisma.ProjectIntegrationUncheckedCreateWithoutOrganizationIntegrationInput> | Prisma.ProjectIntegrationCreateWithoutOrganizationIntegrationInput[] | Prisma.ProjectIntegrationUncheckedCreateWithoutOrganizationIntegrationInput[]
+  connectOrCreate?: Prisma.ProjectIntegrationCreateOrConnectWithoutOrganizationIntegrationInput | Prisma.ProjectIntegrationCreateOrConnectWithoutOrganizationIntegrationInput[]
+  upsert?: Prisma.ProjectIntegrationUpsertWithWhereUniqueWithoutOrganizationIntegrationInput | Prisma.ProjectIntegrationUpsertWithWhereUniqueWithoutOrganizationIntegrationInput[]
+  createMany?: Prisma.ProjectIntegrationCreateManyOrganizationIntegrationInputEnvelope
+  set?: Prisma.ProjectIntegrationWhereUniqueInput | Prisma.ProjectIntegrationWhereUniqueInput[]
+  disconnect?: Prisma.ProjectIntegrationWhereUniqueInput | Prisma.ProjectIntegrationWhereUniqueInput[]
+  delete?: Prisma.ProjectIntegrationWhereUniqueInput | Prisma.ProjectIntegrationWhereUniqueInput[]
+  connect?: Prisma.ProjectIntegrationWhereUniqueInput | Prisma.ProjectIntegrationWhereUniqueInput[]
+  update?: Prisma.ProjectIntegrationUpdateWithWhereUniqueWithoutOrganizationIntegrationInput | Prisma.ProjectIntegrationUpdateWithWhereUniqueWithoutOrganizationIntegrationInput[]
+  updateMany?: Prisma.ProjectIntegrationUpdateManyWithWhereWithoutOrganizationIntegrationInput | Prisma.ProjectIntegrationUpdateManyWithWhereWithoutOrganizationIntegrationInput[]
+  deleteMany?: Prisma.ProjectIntegrationScalarWhereInput | Prisma.ProjectIntegrationScalarWhereInput[]
+}
+
 export type ProjectIntegrationCreateWithoutProjectInput = {
   id?: string
   config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -449,11 +515,13 @@ export type ProjectIntegrationCreateWithoutProjectInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   integrationType: Prisma.IntegrationTypeCreateNestedOneWithoutProjectConfigInput
+  organizationIntegration: Prisma.OrganizationIntegrationCreateNestedOneWithoutProjectIntegrationsInput
 }
 
 export type ProjectIntegrationUncheckedCreateWithoutProjectInput = {
   id?: string
   integrationTypeId: string
+  organizationIntegrationId: string
   config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   enabled?: boolean
   createdAt?: Date | string
@@ -493,6 +561,7 @@ export type ProjectIntegrationScalarWhereInput = {
   id?: Prisma.StringFilter<"ProjectIntegration"> | string
   projectId?: Prisma.StringFilter<"ProjectIntegration"> | string
   integrationTypeId?: Prisma.StringFilter<"ProjectIntegration"> | string
+  organizationIntegrationId?: Prisma.StringFilter<"ProjectIntegration"> | string
   config?: Prisma.JsonNullableFilter<"ProjectIntegration">
   enabled?: Prisma.BoolFilter<"ProjectIntegration"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ProjectIntegration"> | Date | string
@@ -506,11 +575,13 @@ export type ProjectIntegrationCreateWithoutIntegrationTypeInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutIntegrationsInput
+  organizationIntegration: Prisma.OrganizationIntegrationCreateNestedOneWithoutProjectIntegrationsInput
 }
 
 export type ProjectIntegrationUncheckedCreateWithoutIntegrationTypeInput = {
   id?: string
   projectId: string
+  organizationIntegrationId: string
   config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   enabled?: boolean
   createdAt?: Date | string
@@ -543,9 +614,56 @@ export type ProjectIntegrationUpdateManyWithWhereWithoutIntegrationTypeInput = {
   data: Prisma.XOR<Prisma.ProjectIntegrationUpdateManyMutationInput, Prisma.ProjectIntegrationUncheckedUpdateManyWithoutIntegrationTypeInput>
 }
 
+export type ProjectIntegrationCreateWithoutOrganizationIntegrationInput = {
+  id?: string
+  config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  enabled?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  project: Prisma.ProjectCreateNestedOneWithoutIntegrationsInput
+  integrationType: Prisma.IntegrationTypeCreateNestedOneWithoutProjectConfigInput
+}
+
+export type ProjectIntegrationUncheckedCreateWithoutOrganizationIntegrationInput = {
+  id?: string
+  projectId: string
+  integrationTypeId: string
+  config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  enabled?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ProjectIntegrationCreateOrConnectWithoutOrganizationIntegrationInput = {
+  where: Prisma.ProjectIntegrationWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectIntegrationCreateWithoutOrganizationIntegrationInput, Prisma.ProjectIntegrationUncheckedCreateWithoutOrganizationIntegrationInput>
+}
+
+export type ProjectIntegrationCreateManyOrganizationIntegrationInputEnvelope = {
+  data: Prisma.ProjectIntegrationCreateManyOrganizationIntegrationInput | Prisma.ProjectIntegrationCreateManyOrganizationIntegrationInput[]
+  skipDuplicates?: boolean
+}
+
+export type ProjectIntegrationUpsertWithWhereUniqueWithoutOrganizationIntegrationInput = {
+  where: Prisma.ProjectIntegrationWhereUniqueInput
+  update: Prisma.XOR<Prisma.ProjectIntegrationUpdateWithoutOrganizationIntegrationInput, Prisma.ProjectIntegrationUncheckedUpdateWithoutOrganizationIntegrationInput>
+  create: Prisma.XOR<Prisma.ProjectIntegrationCreateWithoutOrganizationIntegrationInput, Prisma.ProjectIntegrationUncheckedCreateWithoutOrganizationIntegrationInput>
+}
+
+export type ProjectIntegrationUpdateWithWhereUniqueWithoutOrganizationIntegrationInput = {
+  where: Prisma.ProjectIntegrationWhereUniqueInput
+  data: Prisma.XOR<Prisma.ProjectIntegrationUpdateWithoutOrganizationIntegrationInput, Prisma.ProjectIntegrationUncheckedUpdateWithoutOrganizationIntegrationInput>
+}
+
+export type ProjectIntegrationUpdateManyWithWhereWithoutOrganizationIntegrationInput = {
+  where: Prisma.ProjectIntegrationScalarWhereInput
+  data: Prisma.XOR<Prisma.ProjectIntegrationUpdateManyMutationInput, Prisma.ProjectIntegrationUncheckedUpdateManyWithoutOrganizationIntegrationInput>
+}
+
 export type ProjectIntegrationCreateManyProjectInput = {
   id?: string
   integrationTypeId: string
+  organizationIntegrationId: string
   config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   enabled?: boolean
   createdAt?: Date | string
@@ -559,11 +677,13 @@ export type ProjectIntegrationUpdateWithoutProjectInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   integrationType?: Prisma.IntegrationTypeUpdateOneRequiredWithoutProjectConfigNestedInput
+  organizationIntegration?: Prisma.OrganizationIntegrationUpdateOneRequiredWithoutProjectIntegrationsNestedInput
 }
 
 export type ProjectIntegrationUncheckedUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   integrationTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationIntegrationId?: Prisma.StringFieldUpdateOperationsInput | string
   config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -573,6 +693,7 @@ export type ProjectIntegrationUncheckedUpdateWithoutProjectInput = {
 export type ProjectIntegrationUncheckedUpdateManyWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   integrationTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationIntegrationId?: Prisma.StringFieldUpdateOperationsInput | string
   config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -582,6 +703,7 @@ export type ProjectIntegrationUncheckedUpdateManyWithoutProjectInput = {
 export type ProjectIntegrationCreateManyIntegrationTypeInput = {
   id?: string
   projectId: string
+  organizationIntegrationId: string
   config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   enabled?: boolean
   createdAt?: Date | string
@@ -595,11 +717,13 @@ export type ProjectIntegrationUpdateWithoutIntegrationTypeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutIntegrationsNestedInput
+  organizationIntegration?: Prisma.OrganizationIntegrationUpdateOneRequiredWithoutProjectIntegrationsNestedInput
 }
 
 export type ProjectIntegrationUncheckedUpdateWithoutIntegrationTypeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationIntegrationId?: Prisma.StringFieldUpdateOperationsInput | string
   config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -609,6 +733,47 @@ export type ProjectIntegrationUncheckedUpdateWithoutIntegrationTypeInput = {
 export type ProjectIntegrationUncheckedUpdateManyWithoutIntegrationTypeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationIntegrationId?: Prisma.StringFieldUpdateOperationsInput | string
+  config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ProjectIntegrationCreateManyOrganizationIntegrationInput = {
+  id?: string
+  projectId: string
+  integrationTypeId: string
+  config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  enabled?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ProjectIntegrationUpdateWithoutOrganizationIntegrationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneRequiredWithoutIntegrationsNestedInput
+  integrationType?: Prisma.IntegrationTypeUpdateOneRequiredWithoutProjectConfigNestedInput
+}
+
+export type ProjectIntegrationUncheckedUpdateWithoutOrganizationIntegrationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  integrationTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ProjectIntegrationUncheckedUpdateManyWithoutOrganizationIntegrationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  integrationTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   config?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -621,60 +786,70 @@ export type ProjectIntegrationSelect<ExtArgs extends runtime.Types.Extensions.In
   id?: boolean
   projectId?: boolean
   integrationTypeId?: boolean
+  organizationIntegrationId?: boolean
   config?: boolean
   enabled?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   integrationType?: boolean | Prisma.IntegrationTypeDefaultArgs<ExtArgs>
+  organizationIntegration?: boolean | Prisma.OrganizationIntegrationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["projectIntegration"]>
 
 export type ProjectIntegrationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   projectId?: boolean
   integrationTypeId?: boolean
+  organizationIntegrationId?: boolean
   config?: boolean
   enabled?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   integrationType?: boolean | Prisma.IntegrationTypeDefaultArgs<ExtArgs>
+  organizationIntegration?: boolean | Prisma.OrganizationIntegrationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["projectIntegration"]>
 
 export type ProjectIntegrationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   projectId?: boolean
   integrationTypeId?: boolean
+  organizationIntegrationId?: boolean
   config?: boolean
   enabled?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   integrationType?: boolean | Prisma.IntegrationTypeDefaultArgs<ExtArgs>
+  organizationIntegration?: boolean | Prisma.OrganizationIntegrationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["projectIntegration"]>
 
 export type ProjectIntegrationSelectScalar = {
   id?: boolean
   projectId?: boolean
   integrationTypeId?: boolean
+  organizationIntegrationId?: boolean
   config?: boolean
   enabled?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ProjectIntegrationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "integrationTypeId" | "config" | "enabled" | "createdAt" | "updatedAt", ExtArgs["result"]["projectIntegration"]>
+export type ProjectIntegrationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "integrationTypeId" | "organizationIntegrationId" | "config" | "enabled" | "createdAt" | "updatedAt", ExtArgs["result"]["projectIntegration"]>
 export type ProjectIntegrationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   integrationType?: boolean | Prisma.IntegrationTypeDefaultArgs<ExtArgs>
+  organizationIntegration?: boolean | Prisma.OrganizationIntegrationDefaultArgs<ExtArgs>
 }
 export type ProjectIntegrationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   integrationType?: boolean | Prisma.IntegrationTypeDefaultArgs<ExtArgs>
+  organizationIntegration?: boolean | Prisma.OrganizationIntegrationDefaultArgs<ExtArgs>
 }
 export type ProjectIntegrationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   integrationType?: boolean | Prisma.IntegrationTypeDefaultArgs<ExtArgs>
+  organizationIntegration?: boolean | Prisma.OrganizationIntegrationDefaultArgs<ExtArgs>
 }
 
 export type $ProjectIntegrationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -682,11 +857,13 @@ export type $ProjectIntegrationPayload<ExtArgs extends runtime.Types.Extensions.
   objects: {
     project: Prisma.$ProjectPayload<ExtArgs>
     integrationType: Prisma.$IntegrationTypePayload<ExtArgs>
+    organizationIntegration: Prisma.$OrganizationIntegrationPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     projectId: string
     integrationTypeId: string
+    organizationIntegrationId: string
     /**
      * Configuração específica deste projeto
      * Ex: { "repoUrl": "...", "channelId": "...", "webhookUrl": "..." }
@@ -1091,6 +1268,7 @@ export interface Prisma__ProjectIntegrationClient<T, Null = never, ExtArgs exten
   readonly [Symbol.toStringTag]: "PrismaPromise"
   project<T extends Prisma.ProjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProjectDefaultArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   integrationType<T extends Prisma.IntegrationTypeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.IntegrationTypeDefaultArgs<ExtArgs>>): Prisma.Prisma__IntegrationTypeClient<runtime.Types.Result.GetResult<Prisma.$IntegrationTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  organizationIntegration<T extends Prisma.OrganizationIntegrationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationIntegrationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationIntegrationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationIntegrationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1123,6 +1301,7 @@ export interface ProjectIntegrationFieldRefs {
   readonly id: Prisma.FieldRef<"ProjectIntegration", 'String'>
   readonly projectId: Prisma.FieldRef<"ProjectIntegration", 'String'>
   readonly integrationTypeId: Prisma.FieldRef<"ProjectIntegration", 'String'>
+  readonly organizationIntegrationId: Prisma.FieldRef<"ProjectIntegration", 'String'>
   readonly config: Prisma.FieldRef<"ProjectIntegration", 'Json'>
   readonly enabled: Prisma.FieldRef<"ProjectIntegration", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"ProjectIntegration", 'DateTime'>

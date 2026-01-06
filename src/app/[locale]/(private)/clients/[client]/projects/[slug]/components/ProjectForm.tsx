@@ -119,6 +119,7 @@ export function ProjectForm({
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
+                  disabled={!!clientId}
                 >
                   <FormControl>
                     <SelectTrigger>

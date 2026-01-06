@@ -559,12 +559,13 @@ model Project {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  integrations     ProjectIntegration[]
-  projectServices  ProjectServices[]
-  projectDocuments ProjectDocuments[]
-  contracts        Contract[]
-  budgetEntries    BudgetEntry[]
-  expenses         Expense[]
+  integrations         ProjectIntegration[]
+  projectServices      ProjectServices[]
+  projectDocuments     ProjectDocuments[]
+  contracts            Contract[]
+  budgetEntries        BudgetEntry[]
+  expenses             Expense[]
+  sonarMetricSnapshots SonarMetricSnapshot[]
 
   @@map("projects")
   @@schema("projects")
@@ -872,10 +873,11 @@ enum JobStatus {
 /// Nível 1: Catálogo Global (O que o seu software suporta)
 /// Ex: { name: "GitHub", slug: "github", logo: "..." }
 model IntegrationType {
-  id   String  @id @default(cuid())
-  name String  @db.VarChar(100)
-  slug String  @unique @db.VarChar(50) /// Identificador único no código
-  logo String? @db.Text
+  id         String  @id @default(cuid())
+  name       String  @db.VarChar(100)
+  slug       String  @unique @db.VarChar(50) /// Identificador único no código
+  logo       String? @db.Text
+  enableByol Boolean @default(false) @map("enable_byol") /// Habilitar possibilidade de Trazer a própria licença
 
   description String? @db.Text
 
@@ -908,13 +910,13 @@ model OrganizationIntegration {
   organizationId String       @map("organization_id")
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
-  integrationTypeId String          @map("integration_type_id")
-  integrationType   IntegrationType @relation(fields: [integrationTypeId], references: [id])
-
-  lastHealthCheck DateTime?
-  healthStatus    IntegrationStatus? // "healthy", "warning", "error"
-  lastError       String?
-  errorCount      Int                @default(0)
+  integrationTypeId String             @map("integration_type_id")
+  integrationType   IntegrationType    @relation(fields: [integrationTypeId], references: [id])
+  enableByol        Boolean            @default(false) @map("enable_byol") /// Habilitar possibilidade de Trazer a própria licença
+  lastHealthCheck   DateTime?
+  healthStatus      IntegrationStatus? // "healthy", "warning", "error"
+  lastError         String?
+  errorCount        Int                @default(0)
 
   enabled Boolean @default(true)
 
@@ -922,8 +924,9 @@ model OrganizationIntegration {
   /// CUIDADO: Campos sensíveis devem ser encriptados antes de salvar aqui
   config Json? @db.JsonB
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @updatedAt @map("updated_at")
+  projectIntegrations ProjectIntegration[]
 
   // Garante que a organização só tenha 1 configuração para cada tipo de integração
   @@unique([organizationId, integrationTypeId])
@@ -941,6 +944,9 @@ model ProjectIntegration {
   integrationTypeId String          @map("integration_type_id")
   integrationType   IntegrationType @relation(fields: [integrationTypeId], references: [id])
 
+  organizationIntegrationId String                  @map("organization_integration_id")
+  organizationIntegration   OrganizationIntegration @relation(fields: [organizationIntegrationId], references: [id])
+
   /// Configuração específica deste projeto
   /// Ex: { "repoUrl": "...", "channelId": "...", "webhookUrl": "..." }
   config Json? @db.JsonB
@@ -951,6 +957,52 @@ model ProjectIntegration {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("project_integrations")
+  @@schema("integrations")
+}
+
+model SonarMetricSnapshot {
+  id        String  @id @default(uuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  // Controle de tempo para os gráficos de evolução
+  timestamp DateTime @default(now())
+
+  bugs            Int
+  vulnerabilities Int
+  codeSmells      Int
+  coverage        Float
+  duplications    Float
+  technicalDebt   Int // Armazenado em minutos (sqale_index)
+  status          String // OK, ERROR, WARN (alert_status)
+  securityRating  String // A, B, C, D, E
+
+  blockerViolations  Int @default(0)
+  criticalViolations Int @default(0)
+  majorViolations    Int @default(0)
+  minorViolations    Int @default(0)
+  infoViolations     Int @default(0)
+
+  gateConditions SonarQualityGateCondition[]
+
+  @@index([projectId, timestamp(sort: Desc)])
+  @@index([status])
+  @@map("sonar_metric_snapshots")
+  @@schema("integrations")
+}
+
+model SonarQualityGateCondition {
+  id         String              @id @default(uuid())
+  snapshotId String
+  snapshot   SonarMetricSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+
+  metric    String // ex: "new_coverage", "critical_violations"
+  value     String // Valor atual (string pois pode ser "80.5" ou "true")
+  threshold String // Limite definido no Sonar
+  status    String // OK, ERROR, WARN
+
+  @@index([snapshotId])
+  @@map("sonar_quality_gate_conditions")
   @@schema("integrations")
 }
 

@@ -64,7 +64,7 @@ const Integrations = async ({ searchParams }: IParams) => {
               <CardHeader className="space-y-4">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="relative w-12 h-12 p-0.5 rounded-xl bg-white border border-border">
+                    <div className="relative min-w-12 min-h-12 max-w-12 max-h-12 p-0.5 rounded-xl bg-white border border-border">
                       <Image
                         src={integration.logo ?? "/zofia-logo.webp"}
                         alt={integration.name}

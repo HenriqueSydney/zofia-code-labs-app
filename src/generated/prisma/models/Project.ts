@@ -326,6 +326,7 @@ export type ProjectWhereInput = {
   contracts?: Prisma.ContractListRelationFilter
   budgetEntries?: Prisma.BudgetEntryListRelationFilter
   expenses?: Prisma.ExpenseListRelationFilter
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotListRelationFilter
 }
 
 export type ProjectOrderByWithRelationInput = {
@@ -359,6 +360,7 @@ export type ProjectOrderByWithRelationInput = {
   contracts?: Prisma.ContractOrderByRelationAggregateInput
   budgetEntries?: Prisma.BudgetEntryOrderByRelationAggregateInput
   expenses?: Prisma.ExpenseOrderByRelationAggregateInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotOrderByRelationAggregateInput
 }
 
 export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -395,6 +397,7 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   contracts?: Prisma.ContractListRelationFilter
   budgetEntries?: Prisma.BudgetEntryListRelationFilter
   expenses?: Prisma.ExpenseListRelationFilter
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotListRelationFilter
 }, "id" | "slug">
 
 export type ProjectOrderByWithAggregationInput = {
@@ -471,6 +474,7 @@ export type ProjectCreateInput = {
   contracts?: Prisma.ContractCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateInput = {
@@ -501,6 +505,7 @@ export type ProjectUncheckedCreateInput = {
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUpdateInput = {
@@ -531,6 +536,7 @@ export type ProjectUpdateInput = {
   contracts?: Prisma.ContractUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateInput = {
@@ -561,6 +567,7 @@ export type ProjectUncheckedUpdateInput = {
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyInput = {
@@ -985,6 +992,20 @@ export type ProjectUpdateOneRequiredWithoutIntegrationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutIntegrationsInput, Prisma.ProjectUpdateWithoutIntegrationsInput>, Prisma.ProjectUncheckedUpdateWithoutIntegrationsInput>
 }
 
+export type ProjectCreateNestedOneWithoutSonarMetricSnapshotsInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutSonarMetricSnapshotsInput, Prisma.ProjectUncheckedCreateWithoutSonarMetricSnapshotsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutSonarMetricSnapshotsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutSonarMetricSnapshotsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutSonarMetricSnapshotsInput, Prisma.ProjectUncheckedCreateWithoutSonarMetricSnapshotsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutSonarMetricSnapshotsInput
+  upsert?: Prisma.ProjectUpsertWithoutSonarMetricSnapshotsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutSonarMetricSnapshotsInput, Prisma.ProjectUpdateWithoutSonarMetricSnapshotsInput>, Prisma.ProjectUncheckedUpdateWithoutSonarMetricSnapshotsInput>
+}
+
 export type ProjectCreateWithoutOrganizationInput = {
   id?: string
   name: string
@@ -1012,6 +1033,7 @@ export type ProjectCreateWithoutOrganizationInput = {
   contracts?: Prisma.ContractCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutOrganizationInput = {
@@ -1041,6 +1063,7 @@ export type ProjectUncheckedCreateWithoutOrganizationInput = {
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutOrganizationInput = {
@@ -1118,6 +1141,7 @@ export type ProjectCreateWithoutUserInput = {
   contracts?: Prisma.ContractCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutUserInput = {
@@ -1147,6 +1171,7 @@ export type ProjectUncheckedCreateWithoutUserInput = {
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutUserInput = {
@@ -1202,6 +1227,7 @@ export type ProjectCreateWithoutClientInput = {
   contracts?: Prisma.ContractCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutClientInput = {
@@ -1231,6 +1257,7 @@ export type ProjectUncheckedCreateWithoutClientInput = {
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutClientInput = {
@@ -1286,6 +1313,7 @@ export type ProjectCreateWithoutProposalInput = {
   contracts?: Prisma.ContractCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutProposalInput = {
@@ -1315,6 +1343,7 @@ export type ProjectUncheckedCreateWithoutProposalInput = {
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutProposalInput = {
@@ -1360,6 +1389,7 @@ export type ProjectUpdateWithoutProposalInput = {
   contracts?: Prisma.ContractUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutProposalInput = {
@@ -1389,6 +1419,7 @@ export type ProjectUncheckedUpdateWithoutProposalInput = {
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutContractsInput = {
@@ -1418,6 +1449,7 @@ export type ProjectCreateWithoutContractsInput = {
   projectDocuments?: Prisma.ProjectDocumentsCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutContractsInput = {
@@ -1447,6 +1479,7 @@ export type ProjectUncheckedCreateWithoutContractsInput = {
   projectDocuments?: Prisma.ProjectDocumentsUncheckedCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutContractsInput = {
@@ -1492,6 +1525,7 @@ export type ProjectUpdateWithoutContractsInput = {
   projectDocuments?: Prisma.ProjectDocumentsUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutContractsInput = {
@@ -1521,6 +1555,7 @@ export type ProjectUncheckedUpdateWithoutContractsInput = {
   projectDocuments?: Prisma.ProjectDocumentsUncheckedUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutProjectDocumentsInput = {
@@ -1550,6 +1585,7 @@ export type ProjectCreateWithoutProjectDocumentsInput = {
   contracts?: Prisma.ContractCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutProjectDocumentsInput = {
@@ -1579,6 +1615,7 @@ export type ProjectUncheckedCreateWithoutProjectDocumentsInput = {
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutProjectDocumentsInput = {
@@ -1624,6 +1661,7 @@ export type ProjectUpdateWithoutProjectDocumentsInput = {
   contracts?: Prisma.ContractUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutProjectDocumentsInput = {
@@ -1653,6 +1691,7 @@ export type ProjectUncheckedUpdateWithoutProjectDocumentsInput = {
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutProjectServicesInput = {
@@ -1682,6 +1721,7 @@ export type ProjectCreateWithoutProjectServicesInput = {
   contracts?: Prisma.ContractCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutProjectServicesInput = {
@@ -1711,6 +1751,7 @@ export type ProjectUncheckedCreateWithoutProjectServicesInput = {
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutProjectServicesInput = {
@@ -1756,6 +1797,7 @@ export type ProjectUpdateWithoutProjectServicesInput = {
   contracts?: Prisma.ContractUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutProjectServicesInput = {
@@ -1785,6 +1827,7 @@ export type ProjectUncheckedUpdateWithoutProjectServicesInput = {
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutNotesInput = {
@@ -1814,6 +1857,7 @@ export type ProjectCreateWithoutNotesInput = {
   contracts?: Prisma.ContractCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutNotesInput = {
@@ -1843,6 +1887,7 @@ export type ProjectUncheckedCreateWithoutNotesInput = {
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutNotesInput = {
@@ -1888,6 +1933,7 @@ export type ProjectUpdateWithoutNotesInput = {
   contracts?: Prisma.ContractUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutNotesInput = {
@@ -1917,6 +1963,7 @@ export type ProjectUncheckedUpdateWithoutNotesInput = {
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutSprintsInput = {
@@ -1946,6 +1993,7 @@ export type ProjectCreateWithoutSprintsInput = {
   contracts?: Prisma.ContractCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutSprintsInput = {
@@ -1975,6 +2023,7 @@ export type ProjectUncheckedCreateWithoutSprintsInput = {
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutSprintsInput = {
@@ -2020,6 +2069,7 @@ export type ProjectUpdateWithoutSprintsInput = {
   contracts?: Prisma.ContractUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutSprintsInput = {
@@ -2049,6 +2099,7 @@ export type ProjectUncheckedUpdateWithoutSprintsInput = {
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutBacklogInput = {
@@ -2078,6 +2129,7 @@ export type ProjectCreateWithoutBacklogInput = {
   contracts?: Prisma.ContractCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutBacklogInput = {
@@ -2107,6 +2159,7 @@ export type ProjectUncheckedCreateWithoutBacklogInput = {
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutBacklogInput = {
@@ -2152,6 +2205,7 @@ export type ProjectUpdateWithoutBacklogInput = {
   contracts?: Prisma.ContractUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutBacklogInput = {
@@ -2181,6 +2235,7 @@ export type ProjectUncheckedUpdateWithoutBacklogInput = {
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutBudgetEntriesInput = {
@@ -2210,6 +2265,7 @@ export type ProjectCreateWithoutBudgetEntriesInput = {
   projectDocuments?: Prisma.ProjectDocumentsCreateNestedManyWithoutProjectInput
   contracts?: Prisma.ContractCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutBudgetEntriesInput = {
@@ -2239,6 +2295,7 @@ export type ProjectUncheckedCreateWithoutBudgetEntriesInput = {
   projectDocuments?: Prisma.ProjectDocumentsUncheckedCreateNestedManyWithoutProjectInput
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutBudgetEntriesInput = {
@@ -2284,6 +2341,7 @@ export type ProjectUpdateWithoutBudgetEntriesInput = {
   projectDocuments?: Prisma.ProjectDocumentsUpdateManyWithoutProjectNestedInput
   contracts?: Prisma.ContractUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutBudgetEntriesInput = {
@@ -2313,6 +2371,7 @@ export type ProjectUncheckedUpdateWithoutBudgetEntriesInput = {
   projectDocuments?: Prisma.ProjectDocumentsUncheckedUpdateManyWithoutProjectNestedInput
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutExpensesInput = {
@@ -2342,6 +2401,7 @@ export type ProjectCreateWithoutExpensesInput = {
   projectDocuments?: Prisma.ProjectDocumentsCreateNestedManyWithoutProjectInput
   contracts?: Prisma.ContractCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutExpensesInput = {
@@ -2371,6 +2431,7 @@ export type ProjectUncheckedCreateWithoutExpensesInput = {
   projectDocuments?: Prisma.ProjectDocumentsUncheckedCreateNestedManyWithoutProjectInput
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutExpensesInput = {
@@ -2416,6 +2477,7 @@ export type ProjectUpdateWithoutExpensesInput = {
   projectDocuments?: Prisma.ProjectDocumentsUpdateManyWithoutProjectNestedInput
   contracts?: Prisma.ContractUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutExpensesInput = {
@@ -2445,6 +2507,7 @@ export type ProjectUncheckedUpdateWithoutExpensesInput = {
   projectDocuments?: Prisma.ProjectDocumentsUncheckedUpdateManyWithoutProjectNestedInput
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutInvoicesInput = {
@@ -2474,6 +2537,7 @@ export type ProjectCreateWithoutInvoicesInput = {
   contracts?: Prisma.ContractCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutInvoicesInput = {
@@ -2503,6 +2567,7 @@ export type ProjectUncheckedCreateWithoutInvoicesInput = {
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutInvoicesInput = {
@@ -2548,6 +2613,7 @@ export type ProjectUpdateWithoutInvoicesInput = {
   contracts?: Prisma.ContractUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutInvoicesInput = {
@@ -2577,6 +2643,7 @@ export type ProjectUncheckedUpdateWithoutInvoicesInput = {
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutIntegrationsInput = {
@@ -2606,6 +2673,7 @@ export type ProjectCreateWithoutIntegrationsInput = {
   contracts?: Prisma.ContractCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutIntegrationsInput = {
@@ -2635,6 +2703,7 @@ export type ProjectUncheckedCreateWithoutIntegrationsInput = {
   contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProjectInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutProjectInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutIntegrationsInput = {
@@ -2680,6 +2749,7 @@ export type ProjectUpdateWithoutIntegrationsInput = {
   contracts?: Prisma.ContractUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutIntegrationsInput = {
@@ -2704,6 +2774,143 @@ export type ProjectUncheckedUpdateWithoutIntegrationsInput = {
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUncheckedUpdateManyWithoutProjectNestedInput
   proposal?: Prisma.ProposalUncheckedUpdateManyWithoutProjectNestedInput
+  projectServices?: Prisma.ProjectServicesUncheckedUpdateManyWithoutProjectNestedInput
+  projectDocuments?: Prisma.ProjectDocumentsUncheckedUpdateManyWithoutProjectNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutProjectNestedInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutProjectNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutSonarMetricSnapshotsInput = {
+  id?: string
+  name: string
+  slug: string
+  description?: string | null
+  status: $Enums.ProjectStatus
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  repositoryUrl?: string | null
+  totalBudget?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBudget?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutProjectsInput
+  client: Prisma.ClientCreateNestedOneWithoutProjectsInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutProjectInput
+  notes?: Prisma.ProjectNoteCreateNestedManyWithoutProjectInput
+  sprints?: Prisma.SprintCreateNestedManyWithoutProjectInput
+  backlog?: Prisma.BacklogItemCreateNestedManyWithoutProjectInput
+  user: Prisma.UserCreateNestedOneWithoutCreatedProjectsInput
+  proposal?: Prisma.ProposalCreateNestedManyWithoutProjectInput
+  integrations?: Prisma.ProjectIntegrationCreateNestedManyWithoutProjectInput
+  projectServices?: Prisma.ProjectServicesCreateNestedManyWithoutProjectInput
+  projectDocuments?: Prisma.ProjectDocumentsCreateNestedManyWithoutProjectInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutProjectInput
+  budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutProjectInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutSonarMetricSnapshotsInput = {
+  id?: string
+  organizationId: string
+  name: string
+  slug: string
+  description?: string | null
+  clientId: string
+  status: $Enums.ProjectStatus
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  repositoryUrl?: string | null
+  totalBudget?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBudget?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdBy: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
+  notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
+  sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
+  backlog?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutProjectInput
+  proposal?: Prisma.ProposalUncheckedCreateNestedManyWithoutProjectInput
+  integrations?: Prisma.ProjectIntegrationUncheckedCreateNestedManyWithoutProjectInput
+  projectServices?: Prisma.ProjectServicesUncheckedCreateNestedManyWithoutProjectInput
+  projectDocuments?: Prisma.ProjectDocumentsUncheckedCreateNestedManyWithoutProjectInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProjectInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutProjectInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutSonarMetricSnapshotsInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutSonarMetricSnapshotsInput, Prisma.ProjectUncheckedCreateWithoutSonarMetricSnapshotsInput>
+}
+
+export type ProjectUpsertWithoutSonarMetricSnapshotsInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutSonarMetricSnapshotsInput, Prisma.ProjectUncheckedUpdateWithoutSonarMetricSnapshotsInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutSonarMetricSnapshotsInput, Prisma.ProjectUncheckedCreateWithoutSonarMetricSnapshotsInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutSonarMetricSnapshotsInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutSonarMetricSnapshotsInput, Prisma.ProjectUncheckedUpdateWithoutSonarMetricSnapshotsInput>
+}
+
+export type ProjectUpdateWithoutSonarMetricSnapshotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalBudget?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBudget?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutProjectsNestedInput
+  client?: Prisma.ClientUpdateOneRequiredWithoutProjectsNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.ProjectNoteUpdateManyWithoutProjectNestedInput
+  sprints?: Prisma.SprintUpdateManyWithoutProjectNestedInput
+  backlog?: Prisma.BacklogItemUpdateManyWithoutProjectNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutCreatedProjectsNestedInput
+  proposal?: Prisma.ProposalUpdateManyWithoutProjectNestedInput
+  integrations?: Prisma.ProjectIntegrationUpdateManyWithoutProjectNestedInput
+  projectServices?: Prisma.ProjectServicesUpdateManyWithoutProjectNestedInput
+  projectDocuments?: Prisma.ProjectDocumentsUpdateManyWithoutProjectNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutProjectNestedInput
+  budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutProjectNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutSonarMetricSnapshotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalBudget?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBudget?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
+  sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
+  backlog?: Prisma.BacklogItemUncheckedUpdateManyWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUncheckedUpdateManyWithoutProjectNestedInput
+  integrations?: Prisma.ProjectIntegrationUncheckedUpdateManyWithoutProjectNestedInput
   projectServices?: Prisma.ProjectServicesUncheckedUpdateManyWithoutProjectNestedInput
   projectDocuments?: Prisma.ProjectDocumentsUncheckedUpdateManyWithoutProjectNestedInput
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutProjectNestedInput
@@ -2756,6 +2963,7 @@ export type ProjectUpdateWithoutOrganizationInput = {
   contracts?: Prisma.ContractUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutOrganizationInput = {
@@ -2785,6 +2993,7 @@ export type ProjectUncheckedUpdateWithoutOrganizationInput = {
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateManyWithoutOrganizationInput = {
@@ -2850,6 +3059,7 @@ export type ProjectUpdateWithoutUserInput = {
   contracts?: Prisma.ContractUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutUserInput = {
@@ -2879,6 +3089,7 @@ export type ProjectUncheckedUpdateWithoutUserInput = {
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateManyWithoutUserInput = {
@@ -2944,6 +3155,7 @@ export type ProjectUpdateWithoutClientInput = {
   contracts?: Prisma.ContractUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutClientInput = {
@@ -2973,6 +3185,7 @@ export type ProjectUncheckedUpdateWithoutClientInput = {
   contracts?: Prisma.ContractUncheckedUpdateManyWithoutProjectNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutProjectNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateManyWithoutClientInput = {
@@ -3010,6 +3223,7 @@ export type ProjectCountOutputType = {
   contracts: number
   budgetEntries: number
   expenses: number
+  sonarMetricSnapshots: number
 }
 
 export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3024,6 +3238,7 @@ export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   contracts?: boolean | ProjectCountOutputTypeCountContractsArgs
   budgetEntries?: boolean | ProjectCountOutputTypeCountBudgetEntriesArgs
   expenses?: boolean | ProjectCountOutputTypeCountExpensesArgs
+  sonarMetricSnapshots?: boolean | ProjectCountOutputTypeCountSonarMetricSnapshotsArgs
 }
 
 /**
@@ -3113,6 +3328,13 @@ export type ProjectCountOutputTypeCountExpensesArgs<ExtArgs extends runtime.Type
   where?: Prisma.ExpenseWhereInput
 }
 
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountSonarMetricSnapshotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SonarMetricSnapshotWhereInput
+}
+
 
 export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3145,6 +3367,7 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   contracts?: boolean | Prisma.Project$contractsArgs<ExtArgs>
   budgetEntries?: boolean | Prisma.Project$budgetEntriesArgs<ExtArgs>
   expenses?: boolean | Prisma.Project$expensesArgs<ExtArgs>
+  sonarMetricSnapshots?: boolean | Prisma.Project$sonarMetricSnapshotsArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
@@ -3227,6 +3450,7 @@ export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   contracts?: boolean | Prisma.Project$contractsArgs<ExtArgs>
   budgetEntries?: boolean | Prisma.Project$budgetEntriesArgs<ExtArgs>
   expenses?: boolean | Prisma.Project$expensesArgs<ExtArgs>
+  sonarMetricSnapshots?: boolean | Prisma.Project$sonarMetricSnapshotsArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3257,6 +3481,7 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     contracts: Prisma.$ContractPayload<ExtArgs>[]
     budgetEntries: Prisma.$BudgetEntryPayload<ExtArgs>[]
     expenses: Prisma.$ExpensePayload<ExtArgs>[]
+    sonarMetricSnapshots: Prisma.$SonarMetricSnapshotPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3683,6 +3908,7 @@ export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.
   contracts<T extends Prisma.Project$contractsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$contractsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   budgetEntries<T extends Prisma.Project$budgetEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$budgetEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BudgetEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   expenses<T extends Prisma.Project$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sonarMetricSnapshots<T extends Prisma.Project$sonarMetricSnapshotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$sonarMetricSnapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SonarMetricSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4385,6 +4611,30 @@ export type Project$expensesArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.ExpenseScalarFieldEnum | Prisma.ExpenseScalarFieldEnum[]
+}
+
+/**
+ * Project.sonarMetricSnapshots
+ */
+export type Project$sonarMetricSnapshotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SonarMetricSnapshot
+   */
+  select?: Prisma.SonarMetricSnapshotSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SonarMetricSnapshot
+   */
+  omit?: Prisma.SonarMetricSnapshotOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SonarMetricSnapshotInclude<ExtArgs> | null
+  where?: Prisma.SonarMetricSnapshotWhereInput
+  orderBy?: Prisma.SonarMetricSnapshotOrderByWithRelationInput | Prisma.SonarMetricSnapshotOrderByWithRelationInput[]
+  cursor?: Prisma.SonarMetricSnapshotWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SonarMetricSnapshotScalarFieldEnum | Prisma.SonarMetricSnapshotScalarFieldEnum[]
 }
 
 /**

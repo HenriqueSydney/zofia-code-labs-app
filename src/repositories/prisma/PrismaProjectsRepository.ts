@@ -46,7 +46,6 @@ export class PrismaProjectsRepository implements IProjectsRepository {
       data: {
         ...projectData,
         status: "DRAFT",
-        budget: 0,
         ...documentsCreateInput,
       },
       include: {

@@ -8,7 +8,7 @@ interface LayoutProps {
   expenses: React.ReactNode;
   notifications: React.ReactNode;
   children: React.ReactNode;
-  params: Promise<{ slug: string; contextualTab: string }>;
+  params: Promise<{ slug: string; contextualTab: string; client: string }>;
 }
 
 export default async function CommercialLayout({
@@ -20,16 +20,17 @@ export default async function CommercialLayout({
   params,
   children,
 }: LayoutProps) {
-  const { slug, contextualTab } = await getParams<{
+  const { slug, contextualTab, client } = await getParams<{
     slug: string;
     contextualTab: string;
-  }>(params, ["slug", "contextualTab"]);
+    client: string;
+  }>(params, ["slug", "contextualTab", "client"]);
 
   {
     children;
   }
   return (
-    <CommercialTabs slug={slug} currentTab={contextualTab}>
+    <CommercialTabs client={client} slug={slug} currentTab={contextualTab}>
       {contextualTab === "proposals" && proposals}
       {contextualTab === "contracts" && contracts}
       {contextualTab === "payments" && payments}

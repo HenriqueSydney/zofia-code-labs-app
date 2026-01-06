@@ -1,14 +1,53 @@
+import { IntegrationBase } from "../IntegrationBase";
 import { AnalyticsStats, IWebAnalyticsService } from "./IWebAnalyticsService";
 
-export class UmamiWebAnalyticsService implements IWebAnalyticsService {
+export class UmamiWebAnalyticsService
+  extends IntegrationBase
+  implements IWebAnalyticsService
+{
   private baseUrl: string;
   private token: string | null = null;
+  private username: string | null = null;
+  private password: string | null = null;
 
-  constructor() {
-    // DNS interno do Docker para performance ARM ou URL do túnel
+  constructor(config: { baseUrl: string; username: string; password: string }) {
+    super("umami-analytics");
+
     this.baseUrl = (
-      process.env.UMAMI_API_URL || "http://umami:3000/api"
+      config.baseUrl ||
+      process.env.UMAMI_API_URL ||
+      "http://umami:3000/api"
     ).replace(/\/$/, "");
+    this.username = config.username;
+    this.password = config.password;
+  }
+
+  /**
+   * Verifica a conectividade com a API do Umami
+   */
+  async healthCheck(): Promise<{ status: "up" | "down"; latency: number }> {
+    const start = performance.now();
+    try {
+      // O Umami possui um endpoint de heartbeat ou podemos testar a própria base
+      const response = await fetch(`${this.baseUrl}/heartbeat`, {
+        method: "GET",
+        signal: AbortSignal.timeout(5000), // Timeout de 5s para não travar o ERP
+      });
+
+      const end = performance.now();
+      const latency = Math.round(end - start);
+
+      return {
+        status: response.ok ? "up" : "down",
+        latency,
+      };
+    } catch (error) {
+      const end = performance.now();
+      return {
+        status: "down",
+        latency: Math.round(end - start),
+      };
+    }
   }
 
   /**
@@ -46,8 +85,8 @@ export class UmamiWebAnalyticsService implements IWebAnalyticsService {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        username: process.env.UMAMI_ADMIN_USER,
-        password: process.env.UMAMI_ADMIN_PASSWORD,
+        username: this.username,
+        password: this.password,
       }),
     });
 
@@ -77,7 +116,7 @@ export class UmamiWebAnalyticsService implements IWebAnalyticsService {
       body: JSON.stringify({
         name,
         domain,
-        shareId: enableShare ? crypto.randomUUID() : null, 
+        shareId: enableShare ? crypto.randomUUID() : null,
       }),
     });
   }

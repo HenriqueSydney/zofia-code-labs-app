@@ -80,6 +80,8 @@ export const ModelName = {
   IntegrationType: 'IntegrationType',
   OrganizationIntegration: 'OrganizationIntegration',
   ProjectIntegration: 'ProjectIntegration',
+  SonarMetricSnapshot: 'SonarMetricSnapshot',
+  SonarQualityGateCondition: 'SonarQualityGateCondition',
   WebhookLog: 'WebhookLog',
   AuditLog: 'AuditLog'
 } as const
@@ -510,6 +512,7 @@ export const IntegrationTypeScalarFieldEnum = {
   name: 'name',
   slug: 'slug',
   logo: 'logo',
+  enableByol: 'enableByol',
   description: 'description',
   externalDocsUrl: 'externalDocsUrl',
   fieldsSchema: 'fieldsSchema',
@@ -523,6 +526,7 @@ export const OrganizationIntegrationScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
   integrationTypeId: 'integrationTypeId',
+  enableByol: 'enableByol',
   lastHealthCheck: 'lastHealthCheck',
   healthStatus: 'healthStatus',
   lastError: 'lastError',
@@ -540,6 +544,7 @@ export const ProjectIntegrationScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
   integrationTypeId: 'integrationTypeId',
+  organizationIntegrationId: 'organizationIntegrationId',
   config: 'config',
   enabled: 'enabled',
   createdAt: 'createdAt',
@@ -547,6 +552,40 @@ export const ProjectIntegrationScalarFieldEnum = {
 } as const
 
 export type ProjectIntegrationScalarFieldEnum = (typeof ProjectIntegrationScalarFieldEnum)[keyof typeof ProjectIntegrationScalarFieldEnum]
+
+
+export const SonarMetricSnapshotScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  timestamp: 'timestamp',
+  bugs: 'bugs',
+  vulnerabilities: 'vulnerabilities',
+  codeSmells: 'codeSmells',
+  coverage: 'coverage',
+  duplications: 'duplications',
+  technicalDebt: 'technicalDebt',
+  status: 'status',
+  securityRating: 'securityRating',
+  blockerViolations: 'blockerViolations',
+  criticalViolations: 'criticalViolations',
+  majorViolations: 'majorViolations',
+  minorViolations: 'minorViolations',
+  infoViolations: 'infoViolations'
+} as const
+
+export type SonarMetricSnapshotScalarFieldEnum = (typeof SonarMetricSnapshotScalarFieldEnum)[keyof typeof SonarMetricSnapshotScalarFieldEnum]
+
+
+export const SonarQualityGateConditionScalarFieldEnum = {
+  id: 'id',
+  snapshotId: 'snapshotId',
+  metric: 'metric',
+  value: 'value',
+  threshold: 'threshold',
+  status: 'status'
+} as const
+
+export type SonarQualityGateConditionScalarFieldEnum = (typeof SonarQualityGateConditionScalarFieldEnum)[keyof typeof SonarQualityGateConditionScalarFieldEnum]
 
 
 export const WebhookLogScalarFieldEnum = {

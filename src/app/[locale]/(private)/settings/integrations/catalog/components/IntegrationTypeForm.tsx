@@ -3,12 +3,14 @@
 import { useState, useTransition } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { CheckedState } from "@radix-ui/react-checkbox";
 import { toast } from "sonner";
-import { Plus, Trash2, Key, Type as TypeIcon } from "lucide-react";
+import { Plus, Trash2, Key, ShieldCheck } from "lucide-react";
 
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -26,6 +28,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
 
 import {
   IntegrationTypeData,
@@ -33,6 +37,7 @@ import {
 } from "@/schemas/integration/integrationType";
 import { createIntegrationTypeAction } from "@/actions/integrations/createIntegrationTypeAction";
 import { updateIntegrationTypeAction } from "@/actions/integrations/updateIntegrationTypeAction";
+import { generateSlug } from "@/utils/generateSlug";
 
 interface IIntegrationFormProps {
   integration?: {
@@ -40,7 +45,9 @@ interface IIntegrationFormProps {
     name: string;
     logo?: string | null;
     description?: string | null;
-    fieldsSchema?: any; // Array vindo do banco
+    enableByol?: boolean;
+    fieldsSchema?: any;
+    externalDocsUrl?: string | null;
   };
   handleCloseModal: () => void;
 }
@@ -51,7 +58,6 @@ export function IntegrationTypeForm({
 }: IIntegrationFormProps) {
   const [isPending, startTransition] = useTransition();
 
-  // Estados locais para o "Adicionador" de campos
   const [newFieldLabel, setNewFieldLabel] = useState("");
   const [newFieldKey, setNewFieldKey] = useState("");
 
@@ -61,25 +67,26 @@ export function IntegrationTypeForm({
       name: integration?.name ?? "",
       description: integration?.description ?? "",
       logo: integration?.logo ?? "",
+      enableByol: integration?.enableByol ?? false,
+      externalDocsUrl: integration?.externalDocsUrl ?? "",
       fieldsSchema: integration?.fieldsSchema ?? [],
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     control: form.control,
     name: "fieldsSchema",
   });
 
   const logoUrl = form.watch("logo");
+  const isByolEnabled = form.watch("enableByol");
 
-  // Função para adicionar novo campo à tabela
   const handleAddField = () => {
     if (!newFieldLabel || !newFieldKey) {
       toast.error("Preencha o Nome e a Chave do campo.");
       return;
     }
 
-    // Verifica se a chave já existe para evitar duplicados
     const exists = fields.some((f) => f.key === newFieldKey);
     if (exists) {
       toast.error("Esta chave técnica já foi adicionada.");
@@ -88,8 +95,11 @@ export function IntegrationTypeForm({
 
     append({
       label: newFieldLabel,
-      key: newFieldKey.toLowerCase().replace(/\s+/g, "_"),
+      key: newFieldKey.toUpperCase().replace(/\s+/g, "_"),
       type: "password",
+      isSecret: true,
+      required: true,
+      dependsOnByol: false, // Default falso ao criar
     });
 
     setNewFieldLabel("");
@@ -117,188 +127,205 @@ export function IntegrationTypeForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="grid grid-cols-1 gap-4">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nome da Integração</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Ex: Stripe"
-                    disabled={isPending}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4">
+            {/* ... Campos Nome, Logo, Descrição iguais ao anterior ... */}
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nome da Integração</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Ex: Stripe"
+                      disabled={isPending}
+                      {...field}
+                    />
+                  </FormControl>
+                  <span className="text-muted-foreground text-sm">
+                    <strong>Slug:</strong>{" "}
+                    {generateSlug({ title: field.value })}
+                  </span>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <div className="flex gap-4 items-end">
-            <div className="flex-1">
-              <FormField
-                control={form.control}
-                name="logo"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>URL do Logo</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="https://..."
-                        disabled={isPending}
-                        {...field}
-                        value={field.value ?? ""}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <FormField
+              control={form.control}
+              name="enableByol"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                  <div className="space-y-0.5">
+                    <FormLabel className="flex items-center gap-2">
+                      <ShieldCheck className="w-4 h-4 text-primary" /> Permite
+                      BYOL?
+                    </FormLabel>
+                    <FormDescription className="text-[11px]">
+                      Habilita o cliente a usar a própria instância/licença.
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            {/* Logo e Descrição resumidos aqui para brevidade */}
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Descrição</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="O que ela faz..."
+                      className="resize-none"
+                      rows={2}
+                      disabled={isPending}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="externalDocsUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Documentação Externa</FormLabel>
+
+                  <FormControl>
+                    <Input
+                      placeholder="https://..."
+                      disabled={isPending}
+                      {...field}
+                      value={field.value ?? ""}
+                    />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          {/* --- SEÇÃO BUILDER DE CAMPOS --- */}
+          <div className="space-y-4 lg:border-l lg:pl-6">
+            <div className="flex flex-col gap-2">
+              <h3 className="text-sm font-semibold flex items-center gap-2">
+                <Key className="w-4 h-4" /> Configuração de Campos
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                Defina as chaves que serão armazenadas no Infisical.
+              </p>
             </div>
-            {logoUrl && (
-              <div className="w-10 h-10 rounded border bg-white flex items-center justify-center p-1">
-                <img
-                  src={logoUrl}
-                  alt="Preview"
-                  className="max-w-full max-h-full object-contain"
+
+            <div className="flex flex-col sm:flex-row gap-3 p-4 bg-muted/30 rounded-lg border border-dashed">
+              <div className="flex-1 space-y-1.5">
+                <span className="text-[10px] font-bold uppercase text-muted-foreground">
+                  Nome UI
+                </span>
+                <Input
+                  placeholder="Ex: API Key"
+                  value={newFieldLabel}
+                  onChange={(e) => setNewFieldLabel(e.target.value)}
                 />
+              </div>
+              <div className="flex-1 space-y-1.5">
+                <span className="text-[10px] font-bold uppercase text-muted-foreground">
+                  Chave
+                </span>
+                <Input
+                  placeholder="Ex: API_KEY"
+                  value={newFieldKey}
+                  onChange={(e) => setNewFieldKey(e.target.value)}
+                />
+              </div>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={handleAddField}
+                className="sm:self-end"
+              >
+                <Plus className="w-4 h-4" />
+              </Button>
+            </div>
+
+            {fields.length > 0 && (
+              <div className="rounded-md border overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-muted/50">
+                      <TableHead className="text-[11px]">Rótulo</TableHead>
+                      <TableHead className="text-[11px]">Chave</TableHead>
+                      {isByolEnabled && (
+                        <TableHead className="text-[11px] text-center w-[80px]">
+                          BYOL?
+                        </TableHead>
+                      )}
+                      <TableHead className="w-[40px]"></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {fields.map((item, index) => (
+                      <TableRow key={item.id} className="group">
+                        <TableCell className="py-2 text-sm">
+                          {item.label}
+                        </TableCell>
+                        <TableCell className="py-2">
+                          <Badge
+                            variant="outline"
+                            className="font-mono text-[10px] uppercase"
+                          >
+                            {item.key}
+                          </Badge>
+                        </TableCell>
+
+                        {isByolEnabled && (
+                          <TableCell className="py-2 text-center">
+                            <Checkbox
+                              checked={item.dependsOnByol}
+                              onCheckedChange={(checked: CheckedState) => {
+                                update(index, {
+                                  ...item,
+                                  dependsOnByol: !!checked,
+                                });
+                              }}
+                            />
+                          </TableCell>
+                        )}
+
+                        <TableCell className="py-2 text-right">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-destructive"
+                            onClick={() => remove(index)}
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
             )}
           </div>
-
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Descrição</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="O que ela faz..."
-                    className="resize-none"
-                    rows={2}
-                    disabled={isPending}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="externalDocsUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Documentação Externa</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="https://..."
-                    disabled={isPending}
-                    {...field}
-                    value={field.value ?? ""}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </div>
 
-        {/* --- SEÇÃO BUILDER DE CAMPOS --- */}
-        <div className="space-y-4 border-t pt-6">
-          <div className="flex flex-col gap-2">
-            <h3 className="text-sm font-semibold flex items-center gap-2">
-              <Key className="w-4 h-4" /> Configuração de Campos (Infisical)
-            </h3>
-            <p className="text-xs text-muted-foreground">
-              Defina quais chaves o cliente deverá preencher. Todos os valores
-              serão tratados como secretos.
-            </p>
-          </div>
-
-          {/* Input para Adicionar */}
-          <div className="flex flex-col sm:flex-row gap-3 p-4 bg-muted/30 rounded-lg border border-dashed">
-            <div className="flex-1 space-y-1.5">
-              <span className="text-[10px] font-bold uppercase text-muted-foreground">
-                Nome na UI
-              </span>
-              <Input
-                placeholder="Ex: API Key"
-                value={newFieldLabel}
-                onChange={(e) => setNewFieldLabel(e.target.value)}
-              />
-            </div>
-            <div className="flex-1 space-y-1.5">
-              <span className="text-[10px] font-bold uppercase text-muted-foreground">
-                Chave Técnica
-              </span>
-              <Input
-                placeholder="Ex: api_key"
-                value={newFieldKey}
-                onChange={(e) => setNewFieldKey(e.target.value)}
-              />
-            </div>
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={handleAddField}
-              className="sm:self-end"
-            >
-              <Plus className="w-4 h-4 mr-2" /> Adicionar
-            </Button>
-          </div>
-
-          {/* Tabela de Campos Adicionados */}
-          {fields.length > 0 && (
-            <div className="rounded-md border">
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-muted/50">
-                    <TableHead className="w-[10px]"></TableHead>
-                    <TableHead>Rótulo (UI)</TableHead>
-                    <TableHead>Chave (Infisical)</TableHead>
-                    <TableHead className="text-right">Ação</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {fields.map((item, index) => (
-                    <TableRow key={item.id} className="group">
-                      <TableCell>
-                        <TypeIcon className="w-3 h-3 text-muted-foreground" />
-                      </TableCell>
-                      <TableCell className="font-medium text-sm">
-                        {item.label}
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant="outline"
-                          className="font-mono text-[10px]"
-                        >
-                          {item.key}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
-                          onClick={() => remove(index)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
-        </div>
-
+        {/* ... Botões de Ação Cancelar/Salvar ... */}
         <div className="flex justify-end gap-3 pt-4 border-t">
           <Button
             variant="ghost"
@@ -309,11 +336,7 @@ export function IntegrationTypeForm({
             Cancelar
           </Button>
           <Button type="submit" disabled={isPending}>
-            {isPending
-              ? "Salvando..."
-              : integration
-              ? "Atualizar Catálogo"
-              : "Criar no Catálogo"}
+            {isPending ? "Salvando..." : "Salvar no Catálogo"}
           </Button>
         </div>
       </form>

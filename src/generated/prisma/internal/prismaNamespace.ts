@@ -413,6 +413,8 @@ export const ModelName = {
   IntegrationType: 'IntegrationType',
   OrganizationIntegration: 'OrganizationIntegration',
   ProjectIntegration: 'ProjectIntegration',
+  SonarMetricSnapshot: 'SonarMetricSnapshot',
+  SonarQualityGateCondition: 'SonarQualityGateCondition',
   WebhookLog: 'WebhookLog',
   AuditLog: 'AuditLog'
 } as const
@@ -430,7 +432,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "organization" | "user" | "account" | "loginHistory" | "session" | "verificationToken" | "serviceCategory" | "serviceType" | "documentTemplate" | "client" | "clientEmployees" | "proposal" | "proposalTemplate" | "proposalItem" | "contract" | "contractTemplate" | "project" | "projectDocuments" | "projectServices" | "projectNote" | "sprint" | "backlogItem" | "budgetEntry" | "expenseCategory" | "expense" | "invoice" | "integrationType" | "organizationIntegration" | "projectIntegration" | "webhookLog" | "auditLog"
+    modelProps: "organization" | "user" | "account" | "loginHistory" | "session" | "verificationToken" | "serviceCategory" | "serviceType" | "documentTemplate" | "client" | "clientEmployees" | "proposal" | "proposalTemplate" | "proposalItem" | "contract" | "contractTemplate" | "project" | "projectDocuments" | "projectServices" | "projectNote" | "sprint" | "backlogItem" | "budgetEntry" | "expenseCategory" | "expense" | "invoice" | "integrationType" | "organizationIntegration" | "projectIntegration" | "sonarMetricSnapshot" | "sonarQualityGateCondition" | "webhookLog" | "auditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2580,6 +2582,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SonarMetricSnapshot: {
+      payload: Prisma.$SonarMetricSnapshotPayload<ExtArgs>
+      fields: Prisma.SonarMetricSnapshotFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SonarMetricSnapshotFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarMetricSnapshotPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SonarMetricSnapshotFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarMetricSnapshotPayload>
+        }
+        findFirst: {
+          args: Prisma.SonarMetricSnapshotFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarMetricSnapshotPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SonarMetricSnapshotFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarMetricSnapshotPayload>
+        }
+        findMany: {
+          args: Prisma.SonarMetricSnapshotFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarMetricSnapshotPayload>[]
+        }
+        create: {
+          args: Prisma.SonarMetricSnapshotCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarMetricSnapshotPayload>
+        }
+        createMany: {
+          args: Prisma.SonarMetricSnapshotCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SonarMetricSnapshotCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarMetricSnapshotPayload>[]
+        }
+        delete: {
+          args: Prisma.SonarMetricSnapshotDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarMetricSnapshotPayload>
+        }
+        update: {
+          args: Prisma.SonarMetricSnapshotUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarMetricSnapshotPayload>
+        }
+        deleteMany: {
+          args: Prisma.SonarMetricSnapshotDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SonarMetricSnapshotUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SonarMetricSnapshotUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarMetricSnapshotPayload>[]
+        }
+        upsert: {
+          args: Prisma.SonarMetricSnapshotUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarMetricSnapshotPayload>
+        }
+        aggregate: {
+          args: Prisma.SonarMetricSnapshotAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSonarMetricSnapshot>
+        }
+        groupBy: {
+          args: Prisma.SonarMetricSnapshotGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SonarMetricSnapshotGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SonarMetricSnapshotCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SonarMetricSnapshotCountAggregateOutputType> | number
+        }
+      }
+    }
+    SonarQualityGateCondition: {
+      payload: Prisma.$SonarQualityGateConditionPayload<ExtArgs>
+      fields: Prisma.SonarQualityGateConditionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SonarQualityGateConditionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarQualityGateConditionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SonarQualityGateConditionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarQualityGateConditionPayload>
+        }
+        findFirst: {
+          args: Prisma.SonarQualityGateConditionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarQualityGateConditionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SonarQualityGateConditionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarQualityGateConditionPayload>
+        }
+        findMany: {
+          args: Prisma.SonarQualityGateConditionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarQualityGateConditionPayload>[]
+        }
+        create: {
+          args: Prisma.SonarQualityGateConditionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarQualityGateConditionPayload>
+        }
+        createMany: {
+          args: Prisma.SonarQualityGateConditionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SonarQualityGateConditionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarQualityGateConditionPayload>[]
+        }
+        delete: {
+          args: Prisma.SonarQualityGateConditionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarQualityGateConditionPayload>
+        }
+        update: {
+          args: Prisma.SonarQualityGateConditionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarQualityGateConditionPayload>
+        }
+        deleteMany: {
+          args: Prisma.SonarQualityGateConditionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SonarQualityGateConditionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SonarQualityGateConditionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarQualityGateConditionPayload>[]
+        }
+        upsert: {
+          args: Prisma.SonarQualityGateConditionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SonarQualityGateConditionPayload>
+        }
+        aggregate: {
+          args: Prisma.SonarQualityGateConditionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSonarQualityGateCondition>
+        }
+        groupBy: {
+          args: Prisma.SonarQualityGateConditionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SonarQualityGateConditionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SonarQualityGateConditionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SonarQualityGateConditionCountAggregateOutputType> | number
+        }
+      }
+    }
     WebhookLog: {
       payload: Prisma.$WebhookLogPayload<ExtArgs>
       fields: Prisma.WebhookLogFieldRefs
@@ -3177,6 +3327,7 @@ export const IntegrationTypeScalarFieldEnum = {
   name: 'name',
   slug: 'slug',
   logo: 'logo',
+  enableByol: 'enableByol',
   description: 'description',
   externalDocsUrl: 'externalDocsUrl',
   fieldsSchema: 'fieldsSchema',
@@ -3190,6 +3341,7 @@ export const OrganizationIntegrationScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
   integrationTypeId: 'integrationTypeId',
+  enableByol: 'enableByol',
   lastHealthCheck: 'lastHealthCheck',
   healthStatus: 'healthStatus',
   lastError: 'lastError',
@@ -3207,6 +3359,7 @@ export const ProjectIntegrationScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
   integrationTypeId: 'integrationTypeId',
+  organizationIntegrationId: 'organizationIntegrationId',
   config: 'config',
   enabled: 'enabled',
   createdAt: 'createdAt',
@@ -3214,6 +3367,40 @@ export const ProjectIntegrationScalarFieldEnum = {
 } as const
 
 export type ProjectIntegrationScalarFieldEnum = (typeof ProjectIntegrationScalarFieldEnum)[keyof typeof ProjectIntegrationScalarFieldEnum]
+
+
+export const SonarMetricSnapshotScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  timestamp: 'timestamp',
+  bugs: 'bugs',
+  vulnerabilities: 'vulnerabilities',
+  codeSmells: 'codeSmells',
+  coverage: 'coverage',
+  duplications: 'duplications',
+  technicalDebt: 'technicalDebt',
+  status: 'status',
+  securityRating: 'securityRating',
+  blockerViolations: 'blockerViolations',
+  criticalViolations: 'criticalViolations',
+  majorViolations: 'majorViolations',
+  minorViolations: 'minorViolations',
+  infoViolations: 'infoViolations'
+} as const
+
+export type SonarMetricSnapshotScalarFieldEnum = (typeof SonarMetricSnapshotScalarFieldEnum)[keyof typeof SonarMetricSnapshotScalarFieldEnum]
+
+
+export const SonarQualityGateConditionScalarFieldEnum = {
+  id: 'id',
+  snapshotId: 'snapshotId',
+  metric: 'metric',
+  value: 'value',
+  threshold: 'threshold',
+  status: 'status'
+} as const
+
+export type SonarQualityGateConditionScalarFieldEnum = (typeof SonarQualityGateConditionScalarFieldEnum)[keyof typeof SonarQualityGateConditionScalarFieldEnum]
 
 
 export const WebhookLogScalarFieldEnum = {
@@ -3777,6 +3964,8 @@ export type GlobalOmitConfig = {
   integrationType?: Prisma.IntegrationTypeOmit
   organizationIntegration?: Prisma.OrganizationIntegrationOmit
   projectIntegration?: Prisma.ProjectIntegrationOmit
+  sonarMetricSnapshot?: Prisma.SonarMetricSnapshotOmit
+  sonarQualityGateCondition?: Prisma.SonarQualityGateConditionOmit
   webhookLog?: Prisma.WebhookLogOmit
   auditLog?: Prisma.AuditLogOmit
 }

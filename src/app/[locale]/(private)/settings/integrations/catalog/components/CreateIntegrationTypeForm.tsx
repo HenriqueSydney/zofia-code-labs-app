@@ -27,14 +27,13 @@ export function CreateIntegrationTypeForm() {
           Novo Tipo de Integração
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-6xl">
         <DialogHeader>
           <DialogTitle>"Novo Tipo de Integração</DialogTitle>
           <DialogDescription>
             Preencha os dados do tipo de integração
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-4 py-4"></div>
         <IntegrationTypeForm handleCloseModal={() => setIsDialogOpen(false)} />
       </DialogContent>
     </Dialog>

@@ -55,7 +55,7 @@ export function IntegrationTypeRemoveOrEdit({
             <Edit className="h-4 w-4 " />
           </Button>
         </DialogTrigger>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-6xl">
           <DialogHeader>
             <DialogTitle>{"Editar Tipo de Integração"}</DialogTitle>
             <DialogDescription>

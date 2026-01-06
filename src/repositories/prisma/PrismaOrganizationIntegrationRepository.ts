@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import { OrganizationIntegration, Prisma } from "@/generated/prisma/client";
-import { IOrganizationIntegrationRepository } from "../IOrganizationIntegrationRepository";
+import {
+  IOrganizationIntegrationRepository,
+  OrganizationIntegrationWithDetails,
+} from "../IOrganizationIntegrationRepository";
 import { OrganizationIntegrationWhereInput } from "@/generated/prisma/models";
 
 export class PrismaOrganizationIntegrationRepository
@@ -15,17 +18,26 @@ export class PrismaOrganizationIntegrationRepository
     });
   }
 
-  async findById(id: string): Promise<OrganizationIntegration | null> {
+  async findById(
+    id: string
+  ): Promise<OrganizationIntegrationWithDetails | null> {
     return await prisma.organizationIntegration.findUnique({
       where: { id },
-      include: { integrationType: true },
+      include: {
+        integrationType: true,
+        projectIntegrations: {
+          include: {
+            project: { select: { slug: true } },
+          },
+        },
+      },
     });
   }
 
   async findByOrgAndType(
     organizationId: string,
     integrationTypeId: string
-  ): Promise<OrganizationIntegration | null> {
+  ): Promise<OrganizationIntegrationWithDetails | null> {
     return await prisma.organizationIntegration.findUnique({
       where: {
         organizationId_integrationTypeId: {
@@ -33,20 +45,34 @@ export class PrismaOrganizationIntegrationRepository
           integrationTypeId,
         },
       },
-      include: { integrationType: true },
+      include: {
+        integrationType: true,
+        projectIntegrations: {
+          include: {
+            project: { select: { slug: true } },
+          },
+        },
+      },
     });
   }
 
   async findByOrgAndSlug(
     organizationId: string,
     slug: string
-  ): Promise<OrganizationIntegration | null> {
+  ): Promise<OrganizationIntegrationWithDetails | null> {
     return await prisma.organizationIntegration.findFirst({
       where: {
         organizationId,
         integrationType: { slug },
       },
-      include: { integrationType: true },
+      include: {
+        integrationType: true,
+        projectIntegrations: {
+          include: {
+            project: { select: { slug: true } },
+          },
+        },
+      },
     });
   }
 

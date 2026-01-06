@@ -7,10 +7,10 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 const updateSchema = z.object({
-  id: z.string().cuid(),
+  id: z.cuid(),
   enabled: z.boolean().optional(),
-  // Aceita um objeto parcial de chaves e valores
   secretValues: z.record(z.string(), z.string().min(1)).optional(),
+  enableByol: z.boolean().default(false),
 });
 
 export async function updateOrganizationIntegrationAction(data: unknown) {

@@ -1,6 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { useTranslations } from "next-intl";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
 import { Link } from "@/i18n/navigation";
 import { SectionHeading } from "@/components/SectionHeading";
 import { fetchProjects } from "@/actions/projects/fetchProjects";
@@ -10,6 +17,7 @@ import { AppError } from "@/errors/AppError";
 import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 import { ProjectList } from "@/components/ProjectList";
 import { QueryFilter } from "@/components/QueryFilter";
+import { TabsContent } from "@/components/ui/tabs";
 
 interface IParams {
   searchParams: Promise<{
@@ -46,28 +54,35 @@ const Projects = async ({ searchParams, params }: IParams) => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <SectionHeading
-          title="Projetos"
-          description="Gerencie todos os projetos da empresa"
-        />
+    <TabsContent value="projects" className="mt-6">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle className="text-lg">Projetos</CardTitle>
+            <CardDescription>
+              Gerencie todos os projetos da empresa
+            </CardDescription>
+          </div>
 
-        <Link href={`/clients/${clientSlug}/projects/new-project`}>
-          <Button size="lg">
-            <Plus className="h-4 w-4 mr-2" />
-            Novo Projeto
-          </Button>
-        </Link>
-      </div>
+          <Link href={`/clients/${clientSlug}/projects/new-project`}>
+            <Button size="lg">
+              <Plus className="h-4 w-4 mr-2" />
+              Novo Projeto
+            </Button>
+          </Link>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-6">
+            <QueryFilter placeholder="Buscar projetos por nome..." />
 
-      <QueryFilter placeholder="Buscar projetos por nome..." />
-
-      <ProjectList
-        projects={fetchProjectsSuccess.projects}
-        totalOfRegister={fetchProjectsSuccess.totalOfRegisters}
-      />
-    </div>
+            <ProjectList
+              projects={fetchProjectsSuccess.projects}
+              totalOfRegister={fetchProjectsSuccess.totalOfRegisters}
+            />
+          </div>
+        </CardContent>
+      </Card>
+    </TabsContent>
   );
 };
 

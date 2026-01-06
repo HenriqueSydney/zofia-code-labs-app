@@ -144,7 +144,14 @@ export function ProjectList({ projects, totalOfRegister }: IProjectList) {
 
       {!hasMore && displayedProjects.length > 0 && (
         <div className="text-center text-muted-foreground py-6 text-sm border-t border-dashed">
-          Todos os <strong>{totalOfRegister}</strong> projetos foram carregados.
+          {totalOfRegister === 1 && <>Todos os projetos foram carregados.</>}
+          {totalOfRegister > 1 && (
+            <>
+              Todos os
+              <strong>{totalOfRegister}</strong>
+              projetos foram carregados.
+            </>
+          )}
         </div>
       )}
     </div>

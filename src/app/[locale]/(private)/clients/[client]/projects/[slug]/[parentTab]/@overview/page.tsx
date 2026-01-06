@@ -82,7 +82,7 @@ export default async function OverviewTab({ params }: IOverviewTab) {
     <TabsContent value="overview" className="space-y-6 mt-6">
       {/* Summary Section */}
       <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2 h-full max-h-[400px] flex flex-col">
+        <Card className="lg:col-span-2 h-full min-h-[400px] max-h-[400px] flex flex-col">
           <CardHeader>
             <CardTitle>Sumário do Projeto</CardTitle>
           </CardHeader>

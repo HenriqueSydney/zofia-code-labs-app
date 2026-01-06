@@ -1,11 +1,14 @@
+import { AppError } from "@/errors/AppError";
 import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
+import Image from "next/image";
 import React from "react";
 
 interface IEmptyState {
   title: string;
   description?: string;
-  icon: LucideIcon;
+  icon?: LucideIcon;
+  image?: string;
   className?: string;
   action?: React.ReactNode;
 }
@@ -15,8 +18,13 @@ export function EmptyState({
   description,
   icon: Icon,
   action,
+  image,
   className,
 }: IEmptyState) {
+  if (!image && !Icon) {
+    throw new AppError("Forneça uma Imagem ou um Icon para o EmptyState");
+  }
+
   return (
     <div
       className={cn(
@@ -25,9 +33,17 @@ export function EmptyState({
         className
       )}
     >
-      <div className="flex h-25 w-25 items-center justify-center rounded-full bg-muted/20 ring-8 ring-muted/5">
-        <Icon className="h-15 w-15 text-muted-foreground/60" />
-      </div>
+      {Icon && (
+        <div className="flex h-25 w-25 items-center justify-center rounded-full bg-muted/20 ring-8 ring-muted/5">
+          <Icon className="h-15 w-15 text-muted-foreground/60" />
+        </div>
+      )}
+      {image && (
+        <div className="flex bg-white h-30 w-30 items-center justify-center rounded-full bg-muted/20 ring-8 ring-muted/5 p-2">
+          <Image src={image} alt={title} width={400} height={400} />
+        </div>
+      )}
+
       <div className="flex flex-1 w-full h-full flex-col md:items-start items-center md:justify-start justify-center gap-3">
         <h3 className="text-xl font-semibold tracking-tight text-foreground">
           {title}

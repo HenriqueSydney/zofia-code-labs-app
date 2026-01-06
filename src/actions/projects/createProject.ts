@@ -30,6 +30,8 @@ export async function createProjectAction(formData: FormData) {
     return item instanceof File && item.size > 0;
   });
   let projectId: string | null = null;
+  let slug = "";
+  let cliendSlug = "";
   const useCase = makeCreateProjectUseCase();
   try {
     const project = await useCase.execute({
@@ -38,7 +40,10 @@ export async function createProjectAction(formData: FormData) {
       userId: session.user.id,
       organizationId: session.user.organizationId,
     });
+    
     projectId = project.id;
+    cliendSlug = project.client.slug;
+    slug = project.slug;
     revalidatePath("/projects");
   } catch (error) {
     console.error(error);
@@ -46,6 +51,6 @@ export async function createProjectAction(formData: FormData) {
   }
 
   if (projectId) {
-    redirect(`/clients/${client.slug}/projects/${slug}/overview`);
+    redirect(`/clients/${cliendSlug}/projects/${slug}/overview`);
   }
 }

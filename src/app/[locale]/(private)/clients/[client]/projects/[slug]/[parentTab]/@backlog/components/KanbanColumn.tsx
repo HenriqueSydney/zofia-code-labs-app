@@ -5,9 +5,9 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { KanbanCard } from "@/app/[locale]/(private)/projects/[projectId]/project/[parentTab]/@backlog/components/KanbanCard";
 import { BacklogItemWithDetails } from "@/repositories/IBacklogItemsRepository";
 import { Hash } from "lucide-react";
+import { KanbanCard } from "./KanbanCard";
 
 interface KanbanColumnProps {
   column: { key: string; label: string; color: string };

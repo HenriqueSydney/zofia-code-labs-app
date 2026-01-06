@@ -1,23 +1,37 @@
-import { OrganizationIntegration, Prisma } from "@/generated/prisma/client";
+import {
+  IntegrationType,
+  OrganizationIntegration,
+  Prisma,
+  ProjectIntegration,
+} from "@/generated/prisma/client";
+
+export type OrganizationIntegrationWithDetails = OrganizationIntegration & {
+  integrationType: IntegrationType;
+  projectIntegrations: (ProjectIntegration & {
+    project: {
+      slug: string;
+    };
+  })[];
+};
 
 export interface IOrganizationIntegrationRepository {
   create(
     data: Prisma.OrganizationIntegrationUncheckedCreateInput
   ): Promise<OrganizationIntegration>;
 
-  findById(id: string): Promise<OrganizationIntegration | null>;
+  findById(id: string): Promise<OrganizationIntegrationWithDetails | null>;
 
   // Busca a conexão específica de uma empresa com um tipo (ex: Zofia + Stripe)
   findByOrgAndType(
     organizationId: string,
     integrationTypeId: string
-  ): Promise<OrganizationIntegration | null>;
+  ): Promise<OrganizationIntegrationWithDetails | null>;
 
   // Busca por slug para facilitar a lógica de negócio (ex: buscar "stripe" para a Org X)
   findByOrgAndSlug(
     organizationId: string,
     slug: string
-  ): Promise<OrganizationIntegration | null>;
+  ): Promise<OrganizationIntegrationWithDetails | null>;
 
   listByOrganization(
     organizationId: string
