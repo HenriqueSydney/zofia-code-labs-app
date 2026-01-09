@@ -9,6 +9,7 @@ import {
   IntegrationFactory,
 } from "@/services/IntegrationFactory";
 import { SonarQubeService } from "@/services/codeQuality/SonarQubeService";
+import { calculateTrend } from "@/utils/calculateTrend";
 
 interface GetMetricsRequest {
   userId: string;
@@ -80,20 +81,20 @@ export class GetSonarQubeMetricsUseCase {
       ],
 
       trends: {
-        bugs: this.calculateTrend(currentSnapshot.bugs, pastSnapshot?.bugs),
-        vulnerabilities: this.calculateTrend(
+        bugs: calculateTrend(currentSnapshot.bugs, pastSnapshot?.bugs),
+        vulnerabilities: calculateTrend(
           currentSnapshot.vulnerabilities,
           pastSnapshot?.vulnerabilities
         ),
-        codeSmells: this.calculateTrend(
+        codeSmells: calculateTrend(
           currentSnapshot.codeSmells,
           pastSnapshot?.codeSmells
         ),
-        technicalDebt: this.calculateTrend(
+        technicalDebt: calculateTrend(
           currentSnapshot.technicalDebt,
           pastSnapshot?.technicalDebt
         ),
-        coverage: this.calculateTrend(
+        coverage: calculateTrend(
           currentSnapshot.coverage,
           pastSnapshot?.coverage
         ),
@@ -105,12 +106,5 @@ export class GetSonarQubeMetricsUseCase {
     return {
       metrics,
     };
-  }
-
-  // Helper para cálculo de variação percentual
-  private calculateTrend(current: number, past?: number): number {
-    if (past === undefined || past === 0) return 0;
-    // Cálculo da variação: ((V2 - V1) / V1) * 100
-    return Math.round(((current - past) / past) * 100);
   }
 }

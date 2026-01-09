@@ -46,7 +46,7 @@ export function CTAIntegration({
         description={`${hookMessage} Conecte sua conta global da ${integrationType.name} para liberar este recurso.`}
         image={integrationType.logo || ""}
         action={
-          <Link href={`/settings/integrations/${integrationType.slug}`}>
+          <Link href={`/settings/integrations/config`}>
             <Button type="button" variant="outline">
               <Settings2 className="mr-2 h-4 w-4" />
               Configurar Provedor Global

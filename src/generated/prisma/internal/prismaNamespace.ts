@@ -415,6 +415,7 @@ export const ModelName = {
   ProjectIntegration: 'ProjectIntegration',
   SonarMetricSnapshot: 'SonarMetricSnapshot',
   SonarQualityGateCondition: 'SonarQualityGateCondition',
+  UmamiMetricSnapshot: 'UmamiMetricSnapshot',
   WebhookLog: 'WebhookLog',
   AuditLog: 'AuditLog'
 } as const
@@ -432,7 +433,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "organization" | "user" | "account" | "loginHistory" | "session" | "verificationToken" | "serviceCategory" | "serviceType" | "documentTemplate" | "client" | "clientEmployees" | "proposal" | "proposalTemplate" | "proposalItem" | "contract" | "contractTemplate" | "project" | "projectDocuments" | "projectServices" | "projectNote" | "sprint" | "backlogItem" | "budgetEntry" | "expenseCategory" | "expense" | "invoice" | "integrationType" | "organizationIntegration" | "projectIntegration" | "sonarMetricSnapshot" | "sonarQualityGateCondition" | "webhookLog" | "auditLog"
+    modelProps: "organization" | "user" | "account" | "loginHistory" | "session" | "verificationToken" | "serviceCategory" | "serviceType" | "documentTemplate" | "client" | "clientEmployees" | "proposal" | "proposalTemplate" | "proposalItem" | "contract" | "contractTemplate" | "project" | "projectDocuments" | "projectServices" | "projectNote" | "sprint" | "backlogItem" | "budgetEntry" | "expenseCategory" | "expense" | "invoice" | "integrationType" | "organizationIntegration" | "projectIntegration" | "sonarMetricSnapshot" | "sonarQualityGateCondition" | "umamiMetricSnapshot" | "webhookLog" | "auditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2730,6 +2731,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    UmamiMetricSnapshot: {
+      payload: Prisma.$UmamiMetricSnapshotPayload<ExtArgs>
+      fields: Prisma.UmamiMetricSnapshotFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UmamiMetricSnapshotFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UmamiMetricSnapshotPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UmamiMetricSnapshotFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UmamiMetricSnapshotPayload>
+        }
+        findFirst: {
+          args: Prisma.UmamiMetricSnapshotFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UmamiMetricSnapshotPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UmamiMetricSnapshotFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UmamiMetricSnapshotPayload>
+        }
+        findMany: {
+          args: Prisma.UmamiMetricSnapshotFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UmamiMetricSnapshotPayload>[]
+        }
+        create: {
+          args: Prisma.UmamiMetricSnapshotCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UmamiMetricSnapshotPayload>
+        }
+        createMany: {
+          args: Prisma.UmamiMetricSnapshotCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UmamiMetricSnapshotCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UmamiMetricSnapshotPayload>[]
+        }
+        delete: {
+          args: Prisma.UmamiMetricSnapshotDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UmamiMetricSnapshotPayload>
+        }
+        update: {
+          args: Prisma.UmamiMetricSnapshotUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UmamiMetricSnapshotPayload>
+        }
+        deleteMany: {
+          args: Prisma.UmamiMetricSnapshotDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UmamiMetricSnapshotUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UmamiMetricSnapshotUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UmamiMetricSnapshotPayload>[]
+        }
+        upsert: {
+          args: Prisma.UmamiMetricSnapshotUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UmamiMetricSnapshotPayload>
+        }
+        aggregate: {
+          args: Prisma.UmamiMetricSnapshotAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUmamiMetricSnapshot>
+        }
+        groupBy: {
+          args: Prisma.UmamiMetricSnapshotGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UmamiMetricSnapshotGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UmamiMetricSnapshotCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UmamiMetricSnapshotCountAggregateOutputType> | number
+        }
+      }
+    }
     WebhookLog: {
       payload: Prisma.$WebhookLogPayload<ExtArgs>
       fields: Prisma.WebhookLogFieldRefs
@@ -3403,6 +3478,23 @@ export const SonarQualityGateConditionScalarFieldEnum = {
 export type SonarQualityGateConditionScalarFieldEnum = (typeof SonarQualityGateConditionScalarFieldEnum)[keyof typeof SonarQualityGateConditionScalarFieldEnum]
 
 
+export const UmamiMetricSnapshotScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  timestamp: 'timestamp',
+  pageviews: 'pageviews',
+  visitors: 'visitors',
+  visits: 'visits',
+  bounceRate: 'bounceRate',
+  totalTime: 'totalTime',
+  avgDuration: 'avgDuration',
+  pagesPerSession: 'pagesPerSession',
+  breakdown: 'breakdown'
+} as const
+
+export type UmamiMetricSnapshotScalarFieldEnum = (typeof UmamiMetricSnapshotScalarFieldEnum)[keyof typeof UmamiMetricSnapshotScalarFieldEnum]
+
+
 export const WebhookLogScalarFieldEnum = {
   id: 'id',
   provider: 'provider',
@@ -3966,6 +4058,7 @@ export type GlobalOmitConfig = {
   projectIntegration?: Prisma.ProjectIntegrationOmit
   sonarMetricSnapshot?: Prisma.SonarMetricSnapshotOmit
   sonarQualityGateCondition?: Prisma.SonarQualityGateConditionOmit
+  umamiMetricSnapshot?: Prisma.UmamiMetricSnapshotOmit
   webhookLog?: Prisma.WebhookLogOmit
   auditLog?: Prisma.AuditLogOmit
 }

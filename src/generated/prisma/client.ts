@@ -199,6 +199,11 @@ export type SonarMetricSnapshot = Prisma.SonarMetricSnapshotModel
  */
 export type SonarQualityGateCondition = Prisma.SonarQualityGateConditionModel
 /**
+ * Model UmamiMetricSnapshot
+ * 
+ */
+export type UmamiMetricSnapshot = Prisma.UmamiMetricSnapshotModel
+/**
  * Model WebhookLog
  * 
  */

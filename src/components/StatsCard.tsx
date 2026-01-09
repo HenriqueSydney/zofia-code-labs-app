@@ -21,13 +21,13 @@ export function StatsCard({
   label,
   mainInformation,
   Icon,
-  trend = 0,
+  trend,
   reverseColor = true,
   iconColor = "bg-primary/10",
 }: IStatsCard) {
-  const isPositive = trend > 0;
-  const isNegative = trend < 0;
-  const isNeutral = trend === 0;
+  const isPositive = trend !== undefined && trend > 0;
+  const isNegative = trend !== undefined && trend < 0;
+  const isNeutral = typeof trend === "number" && trend === 0;
 
   // Lógica de cores para o trend
   // Se reverseColor for true (ex: Bugs), subir (+) é vermelho.
@@ -73,7 +73,9 @@ export function StatsCard({
               {isPositive && <TrendingUp className="h-3 w-3 mr-0.5" />}
               {isNegative && <TrendingDown className="h-3 w-3 mr-0.5" />}
               {isNeutral && <Minus className="h-3 w-3 mr-0.5" />}
-              <span>{isNeutral ? "estável" : `${Math.abs(trend)}%`}</span>
+              {trend !== undefined && (
+                <span>{isNeutral ? "estável" : `${Math.abs(trend)}%`}</span>
+              )}
             </div>
           </div>
         </div>

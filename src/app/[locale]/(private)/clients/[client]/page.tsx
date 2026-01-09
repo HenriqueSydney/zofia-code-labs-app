@@ -4,7 +4,7 @@ import { AppError } from "@/errors/AppError";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
 import { Mail, MapPin, Phone, Settings } from "lucide-react";
-import { ClientUsers } from "./components/ClientUsers";
+import { ClientUsers } from "./_components/ClientUsers";
 
 interface IClientPage {
   params: Promise<{ client: string }>;
@@ -125,7 +125,7 @@ export default async function ClientPage({ params }: IClientPage) {
             </CardContent>
           </Card>
         </div>
-        <ClientUsers clientSlug={slug}/>
+        <ClientUsers clientSlug={slug} />
       </div>
     </TabsContent>
   );

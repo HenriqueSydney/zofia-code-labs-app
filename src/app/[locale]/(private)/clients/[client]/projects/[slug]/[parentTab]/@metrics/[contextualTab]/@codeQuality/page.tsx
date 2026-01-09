@@ -15,17 +15,27 @@ import { AppError } from "@/errors/AppError";
 import { CTAIntegration } from "../components/CTAIntegration";
 import { IntegrationType } from "@/generated/prisma/client";
 import { findIntegrationTypeBySlugAction } from "@/actions/integrations/findIntegrationTypeBySlugAction";
-import { getSonarQubeMetricsAction } from "@/actions/integrations/getSonarQubeMetricsAction";
-import { SyncSonarQubeMetrics } from "./components/SyncSonarQubeMetrics";
-import { MetricsGrid } from "./components/MetricsGrid";
-import { SeverityDonutChart } from "./components/SeverityDonutChart";
+import { SyncSonarQubeMetrics } from "./_components/SyncSonarQubeMetrics";
+import { MetricsGrid } from "./_components/MetricsGrid";
+import { SeverityDonutChart } from "./_components/SeverityDonutChart";
 import { getSonarQubeHistoryAction } from "@/actions/integrations/getSonarQubeHistoryAction";
-import { IssueEvolutionChart } from "./components/IssueEvolutionChart";
-import { CoverageLineChart } from "./components/CoverageLineChart";
-import { TechnicalDebtBarChart } from "./components/TechnicalDebtBarChart";
+import { IssueEvolutionChart } from "./_components/IssueEvolutionChart";
+import { CoverageLineChart } from "./_components/CoverageLineChart";
+import { TechnicalDebtBarChart } from "./_components/TechnicalDebtBarChart";
 import { getSonarQubeIssueAndQualityGateAction } from "@/actions/integrations/getSonarQubeIssueAndQualityGateAction";
-import { ProjectLiveDetails } from "./components/ProjectLiveDetails";
-import { QualityStatusHeader } from "./components/QualityStatusHeader";
+import { ProjectLiveDetails } from "./_components/ProjectLiveDetails";
+import { QualityStatusHeader } from "./_components/QualityStatusHeader";
+import { SeverityDonutContainer } from "./_components/SeverityDonutContainer";
+import { CovarageAndTechnicalChartContainer } from "./_components/CovarageAndTechnicalChartContainer";
+import { IssueEvolutionContainer } from "./_components/IssueEvolutionContainer";
+import { ProjectLiveContainer } from "./_components/ProjectLiveContainer";
+import { Suspense } from "react";
+import Loading from "@/app/loading";
+import { SummaryCardsSkeleton } from "./_skeletons/SummaryCardsSkeleton";
+import { LineChartSkeleton } from "@/components/skeletons/LineChartSkeleton";
+import { PieChartSkeleton } from "@/components/skeletons/PieSkeleton";
+import { IssuesTableSkeleton } from "./_skeletons/IssuesTableSkeleton";
+import { BarChartSkeleton } from "@/components/skeletons/BarChartSkeleton";
 
 interface IParams {
   params: Promise<{
@@ -117,70 +127,6 @@ export default async function CodeQualityTab({ params }: IParams) {
     );
   }
 
-  const [metricsError, metricsSuccess] = await operationWrapper<{
-    success: boolean;
-    data?: any; // Opcional para lidar com o caso de erro da Action
-    message?: string;
-  }>(
-    "action",
-    "getSonarQubeMetricsAction",
-    () => {
-      return getSonarQubeMetricsAction(slug);
-    },
-    {
-      cache: "no-cache",
-    }
-  );
-
-  if (metricsError) {
-    throw new AppError("Não foi possível recuperar a métricas");
-  }
-
-  if (!metricsSuccess?.data) {
-    throw new AppError("Não foi possível recuperar a métricas");
-  }
-
-  const metrics = metricsSuccess?.data?.metrics;
-
-  const [historyError, historySuccess] = await operationWrapper<{
-    success: boolean;
-    data?: any;
-    message?: string;
-  }>(
-    "action",
-    "getSonarQubeHistoryAction",
-    () => {
-      return getSonarQubeHistoryAction(slug);
-    },
-    {
-      cache: "no-cache",
-    }
-  );
-
-  if (historyError) {
-    throw new AppError("Não foi possível recuperar a métricas históricas");
-  }
-
-  const [issuesAndQualityGateError, issuesAndQualityGateSuccess] =
-    await operationWrapper<{
-      success: boolean;
-      data?: any;
-      message?: string;
-    }>(
-      "action",
-      "getSonarQubeIssueAndQualityGateAction",
-      () => {
-        return getSonarQubeIssueAndQualityGateAction(slug);
-      },
-      {
-        cache: "no-cache",
-      }
-    );
-
-  if (issuesAndQualityGateError) {
-    throw new AppError("Não foi possível recuperar a métricas históricas");
-  }
-
   return (
     <TabsContent value="code-quality" className="mt-6">
       <Card>
@@ -189,46 +135,47 @@ export default async function CodeQualityTab({ params }: IParams) {
             <CardTitle className="text-lg">Qualidade de código</CardTitle>
             <CardDescription>
               Acompanhe a qualidade do código do projeto. Informações coletadas
-              do SonarQube
+              do SonarQube.
             </CardDescription>
           </div>
           <div className="flex items-end gap-6">
-            <QualityStatusHeader
-              status={metrics.status}
-              rating={metrics.securityRating}
-            />
+            <Suspense fallback={null}>
+              <QualityStatusHeader slug={slug} />
+            </Suspense>
+
             <SyncSonarQubeMetrics projectSlug={slug} />
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <MetricsGrid metrics={metrics} />
-
+          <Suspense fallback={<SummaryCardsSkeleton />}>
+            <MetricsGrid slug={slug} />
+          </Suspense>
           {/* Linha de Gráficos */}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            {historySuccess?.data && (
-              <div className="lg:col-span-4">
-                <IssueEvolutionChart data={historySuccess.data} />
-              </div>
-            )}
+            <Suspense
+              fallback={<LineChartSkeleton className="lg:col-span-4" />}
+            >
+              <IssueEvolutionContainer slug={slug} />
+            </Suspense>
 
-            <div className="lg:col-span-3">
-              <SeverityDonutChart data={metrics.severity} />
-            </div>
+            <Suspense fallback={<PieChartSkeleton className="lg:col-span-3" />}>
+              <SeverityDonutContainer slug={slug} />
+            </Suspense>
           </div>
 
-          {historySuccess?.data && (
-            <div className="grid gap-4 md:grid-cols-2">
-              <CoverageLineChart data={historySuccess.data} />
-              <TechnicalDebtBarChart data={historySuccess.data} />
-            </div>
-          )}
-
-          {issuesAndQualityGateSuccess.data && (
-            <ProjectLiveDetails
-              issues={issuesAndQualityGateSuccess.data.issues}
-              qualityGate={issuesAndQualityGateSuccess.data.qualityGate}
-            />
-          )}
+          <Suspense
+            fallback={
+              <div className="grid gap-4 md:grid-cols-2">
+                <LineChartSkeleton />
+                <BarChartSkeleton />
+              </div>
+            }
+          >
+            <CovarageAndTechnicalChartContainer slug={slug} />
+          </Suspense>
+          <Suspense fallback={<IssuesTableSkeleton />}>
+            <ProjectLiveContainer slug={slug} />
+          </Suspense>
         </CardContent>
       </Card>
     </TabsContent>

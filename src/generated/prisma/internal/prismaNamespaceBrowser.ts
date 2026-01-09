@@ -82,6 +82,7 @@ export const ModelName = {
   ProjectIntegration: 'ProjectIntegration',
   SonarMetricSnapshot: 'SonarMetricSnapshot',
   SonarQualityGateCondition: 'SonarQualityGateCondition',
+  UmamiMetricSnapshot: 'UmamiMetricSnapshot',
   WebhookLog: 'WebhookLog',
   AuditLog: 'AuditLog'
 } as const
@@ -586,6 +587,23 @@ export const SonarQualityGateConditionScalarFieldEnum = {
 } as const
 
 export type SonarQualityGateConditionScalarFieldEnum = (typeof SonarQualityGateConditionScalarFieldEnum)[keyof typeof SonarQualityGateConditionScalarFieldEnum]
+
+
+export const UmamiMetricSnapshotScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  timestamp: 'timestamp',
+  pageviews: 'pageviews',
+  visitors: 'visitors',
+  visits: 'visits',
+  bounceRate: 'bounceRate',
+  totalTime: 'totalTime',
+  avgDuration: 'avgDuration',
+  pagesPerSession: 'pagesPerSession',
+  breakdown: 'breakdown'
+} as const
+
+export type UmamiMetricSnapshotScalarFieldEnum = (typeof UmamiMetricSnapshotScalarFieldEnum)[keyof typeof UmamiMetricSnapshotScalarFieldEnum]
 
 
 export const WebhookLogScalarFieldEnum = {

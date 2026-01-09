@@ -46,6 +46,13 @@ export function ClientTabs({ children }: IClientTabs) {
     pathname.includes(segment.key)
   )?.key;
 
+  // Verifica se a rota atual contém /projects
+  const isProjectList =
+    pathname.endsWith("/projects") || pathname.endsWith("/projects/");
+  const isInsideProject = pathname.includes("/projects") && !isProjectList;
+
+  if (isInsideProject) return children;
+
   return (
     <Tabs value={currentTab ?? "overview"} className="w-full">
       <TabsList className="w-full h-full flex-col md:flex-row flex mb-2 items-center !justify-evenly glass-effect">

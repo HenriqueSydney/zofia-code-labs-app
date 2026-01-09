@@ -566,6 +566,7 @@ model Project {
   budgetEntries        BudgetEntry[]
   expenses             Expense[]
   sonarMetricSnapshots SonarMetricSnapshot[]
+  umamiMetricSnapshots UmamiMetricSnapshot[]
 
   @@map("projects")
   @@schema("projects")
@@ -1003,6 +1004,40 @@ model SonarQualityGateCondition {
 
   @@index([snapshotId])
   @@map("sonar_quality_gate_conditions")
+  @@schema("integrations")
+}
+
+model UmamiMetricSnapshot {
+  id        String  @id @default(uuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  // Controle de tempo para evolução temporal (Time-series)
+  timestamp DateTime @default(now())
+
+  // Métricas Principais (Stats)
+  pageviews   Int   @default(0)
+  visitors    Int   @default(0) // Visitantes únicos
+  visits      Int   @default(0) // Sessões
+  bounceRate  Float @default(0) // Em porcentagem
+  totalTime   Int   @default(0) // Tempo total em segundos para cálculo de média
+  avgDuration Int   @default(0) // Duração média em segundos
+
+  // Métricas de Engajamento Extra
+  pagesPerSession Float @default(0)
+
+  // Armazenamento opcional de dados dimensionais em JSON 
+  // (Evita criar muitas tabelas para Browser, OS, Dispositivo, etc)
+  breakdown Json? @db.JsonB
+  /**
+   * Ex breakdown: {
+   * "browsers": [{ "name": "Chrome", "value": 100 }],
+   * "devices": [{ "name": "mobile", "value": 50 }]
+   * }
+   */
+
+  @@index([projectId, timestamp(sort: Desc)])
+  @@map("umami_metric_snapshots")
   @@schema("integrations")
 }
 

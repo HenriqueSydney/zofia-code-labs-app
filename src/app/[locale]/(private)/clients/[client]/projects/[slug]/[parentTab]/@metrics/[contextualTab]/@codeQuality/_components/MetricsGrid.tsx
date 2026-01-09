@@ -1,7 +1,10 @@
 import { StatsCard } from "@/components/StatsCard";
 import { Bug, CheckCircle, Clock, Code, Shield } from "lucide-react";
+import { getCachedSonarMetrics } from "../_data/get-sonarqube-metrics";
 
-export function MetricsGrid({ metrics }: { metrics: any }) {
+export async function MetricsGrid({ slug }: { slug: string }) {
+  const metrics = await getCachedSonarMetrics(slug);
+
   // Helper para formatar dívida técnica: minutos para formato legível (ex: 65h ou 1d 4h)
   const formatDebt = (minutes: number) => {
     const hours = Math.round(minutes / 60);

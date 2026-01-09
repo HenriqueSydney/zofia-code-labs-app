@@ -77,7 +77,7 @@ const Clients = async ({ searchParams }: IParams) => {
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <Link href={`/clients/${client.slug}`}>
-                    <div className="flex items-center gap-3 overflow-hidden">
+                    <div className="flex items-center gap-3 overflow-hidden hover:underline">
                       <div className="shrink-0">
                         <Avatar className="h-16 w-24 rounded-lg border">
                           <AvatarImage

@@ -1,16 +1,15 @@
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { CheckCircle2, XCircle, AlertCircle } from "lucide-react";
+import { CheckCircle2, XCircle } from "lucide-react";
+import { getCachedSonarMetrics } from "../_data/get-sonarqube-metrics";
 
 interface QualityStatusHeaderProps {
-  status: "OK" | "ERROR" | "WARN";
-  rating: string;
+  slug: string;
 }
 
-export function QualityStatusHeader({
-  status,
-  rating,
-}: QualityStatusHeaderProps) {
+export async function QualityStatusHeader({ slug }: QualityStatusHeaderProps) {
+  const metrics = await getCachedSonarMetrics(slug);
+  const rating = metrics.securityRating;
   // Mapeamento de cores para o Rating (A, B, C...)
   const getRatingColors = (r: string) => {
     const colors: Record<string, string> = {
@@ -23,7 +22,7 @@ export function QualityStatusHeader({
     return colors[r] || "text-slate-400 border-slate-400/30 bg-slate-400/10";
   };
 
-  const isPassed = status === "OK";
+  const isPassed = metrics.status === "OK";
 
   return (
     <div className="flex items-center gap-6">
