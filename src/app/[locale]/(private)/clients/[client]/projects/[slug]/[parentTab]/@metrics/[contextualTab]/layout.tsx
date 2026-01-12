@@ -2,6 +2,7 @@ import { getParams } from "@/utils/getParams";
 import { MetricsTabs } from "../components/MetricsTabs";
 
 interface LayoutProps {
+  lifeCycle: React.ReactNode;
   webAnalytics: React.ReactNode;
   codeQuality: React.ReactNode;
   children: React.ReactNode;
@@ -9,6 +10,7 @@ interface LayoutProps {
 }
 
 export default async function IntegrationsLayout({
+  lifeCycle,
   webAnalytics,
   codeQuality,
   params,
@@ -20,13 +22,12 @@ export default async function IntegrationsLayout({
     client: string;
   }>(params, ["slug", "contextualTab", "client"]);
 
-  {
-    children;
-  }
   return (
     <MetricsTabs client={client} slug={slug} currentTab={contextualTab}>
-      {contextualTab === "web-analytics" && webAnalytics}
-      {contextualTab === "code-quality" && codeQuality}
+      {lifeCycle}
+      {webAnalytics}
+      {codeQuality}
+      {children}
     </MetricsTabs>
   );
 }

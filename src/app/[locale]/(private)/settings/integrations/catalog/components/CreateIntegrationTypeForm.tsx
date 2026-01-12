@@ -29,7 +29,7 @@ export function CreateIntegrationTypeForm() {
       </DialogTrigger>
       <DialogContent className="max-w-6xl">
         <DialogHeader>
-          <DialogTitle>"Novo Tipo de Integração</DialogTitle>
+          <DialogTitle>Novo Tipo de Integração</DialogTitle>
           <DialogDescription>
             Preencha os dados do tipo de integração
           </DialogDescription>

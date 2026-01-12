@@ -5,6 +5,7 @@ import { LucideIcon, TrendingDown, TrendingUp, Minus } from "lucide-react";
 interface IStatsCard {
   label: string;
   mainInformation: string | number;
+  description?: string;
   Icon: LucideIcon;
   trend?: number;
   reverseColor?: boolean; // Default true: subir é ruim (ex: bugs). False: subir é bom (ex: coverage).
@@ -22,6 +23,7 @@ export function StatsCard({
   mainInformation,
   Icon,
   trend,
+  description,
   reverseColor = true,
   iconColor = "bg-primary/10",
 }: IStatsCard) {
@@ -75,6 +77,9 @@ export function StatsCard({
               {isNeutral && <Minus className="h-3 w-3 mr-0.5" />}
               {trend !== undefined && (
                 <span>{isNeutral ? "estável" : `${Math.abs(trend)}%`}</span>
+              )}
+              {description && (
+                <span className="text-muted-foreground!">{description}</span>
               )}
             </div>
           </div>

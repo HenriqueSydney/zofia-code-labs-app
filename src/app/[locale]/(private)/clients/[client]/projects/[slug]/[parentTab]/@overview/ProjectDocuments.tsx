@@ -5,6 +5,8 @@ import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 import { AttachmentIcon } from "@/components/AttachmentIcon";
 import { ProjectDocumentsActions } from "./ProjectDocumentsAction";
 import { ProjectDocumentsAddAction } from "./ProjectDocumentsAddAction";
+import { EmptyState } from "@/components/EmptyState";
+import { File } from "lucide-react";
 
 interface IProjectDocuments {
   project: ProjectWithDetails;
@@ -23,6 +25,19 @@ const ProjectDocuments = ({ project }: IProjectDocuments) => {
       </CardHeader>
       <CardContent className="overflow-y-auto flex-1 min-h-0">
         <div className="space-y-2">
+          {documents.length === 0 && (
+            <EmptyState
+              title="Documentos"
+              description="Nenhum documento anexado até o momento"
+              icon={File}
+              action={
+                <ProjectDocumentsAddAction
+                  projectId={project.id}
+                  variant="default"
+                />
+              }
+            />
+          )}
           {documents.map((doc) => {
             return (
               <div

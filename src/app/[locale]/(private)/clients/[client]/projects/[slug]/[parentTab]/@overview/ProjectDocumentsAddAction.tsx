@@ -14,23 +14,16 @@ import { DropzoneUpload } from "@/components/DropzoneUpload";
 import { FilePlus, FileText, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { uploadDocumentsAction } from "@/actions/documents/uploadDocumentsAction";
+import { formatBytes } from "@/utils/formatBytes";
 
 interface IProjectDocumentsAddAction {
   projectId: string;
-}
-
-// Função utilitária para formatar bytes (caso não tenha uma global)
-function formatBytes(bytes: number, decimals = 2) {
-  if (!+bytes) return "0 Bytes";
-  const k = 1024;
-  const dm = decimals < 0 ? 0 : decimals;
-  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+  variant?: "outline" | "default" | "ghost";
 }
 
 export function ProjectDocumentsAddAction({
   projectId,
+  variant = "ghost",
 }: IProjectDocumentsAddAction) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
@@ -73,7 +66,7 @@ export function ProjectDocumentsAddAction({
       }}
     >
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-1">
+        <Button variant={variant} size="sm" className="gap-1">
           <FilePlus className="h-4 w-4" />
           Adicionar
         </Button>

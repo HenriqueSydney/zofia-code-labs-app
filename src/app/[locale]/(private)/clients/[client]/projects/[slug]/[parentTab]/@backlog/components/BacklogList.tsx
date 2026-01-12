@@ -92,16 +92,6 @@ export function BacklogList({ backlog }: IBacklogList) {
     (item) => item.status !== "CANCELED" && item.status !== "DONE"
   );
 
-  if (itemsWithoutCancel.length === 0) {
-    return (
-      <EmptyState
-        title="Backlog do Produto"
-        icon={ListTodo}
-        description="Nenhum item de backlog cadastrado até o momento. Inicie a gestão do backlog com o cadastramento de ao menos 1 item."
-      />
-    );
-  }
-
   return (
     <Card>
       <CardHeader className="border-b">

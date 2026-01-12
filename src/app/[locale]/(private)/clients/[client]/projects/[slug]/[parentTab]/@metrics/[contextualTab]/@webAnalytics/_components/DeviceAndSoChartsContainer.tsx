@@ -20,6 +20,29 @@ const deviceColorMapper = (device: string) => {
   return colors[device.toLowerCase()] || "#64748b";
 };
 
+const browserColorMapper = (browser: string) => {
+  const colors: Record<string, string> = {
+    // Principais Navegadores
+    chrome: "#ea4335", // Vermelho Google
+    "edge-chromium": "#0078d7", // Azul Microsoft
+    edge: "#0078d7",
+    firefox: "#ff9400", // Laranja Firefox
+    safari: "#0070c9", // Azul Apple
+    opera: "#ff1b2d", // Vermelho Opera
+
+    // Outros/Mobile
+    samsung: "#1428a0", // Azul Samsung
+    ucbrowser: "#00a5e2", // Azul UC
+    brave: "#fb542b", // Laranja Brave
+    vivaldi: "#ef3939", // Vermelho Vivaldi
+
+    // Bots/Crawlers (se aparecerem)
+    bot: "#475569", // Cinza Escuro
+  };
+
+  return colors[browser.toLowerCase()] || "#64748b"; // Cinza ardósia padrão
+};
+
 export async function DeviceAndSoChartsContainer({
   slug,
 }: IDeviceAndSoChartsContainer) {
@@ -41,7 +64,7 @@ export async function DeviceAndSoChartsContainer({
       browser.name.slice(1).toLowerCase(),
     value: browser.value,
     iconKey: browser.name,
-    color: deviceColorMapper(browser.name),
+    color: browserColorMapper(browser.name),
   }));
 
   const osData = os.map((item) => ({

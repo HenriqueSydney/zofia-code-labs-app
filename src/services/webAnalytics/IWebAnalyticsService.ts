@@ -30,32 +30,27 @@ export type UmamiExpandedMetric = {
   totaltime: number;
 };
 
+interface UmamiExpandedMetricWithAvgTime {
+  name: any;
+  value: number;
+  pageviews: number;
+  bounces: number;
+  totalTime: number;
+  avgTime: number;
+}
+
 export type UmamiHistoryResponse = {
   pageviews: { x: string; y: number }[];
   sessions: { x: string; y: number }[];
 };
 
 export type UmamiBreakdownMetrics = {
-  browsers: {
-    name: any;
-    value: any;
-    pageviews: any;
-  }[];
-  os: {
-    name: any;
-    value: any;
-    pageviews: any;
-  }[];
-  devices: {
-    name: any;
-    value: any;
-    pageviews: any;
-  }[];
-  countries: {
-    name: any;
-    value: any;
-    pageviews: any;
-  }[];
+  browsers: UmamiExpandedMetricWithAvgTime[];
+  os: UmamiExpandedMetricWithAvgTime[];
+  devices: UmamiExpandedMetricWithAvgTime[];
+  countries: UmamiExpandedMetricWithAvgTime[];
+  pages: UmamiExpandedMetricWithAvgTime[];
+  referrers: UmamiExpandedMetricWithAvgTime[];
   history: UmamiHistoryResponse;
   hourlyHistory: UmamiHistoryResponse;
 };
@@ -70,6 +65,11 @@ export type GetCompleteAnalytics = {
   breakdown: UmamiBreakdownMetrics;
   timestamp: Date;
 };
+
+export interface RealtimeVisitor {
+  page: string;
+  visitors: number;
+}
 
 export interface IWebAnalyticsService {
   getWebsiteStats(
@@ -101,4 +101,5 @@ export interface IWebAnalyticsService {
     endAt: number,
     timezone: string
   ): Promise<GetCompleteAnalytics>;
+  getRealtimeMetrics(websiteId: string): Promise<RealtimeVisitor[]>;
 }

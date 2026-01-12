@@ -17,6 +17,9 @@ import { listUsersByOrganizationAction } from "@/actions/users/listUsersByOrgani
 import { auth } from "@/auth";
 import { UserSafe } from "@/repositories/IUsersRepository";
 import { getProjectBySlugAction } from "@/actions/projects/getProjectBySlug";
+import { EmptyState } from "@/components/EmptyState";
+import { ListTodo } from "lucide-react";
+import { BacklogCreateForm } from "./components/BacklogCreateForm";
 
 interface IBacklog {
   params: Promise<{ slug: string }>;
@@ -88,6 +91,8 @@ export default async function Backlog({ params, searchParams }: IBacklog) {
   }
 
   const currentViewMode = rawViewMode === "kanban" ? "kanban" : "list";
+
+  const backlogTotalOfRegisters = success.data.items.length;
   return (
     <TabsContent value="backlog" className="space-y-6 mt-6">
       {/* Summary Section */}
@@ -103,12 +108,21 @@ export default async function Backlog({ params, searchParams }: IBacklog) {
         totalPoints={success.data.totalPoints}
       />
 
+      {backlogTotalOfRegisters === 0 && (
+        <EmptyState
+          title="Backlog do Produto"
+          icon={ListTodo}
+          description="Nenhum item de backlog cadastrado até o momento. Inicie a gestão do backlog com o cadastramento de ao menos 1 item."
+          action={<BacklogCreateForm projectId={project.id} />}
+        />
+      )}
+
       <div key={currentViewMode} className="w-full">
-        {currentViewMode === "kanban" && (
+        {currentViewMode === "kanban" && backlogTotalOfRegisters > 0 && (
           <BacklogKanban backlog={success.data.items} />
         )}
 
-        {currentViewMode === "list" && (
+        {currentViewMode === "list" && backlogTotalOfRegisters > 0 && (
           <BacklogList backlog={success.data.items} />
         )}
       </div>

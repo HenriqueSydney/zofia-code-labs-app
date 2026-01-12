@@ -5,70 +5,117 @@ import {
   PRAnalysis,
   RepoStats,
   WorkflowRun,
+  CommitStat,
+  PRDetail,
+  CommitData,
 } from "../IGitService";
+import { MinimalRepositoryListDTO } from "@/dto/github/RepositoriesDTO";
+import {
+  IProjectLinkable,
+  SetupProjectParams,
+  SetupProjectResult,
+} from "@/services/IProjectLinkable";
+import { GitHubSetupSchema } from "@/schemas/integration/GitHubSetupSchema";
+import { date } from "@/lib/dayjs";
 
-export class GitHubService extends IntegrationBase implements IGitService {
+export class GitHubService
+  extends IntegrationBase
+  implements IGitService, IProjectLinkable
+{
   private readonly baseUrl = "https://api.github.com";
   private readonly personalToken: string;
-  private readonly orgName: string;
+  private readonly orgName?: string; // Nome da Organização configurado globalmente
+  private readonly owner?: string; // Extraído do full_name no contexto do projeto
+  private readonly repo?: string; // Extraído do full_name no contexto do projeto
 
-  constructor(config: { personalToken: string; orgName: string }) {
-    super("github"); // Chamada ao super sem argumentos, assumindo que IntegrationBase não os exige mais
+  constructor(config: {
+    personalToken: string;
+    orgName?: string;
+    owner?: string;
+    repo?: string;
+  }) {
+    super("github");
     this.personalToken = config.personalToken;
     this.orgName = config.orgName;
+    this.owner = config.owner;
+    this.repo = config.repo;
   }
 
-  /**
-   * Helper para centralizar os Headers de autenticação
-   */
   private getHeaders(extraHeaders: Record<string, string> = {}) {
     return {
       Authorization: `Bearer ${this.personalToken}`,
       Accept: "application/vnd.github.v3+json",
+      "X-GitHub-Api-Version": "2022-11-28",
       "Content-Type": "application/json",
       ...extraHeaders,
     };
   }
 
-  /**
-   * Implementação do HealthCheck com cálculo de latência
-   */
-  async healthCheck(): Promise<{ status: "up" | "down"; latency: number }> {
-    const start = performance.now();
-    try {
-      // O endpoint /user é ótimo para validar se o token é válido
-      const response = await fetch(`${this.baseUrl}/user`, {
-        headers: this.getHeaders(),
-        signal: AbortSignal.timeout(5000),
-      });
+  private async request<T>(
+    endpoint: string,
+    options: RequestInit = {}
+  ): Promise<T> {
+    const url = endpoint.startsWith("http")
+      ? endpoint
+      : `${this.baseUrl}${endpoint}`;
 
-      return {
-        status: response.ok ? "up" : "down",
-        latency: Math.round(performance.now() - start),
-      };
-    } catch (error) {
-      return {
-        status: "down",
-        latency: Math.round(performance.now() - start),
-      };
+    const res = await fetch(url, {
+      ...options,
+      headers: this.getHeaders(options.headers as Record<string, string>),
+    });
+
+    if (!res.ok) {
+      const errorBody = await res.json().catch(() => ({}));
+      throw new Error(
+        `GitHub API Error: ${res.status} - ${
+          errorBody.message || res.statusText
+        }`
+      );
+    }
+
+    return res.json() as Promise<T>;
+  }
+
+  private ensureContext() {
+    if (!this.owner || !this.repo) {
+      throw new Error(
+        "GitHubService: Operação requer contexto de repositório (owner/repo)."
+      );
     }
   }
 
+  /**
+   * Métodos Globais e de Gerenciamento
+   */
+
+  async healthCheck(): Promise<{ status: "up" | "down"; latency: number }> {
+    const start = performance.now();
+    try {
+      await this.request("/user", { signal: AbortSignal.timeout(5000) });
+      return { status: "up", latency: Math.round(performance.now() - start) };
+    } catch {
+      return { status: "down", latency: Math.round(performance.now() - start) };
+    }
+  }
+
+  async listRepositories(): Promise<MinimalRepositoryListDTO[]> {
+    // Retorna repositórios do usuário e de organizações onde é membro
+    return this.request<MinimalRepositoryListDTO[]>(
+      `/user/repos?affiliation=owner,organization_member&sort=updated`
+    );
+  }
+
   async createRepository(name: string, isPrivate: boolean) {
+    // Se houver orgName, cria na Org, senão no perfil pessoal
     const endpoint = this.orgName
       ? `/orgs/${this.orgName}/repos`
       : `/user/repos`;
-
-    const res = await fetch(`${this.baseUrl}${endpoint}`, {
+    const data = await this.request<any>(endpoint, {
       method: "POST",
-      headers: this.getHeaders(),
       body: JSON.stringify({ name, private: isPrivate }),
     });
 
-    if (!res.ok) throw new Error(`GitHub Error: ${res.statusText}`);
-
-    const data = await res.json();
-    return { url: data.html_url, id: data.id };
+    return data;
   }
 
   async createFromTemplate(
@@ -76,26 +123,27 @@ export class GitHubService extends IntegrationBase implements IGitService {
     templateRepo: string,
     newName: string
   ) {
-    const res = await fetch(
-      `${this.baseUrl}/repos/${templateOwner}/${templateRepo}/generate`,
+    // O template pode ser de qualquer owner, mas o destino respeita a orgName
+    return this.request<any>(
+      `/repos/${templateOwner}/${templateRepo}/generate`,
       {
         method: "POST",
-        headers: this.getHeaders(),
         body: JSON.stringify({
           name: newName,
-          owner: this.orgName || undefined, // Garante criação na org se definida
+          owner: this.orgName || undefined, // undefined faz o GitHub assumir o usuário do Token
           private: true,
         }),
       }
     );
-    return res.json();
   }
 
-  async getRepoStats(owner: string, repo: string): Promise<RepoStats> {
-    const res = await fetch(`${this.baseUrl}/repos/${owner}/${repo}`, {
-      headers: this.getHeaders(),
-    });
-    const d = await res.json();
+  /**
+   * Métricas e Inspeção (Agnóstico: Funciona para Usuário ou Org)
+   */
+
+  async getRepoStats(): Promise<RepoStats> {
+    this.ensureContext();
+    const d = await this.request<any>(`/repos/${this.owner}/${this.repo}`);
     return {
       stars: d.stargazers_count,
       forks: d.forks_count,
@@ -105,17 +153,11 @@ export class GitHubService extends IntegrationBase implements IGitService {
     };
   }
 
-  async getLatestWorkflowRuns(
-    owner: string,
-    repo: string,
-    limit = 5
-  ): Promise<WorkflowRun[]> {
-    const res = await fetch(
-      `${this.baseUrl}/repos/${owner}/${repo}/actions/runs?per_page=${limit}`,
-      { headers: this.getHeaders() }
+  async getLatestWorkflowRuns(limit = 5): Promise<WorkflowRun[]> {
+    this.ensureContext();
+    const data = await this.request<any>(
+      `/repos/${this.owner}/${this.repo}/actions/runs?per_page=${limit}`
     );
-    const data = await res.json();
-
     if (!data.workflow_runs) return [];
 
     return data.workflow_runs.map((run: any) => ({
@@ -123,27 +165,146 @@ export class GitHubService extends IntegrationBase implements IGitService {
       name: run.name,
       status: run.conclusion || run.status,
       duration:
-        (new Date(run.updated_at).getTime() -
-          new Date(run.created_at).getTime()) /
-        1000,
+        run.updated_at && run.created_at
+          ? (new Date(run.updated_at).getTime() -
+              new Date(run.created_at).getTime()) /
+            1000
+          : 0,
       author: run.head_commit?.author?.name || "Unknown",
       createdAt: run.created_at,
     }));
   }
 
-  async getRecentActivity(
-    owner: string,
-    repo: string,
-    limit = 10
-  ): Promise<GitActivity[]> {
-    const res = await fetch(
-      `${this.baseUrl}/repos/${owner}/${repo}/events?per_page=${limit}`,
-      { headers: this.getHeaders() }
+  async getCommitStats(): Promise<CommitData> {
+    this.ensureContext();
+    const thirtyDaysAgo = date().subtract(30, "days").toISOString();
+
+    const commits = await this.request<any[]>(
+      `/repos/${this.owner}/${this.repo}/commits?since=${thirtyDaysAgo}`
     );
-    const events = await res.json();
 
-    if (!Array.isArray(events)) return [];
+    const stats = commits.reduce((acc: Record<string, number>, curr: any) => {
+      const dateKey = date(curr.commit.author.date).format("YYYY-MM-DD");
+      acc[dateKey] = (acc[dateKey] || 0) + 1;
+      return acc;
+    }, {});
 
+    return {
+      commitsRaw: commits,
+      stats: Object.entries(stats).map(([date, count]) => ({ date, count })),
+    };
+  }
+
+  async getLanguages(): Promise<Record<string, number>> {
+    this.ensureContext();
+    return this.request<Record<string, number>>(
+      `/repos/${this.owner}/${this.repo}/languages`
+    );
+  }
+
+  async getContent(path: string): Promise<string> {
+    this.ensureContext();
+    const data = await this.request<any>(
+      `/repos/${this.owner}/${this.repo}/contents/${path}`
+    );
+    if (!data.content) throw new Error("Content not found");
+    return Buffer.from(data.content, "base64").toString("utf-8");
+  }
+
+  async getPullRequestAnalysis(): Promise<PRAnalysis> {
+    this.ensureContext();
+
+    // Buscamos os últimos 30 PRs com estado 'closed'
+    // Isso retorna tanto os que foram Merged quanto os apenas Closed
+    const prs = await this.request<any[]>(
+      `/repos/${this.owner}/${this.repo}/pulls?state=closed&per_page=30`
+    );
+
+    // 1. Contagem total de fechados (ignorando bots se desejar manter consistência)
+    const closedPrs = prs.filter((pr) => !pr.state.closed);
+    const closedCount = closedPrs.length;
+
+    // 2. Filtramos apenas os que foram mesclados (entrega real)
+    const mergedPrs = closedPrs.filter((pr) => pr.merged_at);
+    const mergedCount = mergedPrs.length;
+
+    if (mergedCount === 0) {
+      return {
+        avgMergeTimeHours: 0,
+        mergedCount: 0,
+        closedCount,
+        latestMergedPRs: [],
+      };
+    }
+
+    // 3. Cálculo do tempo médio de merge (apenas para os mesclados)
+    const totalTime = mergedPrs.reduce((acc: number, pr: any) => {
+      return (
+        acc +
+        (new Date(pr.merged_at).getTime() - new Date(pr.created_at).getTime())
+      );
+    }, 0);
+
+    // 4. Mapeamento para listagem de UI (Histórico de Sucesso)
+    const latestMergedPRs: PRDetail[] = mergedPrs.slice(0, 10).map((pr) => ({
+      id: pr.id,
+      number: pr.number,
+      title: pr.title,
+      author: pr.user.login,
+      mergedAt: pr.merged_at,
+      url: pr.html_url,
+    }));
+
+    return {
+      avgMergeTimeHours: totalTime / mergedCount / (1000 * 60 * 60),
+      mergedCount,
+      closedCount,
+      latestMergedPRs,
+    };
+  }
+
+  async findPackageFiles() {
+    this.ensureContext();
+    const query = `repo:${this.owner}/${this.repo} filename:package.json filename:requirements.txt filename:go.mod filename:composer.json`;
+    const data = await this.request<any>(
+      `/search/code?q=${encodeURIComponent(query)}`
+    );
+    return (data.items || []).map((item: any) => ({
+      name: item.name,
+      path: item.path,
+      downloadUrl: item.html_url,
+    }));
+  }
+
+  async getTopContributors() {
+    this.ensureContext();
+    const data = await this.request<any[]>(
+      `/repos/${this.owner}/${this.repo}/contributors?per_page=5`
+    );
+    return data.map((c: any) => ({
+      login: c.login,
+      contributions: c.contributions,
+    }));
+  }
+
+  async listBranchesSecurity() {
+    this.ensureContext();
+    const branches = await this.request<any[]>(
+      `/repos/${this.owner}/${this.repo}/branches`
+    );
+    return branches
+      .filter((b: any) => b.protected)
+      .map((b: any) => ({
+        name: b.name,
+        protectionUrl: b.protection_url,
+      }));
+  }
+
+  async getRecentActivity(limit = 10): Promise<GitActivity[]> {
+    this.ensureContext();
+    const events = await this.request<any[]>(
+      `/repos/${this.owner}/${this.repo}/events?per_page=${limit}`
+    );
     return events.map((e: any) => ({
       id: e.id,
       type:
@@ -155,114 +316,60 @@ export class GitHubService extends IntegrationBase implements IGitService {
       author: e.actor.login,
       message: e.payload.commits?.[0]?.message || `Activity: ${e.type}`,
       date: e.created_at,
-      url: `https://github.com/${owner}/${repo}/commit/${e.payload.head || ""}`,
+      url: `https://github.com/${this.owner}/${this.repo}/commit/${
+        e.payload.head || ""
+      }`,
     }));
   }
 
-  async getLanguages(
-    owner: string,
-    repo: string
-  ): Promise<Record<string, number>> {
-    const res = await fetch(
-      `${this.baseUrl}/repos/${owner}/${repo}/languages`,
-      { headers: this.getHeaders() }
-    );
-    return await res.json();
-  }
+  /**
+   * Implementação IProjectLinkable
+   */
 
-  async getContent(owner: string, repo: string, path: string): Promise<string> {
-    const res = await fetch(
-      `${this.baseUrl}/repos/${owner}/${repo}/contents/${path}`,
-      { headers: this.getHeaders() }
-    );
-    const data = await res.json();
-    if (!data.content) throw new Error("Content not found");
-    return Buffer.from(data.content, "base64").toString("utf-8");
-  }
+  async setupProject<T>(
+    params: SetupProjectParams<T>
+  ): Promise<SetupProjectResult> {
+    const validatedData = GitHubSetupSchema.parse(params.data);
+    let externalId: string = "";
+    let metadata: Record<string, any> = {};
 
-  async getPullRequestAnalysis(
-    owner: string,
-    repo: string
-  ): Promise<PRAnalysis> {
-    const res = await fetch(
-      `${this.baseUrl}/repos/${owner}/${repo}/pulls?state=closed&per_page=30`,
-      { headers: this.getHeaders() }
-    );
-    const prs = await res.json();
+    if (validatedData.isNewRepo) {
+      const repoName = validatedData.repoName || params.projectSlug;
 
-    if (!Array.isArray(prs)) return { avgMergeTimeHours: 0, count: 0 };
-
-    const mergedPrs = prs.filter((pr: any) => pr.merged_at);
-    if (mergedPrs.length === 0) return { avgMergeTimeHours: 0, count: 0 };
-
-    const totalTime = mergedPrs.reduce((acc: number, pr: any) => {
-      const created = new Date(pr.created_at).getTime();
-      const merged = new Date(pr.merged_at).getTime();
-      return acc + (merged - created);
-    }, 0);
+      if (validatedData.shouldClone && validatedData.templateRepoId) {
+        const [tOwner, tRepo] = validatedData.templateRepoId.split("/");
+        const repo = await this.createFromTemplate(tOwner, tRepo, repoName);
+        externalId = String(repo.id);
+        metadata = {
+          name: repo.name,
+          full_name: repo.full_name,
+          owner_type: repo.owner.type,
+        };
+      } else {
+        const repo = await this.createRepository(repoName, true);
+        externalId = String(repo.id);
+        // O GitHub retorna o objeto owner completo, usamos o tipo (User/Organization)
+        metadata = {
+          name: repoName,
+          full_name: repo.full_name,
+          owner_type: repo.owner.type,
+        };
+      }
+    } else if (validatedData.repositoryId) {
+      const repo = await this.request<any>(
+        `/repositories/${validatedData.repositoryId}`
+      );
+      externalId = String(repo.id);
+      metadata = {
+        name: repo.name,
+        full_name: repo.full_name,
+        owner_type: repo.owner.type,
+      };
+    }
 
     return {
-      avgMergeTimeHours: totalTime / mergedPrs.length / (1000 * 60 * 60),
-      count: mergedPrs.length,
+      externalId,
+      metadata: { ...metadata, provider: "github", setupAt: date().toDate() },
     };
-  }
-
-  /**
-   * Busca arquivos de dependências para identificar a stack do projeto
-   */
-  async findPackageFiles(owner: string, repo: string) {
-    // Busca arquivos importantes usando a API de Search do GitHub
-    const query = `repo:${owner}/${repo} filename:package.json filename:requirements.txt filename:go.mod filename:composer.json`;
-    const res = await fetch(
-      `${this.baseUrl}/search/code?q=${encodeURIComponent(query)}`,
-      { headers: this.getHeaders() }
-    );
-
-    if (!res.ok) return [];
-
-    const data = await res.json();
-    return (data.items || []).map((item: any) => ({
-      name: item.name,
-      path: item.path,
-      downloadUrl: item.html_url,
-    }));
-  }
-
-  /**
-   * Retorna os principais contribuidores do repositório
-   */
-  async getTopContributors(owner: string, repo: string) {
-    const res = await fetch(
-      `${this.baseUrl}/repos/${owner}/${repo}/contributors?per_page=5`,
-      { headers: this.getHeaders() }
-    );
-
-    if (!res.ok) return [];
-
-    const data = await res.json();
-    return data.map((c: any) => ({
-      login: c.login,
-      contributions: c.contributions,
-    }));
-  }
-
-  /**
-   * Lista branches que possuem regras de proteção (Segurança)
-   */
-  async listBranchesSecurity(owner: string, repo: string) {
-    const res = await fetch(`${this.baseUrl}/repos/${owner}/${repo}/branches`, {
-      headers: this.getHeaders(),
-    });
-
-    if (!res.ok) return [];
-
-    const branches = await res.json();
-    // Filtra apenas branches protegidas (onde b.protected === true)
-    return branches
-      .filter((b: any) => b.protected)
-      .map((b: any) => ({
-        name: b.name,
-        protectionUrl: b.protection_url,
-      }));
   }
 }

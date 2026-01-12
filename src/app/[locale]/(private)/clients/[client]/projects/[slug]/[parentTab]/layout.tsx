@@ -13,6 +13,7 @@ import { AppError } from "@/errors/AppError";
 
 interface LayoutProps {
   overview: React.ReactNode;
+  dashboard: React.ReactNode;
   commercial: React.ReactNode;
   backlog: React.ReactNode;
   metrics: React.ReactNode;
@@ -21,6 +22,7 @@ interface LayoutProps {
 
 export default async function ProjectLayout({
   overview,
+  dashboard,
   commercial,
   backlog,
   metrics,
@@ -85,6 +87,7 @@ export default async function ProjectLayout({
       </div>
       <ProjectTabs>
         {parentTab === "overview" && overview}
+        {parentTab === "dashboard" && dashboard}
         {parentTab === "commercial" && commercial}
         {parentTab === "backlog" && backlog}
         {parentTab === "metrics" && metrics}

@@ -3386,6 +3386,7 @@ export const InvoiceScalarFieldEnum = {
   paymentType: 'paymentType',
   amount: 'amount',
   dueDate: 'dueDate',
+  paidAt: 'paidAt',
   status: 'status',
   description: 'description',
   nfseNumber: 'nfseNumber',

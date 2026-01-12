@@ -837,6 +837,7 @@ model Invoice {
 
   amount  Decimal         @db.Decimal(15, 2)
   dueDate DateTime        @map("due_date")
+  paidAt  DateTime?       @map("paid_at")
   status  FinancialStatus @default(PENDING)
 
   description String  @db.VarChar(255)

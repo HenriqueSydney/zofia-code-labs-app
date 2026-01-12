@@ -23,6 +23,9 @@ import { ChartsContainer } from "./_components/ChartsContainer";
 import { LineChartSkeleton } from "@/components/skeletons/LineChartSkeleton";
 import { BarChartSkeleton } from "@/components/skeletons/BarChartSkeleton";
 import { DeviceAndSoChartsContainer } from "./_components/DeviceAndSoChartsContainer";
+import { RealTimeChart } from "./_components/RealTimeChart";
+import { IssuesTableSkeleton } from "../@codeQuality/_skeletons/IssuesTableSkeleton";
+import { ListsContainer } from "./_components/ListsContainer";
 
 interface IContractTab {
   params: Promise<{
@@ -136,31 +139,40 @@ export default async function ContractTab({ params }: IContractTab) {
         <CardContent className="space-y-4">
           <Suspense fallback={<SummaryCardsSkeleton />}>
             <MetricsGrid slug={slug} />
-            <Suspense
-              fallback={
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          </Suspense>
+          <Suspense
+            fallback={
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <div className="lg:cols-span-2">
                   <LineChartSkeleton />
-                  <BarChartSkeleton />
                 </div>
-              }
-            >
-              <ChartsContainer slug={slug} />
-            </Suspense>
-
-            <Suspense
-              fallback={
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  <LineChartSkeleton />
-                  <BarChartSkeleton />
-                </div>
-              }
-            >
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="col-span-3">
-                  <DeviceAndSoChartsContainer slug={slug} />
-                </div>
+                <BarChartSkeleton />
               </div>
-            </Suspense>
+            }
+          >
+            <ChartsContainer slug={slug} />
+          </Suspense>
+
+          <Suspense
+            fallback={
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <LineChartSkeleton />
+                <BarChartSkeleton />
+              </div>
+            }
+          >
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="col-span-3">
+                <DeviceAndSoChartsContainer slug={slug} />
+              </div>
+              <div className="col-span-1 h-full">
+                <RealTimeChart slug={slug} />
+              </div>
+            </div>
+          </Suspense>
+
+          <Suspense fallback={<IssuesTableSkeleton />}>
+            <ListsContainer slug={slug} />
           </Suspense>
         </CardContent>
       </Card>

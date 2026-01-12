@@ -56,11 +56,11 @@ export class TestIntegrationConnectionUseCase {
       }
 
       const instance =
-        await this.integrationFactory.getIntegration<IntegrationBase>(
-          organizationId,
-          integration.integrationType.slug as IntegrationType,
-          secretValues
-        );
+        await this.integrationFactory.getIntegration<IntegrationBase>({
+          organizationId: organizationId,
+          type: integration.integrationType.slug as IntegrationType,
+          providedSecrets: secretValues,
+        });
 
       const result = await instance.healthCheck();
 

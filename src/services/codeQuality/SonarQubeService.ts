@@ -344,10 +344,10 @@ export class SonarQubeService
     return data.token;
   }
 
-  async setupProject({
+  async setupProject<T>({
     projectName,
     projectSlug,
-  }: SetupProjectParams): Promise<SetupProjectResult> {
+  }: SetupProjectParams<T>): Promise<SetupProjectResult> {
     // 1. Cria o projeto
     await this.createProject(projectName, projectSlug);
 

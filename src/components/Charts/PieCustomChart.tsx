@@ -8,10 +8,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Gamepad2, Laptop, LucideIcon, Tv, Watch } from "lucide-react";
+import {
+  Gamepad2,
+  Laptop,
+  LucideIcon,
+  Tv,
+  Watch,
+  Monitor,
+  Smartphone,
+  Tablet,
+  TabletSmartphone,
+} from "lucide-react";
 import { Cell, Pie, ResponsiveContainer, Tooltip, PieChart } from "recharts";
-
-import { Monitor, Smartphone, Tablet, TabletSmartphone } from "lucide-react";
+import { ChartEmptyState } from "./ChartEmptyState";
 
 const pieChartIconMapper = (key: string) => {
   const icons: Record<string, LucideIcon> = {
@@ -27,20 +36,15 @@ const pieChartIconMapper = (key: string) => {
   return icons[key];
 };
 
-type PieData = {
-  name: string;
-  value: number;
-  iconKey: string;
-  color: string;
-};
+type PieData = { name: string; value: number; iconKey: string; color: string };
 
-interface IDevicePieChart {
+interface IPieChart {
   title: string;
   description: string;
   data: PieData[];
 }
 
-export function PieCustomChart({ data, title, description }: IDevicePieChart) {
+export function PieCustomChart({ data, title, description }: IPieChart) {
   const total = data.reduce((acc, curr) => acc + curr.value, 0);
   const hasData = total > 0;
 
@@ -52,15 +56,7 @@ export function PieCustomChart({ data, title, description }: IDevicePieChart) {
       </CardHeader>
       <CardContent>
         <div className="h-[250px] w-full min-h-[250px] relative flex items-center justify-center">
-          {!hasData && (
-            <div className="flex flex-col items-center justify-center text-muted-foreground animate-in fade-in duration-500">
-              <span className="text-sm font-medium">Sem dados disponíveis</span>
-              <span className="text-xs">
-                Nenhum acesso registrado no período
-              </span>
-            </div>
-          )}
-          {hasData && (
+          {hasData ? (
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -78,6 +74,8 @@ export function PieCustomChart({ data, title, description }: IDevicePieChart) {
                 <Tooltip content={<CustomTooltip />} />
               </PieChart>
             </ResponsiveContainer>
+          ) : (
+            <ChartEmptyState subtitle="Nenhum acesso registrado no período" />
           )}
         </div>
         <div className="mt-4 space-y-2">
@@ -93,7 +91,10 @@ export function PieCustomChart({ data, title, description }: IDevicePieChart) {
                   <span>{device.name}</span>
                 </div>
                 <span className="font-medium">
-                  {device.value > 0 ? (device.value / total) * 100 : 0}%
+                  {hasData
+                    ? Number((device.value / total) * 100).toFixed(2)
+                    : 0}
+                  %
                 </span>
               </div>
             );

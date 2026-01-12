@@ -1,8 +1,8 @@
 import { AppError } from "@/errors/AppError";
 import { cache } from "react";
 import { operationWrapper } from "@/lib/operationWrapper";
-import { getUmamiMetricsAction } from "@/actions/integrations/getUmamiMetricsAction";
-import { MetricsResponse } from "@/useCases/integration/GetUmamiMetricsUseCase";
+import { getUmamiMetricsAction } from "@/actions/integrations/umami/getUmamiMetricsAction";
+import { MetricsResponse } from "@/useCases/integration/umami/GetUmamiMetricsUseCase";
 
 // Esta é a função única que todos os componentes vão importar
 export const getCachedUmamiMetrics = cache(async (slug: string) => {

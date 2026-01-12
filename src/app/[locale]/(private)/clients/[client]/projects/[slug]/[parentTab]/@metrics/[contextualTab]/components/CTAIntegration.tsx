@@ -9,6 +9,8 @@ import { OrganizationIntegrationWithDetails } from "@/repositories/IOrganization
 import { ListChecks, Settings2 } from "lucide-react"; // Sugestão de ícones de fallback
 import { toast } from "sonner";
 
+import { useEffect, useState, useTransition } from "react";
+import { GitHubIntegrationForm } from "./GitHubIntegrationForm";
 interface ICTAIntegration {
   client: string;
   projectSlug: string;
@@ -34,6 +36,8 @@ export function CTAIntegration({
   integration,
   integrationType,
 }: ICTAIntegration) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const hookMessage =
     INTEGRATION_HOOKS[integrationType.slug as keyof typeof INTEGRATION_HOOKS] ||
     "Potencialize a gestão do seu projeto com dados em tempo real.";
@@ -57,11 +61,16 @@ export function CTAIntegration({
     );
   }
 
-  const handleConnectServiceToProject = async () => {
+  const handleToggleModal = () => {
+    setIsModalOpen((prev) => !prev);
+  };
+
+  const handleConnectServiceToProject = async (data: any) => {
     const result = await connectProjectToServiceAction(
       client,
       integration.id,
-      projectSlug
+      projectSlug,
+      data
     );
 
     if (!result.success) {
@@ -73,19 +82,27 @@ export function CTAIntegration({
   };
 
   return (
-    <EmptyState
-      title={`${integrationType.name} disponível`}
-      description={`${hookMessage} Ative agora para começar a coletar métricas neste projeto.`}
-      image={integrationType.logo || ""}
-      action={
-        <Button
-          className="bg-primary hover:bg-primary/90"
-          onClick={handleConnectServiceToProject}
-        >
-          <ListChecks className="mr-2 h-4 w-4" />
-          Vincular este Projeto
-        </Button>
-      }
-    />
+    <>
+      <EmptyState
+        title={`${integrationType.name} disponível`}
+        description={`${hookMessage} Ative agora para começar a coletar métricas neste projeto.`}
+        image={integrationType.logo || ""}
+        action={
+          <Button
+            className="bg-primary hover:bg-primary/90"
+            onClick={() => setIsModalOpen(true)}
+          >
+            <ListChecks className="mr-2 h-4 w-4" />
+            Vincular este Projeto
+          </Button>
+        }
+      />
+      <GitHubIntegrationForm
+        handleConnectServiceToProject={handleConnectServiceToProject}
+        isModalOpen={isModalOpen}
+        setIsModalOpen={handleToggleModal}
+        projectSlug={projectSlug}
+      />
+    </>
   );
 }

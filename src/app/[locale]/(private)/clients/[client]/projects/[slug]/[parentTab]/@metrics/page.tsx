@@ -6,5 +6,5 @@ interface PageProps {
 
 export default async function Page({ params }: PageProps) {
   const { slug, client } = await params;
-  redirect(`/clients/${client}/projects/${slug}/metrics/web-analytics`);
+  redirect(`/clients/${client}/projects/${slug}/metrics/life-cycle`);
 }

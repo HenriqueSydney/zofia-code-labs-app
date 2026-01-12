@@ -14,6 +14,7 @@ interface ConnectProjectRequest {
   userId: string;
   projectSlug: string;
   serviceId: string;
+  data: any;
 }
 
 export class ConnectServiceToProjectUseCase {
@@ -29,6 +30,7 @@ export class ConnectServiceToProjectUseCase {
     userId,
     projectSlug,
     serviceId,
+    data,
   }: ConnectProjectRequest): Promise<void> {
     const [project, integration] = await Promise.all([
       this.projectRepository.findBySlug(projectSlug),
@@ -83,16 +85,17 @@ export class ConnectServiceToProjectUseCase {
     }
 
     const instance =
-      await this.integrationFactory.getIntegration<IProjectLinkable>(
-        integration.organizationId,
-        integration.integrationType.slug as IntegrationType,
-        secretValues
-      );
+      await this.integrationFactory.getIntegration<IProjectLinkable>({
+        organizationId: integration.organizationId,
+        type: integration.integrationType.slug as IntegrationType,
+        providedSecrets: secretValues,
+      });
 
     const result = await instance.setupProject({
       organizationId: project.organizationId,
       projectName: project.name,
       projectSlug: project.slug,
+      data,
     });
 
     if (result) {
@@ -101,6 +104,10 @@ export class ConnectServiceToProjectUseCase {
         organizationIntegrationId: integration.id,
         enabled: true,
         integrationTypeId: integration.integrationTypeId,
+        config: {
+          externalId: result.externalId,
+          ...result.metadata,
+        },
       });
     }
 

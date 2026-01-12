@@ -9,7 +9,8 @@ import { revalidatePath } from "next/cache";
 export async function connectProjectToServiceAction(
   client: string,
   serviceId: string,
-  projectSlug: string
+  projectSlug: string,
+  data: any
 ) {
   const session = await auth();
 
@@ -25,6 +26,7 @@ export async function connectProjectToServiceAction(
       projectSlug,
       serviceId,
       userId: session.user.id,
+      data,
     });
 
     revalidatePath(`/clients/${client}/projects/${projectSlug}/metrics`);

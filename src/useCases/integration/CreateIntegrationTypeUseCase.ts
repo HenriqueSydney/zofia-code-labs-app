@@ -5,7 +5,7 @@ import { generateSlug } from "@/utils/generateSlug";
 
 interface CreateRequest {
   name: string;
-  logo?: string;
+  logo?: string | null;
   description: string;
   userId: string;
 }

@@ -1,15 +1,15 @@
-export interface SetupProjectParams {
+export interface SetupProjectParams<T> {
   projectName: string;
   projectSlug: string;
   organizationId: string;
-  // Adicione outros metadados úteis
+  data?: T;
 }
 
 export interface SetupProjectResult {
-  externalId: string; // ID gerado no serviço (ex: WebsiteID no Umami)
+  externalId: string; 
   metadata: Record<string, any>;
 }
 
 export interface IProjectLinkable {
-  setupProject(params: SetupProjectParams): Promise<SetupProjectResult>;
+  setupProject<T>(params: SetupProjectParams<T>): Promise<SetupProjectResult>;
 }

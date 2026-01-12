@@ -1,6 +1,6 @@
 import { AppError } from "@/errors/AppError";
 import { cache } from "react";
-import { getSonarQubeMetricsAction } from "@/actions/integrations/getSonarQubeMetricsAction";
+import { getSonarQubeMetricsAction } from "@/actions/integrations/sonarqube/getSonarQubeMetricsAction";
 import { operationWrapper } from "@/lib/operationWrapper";
 
 // Esta é a função única que todos os componentes vão importar

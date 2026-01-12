@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
-import { syncSonarQubeMetricsAction } from "@/actions/integrations/syncSonarQubeMetricsAction";
+import { syncSonarQubeMetricsAction } from "@/actions/integrations/sonarqube/syncSonarQubeMetricsAction";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { RefreshCw } from "lucide-react"; // Ícone de sincronização

@@ -8,6 +8,7 @@ import {
   Handshake,
   History,
   LayoutDashboard,
+  ListTodo,
   Target,
   TrendingUp,
 } from "lucide-react";
@@ -32,6 +33,11 @@ export function ProjectTabs({ children }: IProjectTabs) {
       Icon: LayoutDashboard,
     },
     { tabSlug: "commercial", tabName: "Comercial", Icon: Handshake },
+    {
+      tabSlug: "backlog",
+      tabName: "Backlogs",
+      Icon: ListTodo,
+    },
     {
       tabSlug: "timeline",
       tabName: "Prazos",

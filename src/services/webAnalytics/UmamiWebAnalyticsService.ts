@@ -1,4 +1,3 @@
-import { prisma } from "@/lib/prisma";
 import { IntegrationBase } from "../IntegrationBase";
 import {
   IProjectLinkable,
@@ -7,9 +6,8 @@ import {
 } from "../IProjectLinkable";
 import {
   AnalyticsStats,
-  GetCompleteAnalytics,
   IWebAnalyticsService,
-  UmamiExpandedMetric,
+  RealtimeVisitor,
   UmamiHistoryResponse,
   UmamiRawStatsResponse,
 } from "./IWebAnalyticsService";
@@ -164,20 +162,30 @@ export class UmamiWebAnalyticsService
   }
 
   private mapMetric(items: any[]) {
-    return items.map((item) => ({
-      // O Umami retorna a chave com o nome do tipo (ex: item.browser, item.os, item.device)
-      // Se não encontrar, tenta 'x' ou o primeiro valor que não seja métrica numérica
-      name:
-        item.x ||
-        item.browser ||
-        item.os ||
-        item.device ||
-        item.country ||
-        item.name ||
-        "Unknown",
-      value: item.visitors || 0,
-      pageviews: item.pageviews || 0,
-    }));
+    return items.map((item) => {
+      // Garantir que os valores numéricos sejam números, pois o Umami às vezes envia strings
+      const pageviews = Number(item.pageviews || 0);
+      const totalTime = Number(item.totaltime || item.totalTime || 0);
+      const visitors = Number(item.visitors || item.value || 0);
+      const bounces = Number(item.bounces || 0);
+
+      return {
+        name:
+          item.x ||
+          item.browser ||
+          item.os ||
+          item.device ||
+          item.country ||
+          item.name ||
+          "Unknown",
+        value: visitors,
+        pageviews: pageviews,
+        bounces: bounces,
+        totalTime: totalTime,
+        // Cálculo do tempo médio por página nesta métrica específica
+        avgTime: pageviews > 0 ? Number((totalTime / pageviews).toFixed(2)) : 0,
+      };
+    });
   }
 
   async getCompleteAnalytics(
@@ -191,30 +199,42 @@ export class UmamiWebAnalyticsService
       .startOf("hour")
       .valueOf();
 
-    const [stats, browsers, os, devices, countries, history, hourlyHistory] =
-      await Promise.all([
-        this.getWebsiteStats(websiteId, startAt, endAt),
-        this.request<any[]>(
-          `/websites/${websiteId}/metrics?type=browser&startAt=${startAt}&endAt=${endAt}`
-        ),
-        this.request<any[]>(
-          `/websites/${websiteId}/metrics?type=os&startAt=${startAt}&endAt=${endAt}`
-        ),
-        this.request<any[]>(
-          `/websites/${websiteId}/metrics?type=device&startAt=${startAt}&endAt=${endAt}`
-        ),
-        this.request<any[]>(
-          `/websites/${websiteId}/metrics?type=country&startAt=${startAt}&endAt=${endAt}`
-        ),
-        this.request<UmamiHistoryResponse>(
-          `/websites/${websiteId}/pageviews?startAt=${startAt}&endAt=${endAt}&unit=day&timezone=${timezone}`
-        ),
-        this.request<UmamiHistoryResponse>(
-          `/websites/${websiteId}/pageviews?startAt=${beginOfTheLast24Hours}&endAt=${endAt}&unit=hour&timezone=${timezone}`
-        ),
-      ]);
+    const metricTypes = [
+      "path",
+      "browser", // O Umami usa 'browser' no singular para o parâmetro type
+      "os",
+      "device", // O Umami usa 'device' no singular para o parâmetro type
+      "country", // O Umami usa 'country' no singular para o parâmetro type
+      "referrer",
+    ] as const;
 
-    console.log(hourlyHistory);
+    // 2. Executa todas as chamadas em paralelo
+    const [stats, metricsResults, history, hourlyHistory] = await Promise.all([
+      this.getWebsiteStats(websiteId, startAt, endAt),
+
+      // Mapeia os tipos de métricas para requests
+      Promise.all(
+        metricTypes.map((type) =>
+          this.request<any[]>(
+            `/websites/${websiteId}/metrics/expanded?type=${type}&startAt=${startAt}&endAt=${endAt}`
+          )
+        )
+      ),
+
+      this.request<UmamiHistoryResponse>(
+        `/websites/${websiteId}/pageviews?startAt=${startAt}&endAt=${endAt}&unit=day&timezone=${timezone}`
+      ),
+
+      this.request<UmamiHistoryResponse>(
+        `/websites/${websiteId}/pageviews?startAt=${beginOfTheLast24Hours}&endAt=${endAt}&unit=hour&timezone=${timezone}`
+      ),
+    ]);
+
+    // 3. Transforma o array de resultados em um objeto mapeado para facilitar o acesso
+    const breakdownData = metricTypes.reduce((acc, type, index) => {
+      acc[type] = this.mapMetric(metricsResults[index]);
+      return acc;
+    }, {} as Record<string, any>);
 
     return {
       pageviews: stats.pageviews.value,
@@ -228,15 +248,36 @@ export class UmamiWebAnalyticsService
           : 0,
 
       breakdown: {
-        browsers: this.mapMetric(browsers),
-        os: this.mapMetric(os),
-        devices: this.mapMetric(devices),
-        countries: this.mapMetric(countries),
+        pages: breakdownData.path,
+        browsers: breakdownData.browser,
+        os: breakdownData.os,
+        devices: breakdownData.device,
+        countries: breakdownData.country,
+        referrers: breakdownData.referrer,
         history: history,
         hourlyHistory,
       },
       timestamp: new Date(),
     };
+  }
+
+  async getRealtimeMetrics(websiteId: string): Promise<RealtimeVisitor[]> {
+    const rawData = await this.request<any>(`/realtime/${websiteId}`);
+
+    if (!rawData || !rawData.urls) {
+      return [];
+    }
+
+    // Tipamos o acumulador explicitamente como um Record de strings para RealtimeVisitor
+    const grouping = Object.entries(rawData.urls).map(([page, visitors]) => {
+      return {
+        page,
+        visitors: visitors as number,
+      };
+    });
+
+    // Agora o TS sabe que Object.values retorna RealtimeVisitor[]
+    return Object.values(grouping).sort((a, b) => b.visitors - a.visitors);
   }
 
   async createWebsite(
@@ -296,7 +337,9 @@ export class UmamiWebAnalyticsService
     });
   }
 
-  async setupProject(params: SetupProjectParams): Promise<SetupProjectResult> {
+  async setupProject<T>(
+    params: SetupProjectParams<T>
+  ): Promise<SetupProjectResult> {
     const projectRepository = makeProjectRepository();
     const project = await projectRepository.findBySlug(params.projectSlug);
     const domain = "clinicaacolhekids.com.br";

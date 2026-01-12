@@ -20,8 +20,17 @@ export enum IntegrationType {
   RESEND = "resend",
 }
 
+type GetIntegrationParams = {
+  organizationId: string;
+  type: IntegrationType;
+  contextOptions?: any; // Novo parâmetro para contexto (owner/repo)
+  providedSecrets?: Record<string, string>;
+};
 // Definição do tipo para a função que cria a instância
-type IntegrationCreator = (secrets: Record<string, string>) => any;
+type IntegrationCreator = (
+  secrets: Record<string, string>,
+  options?: any
+) => any;
 
 // Mapa de estratégias de criação
 const INTEGRATION_STRATEGIES: Record<IntegrationType, IntegrationCreator> = {
@@ -60,10 +69,12 @@ const INTEGRATION_STRATEGIES: Record<IntegrationType, IntegrationCreator> = {
       password: secrets["UMAMI_ADMIN_PASSWORD"],
     }),
 
-  [IntegrationType.GITHUB]: (secrets) =>
+  [IntegrationType.GITHUB]: (secrets, options) =>
     new GitHubService({
       personalToken: secrets["GITHUB_ACCESS_TOKEN"],
       orgName: secrets["GITHUB_ORG_NAME"],
+      owner: options?.owner,
+      repo: options?.repo,
     }),
 
   [IntegrationType.RESEND]: (secrets) =>
@@ -85,50 +96,56 @@ export class IntegrationFactory {
     this.infisical = infisicalService || new InfisicalService();
   }
 
-  async getIntegration<T>(
-    organizationId: string,
-    type: IntegrationType,
-    providedSecrets?: Record<string, string>
-  ): Promise<T> {
+  async getServiceSecret(organizationId: string, type: IntegrationType) {
+    const path = `/${organizationId}/integrations/${type}`;
+    const secrets = await this.infisical.getAllSecrets({
+      workspaceId: process.env.INFISICAL_WORKSPACE_ID!,
+      environment: process.env.NODE_ENV === "production" ? "prod" : "dev",
+      path,
+    });
+
+    if (!secrets || Object.keys(secrets).length === 0) {
+      throw new Error(
+        `Nenhum segredo encontrado para a integração ${type} no path ${path}`
+      );
+    }
+
+    return secrets;
+  }
+
+  async getIntegration<T>({
+    organizationId,
+    type,
+    contextOptions,
+    providedSecrets,
+  }: GetIntegrationParams): Promise<T> {
     let finalSecrets: Record<string, string>;
 
-    // 1. Lógica de Fallback: Se não passou secrets, busca no Infisical
     if (!providedSecrets) {
-      const path = `/${organizationId}/integrations/${type}`;
-      finalSecrets = await this.infisical.getAllSecrets({
-        workspaceId: process.env.INFISICAL_WORKSPACE_ID!,
-        environment: process.env.NODE_ENV === "production" ? "prod" : "dev",
-        path,
-      });
-
-      if (!finalSecrets || Object.keys(finalSecrets).length === 0) {
-        throw new Error(
-          `Nenhum segredo encontrado para a integração ${type} no path ${path}`
-        );
-      }
+      finalSecrets = await this.getServiceSecret(organizationId, type);
     } else {
-      // Se passou, usa as repassadas
       finalSecrets = providedSecrets;
     }
 
-    // 2. Validação de Cache via Hash (evita instanciar o que já está pronto e igual)
+    // O cache agora precisa levar em conta o contexto (owner/repo)
+    // para não retornar o serviço do Projeto A para o Projeto B
+    const contextHash = contextOptions ? JSON.stringify(contextOptions) : "";
     const secretsHash = JSON.stringify(finalSecrets);
-    const cacheKey = `${organizationId}:${type}`;
-    const cached = IntegrationFactory.cache.get(cacheKey);
+    const cacheKey = `${organizationId}:${type}:${contextHash}`;
 
+    const cached = IntegrationFactory.cache.get(cacheKey);
     if (cached && cached.secretsHash === secretsHash) {
       return cached.instance as T;
     }
 
-    // 3. Estratégia de Criação
     const createInstance = INTEGRATION_STRATEGIES[type];
     if (!createInstance) {
       throw new Error(`Estratégia não definida para: ${type}`);
     }
 
-    const instance = createInstance(finalSecrets);
+    // Passamos finalSecrets e o contexto para o criador
+    const instance = createInstance(finalSecrets, contextOptions);
 
-    // 4. Atualiza Cache
     IntegrationFactory.cache.set(cacheKey, {
       instance,
       secretsHash,

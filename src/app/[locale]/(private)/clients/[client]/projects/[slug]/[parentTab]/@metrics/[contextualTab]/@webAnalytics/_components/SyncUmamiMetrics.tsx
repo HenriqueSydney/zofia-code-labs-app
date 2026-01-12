@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
-import { syncUmamiMetricsAction } from "@/actions/integrations/syncUmamiMetricsAction";
+import { syncUmamiMetricsAction } from "@/actions/integrations/umami/syncUmamiMetricsAction";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { RefreshCw } from "lucide-react"; // Ícone de sincronização

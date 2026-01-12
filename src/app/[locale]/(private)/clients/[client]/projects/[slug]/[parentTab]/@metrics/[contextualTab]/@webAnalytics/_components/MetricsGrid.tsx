@@ -1,6 +1,7 @@
 import { StatsCard } from "@/components/StatsCard";
 import { Eye, Files, MousePointerClick, Timer, Users } from "lucide-react";
 import { getCachedUmamiMetrics } from "../_data/get-umami-metrics";
+import { formatDuration } from "@/utils/formatDuration";
 
 export async function MetricsGrid({ slug }: { slug: string }) {
   const metrics = await getCachedUmamiMetrics(slug);
@@ -36,7 +37,7 @@ export async function MetricsGrid({ slug }: { slug: string }) {
 
       <StatsCard
         label="Duração Média"
-        mainInformation={metrics.avgDuration} // Ex: "2m 15s"
+        mainInformation={formatDuration(metrics.avgDuration)} // Ex: "2m 15s"
         trend={metrics.trends.avgDuration}
         Icon={Timer}
         iconColor="bg-green-500/10"
