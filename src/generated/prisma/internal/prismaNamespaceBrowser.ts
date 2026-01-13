@@ -478,11 +478,18 @@ export const ExpenseScalarFieldEnum = {
   organizationId: 'organizationId',
   projectId: 'projectId',
   description: 'description',
+  supplier: 'supplier',
   amount: 'amount',
   expenseCategoryId: 'expenseCategoryId',
+  status: 'status',
   date: 'date',
+  dueDate: 'dueDate',
+  paidAt: 'paidAt',
+  attachmentUrl: 'attachmentUrl',
+  createdById: 'createdById',
   meta: 'meta',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type ExpenseScalarFieldEnum = (typeof ExpenseScalarFieldEnum)[keyof typeof ExpenseScalarFieldEnum]

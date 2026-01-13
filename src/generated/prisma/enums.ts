@@ -169,6 +169,16 @@ export const ExpenseNature = {
 export type ExpenseNature = (typeof ExpenseNature)[keyof typeof ExpenseNature]
 
 
+export const ExpenseStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  CANCELED: 'CANCELED',
+  SCHEDULED: 'SCHEDULED'
+} as const
+
+export type ExpenseStatus = (typeof ExpenseStatus)[keyof typeof ExpenseStatus]
+
+
 export const FinancialStatus = {
   PENDING: 'PENDING',
   PAID: 'PAID',

@@ -1,6 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import { IProjectStatsRepository } from "../IProjectStatsRepository";
-import { BacklogStatus, FinancialStatus } from "@/generated/prisma/enums";
+import {
+  BacklogStatus,
+  ContractStatus,
+  FinancialStatus,
+  ProposalStatus,
+} from "@/generated/prisma/enums";
 import { date } from "@/lib/dayjs"; // Utilizando seu utilitário dayjs
 
 export class PrismaProjectStatsRepository implements IProjectStatsRepository {
@@ -99,74 +104,115 @@ export class PrismaProjectStatsRepository implements IProjectStatsRepository {
     const thirtyDaysAgo = date().subtract(30, "day").toDate();
     const sixtyDaysAgo = date().subtract(60, "day").toDate();
 
+    // Pega o início do dia de 1 ano atrás para o gráfico
+    const oneYearAgo = date().subtract(1, "year").startOf("day").toDate();
+
     const [
       revenueSum,
       expenseSum,
       invoices,
       expenses,
-      prevRevenue,
-      prevExpense,
+      // Tendências (Baseadas em DATA DE PAGAMENTO)
+      revenueCurrentMonth,
+      revenuePreviousMonth,
+      expenseCurrentMonth,
+      expensePreviousMonth,
     ] = await Promise.all([
+      // 1. Total Recebido (Global - Status Pago)
       prisma.invoice.aggregate({
         where: { projectId, status: FinancialStatus.PAID },
         _sum: { amount: true },
       }),
+      // 2. Total Gasto (Global - Status Pago) - *Importante filtrar pagos para fluxo de caixa real*
       prisma.expense.aggregate({
-        where: { projectId },
+        where: {
+          projectId,
+          status: FinancialStatus.PAID,
+        },
         _sum: { amount: true },
       }),
+
+      // 3. Lista de Invoices (Últimos 12 meses pelo PAID_AT)
       prisma.invoice.findMany({
-        where: { projectId, status: FinancialStatus.PAID },
-        orderBy: { createdAt: "asc" },
+        where: {
+          projectId,
+          status: FinancialStatus.PAID,
+          paidAt: { gte: oneYearAgo, not: null }, // Filtra pela data de recebimento
+        },
+        orderBy: { paidAt: "asc" },
       }),
+
+      // 4. Lista de Expenses (Últimos 12 meses pelo PAID_AT)
       prisma.expense.findMany({
-        where: { projectId },
-        orderBy: { date: "asc" },
+        where: {
+          projectId,
+          status: FinancialStatus.PAID, // Apenas despesas pagas aparecem no fluxo realizado
+          paidAt: { gte: oneYearAgo, not: null }, // Filtra pela data de pagamento
+        },
+        orderBy: { paidAt: "asc" },
       }),
-      // Agregações para tendências
+
+      // --- TENDÊNCIAS (Comparando fluxo de caixa de 30 dias) ---
+
+      // 5. Receita Recente (0-30 dias pelo paidAt)
       prisma.invoice.aggregate({
         where: {
           projectId,
           status: FinancialStatus.PAID,
-          createdAt: { gte: thirtyDaysAgo, lte: now },
+          paidAt: { gte: thirtyDaysAgo, lte: now },
         },
         _sum: { amount: true },
       }),
+      // 6. Receita Anterior (30-60 dias pelo paidAt)
       prisma.invoice.aggregate({
         where: {
           projectId,
           status: FinancialStatus.PAID,
-          createdAt: { gte: sixtyDaysAgo, lte: thirtyDaysAgo },
+          paidAt: { gte: sixtyDaysAgo, lte: thirtyDaysAgo },
         },
         _sum: { amount: true },
       }),
+      // 7. Despesa Recente (0-30 dias pelo paidAt)
       prisma.expense.aggregate({
-        where: { projectId, date: { gte: thirtyDaysAgo, lte: now } },
+        where: {
+          projectId,
+          status: FinancialStatus.PAID,
+          paidAt: { gte: thirtyDaysAgo, lte: now },
+        },
         _sum: { amount: true },
       }),
+      // 8. Despesa Anterior (30-60 dias pelo paidAt)
       prisma.expense.aggregate({
-        where: { projectId, date: { gte: sixtyDaysAgo, lte: thirtyDaysAgo } },
+        where: {
+          projectId,
+          status: FinancialStatus.PAID,
+          paidAt: { gte: sixtyDaysAgo, lte: thirtyDaysAgo },
+        },
         _sum: { amount: true },
       }),
     ]);
 
-    // O retorno das agregações no aggregate vem em array pela ordem do Promise.all
-    // Para simplificar, usei variáveis explícitas abaixo:
-    const currentRevValue = Number(prevRevenue._sum.amount || 0);
-    const previousRevValue = Number(prevExpense._sum.amount || 0); // Ajuste de nomeclatura na lógica
+    const currentRevValue = Number(revenueCurrentMonth._sum.amount || 0);
+    const previousRevValue = Number(revenuePreviousMonth._sum.amount || 0);
 
+    const currentExpValue = Number(expenseCurrentMonth._sum.amount || 0);
+    const previousExpValue = Number(expensePreviousMonth._sum.amount || 0);
+    const totalReceived = Number(revenueSum._sum.amount || 0);
+    const totalExpenses = Number(expenseSum._sum.amount || 0);
+    const netResult = totalReceived - totalExpenses;
     return {
       totalReceived: Number(revenueSum._sum.amount || 0),
       totalExpenses: Number(expenseSum._sum.amount || 0),
+      netResult,
       monthlyHistory: this.groupFinancialsByMonth(invoices, expenses),
       trends: {
         received: this.calculatePercentageChange(
-          Number(prevRevenue._sum.amount || 0),
-          Number(prevExpense._sum.amount || 0)
+          currentRevValue,
+          previousRevValue
         ),
         expenses: this.calculatePercentageChange(
-          Number(prevRevenue._sum.amount || 0),
-          Number(prevExpense._sum.amount || 0)
+          currentExpValue,
+          previousExpValue
         ),
       },
     };
@@ -203,28 +249,169 @@ export class PrismaProjectStatsRepository implements IProjectStatsRepository {
     return burndown;
   }
 
+  async getCommercialMetrics(projectId: string) {
+    const proposals = await prisma.proposal.findMany({
+      where: { projectId, isActive: true, isCurrent: true },
+      select: { status: true, totalValue: true },
+    });
+
+    const proposalStats = proposals.reduce(
+      (acc, curr) => {
+        const val = Number(curr.totalValue);
+        acc.count++;
+
+        // CORREÇÃO: Casting do array para (ProposalStatus[]) para o TypeScript não reclamar
+        const openStatuses = [
+          ProposalStatus.DRAFT,
+          ProposalStatus.REVIEW,
+          ProposalStatus.SENT,
+        ] as ProposalStatus[];
+
+        if (openStatuses.includes(curr.status)) {
+          acc.openValue += val;
+        }
+
+        // CORREÇÃO: Casting do array para (ProposalStatus[])
+        const wonStatuses = [
+          ProposalStatus.APPROVED,
+          ProposalStatus.ACCEPTED,
+        ] as ProposalStatus[];
+
+        if (wonStatuses.includes(curr.status)) {
+          acc.wonValue += val;
+        }
+        return acc;
+      },
+      { count: 0, openValue: 0, wonValue: 0 }
+    );
+
+    const contracts = await prisma.contract.findMany({
+      where: {
+        projectId,
+        isActive: true,
+        isCurrent: true,
+        // CORREÇÃO: Casting para garantir que o array seja ContractStatus[]
+        status: {
+          in: [ContractStatus.SIGNED, ContractStatus.SENT] as ContractStatus[],
+        },
+      },
+      include: {
+        proposal: {
+          select: { totalValue: true },
+        },
+      },
+    });
+
+    const contractStats = contracts.reduce(
+      (acc, curr) => {
+        acc.activeCount++;
+        acc.totalValue += Number(curr.proposal.totalValue);
+        return acc;
+      },
+      { activeCount: 0, totalValue: 0 }
+    );
+
+    // Agora o getFinancialMetrics retorna netResult, então não dará erro
+    const financialMetrics = await this.getFinancialMetrics(projectId);
+
+    const margin =
+      financialMetrics.totalReceived > 0
+        ? (financialMetrics.netResult / financialMetrics.totalReceived) * 100
+        : 0;
+
+    return {
+      proposals: {
+        count: proposalStats.count,
+        openValue: proposalStats.openValue,
+        wonValue: proposalStats.wonValue,
+      },
+      contracts: {
+        activeCount: contractStats.activeCount,
+        totalValue: contractStats.totalValue,
+      },
+      financials: {
+        totalReceived: financialMetrics.totalReceived,
+        netResult: financialMetrics.netResult,
+        profitMargin: Number(margin.toFixed(2)),
+      },
+    };
+  }
+
   private groupFinancialsByMonth(invoices: any[], expenses: any[]) {
-    const history: Record<
+    const historyMap = new Map<
       string,
-      { month: string; revenue: number; expenses: number }
-    > = {};
+      { revenue: number; expenses: number; sortDate: number }
+    >();
 
-    invoices.forEach((inv) => {
-      // Formata o mês usando as capacidades do Dayjs
-      const monthLabel = date(inv.createdAt).format("MMM");
-      if (!history[monthLabel])
-        history[monthLabel] = { month: monthLabel, revenue: 0, expenses: 0 };
-      history[monthLabel].revenue += Number(inv.amount);
+    // 1. Agrupar Receitas por Mês
+    invoices.forEach((invoice) => {
+      if (!invoice.paidAt) return;
+
+      const monthKey = date(invoice.paidAt).format("MMM/YYYY").toLowerCase(); // ex: 'nov'
+      const sortKey = Number(date(invoice.paidAt).format("YYYYMM")); // ex: 202311
+
+      const current = historyMap.get(monthKey) || {
+        revenue: 0,
+        expenses: 0,
+        sortDate: sortKey,
+      };
+
+      historyMap.set(monthKey, {
+        ...current,
+        revenue: current.revenue + Number(invoice.amount),
+      });
     });
 
-    expenses.forEach((exp) => {
-      const monthLabel = date(exp.date).format("MMM");
-      if (!history[monthLabel])
-        history[monthLabel] = { month: monthLabel, revenue: 0, expenses: 0 };
-      history[monthLabel].expenses += Number(exp.amount);
+    // 2. Agrupar Despesas por Mês
+    expenses.forEach((expense) => {
+      if (!expense.paidAt) return;
+
+      const monthKey = date(expense.paidAt).format("MMM/YYYY").toLowerCase();
+      const sortKey = Number(date(expense.paidAt).format("YYYYMM"));
+
+      const current = historyMap.get(monthKey) || {
+        revenue: 0,
+        expenses: 0,
+        sortDate: sortKey,
+      };
+
+      historyMap.set(monthKey, {
+        ...current,
+        expenses: current.expenses + Number(expense.amount),
+      });
     });
 
-    return Object.values(history);
+    // 3. Ordenar Cronologicamente
+    const sortedData = Array.from(historyMap.entries())
+      .map(([month, data]) => ({
+        month,
+        revenue: data.revenue,
+        expenses: data.expenses,
+        sortDate: data.sortDate,
+      }))
+      .sort((a, b) => a.sortDate - b.sortDate);
+
+    // 4. Lógica de Acumulação (NOVO)
+    let accumulatedRevenue = 0;
+    let accumulatedExpenses = 0;
+
+    const accumulatedData = sortedData.map((item) => {
+      // Soma o valor do mês atual ao acumulador
+      accumulatedRevenue += item.revenue;
+      accumulatedExpenses += item.expenses;
+
+      return {
+        month: item.month,
+        // Retorna o valor acumulado em vez do valor do mês
+        revenue: accumulatedRevenue,
+        expenses: accumulatedExpenses,
+        // Mantemos os valores originais 'monthlyRevenue' caso queira mostrar no tooltip (opcional)
+        monthlyRevenue: item.revenue,
+        monthlyExpenses: item.expenses,
+      };
+    });
+
+    return accumulatedData;
   }
 
   private calculatePercentageChange(current: number, previous: number) {

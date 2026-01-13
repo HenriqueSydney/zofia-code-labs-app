@@ -1,6 +1,5 @@
 import { Banknote, Calendar, DollarSign, FileText } from "lucide-react";
 import { date } from "@/lib/dayjs";
-import { Button } from "@/components/ui/button";
 import { FinancialStatus } from "@/generated/prisma/enums";
 import { InvoiceWithDetails } from "@/repositories/IInvoiceRepository";
 import { formatCurrency } from "@/utils/formatCurrency";

@@ -26,7 +26,7 @@ export async function FinancialHistoryChart({ slug }: IFinancialHistoryChart) {
   return (
     <LineChart
       title="Fluxo Financeiro"
-      description="Comparativo real mensal entre faturas pagas e despesas registradas"
+      description="Comparativo da evolução das Despesas e Receitas"
       // metrics.chartData contém o array { month, revenue, expenses } agrupado pelo Repository
       data={metrics.chartData}
       indexKey="month"

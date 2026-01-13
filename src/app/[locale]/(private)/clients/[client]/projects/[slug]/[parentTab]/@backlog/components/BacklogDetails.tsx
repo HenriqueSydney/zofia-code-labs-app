@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { BacklogItemWithDetails } from "@/repositories/IBacklogItemsRepository";
 import { Hash } from "lucide-react";
@@ -6,6 +7,7 @@ import { getBacklogPriorityBadge } from "@/mappers/getBacklogPriorityBadge";
 import { backlogStatusMapper } from "@/mappers/BacklogMappers";
 import { deleteBacklogAction } from "@/actions/backlog/deleteBacklogItemAction";
 import { toast } from "sonner";
+import { useParams } from "next/navigation";
 
 interface IBacklogDetails {
   item: BacklogItemWithDetails;
@@ -17,9 +19,11 @@ export function BacklogDetails({
   setIsDialogOpen,
   setIsEditOpen,
 }: IBacklogDetails) {
+  const params = useParams();
   const handleDeleteItem = async () => {
     const result = await deleteBacklogAction({
       id: item.id,
+      projectSlug: params.slug as string,
     });
 
     if (!result.success) {
@@ -28,6 +32,7 @@ export function BacklogDetails({
     }
 
     toast.success("Tarefa removida com sucesso");
+    setIsDialogOpen(false);
   };
 
   return (

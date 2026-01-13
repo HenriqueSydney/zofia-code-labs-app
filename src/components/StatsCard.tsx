@@ -9,13 +9,7 @@ interface IStatsCard {
   Icon: LucideIcon;
   trend?: number;
   reverseColor?: boolean; // Default true: subir é ruim (ex: bugs). False: subir é bom (ex: coverage).
-  iconColor?:
-    | "bg-primary/10"
-    | "bg-accent/10"
-    | "bg-blue-500/10"
-    | "bg-orange-500/10"
-    | "bg-green-500/10"
-    | "bg-destructive/10";
+  iconColor?: string;
 }
 
 export function StatsCard({

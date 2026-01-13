@@ -6,7 +6,7 @@ import { IProjectsRepository } from "@/repositories/IProjectsRepository";
 import { AppError } from "@/errors/AppError";
 
 interface CreateInvoiceUseCaseRequest
-  extends Omit<Prisma.InvoiceUncheckedCreateInput, "projectId"> {
+  extends Omit<Prisma.InvoiceUncheckedCreateInput, "projectId" | "clientId"> {
   userId: string;
   projectSlug: string;
 }
@@ -27,10 +27,6 @@ export class CreateInvoiceUseCase {
       throw new AppError("Projeto não encontrado.");
     }
 
-    /**
-     * 2. Verifica se o usuário tem permissão no projeto.
-     * Usamos "UPDATE" ou um nível que permita gerenciar o financeiro do projeto.
-     */
     await checkUserPermissionForAsset("project", userId, project, "UPDATE");
 
     // 3. Cria a invoice vinculando o projectId obtido e a organizationId do projeto

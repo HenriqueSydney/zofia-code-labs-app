@@ -21,7 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-import { useEffect, useEffectEvent, useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -40,6 +40,7 @@ import {
   backlogPriorityMapper,
   backlogStatusMapper,
 } from "@/mappers/BacklogMappers";
+import { useParams } from "next/navigation";
 
 export type AssigneeOption = {
   id: string;
@@ -59,6 +60,7 @@ export function BacklogForm({
   handleCloseModal,
 }: IBacklogForm) {
   const { data: session } = useSession();
+  const params = useParams();
   const [assigneesOptions, setAssigneesOptions] = useState<AssigneeOption[]>(
     []
   );
@@ -83,7 +85,7 @@ export function BacklogForm({
     startTransition(async () => {
       try {
         if (backlog?.id) {
-          const result = await updateBacklogAction(data);
+          const result = await updateBacklogAction(data, params.slug as string);
 
           if (!result.success) {
             toast.error(result.message);
@@ -93,7 +95,10 @@ export function BacklogForm({
           toast.success("Item atualizado com sucesso!");
         } else {
           // --- MODO CRIAÇÃO ---
-          const result = await createBacklogAction({ ...data, projectId });
+          const result = await createBacklogAction(
+            { ...data, projectId },
+            params.slug as string
+          );
 
           if (!result.success) {
             toast.error(result.message);

@@ -5,7 +5,7 @@ import { backlogItemSchema } from "@/schemas/backlog/backlogItemSchema";
 import { makeCreateBacklogItemUseCase } from "@/useCases/backlog/factories/makeCreateBacklogItemUseCase";
 import { revalidatePath } from "next/cache";
 
-export async function createBacklogAction(data: unknown) {
+export async function createBacklogAction(data: unknown, projectSlug: string) {
   // 1. Autenticação
   const session = await auth();
   if (!session?.user?.organizationId) {
@@ -56,10 +56,7 @@ export async function createBacklogAction(data: unknown) {
       },
     });
 
-    // 5. Revalidação de cache
-    // Ajuste o caminho conforme onde a lista de backlogs é exibida (ex: dentro do projeto ou num board geral)
-    revalidatePath(`/dashboard/projects/${projectId}`);
-    revalidatePath("/dashboard/backlogs");
+    revalidatePath(`/projects/${projectSlug}/backlog/`);
 
     return { success: true };
   } catch (error) {

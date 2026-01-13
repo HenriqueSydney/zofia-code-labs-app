@@ -1,38 +1,39 @@
-// @/actions/financial/createInvoiceAction.ts
 "use server";
 
 import { auth } from "@/auth";
 import { handleErrors } from "@/errors/handleErrors";
 import { revalidatePath } from "next/cache";
 import {
-  InvoiceFormData,
-  invoiceSchema,
-} from "@/schemas/financial/invoiceSchema";
-import { makeCreateInvoiceUseCase } from "@/useCases/financial/factories/makeCreateInvoiceUseCase";
+  UpdateExpenseFormData,
+  updateExpenseSchema,
+} from "@/schemas/expenses/expenseSchema";
+import { makeUpdateExpenseUseCase } from "@/useCases/expenses/factories/makeUpdateExpenseUseCase";
 
-export async function createInvoiceAction(
+export async function updateExpenseAction(
+  expenseId: string,
   projectSlug: string,
-  data: InvoiceFormData
+  data: UpdateExpenseFormData
 ) {
   const session = await auth();
   if (!session?.user?.id) return { success: false, message: "Não autorizado" };
 
-  const validation = invoiceSchema.safeParse(data);
+  // Usamos o schema parcial aqui
+  const validation = updateExpenseSchema.safeParse(data);
   if (!validation.success) {
     return { success: false, message: validation.error.issues[0].message };
   }
 
   try {
-    const useCase = makeCreateInvoiceUseCase();
+    const useCase = makeUpdateExpenseUseCase();
+
     await useCase.execute({
-      ...validation.data,
-      projectSlug,
-      organizationId: session.user.organizationId,
+      expenseId,
       userId: session.user.id,
+      data: validation.data, // Passa apenas os campos validados
     });
 
     revalidatePath(`/projects/${projectSlug}/financial`);
-    return { success: true, message: "Fatura gerada com sucesso!" };
+    return { success: true, message: "Despesa atualizada com sucesso!" };
   } catch (error) {
     return { success: false, message: handleErrors(error) };
   }

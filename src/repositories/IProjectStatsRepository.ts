@@ -23,4 +23,21 @@ export interface IProjectStatsRepository {
     monthlyHistory: { month: string; revenue: number; expenses: number }[];
     trends: any;
   }>;
+
+  getCommercialMetrics(projectId: string): Promise<{
+    proposals: {
+      count: number; // Total de propostas
+      openValue: number; // Valor em negociação (DRAFT, REVIEW, SENT)
+      wonValue: number; // Valor ganho (APPROVED, ACCEPTED)
+    };
+    contracts: {
+      activeCount: number; // Contratos assinados/ativos
+      totalValue: number; // Soma do valor das propostas vinculadas aos contratos ativos
+    };
+    financials: {
+      netResult: number;
+      totalReceived: number;
+      profitMargin: number; // (Receita - Despesa) / Receita
+    };
+  }>;
 }

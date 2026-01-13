@@ -8,6 +8,7 @@ import { makeDeleteBacklogItemUseCase } from "@/useCases/backlog/factories/makeD
 // Schema simples apenas para o ID, caso não queira criar um arquivo separado
 const deleteBacklogSchema = z.object({
   id: z.cuid("ID do backlog inválido"),
+  projectSlug: z.string(),
 });
 
 type DeleteBacklogType = z.infer<typeof deleteBacklogSchema>;
@@ -45,7 +46,7 @@ export async function deleteBacklogAction(data: DeleteBacklogType) {
     });
 
     // 5. Revalidação
-    revalidatePath("/dashboard/backlogs");
+    revalidatePath(`/projects/${parsed.data.projectSlug}/backlog/`);
 
     return { success: true };
   } catch (error) {

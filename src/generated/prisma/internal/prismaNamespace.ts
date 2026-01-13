@@ -3367,11 +3367,18 @@ export const ExpenseScalarFieldEnum = {
   organizationId: 'organizationId',
   projectId: 'projectId',
   description: 'description',
+  supplier: 'supplier',
   amount: 'amount',
   expenseCategoryId: 'expenseCategoryId',
+  status: 'status',
   date: 'date',
+  dueDate: 'dueDate',
+  paidAt: 'paidAt',
+  attachmentUrl: 'attachmentUrl',
+  createdById: 'createdById',
   meta: 'meta',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type ExpenseScalarFieldEnum = (typeof ExpenseScalarFieldEnum)[keyof typeof ExpenseScalarFieldEnum]
@@ -3875,6 +3882,20 @@ export type EnumExpenseNatureFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
  * Reference to a field of type 'ExpenseNature[]'
  */
 export type ListEnumExpenseNatureFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExpenseNature[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ExpenseStatus'
+ */
+export type EnumExpenseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExpenseStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ExpenseStatus[]'
+ */
+export type ListEnumExpenseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExpenseStatus[]'>
     
 
 

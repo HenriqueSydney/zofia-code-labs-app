@@ -776,20 +776,46 @@ model Expense {
   projectId String
   project   Project @relation(fields: [projectId], references: [id])
 
-  description String
-  amount      Decimal @db.Decimal(15, 2)
+  // Melhoria: Separar fornecedor da descrição
+  description String // Ex: "Renovação Anual"
+  supplier    String? // Ex: "JetBrains", "AWS"
+
+  amount Decimal @db.Decimal(15, 2)
 
   expenseCategoryId String
   expenseCategory   ExpenseCategory @relation(fields: [expenseCategoryId], references: [id])
 
-  date DateTime @default(now())
+  // Melhoria: Controle de Status e Datas
+  status  ExpenseStatus @default(PENDING) // Enum: PENDING, PAID, CANCELED
+  date    DateTime      @default(now())
+  dueDate DateTime?     @map("due_date") // Data de vencimento
+  paidAt  DateTime?     @map("paid_at") // Data do efetivo pagamento
+
+  // Melhoria: Link para comprovante (S3/R2)
+  attachmentUrl String? @map("attachment_url")
+
+  // Melhoria: Quem criou
+  createdById String? @map("created_by_id")
+  // createdBy   User?   @relation(...) // Se tiver model de User
 
   meta Json?
 
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([projectId])
+  @@index([organizationId])
+  @@index([status]) // Importante para filtros
   @@map("project_expenses")
+  @@schema("financial")
+}
+
+enum ExpenseStatus {
+  PENDING
+  PAID
+  CANCELED
+  SCHEDULED
+
   @@schema("financial")
 }
 

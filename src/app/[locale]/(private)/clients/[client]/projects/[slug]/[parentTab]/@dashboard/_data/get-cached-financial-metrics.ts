@@ -21,6 +21,5 @@ export const getCachedFinancialMetrics = cache(async (slug: string) => {
       success?.message || "Não foi possível recuperar as métricas financeiras"
     );
   }
-
   return success.data;
 });

@@ -5,7 +5,7 @@ import { updateBacklogItemSchema } from "@/schemas/backlog/updateBacklogItemSche
 import { makeUpdateBacklogItemUseCase } from "@/useCases/backlog/factories/makeUpdateBacklogItemUseCase";
 import { revalidatePath } from "next/cache";
 
-export async function updateBacklogAction(data: unknown) {
+export async function updateBacklogAction(data: unknown, projectSlug: string) {
   // 1. Autenticação
   const session = await auth();
   if (!session?.user?.organizationId) {
@@ -59,7 +59,7 @@ export async function updateBacklogAction(data: unknown) {
     });
 
     // 5. Revalidação
-    revalidatePath("/dashboard/backlogs");
+    revalidatePath(`/projects/${projectSlug}/backlog/`);
 
     return { success: true };
   } catch (error) {
