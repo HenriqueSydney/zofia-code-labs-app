@@ -39,7 +39,8 @@ export type ContractWithDetails = Contract & {
   project: {
     organizationId: string;
     name: string;
-    client: { tradeName: string; email: string };
+    slug: string;
+    client: { tradeName: string; email: string; slug: string };
   };
   proposal: {
     totalValue: Decimal;
@@ -54,33 +55,41 @@ export type ListContractParams = {
   query?: string;
 };
 
+export type ContractWithProjectDetails = Contract & {
+  project: {
+    organizationId: string;
+    slug: string;
+    client: { slug: string };
+  };
+};
+
 export interface IContractRepository {
   create(
     data: CreateContractDTO,
-    tx?: Prisma.TransactionClient
-  ): Promise<Contract>;
+    tx?: Prisma.TransactionClient,
+  ): Promise<ContractWithProjectDetails>;
   findById(id: string): Promise<ContractWithDetails | null>;
   findAllByClient(
     clientId: string,
-    pagination: Pagination
+    pagination: Pagination,
   ): Promise<{ contracts: ContractWithDetails[]; totalOfRegister: number }>;
   list(
     filter: ListContractParams,
-    pagination: Pagination
+    pagination: Pagination,
   ): Promise<{ contracts: ContractWithDetails[]; totalOfRegister: number }>;
   getHistory(
     projectId: string,
-    pagination: Pagination
+    pagination: Pagination,
   ): Promise<{ contracts: ContractWithDetails[]; totalOfRegister: number }>;
   update(
     id: string,
     data: UpdateContractDTO,
-    tx?: Prisma.TransactionClient
-  ): Promise<Contract>;
+    tx?: Prisma.TransactionClient,
+  ): Promise<ContractWithProjectDetails>;
   updateStatus(
     id: string,
     status: ContractStatus,
-    tx?: Prisma.TransactionClient
-  ): Promise<Contract>;
+    tx?: Prisma.TransactionClient,
+  ): Promise<ContractWithProjectDetails>;
   cancel(id: string, tx?: Prisma.TransactionClient): Promise<void>;
 }

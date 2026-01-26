@@ -5,7 +5,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { SuccessToastComponent } from "@/components/SuccessToastComponent";
 import { getParams } from "@/utils/getParams";
 import { TabsContent } from "@/components/ui/tabs";
 import { CTAIntegration } from "../components/CTAIntegration";
@@ -50,12 +49,12 @@ export default async function ContractTab({ params }: IContractTab) {
       "findOrganizationIntegrationByIntegrationSlugAction",
       () => {
         return findOrganizationIntegrationByIntegrationSlugAction(
-          "umami-analytics"
+          "umami-analytics",
         );
       },
       {
         cache: "no-cache",
-      }
+      },
     ),
     operationWrapper<{
       data: IntegrationType | null;
@@ -67,7 +66,7 @@ export default async function ContractTab({ params }: IContractTab) {
       },
       {
         cache: "no-cache",
-      }
+      },
     ),
   ]);
 
@@ -81,26 +80,25 @@ export default async function ContractTab({ params }: IContractTab) {
 
   if (integrationTypeError) {
     throw new AppError(
-      "Tipo de integração não configurada globalmente, entre em contato com o suporte"
+      "Tipo de integração não configurada globalmente, entre em contato com o suporte",
     );
   }
 
   if (!integrationTypeSuccess.data) {
     throw new AppError(
-      "Tipo de integração não configurada globalmente, entre em contato com o suporte"
+      "Tipo de integração não configurada globalmente, entre em contato com o suporte",
     );
   }
 
   const doesProjectIsAlreadySetup = success.data
     ? success.data.projectIntegrations.findIndex(
-        (integration) => integration.project.slug === slug
+        (integration) => integration.project.slug === slug,
       )
     : -1;
 
   if (doesProjectIsAlreadySetup === -1) {
     return (
       <TabsContent value="web-analytics" className="mt-6">
-        <SuccessToastComponent />
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-lg">Web Analytics</CardTitle>
@@ -122,7 +120,6 @@ export default async function ContractTab({ params }: IContractTab) {
 
   return (
     <TabsContent value="web-analytics" className="mt-6">
-      <SuccessToastComponent />
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
@@ -143,7 +140,7 @@ export default async function ContractTab({ params }: IContractTab) {
           <Suspense
             fallback={
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <div className="lg:cols-span-2">
+                <div className="lg:col-span-2">
                   <LineChartSkeleton />
                 </div>
                 <BarChartSkeleton />
@@ -155,8 +152,10 @@ export default async function ContractTab({ params }: IContractTab) {
 
           <Suspense
             fallback={
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <LineChartSkeleton />
+                <BarChartSkeleton /> 
+                <BarChartSkeleton /> 
                 <BarChartSkeleton />
               </div>
             }

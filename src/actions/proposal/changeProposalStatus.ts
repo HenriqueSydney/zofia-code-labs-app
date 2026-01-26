@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import { AppError } from "@/errors/AppError";
+import { handleErrors } from "@/errors/handleErrors";
 import { ProposalStatus } from "@/generated/prisma/enums";
 import { makeChangeProposalStatus } from "@/useCases/proposal/factories/makeChangeProposalStatusUseCase";
 import { revalidatePath } from "next/cache";
@@ -9,7 +10,8 @@ import { revalidatePath } from "next/cache";
 export async function changeProposalStatusAction(
   proposalId: string,
   newStatus: ProposalStatus,
-  communicationChannel?: "whatsapp" | "email"
+  communicationChannel?: "whatsapp" | "email",
+  rejectFormDetails?: any,
 ) {
   const session = await auth();
   if (!session?.user) return { error: "Não autorizado" };
@@ -28,18 +30,15 @@ export async function changeProposalStatusAction(
       proposalId,
       userId: session.user.id,
       newStatus,
-      communicationChannel
+      communicationChannel,
+      rejectFormDetails
     });
 
     revalidatePath(`/projects/${updatedProposal.projectId}/project`);
     return { result: true, message: "Proposta encaminhada para próxima fase" };
   } catch (error) {
-    console.error(error);
     return {
-      error:
-        error instanceof Error
-          ? error.message
-          : "Erro ao encaminhar a proposta para próxima fase. Tente novamente mais tarde",
+      error: handleErrors(error),
     };
   }
 }

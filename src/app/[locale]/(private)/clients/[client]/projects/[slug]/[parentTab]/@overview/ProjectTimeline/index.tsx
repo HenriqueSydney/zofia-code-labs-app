@@ -3,13 +3,7 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  ChevronRight,
-  Wrench,
-  XCircle,
-  AlertTriangle,
-  AlertCircle,
-} from "lucide-react";
+import { ChevronRight, Wrench, XCircle, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -30,15 +24,17 @@ import {
   commercialStages,
   operationalStages,
 } from "@/mappers/projectStageMapper";
-import { changeProjectStatusAction } from "@/actions/projects/changeProjectStatus";
 import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 import { cancelProjectAction } from "@/actions/projects/cancelProject";
-import { ProjectTransitionDialog } from "@/components/features/projects/transitions/TransitionDialog";
-import { cancelProposalAction } from "@/actions/proposal/cancelProposal";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Separator } from "@/components/ui/separator";
-import { checkIfProposalIsEditable } from "@/utils/checkIfProposalIsEditable";
-import { getProposalNextStepLabel } from "@/utils/getNextStageLabel";
+import { ProjectTransitionDialog } from "@/app/[locale]/(private)/clients/[client]/projects/[slug]/[parentTab]/@overview/transitions/TransitionDialog";
+
+import {
+  getContractNextStepLabel,
+  getProposalNextStepLabel,
+} from "@/utils/getNextStageLabel";
+import { RegressDialog } from "@/app/[locale]/(private)/clients/[client]/projects/[slug]/[parentTab]/@overview/transitions/RegressDialog";
+import { Badge } from "@/components/ui/badge";
+import { useSession } from "next-auth/react";
 
 interface ProjectTimelineProps {
   project: ProjectWithDetails;
@@ -46,6 +42,7 @@ interface ProjectTimelineProps {
 }
 
 const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
+  const { data: session } = useSession();
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [showAdvanceDialog, setShowAdvanceDialog] = useState(false);
   const [showRegressDialog, setShowRegressDialog] = useState(false);
@@ -68,33 +65,8 @@ const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
   const isInCommercial = commercialStages.some((s) => s.key === currentStage);
   const isInOperational = operationalStages.some((s) => s.key === currentStage);
   const isInCommercialClosing = commercialClosingStages.some(
-    (s) => s.key === currentStage
+    (s) => s.key === currentStage,
   );
-
-  const handleRegress = async () => {
-    if (prevStage) {
-      if (currentStageConfig.key === "PROPOSAL" && project.proposal) {
-        const result = await cancelProposalAction(project.proposal.id);
-
-        if (result.error) {
-          toast.error(result.error);
-          return;
-        }
-      }
-      const result = await changeProjectStatusAction({
-        projectId: project.id,
-        newStatus: prevStage.key,
-        data: contextData,
-      });
-
-      if (result.error) {
-        toast.error(result.error);
-        return;
-      }
-      toast.info(`Projeto retornado para: ${prevStage.label}`);
-    }
-    setShowRegressDialog(false);
-  };
 
   const handleCancel = async () => {
     const result = await cancelProjectAction(project.id);
@@ -108,10 +80,12 @@ const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
     setShowCancelDialog(false);
   };
 
-  const { canBeCancelled } = checkIfProposalIsEditable(
-    project.proposal?.status
-  );
+  const isAutomaticStep = [
+    "WAITING_SIGNATURE",
+    "WAITING_DOWN_PAYMENT",
+  ].includes(project.status);
 
+  const isOwner = session?.user.role === "OWNER";
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -125,7 +99,7 @@ const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
               "p-4 rounded-lg flex items-center gap-4",
               isMaintenanceSupport
                 ? "bg-teal-500/10 border border-teal-500/20"
-                : "bg-muted/30"
+                : "bg-muted/30",
             )}
           >
             <div
@@ -133,7 +107,7 @@ const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
                 "p-2 rounded-full",
                 isMaintenanceSupport
                   ? "bg-teal-500 text-white"
-                  : "bg-muted text-muted-foreground"
+                  : "bg-muted text-muted-foreground",
               )}
             >
               <Wrench className="h-5 w-5" />
@@ -142,7 +116,9 @@ const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
               <h4
                 className={cn(
                   "font-semibold",
-                  isMaintenanceSupport ? "text-teal-600 dark:text-teal-400" : ""
+                  isMaintenanceSupport
+                    ? "text-teal-600 dark:text-teal-400"
+                    : "",
                 )}
               >
                 Manutenção & Suporte
@@ -170,33 +146,44 @@ const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
                     {currentStageConfig.description}
                   </p>
                 </div>
+                {isAutomaticStep && (
+                  <Badge variant="secondary" className="text-sm p-2">
+                    Etapa automática
+                  </Badge>
+                )}
               </div>
 
               {/* Inline Actions */}
               <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-                {prevStage && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowRegressDialog(true)}
-                  >
-                    Retornar
-                  </Button>
-                )}
-
-                {nextStage && currentStageConfig?.nextAction && (
-                  <Button
-                    size="sm"
-                    onClick={() => setShowAdvanceDialog(true)}
-                    className="gap-1"
-                  >
-                    {currentStageConfig.key !== "PROPOSAL" &&
-                      currentStageConfig.nextAction}
-
-                    {currentStageConfig.key === "PROPOSAL" &&
-                      getProposalNextStepLabel(project.proposal)}
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
+                {(!isAutomaticStep || isOwner) && (
+                  <>
+                    {prevStage && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowRegressDialog(true)}
+                      >
+                        Retornar
+                      </Button>
+                    )}
+                    {nextStage && currentStageConfig?.nextAction && (
+                      <Button
+                        size="sm"
+                        onClick={() => setShowAdvanceDialog(true)}
+                        className="gap-1"
+                      >
+                        Avançar para:{" "}
+                        {!["PROPOSAL", "PROPOSAL_GENERATED"].includes(
+                          currentStageConfig.key,
+                        ) && currentStageConfig.nextAction}
+                        {currentStageConfig.key === "PROPOSAL" &&
+                          getProposalNextStepLabel(project.proposal)}
+                        {currentStageConfig.key === "PROPOSAL_GENERATED" &&
+                          getContractNextStepLabel(project.contract)}
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </>
                 )}
 
                 <Button
@@ -225,50 +212,14 @@ const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
           />
         )}
         {/* Regress Dialog */}
-        <AlertDialog
-          open={showRegressDialog}
-          onOpenChange={setShowRegressDialog}
-        >
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Retornar Etapa</AlertDialogTitle>
-              <AlertDialogDescription asChild>
-                <div className="flex flex-col space-y-6">
-                  {canBeCancelled && currentStageConfig.key === "PROPOSAL" && (
-                    <Alert className="bg-accent/10 border-accent/30">
-                      <AlertCircle className="h-4 w-4" />
-                      <AlertTitle>Projeto possui proposta ativa</AlertTitle>
-                      <AlertDescription>
-                        Caso retorne para o status anterior, a proposta será
-                        cancelada.
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                  <Separator />
-                  <div className="flex items-start gap-2">
-                    <AlertTriangle className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
-                    <span>
-                      Deseja retornar o projeto de{" "}
-                      <strong>{currentStageConfig?.label}</strong> para{" "}
-                      <strong>{prevStage?.label}</strong>?
-                    </span>
-                  </div>
-                </div>
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel className="cursor-pointer">
-                Cancelar
-              </AlertDialogCancel>
-              <AlertDialogAction
-                onClick={handleRegress}
-                className="bg-secondary hover:bg-accent cursor-pointer"
-              >
-                Retornar
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <RegressDialog
+          showRegressDialog={showRegressDialog}
+          currentStageConfig={currentStageConfig}
+          prevStage={prevStage}
+          project={project}
+          setShowRegressDialog={setShowRegressDialog}
+          contextData={contextData}
+        />
 
         {/* Cancel Dialog */}
         <AlertDialog open={showCancelDialog} onOpenChange={setShowCancelDialog}>

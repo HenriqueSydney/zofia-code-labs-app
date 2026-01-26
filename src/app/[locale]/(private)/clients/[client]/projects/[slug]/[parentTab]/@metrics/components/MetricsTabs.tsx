@@ -31,7 +31,7 @@ export function MetricsTabs({
       tabName: "Qualidade de Código",
       Icon: SearchCode,
     },
-    { tabSlug: "security", tabName: "Segurança", Icon: ShieldCheck },
+    // { tabSlug: "security", tabName: "Segurança", Icon: ShieldCheck },
     {
       tabSlug: "web-analytics",
       tabName: "Web Analytics",

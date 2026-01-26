@@ -49,6 +49,7 @@ export type BacklogItemMinAggregateOutputType = {
   priority: $Enums.BacklogPriority | null
   assigneeId: string | null
   externalLink: string | null
+  serviceDefaultBacklogItemId: string | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -67,6 +68,7 @@ export type BacklogItemMaxAggregateOutputType = {
   priority: $Enums.BacklogPriority | null
   assigneeId: string | null
   externalLink: string | null
+  serviceDefaultBacklogItemId: string | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -85,6 +87,7 @@ export type BacklogItemCountAggregateOutputType = {
   priority: number
   assigneeId: number
   externalLink: number
+  serviceDefaultBacklogItemId: number
   createdAt: number
   updatedAt: number
   deletedAt: number
@@ -115,6 +118,7 @@ export type BacklogItemMinAggregateInputType = {
   priority?: true
   assigneeId?: true
   externalLink?: true
+  serviceDefaultBacklogItemId?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -133,6 +137,7 @@ export type BacklogItemMaxAggregateInputType = {
   priority?: true
   assigneeId?: true
   externalLink?: true
+  serviceDefaultBacklogItemId?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -151,6 +156,7 @@ export type BacklogItemCountAggregateInputType = {
   priority?: true
   assigneeId?: true
   externalLink?: true
+  serviceDefaultBacklogItemId?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -256,6 +262,7 @@ export type BacklogItemGroupByOutputType = {
   priority: $Enums.BacklogPriority
   assigneeId: string | null
   externalLink: string | null
+  serviceDefaultBacklogItemId: string | null
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
@@ -297,6 +304,7 @@ export type BacklogItemWhereInput = {
   priority?: Prisma.EnumBacklogPriorityFilter<"BacklogItem"> | $Enums.BacklogPriority
   assigneeId?: Prisma.StringNullableFilter<"BacklogItem"> | string | null
   externalLink?: Prisma.StringNullableFilter<"BacklogItem"> | string | null
+  serviceDefaultBacklogItemId?: Prisma.StringNullableFilter<"BacklogItem"> | string | null
   createdAt?: Prisma.DateTimeFilter<"BacklogItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BacklogItem"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"BacklogItem"> | Date | string | null
@@ -304,6 +312,7 @@ export type BacklogItemWhereInput = {
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   sprint?: Prisma.XOR<Prisma.SprintNullableScalarRelationFilter, Prisma.SprintWhereInput> | null
   assignee?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  serviceDefaultBacklogItem?: Prisma.XOR<Prisma.ServiceDefaultBacklogItemNullableScalarRelationFilter, Prisma.ServiceDefaultBacklogItemWhereInput> | null
 }
 
 export type BacklogItemOrderByWithRelationInput = {
@@ -319,6 +328,7 @@ export type BacklogItemOrderByWithRelationInput = {
   priority?: Prisma.SortOrder
   assigneeId?: Prisma.SortOrderInput | Prisma.SortOrder
   externalLink?: Prisma.SortOrderInput | Prisma.SortOrder
+  serviceDefaultBacklogItemId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -326,6 +336,7 @@ export type BacklogItemOrderByWithRelationInput = {
   project?: Prisma.ProjectOrderByWithRelationInput
   sprint?: Prisma.SprintOrderByWithRelationInput
   assignee?: Prisma.UserOrderByWithRelationInput
+  serviceDefaultBacklogItem?: Prisma.ServiceDefaultBacklogItemOrderByWithRelationInput
 }
 
 export type BacklogItemWhereUniqueInput = Prisma.AtLeast<{
@@ -344,6 +355,7 @@ export type BacklogItemWhereUniqueInput = Prisma.AtLeast<{
   priority?: Prisma.EnumBacklogPriorityFilter<"BacklogItem"> | $Enums.BacklogPriority
   assigneeId?: Prisma.StringNullableFilter<"BacklogItem"> | string | null
   externalLink?: Prisma.StringNullableFilter<"BacklogItem"> | string | null
+  serviceDefaultBacklogItemId?: Prisma.StringNullableFilter<"BacklogItem"> | string | null
   createdAt?: Prisma.DateTimeFilter<"BacklogItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BacklogItem"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"BacklogItem"> | Date | string | null
@@ -351,6 +363,7 @@ export type BacklogItemWhereUniqueInput = Prisma.AtLeast<{
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
   sprint?: Prisma.XOR<Prisma.SprintNullableScalarRelationFilter, Prisma.SprintWhereInput> | null
   assignee?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  serviceDefaultBacklogItem?: Prisma.XOR<Prisma.ServiceDefaultBacklogItemNullableScalarRelationFilter, Prisma.ServiceDefaultBacklogItemWhereInput> | null
 }, "id">
 
 export type BacklogItemOrderByWithAggregationInput = {
@@ -366,6 +379,7 @@ export type BacklogItemOrderByWithAggregationInput = {
   priority?: Prisma.SortOrder
   assigneeId?: Prisma.SortOrderInput | Prisma.SortOrder
   externalLink?: Prisma.SortOrderInput | Prisma.SortOrder
+  serviceDefaultBacklogItemId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -392,6 +406,7 @@ export type BacklogItemScalarWhereWithAggregatesInput = {
   priority?: Prisma.EnumBacklogPriorityWithAggregatesFilter<"BacklogItem"> | $Enums.BacklogPriority
   assigneeId?: Prisma.StringNullableWithAggregatesFilter<"BacklogItem"> | string | null
   externalLink?: Prisma.StringNullableWithAggregatesFilter<"BacklogItem"> | string | null
+  serviceDefaultBacklogItemId?: Prisma.StringNullableWithAggregatesFilter<"BacklogItem"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"BacklogItem"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"BacklogItem"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"BacklogItem"> | Date | string | null
@@ -413,6 +428,7 @@ export type BacklogItemCreateInput = {
   project: Prisma.ProjectCreateNestedOneWithoutBacklogInput
   sprint?: Prisma.SprintCreateNestedOneWithoutBacklogItemsInput
   assignee?: Prisma.UserCreateNestedOneWithoutBacklogItemsInput
+  serviceDefaultBacklogItem?: Prisma.ServiceDefaultBacklogItemCreateNestedOneWithoutBacklogItemsInput
 }
 
 export type BacklogItemUncheckedCreateInput = {
@@ -428,6 +444,7 @@ export type BacklogItemUncheckedCreateInput = {
   priority?: $Enums.BacklogPriority
   assigneeId?: string | null
   externalLink?: string | null
+  serviceDefaultBacklogItemId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -449,6 +466,7 @@ export type BacklogItemUpdateInput = {
   project?: Prisma.ProjectUpdateOneRequiredWithoutBacklogNestedInput
   sprint?: Prisma.SprintUpdateOneWithoutBacklogItemsNestedInput
   assignee?: Prisma.UserUpdateOneWithoutBacklogItemsNestedInput
+  serviceDefaultBacklogItem?: Prisma.ServiceDefaultBacklogItemUpdateOneWithoutBacklogItemsNestedInput
 }
 
 export type BacklogItemUncheckedUpdateInput = {
@@ -464,6 +482,7 @@ export type BacklogItemUncheckedUpdateInput = {
   priority?: Prisma.EnumBacklogPriorityFieldUpdateOperationsInput | $Enums.BacklogPriority
   assigneeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceDefaultBacklogItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -482,6 +501,7 @@ export type BacklogItemCreateManyInput = {
   priority?: $Enums.BacklogPriority
   assigneeId?: string | null
   externalLink?: string | null
+  serviceDefaultBacklogItemId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -514,6 +534,7 @@ export type BacklogItemUncheckedUpdateManyInput = {
   priority?: Prisma.EnumBacklogPriorityFieldUpdateOperationsInput | $Enums.BacklogPriority
   assigneeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceDefaultBacklogItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -542,6 +563,7 @@ export type BacklogItemCountOrderByAggregateInput = {
   priority?: Prisma.SortOrder
   assigneeId?: Prisma.SortOrder
   externalLink?: Prisma.SortOrder
+  serviceDefaultBacklogItemId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -565,6 +587,7 @@ export type BacklogItemMaxOrderByAggregateInput = {
   priority?: Prisma.SortOrder
   assigneeId?: Prisma.SortOrder
   externalLink?: Prisma.SortOrder
+  serviceDefaultBacklogItemId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -583,6 +606,7 @@ export type BacklogItemMinOrderByAggregateInput = {
   priority?: Prisma.SortOrder
   assigneeId?: Prisma.SortOrder
   externalLink?: Prisma.SortOrder
+  serviceDefaultBacklogItemId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -677,6 +701,48 @@ export type BacklogItemUncheckedUpdateManyWithoutAssigneeNestedInput = {
   deleteMany?: Prisma.BacklogItemScalarWhereInput | Prisma.BacklogItemScalarWhereInput[]
 }
 
+export type BacklogItemCreateNestedManyWithoutServiceDefaultBacklogItemInput = {
+  create?: Prisma.XOR<Prisma.BacklogItemCreateWithoutServiceDefaultBacklogItemInput, Prisma.BacklogItemUncheckedCreateWithoutServiceDefaultBacklogItemInput> | Prisma.BacklogItemCreateWithoutServiceDefaultBacklogItemInput[] | Prisma.BacklogItemUncheckedCreateWithoutServiceDefaultBacklogItemInput[]
+  connectOrCreate?: Prisma.BacklogItemCreateOrConnectWithoutServiceDefaultBacklogItemInput | Prisma.BacklogItemCreateOrConnectWithoutServiceDefaultBacklogItemInput[]
+  createMany?: Prisma.BacklogItemCreateManyServiceDefaultBacklogItemInputEnvelope
+  connect?: Prisma.BacklogItemWhereUniqueInput | Prisma.BacklogItemWhereUniqueInput[]
+}
+
+export type BacklogItemUncheckedCreateNestedManyWithoutServiceDefaultBacklogItemInput = {
+  create?: Prisma.XOR<Prisma.BacklogItemCreateWithoutServiceDefaultBacklogItemInput, Prisma.BacklogItemUncheckedCreateWithoutServiceDefaultBacklogItemInput> | Prisma.BacklogItemCreateWithoutServiceDefaultBacklogItemInput[] | Prisma.BacklogItemUncheckedCreateWithoutServiceDefaultBacklogItemInput[]
+  connectOrCreate?: Prisma.BacklogItemCreateOrConnectWithoutServiceDefaultBacklogItemInput | Prisma.BacklogItemCreateOrConnectWithoutServiceDefaultBacklogItemInput[]
+  createMany?: Prisma.BacklogItemCreateManyServiceDefaultBacklogItemInputEnvelope
+  connect?: Prisma.BacklogItemWhereUniqueInput | Prisma.BacklogItemWhereUniqueInput[]
+}
+
+export type BacklogItemUpdateManyWithoutServiceDefaultBacklogItemNestedInput = {
+  create?: Prisma.XOR<Prisma.BacklogItemCreateWithoutServiceDefaultBacklogItemInput, Prisma.BacklogItemUncheckedCreateWithoutServiceDefaultBacklogItemInput> | Prisma.BacklogItemCreateWithoutServiceDefaultBacklogItemInput[] | Prisma.BacklogItemUncheckedCreateWithoutServiceDefaultBacklogItemInput[]
+  connectOrCreate?: Prisma.BacklogItemCreateOrConnectWithoutServiceDefaultBacklogItemInput | Prisma.BacklogItemCreateOrConnectWithoutServiceDefaultBacklogItemInput[]
+  upsert?: Prisma.BacklogItemUpsertWithWhereUniqueWithoutServiceDefaultBacklogItemInput | Prisma.BacklogItemUpsertWithWhereUniqueWithoutServiceDefaultBacklogItemInput[]
+  createMany?: Prisma.BacklogItemCreateManyServiceDefaultBacklogItemInputEnvelope
+  set?: Prisma.BacklogItemWhereUniqueInput | Prisma.BacklogItemWhereUniqueInput[]
+  disconnect?: Prisma.BacklogItemWhereUniqueInput | Prisma.BacklogItemWhereUniqueInput[]
+  delete?: Prisma.BacklogItemWhereUniqueInput | Prisma.BacklogItemWhereUniqueInput[]
+  connect?: Prisma.BacklogItemWhereUniqueInput | Prisma.BacklogItemWhereUniqueInput[]
+  update?: Prisma.BacklogItemUpdateWithWhereUniqueWithoutServiceDefaultBacklogItemInput | Prisma.BacklogItemUpdateWithWhereUniqueWithoutServiceDefaultBacklogItemInput[]
+  updateMany?: Prisma.BacklogItemUpdateManyWithWhereWithoutServiceDefaultBacklogItemInput | Prisma.BacklogItemUpdateManyWithWhereWithoutServiceDefaultBacklogItemInput[]
+  deleteMany?: Prisma.BacklogItemScalarWhereInput | Prisma.BacklogItemScalarWhereInput[]
+}
+
+export type BacklogItemUncheckedUpdateManyWithoutServiceDefaultBacklogItemNestedInput = {
+  create?: Prisma.XOR<Prisma.BacklogItemCreateWithoutServiceDefaultBacklogItemInput, Prisma.BacklogItemUncheckedCreateWithoutServiceDefaultBacklogItemInput> | Prisma.BacklogItemCreateWithoutServiceDefaultBacklogItemInput[] | Prisma.BacklogItemUncheckedCreateWithoutServiceDefaultBacklogItemInput[]
+  connectOrCreate?: Prisma.BacklogItemCreateOrConnectWithoutServiceDefaultBacklogItemInput | Prisma.BacklogItemCreateOrConnectWithoutServiceDefaultBacklogItemInput[]
+  upsert?: Prisma.BacklogItemUpsertWithWhereUniqueWithoutServiceDefaultBacklogItemInput | Prisma.BacklogItemUpsertWithWhereUniqueWithoutServiceDefaultBacklogItemInput[]
+  createMany?: Prisma.BacklogItemCreateManyServiceDefaultBacklogItemInputEnvelope
+  set?: Prisma.BacklogItemWhereUniqueInput | Prisma.BacklogItemWhereUniqueInput[]
+  disconnect?: Prisma.BacklogItemWhereUniqueInput | Prisma.BacklogItemWhereUniqueInput[]
+  delete?: Prisma.BacklogItemWhereUniqueInput | Prisma.BacklogItemWhereUniqueInput[]
+  connect?: Prisma.BacklogItemWhereUniqueInput | Prisma.BacklogItemWhereUniqueInput[]
+  update?: Prisma.BacklogItemUpdateWithWhereUniqueWithoutServiceDefaultBacklogItemInput | Prisma.BacklogItemUpdateWithWhereUniqueWithoutServiceDefaultBacklogItemInput[]
+  updateMany?: Prisma.BacklogItemUpdateManyWithWhereWithoutServiceDefaultBacklogItemInput | Prisma.BacklogItemUpdateManyWithWhereWithoutServiceDefaultBacklogItemInput[]
+  deleteMany?: Prisma.BacklogItemScalarWhereInput | Prisma.BacklogItemScalarWhereInput[]
+}
+
 export type BacklogItemCreateNestedManyWithoutProjectInput = {
   create?: Prisma.XOR<Prisma.BacklogItemCreateWithoutProjectInput, Prisma.BacklogItemUncheckedCreateWithoutProjectInput> | Prisma.BacklogItemCreateWithoutProjectInput[] | Prisma.BacklogItemUncheckedCreateWithoutProjectInput[]
   connectOrCreate?: Prisma.BacklogItemCreateOrConnectWithoutProjectInput | Prisma.BacklogItemCreateOrConnectWithoutProjectInput[]
@@ -765,18 +831,6 @@ export type EnumBacklogStatusFieldUpdateOperationsInput = {
   set?: $Enums.BacklogStatus
 }
 
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
-export type EnumBacklogPriorityFieldUpdateOperationsInput = {
-  set?: $Enums.BacklogPriority
-}
-
 export type BacklogItemCreateWithoutOrganizationInput = {
   id?: string
   title: string
@@ -792,6 +846,7 @@ export type BacklogItemCreateWithoutOrganizationInput = {
   project: Prisma.ProjectCreateNestedOneWithoutBacklogInput
   sprint?: Prisma.SprintCreateNestedOneWithoutBacklogItemsInput
   assignee?: Prisma.UserCreateNestedOneWithoutBacklogItemsInput
+  serviceDefaultBacklogItem?: Prisma.ServiceDefaultBacklogItemCreateNestedOneWithoutBacklogItemsInput
 }
 
 export type BacklogItemUncheckedCreateWithoutOrganizationInput = {
@@ -806,6 +861,7 @@ export type BacklogItemUncheckedCreateWithoutOrganizationInput = {
   priority?: $Enums.BacklogPriority
   assigneeId?: string | null
   externalLink?: string | null
+  serviceDefaultBacklogItemId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -853,6 +909,7 @@ export type BacklogItemScalarWhereInput = {
   priority?: Prisma.EnumBacklogPriorityFilter<"BacklogItem"> | $Enums.BacklogPriority
   assigneeId?: Prisma.StringNullableFilter<"BacklogItem"> | string | null
   externalLink?: Prisma.StringNullableFilter<"BacklogItem"> | string | null
+  serviceDefaultBacklogItemId?: Prisma.StringNullableFilter<"BacklogItem"> | string | null
   createdAt?: Prisma.DateTimeFilter<"BacklogItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BacklogItem"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"BacklogItem"> | Date | string | null
@@ -873,6 +930,7 @@ export type BacklogItemCreateWithoutAssigneeInput = {
   organization: Prisma.OrganizationCreateNestedOneWithoutBacklogItemsInput
   project: Prisma.ProjectCreateNestedOneWithoutBacklogInput
   sprint?: Prisma.SprintCreateNestedOneWithoutBacklogItemsInput
+  serviceDefaultBacklogItem?: Prisma.ServiceDefaultBacklogItemCreateNestedOneWithoutBacklogItemsInput
 }
 
 export type BacklogItemUncheckedCreateWithoutAssigneeInput = {
@@ -887,6 +945,7 @@ export type BacklogItemUncheckedCreateWithoutAssigneeInput = {
   points?: number
   priority?: $Enums.BacklogPriority
   externalLink?: string | null
+  serviceDefaultBacklogItemId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -918,6 +977,68 @@ export type BacklogItemUpdateManyWithWhereWithoutAssigneeInput = {
   data: Prisma.XOR<Prisma.BacklogItemUpdateManyMutationInput, Prisma.BacklogItemUncheckedUpdateManyWithoutAssigneeInput>
 }
 
+export type BacklogItemCreateWithoutServiceDefaultBacklogItemInput = {
+  id?: string
+  title: string
+  description: string
+  status?: $Enums.BacklogStatus
+  order?: number
+  points?: number
+  priority?: $Enums.BacklogPriority
+  externalLink?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  organization: Prisma.OrganizationCreateNestedOneWithoutBacklogItemsInput
+  project: Prisma.ProjectCreateNestedOneWithoutBacklogInput
+  sprint?: Prisma.SprintCreateNestedOneWithoutBacklogItemsInput
+  assignee?: Prisma.UserCreateNestedOneWithoutBacklogItemsInput
+}
+
+export type BacklogItemUncheckedCreateWithoutServiceDefaultBacklogItemInput = {
+  id?: string
+  title: string
+  description: string
+  status?: $Enums.BacklogStatus
+  order?: number
+  organizationId: string
+  projectId: string
+  sprintId?: string | null
+  points?: number
+  priority?: $Enums.BacklogPriority
+  assigneeId?: string | null
+  externalLink?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type BacklogItemCreateOrConnectWithoutServiceDefaultBacklogItemInput = {
+  where: Prisma.BacklogItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.BacklogItemCreateWithoutServiceDefaultBacklogItemInput, Prisma.BacklogItemUncheckedCreateWithoutServiceDefaultBacklogItemInput>
+}
+
+export type BacklogItemCreateManyServiceDefaultBacklogItemInputEnvelope = {
+  data: Prisma.BacklogItemCreateManyServiceDefaultBacklogItemInput | Prisma.BacklogItemCreateManyServiceDefaultBacklogItemInput[]
+  skipDuplicates?: boolean
+}
+
+export type BacklogItemUpsertWithWhereUniqueWithoutServiceDefaultBacklogItemInput = {
+  where: Prisma.BacklogItemWhereUniqueInput
+  update: Prisma.XOR<Prisma.BacklogItemUpdateWithoutServiceDefaultBacklogItemInput, Prisma.BacklogItemUncheckedUpdateWithoutServiceDefaultBacklogItemInput>
+  create: Prisma.XOR<Prisma.BacklogItemCreateWithoutServiceDefaultBacklogItemInput, Prisma.BacklogItemUncheckedCreateWithoutServiceDefaultBacklogItemInput>
+}
+
+export type BacklogItemUpdateWithWhereUniqueWithoutServiceDefaultBacklogItemInput = {
+  where: Prisma.BacklogItemWhereUniqueInput
+  data: Prisma.XOR<Prisma.BacklogItemUpdateWithoutServiceDefaultBacklogItemInput, Prisma.BacklogItemUncheckedUpdateWithoutServiceDefaultBacklogItemInput>
+}
+
+export type BacklogItemUpdateManyWithWhereWithoutServiceDefaultBacklogItemInput = {
+  where: Prisma.BacklogItemScalarWhereInput
+  data: Prisma.XOR<Prisma.BacklogItemUpdateManyMutationInput, Prisma.BacklogItemUncheckedUpdateManyWithoutServiceDefaultBacklogItemInput>
+}
+
 export type BacklogItemCreateWithoutProjectInput = {
   id?: string
   title: string
@@ -933,6 +1054,7 @@ export type BacklogItemCreateWithoutProjectInput = {
   organization: Prisma.OrganizationCreateNestedOneWithoutBacklogItemsInput
   sprint?: Prisma.SprintCreateNestedOneWithoutBacklogItemsInput
   assignee?: Prisma.UserCreateNestedOneWithoutBacklogItemsInput
+  serviceDefaultBacklogItem?: Prisma.ServiceDefaultBacklogItemCreateNestedOneWithoutBacklogItemsInput
 }
 
 export type BacklogItemUncheckedCreateWithoutProjectInput = {
@@ -947,6 +1069,7 @@ export type BacklogItemUncheckedCreateWithoutProjectInput = {
   priority?: $Enums.BacklogPriority
   assigneeId?: string | null
   externalLink?: string | null
+  serviceDefaultBacklogItemId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -993,6 +1116,7 @@ export type BacklogItemCreateWithoutSprintInput = {
   organization: Prisma.OrganizationCreateNestedOneWithoutBacklogItemsInput
   project: Prisma.ProjectCreateNestedOneWithoutBacklogInput
   assignee?: Prisma.UserCreateNestedOneWithoutBacklogItemsInput
+  serviceDefaultBacklogItem?: Prisma.ServiceDefaultBacklogItemCreateNestedOneWithoutBacklogItemsInput
 }
 
 export type BacklogItemUncheckedCreateWithoutSprintInput = {
@@ -1007,6 +1131,7 @@ export type BacklogItemUncheckedCreateWithoutSprintInput = {
   priority?: $Enums.BacklogPriority
   assigneeId?: string | null
   externalLink?: string | null
+  serviceDefaultBacklogItemId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1050,6 +1175,7 @@ export type BacklogItemCreateManyOrganizationInput = {
   priority?: $Enums.BacklogPriority
   assigneeId?: string | null
   externalLink?: string | null
+  serviceDefaultBacklogItemId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1070,6 +1196,7 @@ export type BacklogItemUpdateWithoutOrganizationInput = {
   project?: Prisma.ProjectUpdateOneRequiredWithoutBacklogNestedInput
   sprint?: Prisma.SprintUpdateOneWithoutBacklogItemsNestedInput
   assignee?: Prisma.UserUpdateOneWithoutBacklogItemsNestedInput
+  serviceDefaultBacklogItem?: Prisma.ServiceDefaultBacklogItemUpdateOneWithoutBacklogItemsNestedInput
 }
 
 export type BacklogItemUncheckedUpdateWithoutOrganizationInput = {
@@ -1084,6 +1211,7 @@ export type BacklogItemUncheckedUpdateWithoutOrganizationInput = {
   priority?: Prisma.EnumBacklogPriorityFieldUpdateOperationsInput | $Enums.BacklogPriority
   assigneeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceDefaultBacklogItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1101,6 +1229,7 @@ export type BacklogItemUncheckedUpdateManyWithoutOrganizationInput = {
   priority?: Prisma.EnumBacklogPriorityFieldUpdateOperationsInput | $Enums.BacklogPriority
   assigneeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceDefaultBacklogItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1118,6 +1247,7 @@ export type BacklogItemCreateManyAssigneeInput = {
   points?: number
   priority?: $Enums.BacklogPriority
   externalLink?: string | null
+  serviceDefaultBacklogItemId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1138,6 +1268,7 @@ export type BacklogItemUpdateWithoutAssigneeInput = {
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutBacklogItemsNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutBacklogNestedInput
   sprint?: Prisma.SprintUpdateOneWithoutBacklogItemsNestedInput
+  serviceDefaultBacklogItem?: Prisma.ServiceDefaultBacklogItemUpdateOneWithoutBacklogItemsNestedInput
 }
 
 export type BacklogItemUncheckedUpdateWithoutAssigneeInput = {
@@ -1152,6 +1283,7 @@ export type BacklogItemUncheckedUpdateWithoutAssigneeInput = {
   points?: Prisma.IntFieldUpdateOperationsInput | number
   priority?: Prisma.EnumBacklogPriorityFieldUpdateOperationsInput | $Enums.BacklogPriority
   externalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceDefaultBacklogItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1168,6 +1300,79 @@ export type BacklogItemUncheckedUpdateManyWithoutAssigneeInput = {
   sprintId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.IntFieldUpdateOperationsInput | number
   priority?: Prisma.EnumBacklogPriorityFieldUpdateOperationsInput | $Enums.BacklogPriority
+  externalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceDefaultBacklogItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type BacklogItemCreateManyServiceDefaultBacklogItemInput = {
+  id?: string
+  title: string
+  description: string
+  status?: $Enums.BacklogStatus
+  order?: number
+  organizationId: string
+  projectId: string
+  sprintId?: string | null
+  points?: number
+  priority?: $Enums.BacklogPriority
+  assigneeId?: string | null
+  externalLink?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type BacklogItemUpdateWithoutServiceDefaultBacklogItemInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBacklogStatusFieldUpdateOperationsInput | $Enums.BacklogStatus
+  order?: Prisma.FloatFieldUpdateOperationsInput | number
+  points?: Prisma.IntFieldUpdateOperationsInput | number
+  priority?: Prisma.EnumBacklogPriorityFieldUpdateOperationsInput | $Enums.BacklogPriority
+  externalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutBacklogItemsNestedInput
+  project?: Prisma.ProjectUpdateOneRequiredWithoutBacklogNestedInput
+  sprint?: Prisma.SprintUpdateOneWithoutBacklogItemsNestedInput
+  assignee?: Prisma.UserUpdateOneWithoutBacklogItemsNestedInput
+}
+
+export type BacklogItemUncheckedUpdateWithoutServiceDefaultBacklogItemInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBacklogStatusFieldUpdateOperationsInput | $Enums.BacklogStatus
+  order?: Prisma.FloatFieldUpdateOperationsInput | number
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  sprintId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  points?: Prisma.IntFieldUpdateOperationsInput | number
+  priority?: Prisma.EnumBacklogPriorityFieldUpdateOperationsInput | $Enums.BacklogPriority
+  assigneeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type BacklogItemUncheckedUpdateManyWithoutServiceDefaultBacklogItemInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBacklogStatusFieldUpdateOperationsInput | $Enums.BacklogStatus
+  order?: Prisma.FloatFieldUpdateOperationsInput | number
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  sprintId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  points?: Prisma.IntFieldUpdateOperationsInput | number
+  priority?: Prisma.EnumBacklogPriorityFieldUpdateOperationsInput | $Enums.BacklogPriority
+  assigneeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1186,6 +1391,7 @@ export type BacklogItemCreateManyProjectInput = {
   priority?: $Enums.BacklogPriority
   assigneeId?: string | null
   externalLink?: string | null
+  serviceDefaultBacklogItemId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1206,6 +1412,7 @@ export type BacklogItemUpdateWithoutProjectInput = {
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutBacklogItemsNestedInput
   sprint?: Prisma.SprintUpdateOneWithoutBacklogItemsNestedInput
   assignee?: Prisma.UserUpdateOneWithoutBacklogItemsNestedInput
+  serviceDefaultBacklogItem?: Prisma.ServiceDefaultBacklogItemUpdateOneWithoutBacklogItemsNestedInput
 }
 
 export type BacklogItemUncheckedUpdateWithoutProjectInput = {
@@ -1220,6 +1427,7 @@ export type BacklogItemUncheckedUpdateWithoutProjectInput = {
   priority?: Prisma.EnumBacklogPriorityFieldUpdateOperationsInput | $Enums.BacklogPriority
   assigneeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceDefaultBacklogItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1237,6 +1445,7 @@ export type BacklogItemUncheckedUpdateManyWithoutProjectInput = {
   priority?: Prisma.EnumBacklogPriorityFieldUpdateOperationsInput | $Enums.BacklogPriority
   assigneeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceDefaultBacklogItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1254,6 +1463,7 @@ export type BacklogItemCreateManySprintInput = {
   priority?: $Enums.BacklogPriority
   assigneeId?: string | null
   externalLink?: string | null
+  serviceDefaultBacklogItemId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1274,6 +1484,7 @@ export type BacklogItemUpdateWithoutSprintInput = {
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutBacklogItemsNestedInput
   project?: Prisma.ProjectUpdateOneRequiredWithoutBacklogNestedInput
   assignee?: Prisma.UserUpdateOneWithoutBacklogItemsNestedInput
+  serviceDefaultBacklogItem?: Prisma.ServiceDefaultBacklogItemUpdateOneWithoutBacklogItemsNestedInput
 }
 
 export type BacklogItemUncheckedUpdateWithoutSprintInput = {
@@ -1288,6 +1499,7 @@ export type BacklogItemUncheckedUpdateWithoutSprintInput = {
   priority?: Prisma.EnumBacklogPriorityFieldUpdateOperationsInput | $Enums.BacklogPriority
   assigneeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceDefaultBacklogItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1305,6 +1517,7 @@ export type BacklogItemUncheckedUpdateManyWithoutSprintInput = {
   priority?: Prisma.EnumBacklogPriorityFieldUpdateOperationsInput | $Enums.BacklogPriority
   assigneeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceDefaultBacklogItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1325,6 +1538,7 @@ export type BacklogItemSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   priority?: boolean
   assigneeId?: boolean
   externalLink?: boolean
+  serviceDefaultBacklogItemId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1332,6 +1546,7 @@ export type BacklogItemSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   sprint?: boolean | Prisma.BacklogItem$sprintArgs<ExtArgs>
   assignee?: boolean | Prisma.BacklogItem$assigneeArgs<ExtArgs>
+  serviceDefaultBacklogItem?: boolean | Prisma.BacklogItem$serviceDefaultBacklogItemArgs<ExtArgs>
 }, ExtArgs["result"]["backlogItem"]>
 
 export type BacklogItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1347,6 +1562,7 @@ export type BacklogItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   priority?: boolean
   assigneeId?: boolean
   externalLink?: boolean
+  serviceDefaultBacklogItemId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1354,6 +1570,7 @@ export type BacklogItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   sprint?: boolean | Prisma.BacklogItem$sprintArgs<ExtArgs>
   assignee?: boolean | Prisma.BacklogItem$assigneeArgs<ExtArgs>
+  serviceDefaultBacklogItem?: boolean | Prisma.BacklogItem$serviceDefaultBacklogItemArgs<ExtArgs>
 }, ExtArgs["result"]["backlogItem"]>
 
 export type BacklogItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1369,6 +1586,7 @@ export type BacklogItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   priority?: boolean
   assigneeId?: boolean
   externalLink?: boolean
+  serviceDefaultBacklogItemId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1376,6 +1594,7 @@ export type BacklogItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   sprint?: boolean | Prisma.BacklogItem$sprintArgs<ExtArgs>
   assignee?: boolean | Prisma.BacklogItem$assigneeArgs<ExtArgs>
+  serviceDefaultBacklogItem?: boolean | Prisma.BacklogItem$serviceDefaultBacklogItemArgs<ExtArgs>
 }, ExtArgs["result"]["backlogItem"]>
 
 export type BacklogItemSelectScalar = {
@@ -1391,29 +1610,33 @@ export type BacklogItemSelectScalar = {
   priority?: boolean
   assigneeId?: boolean
   externalLink?: boolean
+  serviceDefaultBacklogItemId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type BacklogItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "status" | "order" | "organizationId" | "projectId" | "sprintId" | "points" | "priority" | "assigneeId" | "externalLink" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["backlogItem"]>
+export type BacklogItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "status" | "order" | "organizationId" | "projectId" | "sprintId" | "points" | "priority" | "assigneeId" | "externalLink" | "serviceDefaultBacklogItemId" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["backlogItem"]>
 export type BacklogItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   sprint?: boolean | Prisma.BacklogItem$sprintArgs<ExtArgs>
   assignee?: boolean | Prisma.BacklogItem$assigneeArgs<ExtArgs>
+  serviceDefaultBacklogItem?: boolean | Prisma.BacklogItem$serviceDefaultBacklogItemArgs<ExtArgs>
 }
 export type BacklogItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   sprint?: boolean | Prisma.BacklogItem$sprintArgs<ExtArgs>
   assignee?: boolean | Prisma.BacklogItem$assigneeArgs<ExtArgs>
+  serviceDefaultBacklogItem?: boolean | Prisma.BacklogItem$serviceDefaultBacklogItemArgs<ExtArgs>
 }
 export type BacklogItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
   sprint?: boolean | Prisma.BacklogItem$sprintArgs<ExtArgs>
   assignee?: boolean | Prisma.BacklogItem$assigneeArgs<ExtArgs>
+  serviceDefaultBacklogItem?: boolean | Prisma.BacklogItem$serviceDefaultBacklogItemArgs<ExtArgs>
 }
 
 export type $BacklogItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1423,6 +1646,7 @@ export type $BacklogItemPayload<ExtArgs extends runtime.Types.Extensions.Interna
     project: Prisma.$ProjectPayload<ExtArgs>
     sprint: Prisma.$SprintPayload<ExtArgs> | null
     assignee: Prisma.$UserPayload<ExtArgs> | null
+    serviceDefaultBacklogItem: Prisma.$ServiceDefaultBacklogItemPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1437,6 +1661,7 @@ export type $BacklogItemPayload<ExtArgs extends runtime.Types.Extensions.Interna
     priority: $Enums.BacklogPriority
     assigneeId: string | null
     externalLink: string | null
+    serviceDefaultBacklogItemId: string | null
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -1838,6 +2063,7 @@ export interface Prisma__BacklogItemClient<T, Null = never, ExtArgs extends runt
   project<T extends Prisma.ProjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProjectDefaultArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   sprint<T extends Prisma.BacklogItem$sprintArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BacklogItem$sprintArgs<ExtArgs>>): Prisma.Prisma__SprintClient<runtime.Types.Result.GetResult<Prisma.$SprintPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   assignee<T extends Prisma.BacklogItem$assigneeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BacklogItem$assigneeArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  serviceDefaultBacklogItem<T extends Prisma.BacklogItem$serviceDefaultBacklogItemArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BacklogItem$serviceDefaultBacklogItemArgs<ExtArgs>>): Prisma.Prisma__ServiceDefaultBacklogItemClient<runtime.Types.Result.GetResult<Prisma.$ServiceDefaultBacklogItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1879,6 +2105,7 @@ export interface BacklogItemFieldRefs {
   readonly priority: Prisma.FieldRef<"BacklogItem", 'BacklogPriority'>
   readonly assigneeId: Prisma.FieldRef<"BacklogItem", 'String'>
   readonly externalLink: Prisma.FieldRef<"BacklogItem", 'String'>
+  readonly serviceDefaultBacklogItemId: Prisma.FieldRef<"BacklogItem", 'String'>
   readonly createdAt: Prisma.FieldRef<"BacklogItem", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"BacklogItem", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"BacklogItem", 'DateTime'>
@@ -2313,6 +2540,25 @@ export type BacklogItem$assigneeArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   include?: Prisma.UserInclude<ExtArgs> | null
   where?: Prisma.UserWhereInput
+}
+
+/**
+ * BacklogItem.serviceDefaultBacklogItem
+ */
+export type BacklogItem$serviceDefaultBacklogItemArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ServiceDefaultBacklogItem
+   */
+  select?: Prisma.ServiceDefaultBacklogItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ServiceDefaultBacklogItem
+   */
+  omit?: Prisma.ServiceDefaultBacklogItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ServiceDefaultBacklogItemInclude<ExtArgs> | null
+  where?: Prisma.ServiceDefaultBacklogItemWhereInput
 }
 
 /**

@@ -14,6 +14,11 @@ export const envSchema = z.object({
   R2_PUBLIC_URL: z.string(),
   DOCUMENSO_API_KEY: z.string(),
   DOCUMENSO_API_URL: z.string(),
+  SMTP_HOST: z.string(),
+  SMTP_USER: z.string(),
+  SMTP_PASSWORD: z.string(),
+  GOOGLE_APP_PASSWORD: z.string(),
+  GOOGLE_EMAIL: z.email(),
 });
 
 const env = envSchema.safeParse(process.env);

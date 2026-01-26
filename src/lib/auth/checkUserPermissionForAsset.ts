@@ -24,6 +24,7 @@ const strategies = {
   organizationIntegration: new AuthProposalStrategy(),
   invoice: new AuthProposalStrategy(),
   expense: new AuthProposalStrategy(),
+  services: new AuthProposalStrategy()
   // comment: new CommentStrategy(),
 } as const; // 'as const' ajuda na tipagem
 

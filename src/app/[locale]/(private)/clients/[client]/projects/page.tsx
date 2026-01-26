@@ -46,7 +46,7 @@ const Projects = async ({ searchParams, params }: IParams) => {
     },
     {
       cache: "no-cache",
-    }
+    },
   );
 
   if (fetchProjectsError) {
@@ -64,7 +64,7 @@ const Projects = async ({ searchParams, params }: IParams) => {
             </CardDescription>
           </div>
 
-          <Link href={`/clients/${clientSlug}/projects/new-project`}>
+          <Link href={`/clients/${clientSlug}/projects/new-project/form`}>
             <Button size="lg">
               <Plus className="h-4 w-4 mr-2" />
               Novo Projeto

@@ -3,17 +3,19 @@ import {
   CreateProposalDTO,
   CreateProposalItemDTO,
   IProposalRepository,
+  ProposalCreateReturnWithDetails,
   ProposalWithDetails,
   UpdateProposalDTO,
 } from "../IProposalRepository";
 import { Prisma, Proposal, ProposalStatus } from "@/generated/prisma/client";
 import { normalizePrisma } from "@/utils/normalizePrisma";
+import { date } from "@/lib/dayjs";
 
 export class PrismaProposalRepository implements IProposalRepository {
   async create(
     data: CreateProposalDTO,
-    tx?: Prisma.TransactionClient
-  ): Promise<Proposal> {
+    tx?: Prisma.TransactionClient,
+  ): Promise<ProposalCreateReturnWithDetails> {
     if (tx) {
       return this.executeCreateLogic(data, tx);
     }
@@ -25,8 +27,8 @@ export class PrismaProposalRepository implements IProposalRepository {
 
   private async executeCreateLogic(
     data: CreateProposalDTO,
-    tx: Prisma.TransactionClient
-  ): Promise<Proposal> {
+    tx: Prisma.TransactionClient,
+  ): Promise<ProposalCreateReturnWithDetails> {
     // 1. Buscar a última versão para este projeto
     const lastProposal = await tx.proposal.findFirst({
       where: { projectId: data.projectId },
@@ -66,6 +68,13 @@ export class PrismaProposalRepository implements IProposalRepository {
       },
       include: {
         items: true,
+        project: {
+          select: {
+            organizationId: true,
+            slug: true,
+            client: { select: { tradeName: true, email: true, slug: true } },
+          }, // Otimização: trazer só o necessário
+        },
       },
     });
 
@@ -87,7 +96,8 @@ export class PrismaProposalRepository implements IProposalRepository {
         project: {
           select: {
             organizationId: true,
-            client: { select: { tradeName: true, email: true } },
+            slug: true,
+            client: { select: { tradeName: true, email: true, slug: true } },
           }, // Otimização: trazer só o necessário
         },
         createdUser: {
@@ -166,7 +176,7 @@ export class PrismaProposalRepository implements IProposalRepository {
   async update(
     id: string,
     data: UpdateProposalDTO,
-    tx?: Prisma.TransactionClient
+    tx?: Prisma.TransactionClient,
   ): Promise<Proposal> {
     const client = tx || prisma;
 
@@ -181,12 +191,28 @@ export class PrismaProposalRepository implements IProposalRepository {
   async updateStatus(
     id: string,
     status: ProposalStatus,
-    tx?: Prisma.TransactionClient
+    userId: string,
+    tx?: Prisma.TransactionClient,
   ): Promise<Proposal> {
+    let createData: Prisma.ProposalUncheckedUpdateInput = {};
+    if (status === "APPROVED") {
+      createData = {
+        approvedBy: userId,
+        approvedAt: date().toDate(),
+      };
+    }
+
+    if (status === "REVIEW") {
+      createData = {
+        reviewedBy: userId,
+        reviewedAt: date().toDate(),
+      };
+    }
+
     const client = tx || prisma;
     return await client.proposal.update({
       where: { id },
-      data: { status },
+      data: { status, ...createData },
     });
   }
 
@@ -198,10 +224,10 @@ export class PrismaProposalRepository implements IProposalRepository {
     proposalId: string,
     newItems: CreateProposalItemDTO[],
     newTotal: number,
-    tx?: Prisma.TransactionClient
+    tx?: Prisma.TransactionClient,
   ): Promise<void> {
     if (tx) {
-      await tx.proposalItem.deleteMany({
+      (await tx.proposalItem.deleteMany({
         where: { proposalId },
       }),
         prisma.proposal.update({
@@ -218,7 +244,7 @@ export class PrismaProposalRepository implements IProposalRepository {
               })),
             },
           },
-        });
+        }));
 
       return;
     }
@@ -261,6 +287,7 @@ export class PrismaProposalRepository implements IProposalRepository {
     const client = tx || prisma;
     await client.proposal.update({
       data: {
+        isCurrent: false,
         status: "REJECTED",
       },
       where: { id },

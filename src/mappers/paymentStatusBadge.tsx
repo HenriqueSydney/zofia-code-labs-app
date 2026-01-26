@@ -1,6 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 
-export const getPaymentStatusBadge = (status: any) => {
+export const getPaymentStatusBadge = (
+  status: "pending" | "invoiced" | "paid" | "overdue",
+) => {
   const config = {
     pending: { label: "Pendente", variant: "secondary" as const },
     invoiced: { label: "Faturado", variant: "outline" as const },

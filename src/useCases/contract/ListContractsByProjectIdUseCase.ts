@@ -23,11 +23,14 @@ export class ListContractsByProjectIdUseCase {
       "contract",
       userId,
       { organizationId },
-      "READ"
+      "READ",
     );
-    return await this.contractRepository.getHistory(projectId, {
+
+    const contracts = await this.contractRepository.getHistory(projectId, {
       numberPerPage,
       page,
     });
+
+    return contracts;
   }
 }

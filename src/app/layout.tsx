@@ -5,9 +5,8 @@ import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
 import { SessionProvider } from "next-auth/react";
 import { NextIntlClientProvider } from "next-intl";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { auth } from "@/auth";
+import { SuccessToastComponent } from "@/components/SuccessToastComponent";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +39,8 @@ export default async function RootLayout({
             <NextIntlClientProvider>
               <div className="min-h-screen bg-background">{children}</div>
               <Toaster />
+
+              <SuccessToastComponent />
             </NextIntlClientProvider>
           </ThemeProvider>
         </SessionProvider>

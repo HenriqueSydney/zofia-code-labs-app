@@ -59,6 +59,7 @@ export const ModelName = {
   VerificationToken: 'VerificationToken',
   ServiceCategory: 'ServiceCategory',
   ServiceType: 'ServiceType',
+  ServiceDefaultBacklogItem: 'ServiceDefaultBacklogItem',
   DocumentTemplate: 'DocumentTemplate',
   Client: 'Client',
   ClientEmployees: 'ClientEmployees',
@@ -68,6 +69,8 @@ export const ModelName = {
   Contract: 'Contract',
   ContractTemplate: 'ContractTemplate',
   Project: 'Project',
+  ProjectRoles: 'ProjectRoles',
+  ProjectMember: 'ProjectMember',
   ProjectDocuments: 'ProjectDocuments',
   ProjectServices: 'ProjectServices',
   ProjectNote: 'ProjectNote',
@@ -208,6 +211,23 @@ export const ServiceTypeScalarFieldEnum = {
 } as const
 
 export type ServiceTypeScalarFieldEnum = (typeof ServiceTypeScalarFieldEnum)[keyof typeof ServiceTypeScalarFieldEnum]
+
+
+export const ServiceDefaultBacklogItemScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  serviceTypeId: 'serviceTypeId',
+  title: 'title',
+  description: 'description',
+  order: 'order',
+  points: 'points',
+  priority: 'priority',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type ServiceDefaultBacklogItemScalarFieldEnum = (typeof ServiceDefaultBacklogItemScalarFieldEnum)[keyof typeof ServiceDefaultBacklogItemScalarFieldEnum]
 
 
 export const DocumentTemplateScalarFieldEnum = {
@@ -356,9 +376,12 @@ export const ProjectScalarFieldEnum = {
   description: 'description',
   clientId: 'clientId',
   status: 'status',
+  priority: 'priority',
+  health: 'health',
+  tags: 'tags',
+  estimatedStartDate: 'estimatedStartDate',
   startDate: 'startDate',
   endDate: 'endDate',
-  repositoryUrl: 'repositoryUrl',
   totalBudget: 'totalBudget',
   totalSpent: 'totalSpent',
   remainingBudget: 'remainingBudget',
@@ -368,6 +391,28 @@ export const ProjectScalarFieldEnum = {
 } as const
 
 export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
+
+
+export const ProjectRolesScalarFieldEnum = {
+  id: 'id',
+  role: 'role',
+  description: 'description'
+} as const
+
+export type ProjectRolesScalarFieldEnum = (typeof ProjectRolesScalarFieldEnum)[keyof typeof ProjectRolesScalarFieldEnum]
+
+
+export const ProjectMemberScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  userId: 'userId',
+  projectRolesId: 'projectRolesId',
+  allocation: 'allocation',
+  joinedAt: 'joinedAt',
+  leftAt: 'leftAt'
+} as const
+
+export type ProjectMemberScalarFieldEnum = (typeof ProjectMemberScalarFieldEnum)[keyof typeof ProjectMemberScalarFieldEnum]
 
 
 export const ProjectDocumentsScalarFieldEnum = {
@@ -435,6 +480,7 @@ export const BacklogItemScalarFieldEnum = {
   priority: 'priority',
   assigneeId: 'assigneeId',
   externalLink: 'externalLink',
+  serviceDefaultBacklogItemId: 'serviceDefaultBacklogItemId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'

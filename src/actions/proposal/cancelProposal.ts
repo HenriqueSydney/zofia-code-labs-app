@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
+import { handleErrors } from "@/errors/handleErrors";
 import { makeCancelProposalUseCase } from "@/useCases/proposal/factories/makeCancelProposalUseCase";
 import { revalidatePath } from "next/cache";
 
@@ -10,18 +11,17 @@ export async function cancelProposalAction(proposalId: string) {
 
   const useCase = makeCancelProposalUseCase();
   try {
-    const { projectId } = await useCase.execute({
+    const { clientSlug, projectSlug } = await useCase.execute({
       id: proposalId,
       userId: session.user.id,
     });
 
-    revalidatePath(`/clients/${client.slug}/projects/${slug}`);
+    revalidatePath(`/clients/${clientSlug}/projects/${projectSlug}`);
     revalidatePath(
-      `/clients/${client.slug}/projects/${slug}/commercial/proposal`
+      `/clients/${clientSlug}/projects/${projectSlug}/commercial/proposal`
     );
     return { success: true, message: "Proposta removida com sucesso." };
   } catch (error) {
-    console.error(error);
-    return { error: "Proposta removida com sucesso." };
+    return { error: handleErrors(error) };
   }
 }

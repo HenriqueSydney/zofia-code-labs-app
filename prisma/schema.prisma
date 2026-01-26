@@ -48,19 +48,20 @@ model Organization {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relacionamentos de isolamento de dados
-  users                 User[]
-  clients               Client[]
-  projects              Project[]
-  serviceTypes          ServiceType[]
-  templates             DocumentTemplate[]
-  invoices              Invoice[]
-  availableIntegrations OrganizationIntegration[]
-  serviceCategories     ServiceCategory[]
-  backlogItems          BacklogItem[]
-  clientEmployees       ClientEmployees[]
-  expenseCategories     ExpenseCategory[]
-  expenses              Expense[]
-  budgetEntries         BudgetEntry[]
+  users                      User[]
+  clients                    Client[]
+  projects                   Project[]
+  serviceTypes               ServiceType[]
+  templates                  DocumentTemplate[]
+  invoices                   Invoice[]
+  availableIntegrations      OrganizationIntegration[]
+  serviceCategories          ServiceCategory[]
+  backlogItems               BacklogItem[]
+  clientEmployees            ClientEmployees[]
+  expenseCategories          ExpenseCategory[]
+  expenses                   Expense[]
+  budgetEntries              BudgetEntry[]
+  serviceDefaultBacklogItems ServiceDefaultBacklogItem[]
 
   @@map("organizations")
   @@schema("identity")
@@ -100,6 +101,7 @@ model User {
   reviwedcontracts  Contract[]        @relation("review_user")
   backlogItems      BacklogItem[]
   clientEmployees   ClientEmployees[]
+  projectMembers    ProjectMember[]
 
   @@map("users")
   @@schema("identity")
@@ -204,10 +206,35 @@ model ServiceType {
   basePrice   Decimal? @map("base_price") @db.Decimal(15, 2)
   active      Boolean  @default(true)
 
-  proposals       ProposalItem[]
-  projectServices ProjectServices[]
+  proposals                  ProposalItem[]
+  projectServices            ProjectServices[]
+  serviceDefaultBacklogItems ServiceDefaultBacklogItem[]
 
   @@map("service_types")
+  @@schema("catalog")
+}
+
+model ServiceDefaultBacklogItem {
+  id             String       @id @default(cuid())
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  serviceTypeId String
+  serviceType   ServiceType @relation(fields: [serviceTypeId], references: [id])
+
+  title       String @db.VarChar(255)
+  description String
+  order       Float  @default(0)
+
+  points   Int             @default(0)
+  priority BacklogPriority @default(LOW) // LOW, MEDIUM, HIGH, URGENT
+
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  deletedAt    DateTime?
+  backlogItems BacklogItem[]
+
+  @@map("service_default_backlog_item")
   @@schema("catalog")
 }
 
@@ -504,21 +531,38 @@ model ContractTemplate {
 // =========================================================================
 
 enum ProjectStatus {
-  DRAFT // MANUAL
-  TECH_ANALYSIS // MANUAL
-  PROPOSAL // MANUAL
-  PROPOSAL_GENERATED // SISTEMA OU SE INCLUIR DOCUMENTO DE PROPOSTA
-  WAITING_SIGNATURE // SISTEMA OU SE INCLUIR DOCUMENTO DE CONTRATO
-  WAITING_DOWN_PAYMENT // SISTEMA OU INFORMAR DADOS DO PAGAMENTO
-  PLANNED // MANUAL
-  IN_PROGRESS // MANUAL
-  REVIEW // MANUAL
-  ON_HOLD // MANUAL
-  DELIVERED // MANUAL
-  FINAL_PAYMENT // MANUAL
-  COMPLETED //SISTEMA OU INFORMAR DADOS DO PAGAMENTO
-  CANCELLED // MANUAL
-  MAINTENANCE // MANUAL
+  DRAFT
+  TECH_ANALYSIS
+  PROPOSAL
+  PROPOSAL_GENERATED
+  WAITING_SIGNATURE
+  WAITING_DOWN_PAYMENT
+  PLANNED
+  IN_PROGRESS
+  REVIEW
+  ON_HOLD
+  DELIVERED
+  FINAL_PAYMENT
+  COMPLETED
+  CANCELLED
+  MAINTENANCE
+
+  @@schema("projects")
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+
+  @@schema("projects")
+}
+
+enum ProjectHealth {
+  ON_TRACK
+  AT_RISK
+  OFF_TRACK
 
   @@schema("projects")
 }
@@ -536,10 +580,16 @@ model Project {
   clientId String @map("client_id")
   client   Client @relation(fields: [clientId], references: [id])
 
-  status        ProjectStatus
-  startDate     DateTime?     @map("start_date")
-  endDate       DateTime?     @map("end_date")
-  repositoryUrl String?       @map("repository_url") @db.VarChar(500)
+  status ProjectStatus
+
+  priority Priority      @default(MEDIUM)
+  health   ProjectHealth @default(ON_TRACK)
+
+  tags String[]
+
+  estimatedStartDate DateTime? @map("estimated_start_date")
+  startDate          DateTime? @map("start_date")
+  endDate            DateTime? @map("end_date")
 
   totalBudget     Decimal @default(0) @db.Decimal(15, 2)
   totalSpent      Decimal @default(0) @db.Decimal(15, 2)
@@ -567,8 +617,46 @@ model Project {
   expenses             Expense[]
   sonarMetricSnapshots SonarMetricSnapshot[]
   umamiMetricSnapshots UmamiMetricSnapshot[]
+  projectMembers       ProjectMember[]
 
   @@map("projects")
+  @@schema("projects")
+}
+
+model ProjectRoles {
+  id String @id @default(cuid())
+
+  role           String          @db.VarChar(50)
+  description    String          @db.VarChar(500)
+  projectMembers ProjectMember[]
+
+  @@map("project_roles")
+  @@schema("projects")
+}
+
+model ProjectMember {
+  id String @id @default(cuid())
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  // Cargo naquele período específico
+  projectRolesId String
+  projectRole    ProjectRoles @relation(fields: [projectRolesId], references: [id])
+
+  allocation Float @default(100)
+
+  // O segredo está aqui: Janela de Tempo
+  joinedAt DateTime  @default(now()) @map("joined_at")
+  leftAt   DateTime? @map("left_at") // Se null, está ativo atualmente
+
+  // Adicione índices para busca rápida
+  @@index([projectId, userId])
+  @@index([userId])
+  @@map("project_members")
   @@schema("projects")
 }
 
@@ -691,6 +779,9 @@ model BacklogItem {
   assignee   User?           @relation(fields: [assigneeId], references: [id])
 
   externalLink String? @map("external_link") // Link pro card no Jira/Taiga original
+
+  serviceDefaultBacklogItem   ServiceDefaultBacklogItem? @relation(fields: [serviceDefaultBacklogItemId], references: [id])
+  serviceDefaultBacklogItemId String?
 
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")

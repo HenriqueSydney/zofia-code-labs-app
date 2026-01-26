@@ -81,6 +81,11 @@ export type ServiceCategory = Prisma.ServiceCategoryModel
  */
 export type ServiceType = Prisma.ServiceTypeModel
 /**
+ * Model ServiceDefaultBacklogItem
+ * 
+ */
+export type ServiceDefaultBacklogItem = Prisma.ServiceDefaultBacklogItemModel
+/**
  * Model DocumentTemplate
  * Modelos de documentos HTML/Markdown
  */
@@ -125,6 +130,16 @@ export type ContractTemplate = Prisma.ContractTemplateModel
  * 
  */
 export type Project = Prisma.ProjectModel
+/**
+ * Model ProjectRoles
+ * 
+ */
+export type ProjectRoles = Prisma.ProjectRolesModel
+/**
+ * Model ProjectMember
+ * 
+ */
+export type ProjectMember = Prisma.ProjectMemberModel
 /**
  * Model ProjectDocuments
  * 

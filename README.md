@@ -15,7 +15,7 @@ Requisito: Salvar valor, prazo estimado e escopo macro.
 
 Requisito: Adicionar, remover e listar documentos do projeto
 
-- [/] Criação do Fluxo de Trabalho (State Machine)
+- [x] Criação do Fluxo de Trabalho (State Machine)
 
 Requisito: Lógica de transição de status (Rascunho -> Análise -> Contrato -> Pagamento -> Planned).
 
@@ -23,15 +23,67 @@ Requisito: Lógica de transição de status (Rascunho -> Análise -> Contrato ->
 
 Requisito: Função "Find & Replace" no backend para injetar dados do cliente/projeto no HTML antes de gerar o PDF.
 
-- [ ] Integração do React.email (Notificações)
+- [x] Integração do React.email (Notificações)
+- [x] Email: Verificação de Conta (Magic Link/Código)
+- [x] Email: Alerta de Novo Acesso (Dispositivo desconhecido)
+- [x] Email: Bem vindo! Cliente cadastrado;
+- [x] Email: Convite para Colaboração
+- [x] Email: Bem vindo! Usuário cadastrado (confirmação para o admin);
+- [x] Email: Confirmação de Alteração de Senha;
+- [x] Email: Esqueceu a senha;
+- [x] Email: Contrato disponibilizado para assinatura;
+- [x] Email: Pendência de assinatura de contrato;
+- [x] Email: Pendência de Pagamento;
+- [x] Email: Cobrança de Pagamento;
+- [x] Email: Comprovante de Pagamento Recebido;
+- [x] Email: Nota Fiscal Emitida (NFS-e);
+- [x] Email: Confirmação de aquisição de serviço adicional (analytics, segurança, ia...);
+- [x] Email: Informe de início do desenvolvimento;
+- [x] Email: Aguardando homologação da solução;
+- [x] Email: Report de Impedimento (Blocker)
+- [x] Email: Aviso de SLA Próximo do Vencimento
+- [x] Email: Status Report Semanal (Resumo)
+- [x] Email: Pesquisa de Satisfação (NPS)
+- [x] Email: Abertura de Chamado
+- [x] Email: Entrega Final do Projeto (Handover)
+- [x] Email: Admin: Email de notificação de pagamento;
+- [x] Email: Admin: Daily Briefing;
+
+- [ ] Implementação dos Emails onde são chamados
+- [ ] Email: Verificação de Conta (Magic Link/Código)
+- [ ] Email: Alerta de Novo Acesso (Dispositivo desconhecido)
+- [ ] Email: Bem vindo! Cliente cadastrado;
+- [ ] Email: Convite para Colaboração
+- [ ] Email: Bem vindo! Usuário cadastrado (confirmação para o admin);
+- [ ] Email: Confirmação de Alteração de Senha;
+- [ ] Email: Esqueceu a senha;
+- [ ] Email: Contrato disponibilizado para assinatura;
+- [ ] Email: Pendência de assinatura de contrato;
+- [ ] Email: Pendência de Pagamento;
+- [ ] Email: Cobrança de Pagamento;
+- [ ] Email: Comprovante de Pagamento Recebido;
+- [ ] Email: Nota Fiscal Emitida (NFS-e);
+- [ ] Email: Confirmação de aquisição de serviço adicional (analytics, segurança, ia...);
+- [ ] Email: Informe de início do desenvolvimento;
+- [ ] Email: Aguardando homologação da solução;
+- [ ] Email: Report de Impedimento (Blocker)
+- [ ] Email: Aviso de SLA Próximo do Vencimento
+- [ ] Email: Status Report Semanal (Resumo)
+- [ ] Email: Pesquisa de Satisfação (NPS)
+- [ ] Email: Abertura de Chamado
+- [ ] Email: Entrega Final do Projeto (Handover)
+- [ ] Email: Admin: Email de notificação de pagamento;
+- [ ] Email: Admin: Daily Briefing;
 
 - Requisito: Emails transacionais para mudança de status (ex: "Nova proposta gerada", "Projeto aprovado").
 
-- [ ] Integração com Documenso (Webhooks e Envio)
+- [x] Integração com Documenso (Webhooks e Envio)
 
 Requisito: Envio automático do PDF do contrato e escuta do webhook COMPLETED.
 
-- [ ] Integração com Gateway de Pagamento (Mercado Pago/Stripe)
+- [ ] Integração com Gateway de Pagamento (Mercado Pago)
+- [ ] Integração com Gateway de Pagamento (Banco Inter)
+- [ ] Integração com Gateway de Pagamento (Stripe)
 
 Requisito: Gerar cobrança dos 30% de entrada após assinatura e liberar o projeto após confirmação via webhook.
 
@@ -40,26 +92,31 @@ Neste ponto, o sistema já vende, assina e cobra sozinho. O fluxo comercial est�
 🔨 Fase 2: O Motor de Engenharia (Setup e Gestão)
 Objetivo: Automatizar o setup técnico e organizar o escopo de entrega.
 
-- [ ] Cadastro de Observações e Backlogs
+- [x] Cadastro de Observações e Backlogs
+- [x] Cadastrar backlogs defaults por serviço
 
 Requisito: Quebra do projeto em Épicos/Histórias dentro do sistema.
 
-- [ ] Cadastro de Integrações (Gerenciamento de Tokens)
+- [x] Cadastro de Integrações (Gerenciamento de Tokens)
 
 Requisito: Área segura (vault) para salvar Tokens (GitHub PAT, Sonar Token, etc).
 
+- [x] Integração com GitHub - Métricas
+- [ ] Permitir integrar mais de 1 projeto ao projeto.
 - [ ] Integração com GitHub (Provisionamento)
+- [ ] Permitir integrar mais de 1 projeto ao projeto.
 
 Requisito: Criação automática de repositório na Org, times e branches.
 
-- [ ] Integração com Infisical (Gestão de Segredos)
+- [x] Integração com Infisical (Gestão de Segredos)
 
 Requisito: Provisionamento automático de variáveis de ambiente do projeto.
 
 🛡️ Fase 3: Qualidade e Governança (Diferencial)
 Objetivo: Trazer visibilidade de qualidade para o painel do projeto.
 
-- [ ] Integração com SonarQube
+- [x] Integração com SonarQube
+- [ ] Permitir integrar mais de 1 projeto ao projeto.
 
 Requisito: Exibir métricas de qualidade/coverage no dashboard.
 

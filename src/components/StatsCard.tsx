@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils"; // Ajustado para o padrão comum do shadcn
 import { LucideIcon, TrendingDown, TrendingUp, Minus } from "lucide-react";
+import { ReactNode } from "react";
 
 interface IStatsCard {
   label: string;
@@ -10,6 +11,7 @@ interface IStatsCard {
   trend?: number;
   reverseColor?: boolean; // Default true: subir é ruim (ex: bugs). False: subir é bom (ex: coverage).
   iconColor?: string;
+  badge?: ReactNode
 }
 
 export function StatsCard({
@@ -20,6 +22,7 @@ export function StatsCard({
   description,
   reverseColor = true,
   iconColor = "bg-primary/10",
+  badge
 }: IStatsCard) {
   const isPositive = trend !== undefined && trend > 0;
   const isNegative = trend !== undefined && trend < 0;
@@ -72,9 +75,10 @@ export function StatsCard({
               {trend !== undefined && (
                 <span>{isNeutral ? "estável" : `${Math.abs(trend)}%`}</span>
               )}
-              {description && (
+              {description  && (
                 <span className="text-muted-foreground!">{description}</span>
               )}
+              {badge && badge}
             </div>
           </div>
         </div>

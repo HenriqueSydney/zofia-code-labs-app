@@ -845,14 +845,6 @@ export type ProposalUncheckedUpdateManyWithoutReviewUserNestedInput = {
   deleteMany?: Prisma.ProposalScalarWhereInput | Prisma.ProposalScalarWhereInput[]
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type EnumProposalStatusFieldUpdateOperationsInput = {
   set?: $Enums.ProposalStatus
 }

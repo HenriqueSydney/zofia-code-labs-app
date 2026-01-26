@@ -4,7 +4,7 @@ import { ContractStatus } from "@/generated/prisma/enums";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { prisma } from "@/lib/prisma";
 import { IAuditLogRepository } from "@/repositories/IAuditLogRepository";
-import { IContractRepository } from "@/repositories/IContractRepository";
+import { ContractWithProjectDetails, IContractRepository } from "@/repositories/IContractRepository";
 import { ChangeProjectStatusUseCase } from "../projects/ChangeProjectStatusUseCase";
 import { IS3StorageService } from "@/services/s3Client/IS3StorageService";
 import { IDocumentSignService } from "@/services/documenso/IDocumentSignService";
@@ -22,147 +22,137 @@ export class ChangeContractStatusUseCase {
     private changeProjectStatusUseCase: ChangeProjectStatusUseCase,
     private auditLogRepository: IAuditLogRepository,
     private storageService: IS3StorageService,
-    private documentSignService: IDocumentSignService
+    private documentSignService: IDocumentSignService,
   ) {}
 
   async execute({
     contractId,
     newStatus,
     userId,
-    communicationChannel,
-  }: ChangeContractStatusRequest): Promise<Contract> {
+  }: ChangeContractStatusRequest): Promise<ContractWithProjectDetails> {
     const contract = await this.contractRepository.findById(contractId);
 
-    if (!contract) {
-      throw new AppError("Contrato não encontrada.", 404);
-    }
-
+    if (!contract) throw new AppError("Contrato não encontrado.", 404);
     if (!this.isValidTransition(contract.status, newStatus)) {
       throw new AppError(
-        `Não é possível alterar o status de ${contract.status} para ${newStatus}.`,
-        400
+        `Transição de ${contract.status} para ${newStatus} inválida.`,
+        400,
       );
     }
 
     await checkUserPermissionForAsset(
       "contract",
       userId,
-      { contract, organizationId: contract.project.organizationId },
-      "UPDATE"
+      {
+        contract,
+        organizationId: contract.project.organizationId,
+      },
+      "UPDATE",
     );
 
-    const updatedContract = await prisma.$transaction(async (tx) => {
+    let externalSignId: string | undefined;
+
+    // --- OPERAÇÕES EXTERNAS (FORA DA TRANSAÇÃO) ---
+    if (newStatus === "SENT") {
+      const fileKey = contract.fileKey;
+      if (!fileKey) throw new AppError("Arquivo do contrato não existe.");
+
+      // 1. Download do arquivo
+      const fileBuffer = await this.storageService.getFileBuffer(fileKey);
+
+      // 2. Integração com Documenso (API Externa)
+      const documentId = await this.documentSignService.createDocument(
+        fileBuffer,
+        `Contrato - ${contract.project.client.tradeName}`,
+        [
+          {
+            email: contract.project.client.email,
+            name: contract.project.client.tradeName,
+            role: "SIGNER",
+          },
+          {
+            email: "henriquesydneylima@gmail.com",
+            name: "Henrique Sydney Ribeiro Lima",
+            role: "SIGNER",
+          },
+        ],
+      );
+
+      await this.documentSignService.sendForSignature(documentId);
+      externalSignId = String(documentId);
+    }
+
+    // --- TRANSAÇÃO DO BANCO (APENAS ESCRITA) ---
+    return await prisma.$transaction(async (tx) => {
+      // 1. Atualiza o status do contrato
       const updatedContract = await this.contractRepository.updateStatus(
         contractId,
         newStatus,
-        tx
+        tx,
       );
 
-      if (newStatus === "SENT") {
-        const fileKey = updatedContract.fileKey;
-
-        if (!fileKey) {
-          throw new AppError(
-            "Arquivo do contrato não existe. retorne para o início da fase e gere um novo documento"
-          );
-        }
-
-        // 2. Baixar o arquivo do R2 para Buffer
-        // Você precisará de um método no seu StorageService que retorne o Buffer
-        const fileBuffer = await this.storageService.getFileBuffer(fileKey);
-
-        // 3. Criar o documento no Documenso
-        const documentId = await this.documentSignService.createDocument(
-          fileBuffer,
-          `Contrato - ${contract.project.client.tradeName}`,
-          [
-            {
-              email: contract.project.client.email,
-              name: contract.project.client.tradeName,
-              role: "SIGNER",
-            },
-            {
-              email: "henriquesydneylima@gmail.com",
-              name: "Henrique Sydney Ribeiro Lima",
-              role: "SIGNER",
-            },
-          ]
-        );
-
-        await this.documentSignService.sendForSignature(documentId);
-
+      // 2. Se enviou, grava o ID externo
+      if (externalSignId) {
         await tx.contract.update({
-          where: { id: updatedContract.id },
-          data: { externalSignId: String(documentId) },
+          where: { id: contractId },
+          data: { externalSignId },
         });
+      }
 
+      // 3. Lógica de status do projeto
+      if (newStatus === "SENT") {
         await this.changeProjectStatusUseCase.execute(
           {
-            projectId: updatedContract.projectId,
+            projectId: contract.projectId,
             newStatus: "WAITING_SIGNATURE",
-            data: {
-              observation: "Contrato enviado ao cliente para assinatura.",
-            },
-            userId: userId,
+            data: { observation: "Contrato enviado ao cliente." },
+            userId,
           },
-          tx
+          tx,
         );
-      }
-
-      if (newStatus === "SIGNED") {
-        // 1. Atualizar o projeto para fase de pagamento
+      } else if (newStatus === "SIGNED") {
         await this.changeProjectStatusUseCase.execute(
           {
-            projectId: updatedContract.projectId,
-            newStatus: "WAITING_DOWN_PAYMENT", // Exemplo de status
-            data: {
-              observation:
-                "Contrato assinado. Aguardando processamento de pagamento.",
-            },
-            userId: userId,
+            projectId: contract.projectId,
+            newStatus: "WAITING_DOWN_PAYMENT",
+            data: { observation: "Contrato assinado." },
+            userId,
           },
-          tx
+          tx,
         );
-      }
-
-      if (newStatus === "CANCELLED" || newStatus === "REJECTED") {
-        // Lógica de limpeza ou notificação se necessário
+      } else if (["CANCELLED", "REJECTED"].includes(newStatus)) {
         await this.changeProjectStatusUseCase.execute(
           {
-            projectId: updatedContract.projectId,
+            projectId: contract.projectId,
             newStatus: "PROPOSAL_GENERATED",
-            data: {
-              observation: `Contrato ${newStatus.toLowerCase()} via Documenso.`,
-            },
-            userId: userId,
+            data: { observation: `Contrato ${newStatus.toLowerCase()}.` },
+            userId,
           },
-          tx
+          tx,
         );
       }
 
+      // 4. Log de Auditoria
       await this.auditLogRepository.create(
         {
           entityType: "Project",
-          entityId: updatedContract.projectId ?? "",
+          entityId: contract.projectId,
           action: "CONTRACT_STATUS_CHANGE",
           userId,
           changes: { status: { from: contract.status, to: newStatus } },
-          metadata: {
-            contractId: contract.id,
-          },
+          metadata: { contractId: contract.id },
         },
-        tx
+        tx,
       );
-      return contract;
-    });
 
-    return updatedContract;
+      return updatedContract;
+    });
   }
 
   // Helper para validar a transição (State Machine Guard)
   private isValidTransition(
     current: ContractStatus,
-    next: ContractStatus
+    next: ContractStatus,
   ): boolean {
     // Se o status for o mesmo, permite (idempotência) ou bloqueia, depende da sua preferência.
     if (current === next) return true;

@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 import { projectFormSchema } from "@/schemas/projects/createProjectSchema";
 import { makeCreateProjectUseCase } from "@/useCases/projects/factories/makeCreateProjectUseCase";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { redirect, RedirectType } from "next/navigation";
 
 export async function createProjectAction(formData: FormData) {
   const session = await auth();
@@ -16,6 +16,11 @@ export async function createProjectAction(formData: FormData) {
     description: formData.get("description"),
     clientId: formData.get("clientId"),
     documents: formData.getAll("documents"),
+    priority: formData.get("priority"),
+    totalBudget: Number(formData.get("totalBudget")),
+    estimatedStartDate: formData.get("estimatedStartDate"),
+    endDate: formData.get("endDate"),
+    tags: formData.getAll("tags"),
   };
 
   // 2. Validação Zod
@@ -40,7 +45,7 @@ export async function createProjectAction(formData: FormData) {
       userId: session.user.id,
       organizationId: session.user.organizationId,
     });
-    
+
     projectId = project.id;
     cliendSlug = project.client.slug;
     slug = project.slug;
@@ -51,6 +56,9 @@ export async function createProjectAction(formData: FormData) {
   }
 
   if (projectId) {
-    redirect(`/clients/${cliendSlug}/projects/${slug}/overview`);
+    redirect(
+      `/clients/${cliendSlug}/projects/${slug}/overview`,
+      RedirectType.replace,
+    );
   }
 }

@@ -14,10 +14,10 @@ export class CancelProposalUseCase {
     private auditLogRepository: IAuditLogRepository
   ) {}
 
-  async execute({
-    id,
-    userId,
-  }: CancelProposalUseCaseParams): Promise<{ projectId: string }> {
+  async execute({ id, userId }: CancelProposalUseCaseParams): Promise<{
+    clientSlug: string;
+    projectSlug: string;
+  }> {
     const proposal = await this.proposalRepository.findById(id);
 
     if (!proposal) {
@@ -32,13 +32,13 @@ export class CancelProposalUseCase {
     );
 
     // Regra de negócio: Talvez impedir deletar propostas já ACEITAS?
-    if (proposal.status === "ACCEPTED") {
-      throw new Error("Não é possível excluir uma proposta aceita");
-    }
+    // if (proposal.status === "ACCEPTED") {
+    //   throw new Error("Não é possível excluir uma proposta aceita");
+    // }
 
-    if (proposal.status === "REJECTED") {
-      throw new Error("Não é possível excluir uma proposta rejeitada");
-    }
+    // if (proposal.status === "REJECTED") {
+    //   throw new Error("Não é possível excluir uma proposta rejeitada");
+    // }
 
     await prisma.$transaction(async (tx) => {
       await this.proposalRepository.cancel(id, tx);
@@ -57,6 +57,9 @@ export class CancelProposalUseCase {
       );
     });
 
-    return { projectId: proposal.projectId };
+    return {
+      clientSlug: proposal.project.client.slug,
+      projectSlug: proposal.project.slug,
+    };
   }
 }

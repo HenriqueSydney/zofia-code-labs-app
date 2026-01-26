@@ -1,9 +1,12 @@
 "use server";
 
 import { auth } from "@/auth";
+import { handleErrors } from "@/errors/handleErrors";
+import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 import { updateProjectSchema } from "@/schemas/projects/updateProjectSchema";
 import { makeUpdateProjectUseCase } from "@/useCases/projects/factories/makeUpdateProjectUseCase";
 import { revalidatePath } from "next/cache";
+import { redirect, RedirectType } from "next/navigation";
 
 export async function updateProjectAction(formData: FormData) {
   const session = await auth();
@@ -22,7 +25,11 @@ export async function updateProjectAction(formData: FormData) {
     name: formData.get("name"),
     description: formData.get("description"),
     clientId: formData.get("clientId"),
-    serviceTypeId: formData.get("serviceTypeId"),
+    priority: formData.get("priority"),
+    totalBudget: Number(formData.get("totalBudget")),
+    estimatedStartDate: formData.get("estimatedStartDate"),
+    endDate: formData.get("endDate"),
+    tags: formData.getAll("tags"),
   };
 
   const validation = updateProjectSchema.safeParse(rawData);
@@ -37,22 +44,27 @@ export async function updateProjectAction(formData: FormData) {
   });
 
   const useCase = makeUpdateProjectUseCase();
-
+  let project: Omit<ProjectWithDetails, "projectServices" | "proposal">;
   try {
-    await useCase.execute({
+    project = await useCase.execute({
       ...validation.data, // name, description, client...
       id,
       newFiles,
       userId: session.user.id,
+      organizationId: session.user.organizationId,
     });
+
+    revalidatePath("/projects");
+    revalidatePath(`/clients/${project.client.slug}/projects`);
   } catch (error) {
-    console.error(error);
-    return { error: "Erro ao atualizar o projeto." };
+    const errorMessage = handleErrors(error);
+    return { error: errorMessage };
   }
 
-  revalidatePath("/projects");
-  revalidatePath(`/projects/${id}`);
-
-  // Opcional: Redirecionar ou apenas retornar sucesso para mostrar um Toast
-  return { success: true, message: "Projeto atualizado com sucesso!" };
+  if (project) {
+    redirect(
+      `/clients/${project.client.slug}/projects/${project.slug}/overview`,
+      RedirectType.replace,
+    );
+  }
 }

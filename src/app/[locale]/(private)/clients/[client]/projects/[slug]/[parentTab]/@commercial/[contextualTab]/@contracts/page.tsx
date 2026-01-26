@@ -2,7 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreateNewContractButton } from "./CreateNewContractButton";
 import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 import { fetchContractHistory } from "@/actions/contract/fetchContractHistory";
-import { SuccessToastComponent } from "@/components/SuccessToastComponent";
 import { getParams } from "@/utils/getParams";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { AppError } from "@/errors/AppError";
@@ -27,7 +26,7 @@ export default async function ContractTab({ params }: IContractTab) {
     numberPerPage = 10,
   } = await getParams<{ slug: string; page: number; numberPerPage: number }>(
     params,
-    ["slug", "page", "numberPerPage"]
+    ["slug", "page", "numberPerPage"],
   );
   const [projectError, projectSuccess] = await operationWrapper<{
     project: ProjectWithDetails;
@@ -39,7 +38,7 @@ export default async function ContractTab({ params }: IContractTab) {
     },
     {
       cache: "no-cache",
-    }
+    },
   );
 
   if (projectError) throw new AppError("Falha ao tentar localizar o projeto");
@@ -57,7 +56,7 @@ export default async function ContractTab({ params }: IContractTab) {
     },
     {
       cache: "no-cache",
-    }
+    },
   );
 
   if (error) {
@@ -66,7 +65,6 @@ export default async function ContractTab({ params }: IContractTab) {
 
   return (
     <TabsContent value="contracts" className="mt-6">
-      <SuccessToastComponent />
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg">

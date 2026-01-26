@@ -128,6 +128,25 @@ export const ProjectStatus = {
 export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus]
 
 
+export const Priority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+} as const
+
+export type Priority = (typeof Priority)[keyof typeof Priority]
+
+
+export const ProjectHealth = {
+  ON_TRACK: 'ON_TRACK',
+  AT_RISK: 'AT_RISK',
+  OFF_TRACK: 'OFF_TRACK'
+} as const
+
+export type ProjectHealth = (typeof ProjectHealth)[keyof typeof ProjectHealth]
+
+
 export const BacklogPriority = {
   URGENT: 'URGENT',
   HIGH: 'HIGH',

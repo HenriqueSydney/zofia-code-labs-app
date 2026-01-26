@@ -3,7 +3,6 @@ import { TabsContent } from "@radix-ui/react-tabs";
 import { CreateNewProposalButton } from "./CreateNewProposalButton";
 import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 import { fetchProposalHistory } from "@/actions/proposal/fetchProposalHistory";
-import { SuccessToastComponent } from "@/components/SuccessToastComponent";
 import { getParams } from "@/utils/getParams";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { AppError } from "@/errors/AppError";
@@ -55,7 +54,6 @@ export default async function ProposalTab({ params }: IProposalTab) {
 
   return (
     <TabsContent value="proposals" className="mt-6">
-      <SuccessToastComponent />
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg">Histórico de Propostas</CardTitle>

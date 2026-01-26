@@ -1,5 +1,3 @@
-
-
 import { ReactNode } from "react";
 
 import {
@@ -26,8 +24,11 @@ export function Tooltip({
   return (
     <ShadnTooltip>
       <TooltipTrigger asChild>{children}</TooltipTrigger>
-      <TooltipContent className={cn("max-w-2xl whitespace-pre-line", className)} side={direction}>
-        <p>{description}</p>
+      <TooltipContent
+        className={cn("max-w-2xl whitespace-pre-line", className)}
+        side={direction}
+      >
+        <p className="whitespace-pre-line">{description}</p>
       </TooltipContent>
     </ShadnTooltip>
   );

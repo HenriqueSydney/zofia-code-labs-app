@@ -1,79 +1,107 @@
+import { handleErrors } from "@/errors/handleErrors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IProjectsRepository } from "@/repositories/IProjectsRepository";
 import { IS3StorageService } from "@/services/s3Client/IS3StorageService";
+import { prepareFileToUpload } from "@/utils/prepareFileToUpload";
+import { Priority, ProjectHealth } from "@/generated/prisma/client";
+import { date } from "@/lib/dayjs";
 
 interface UpdateProjectRequest {
   id: string;
+  userId: string;
+  organizationId: string;
+
+  // Dados de atualização
   name?: string;
   description?: string;
   clientId?: string;
-  serviceTypeId?: string;
-  newFiles?: File[]; // Apenas novos arquivos a serem adicionados
-  userId: string;
+  priority?: Priority;
+  health?: ProjectHealth;
+  totalBudget?: number;
+  estimatedStartDate?: string; // string que virá do form (Date input)
+  endDate?: string; // string que virá do form (Date input)
+  tags?: string[];
+
+  newFiles?: File[]; // Arquivos novos
 }
 
 export class UpdateProjectUseCase {
   constructor(
     private projectsRepository: IProjectsRepository,
-    private storageService: IS3StorageService
+    private storageService: IS3StorageService,
   ) {}
 
   async execute(request: UpdateProjectRequest) {
-    const { newFiles, id, userId, ...updateData } = request;
+    const { newFiles, id, userId, organizationId, ...updateData } = request;
 
-    const projectExists = await this.projectsRepository.findById(id);
-    if (!projectExists) {
-      throw new Error("Projeto não encontrado.");
-    }
+    try {
+      // 1. Verifica existência e permissões
+      const projectExists = await this.projectsRepository.findById(id);
 
-    await checkUserPermissionForAsset(
-      "project",
-      userId,
-      projectExists,
-      "UPDATE"
-    );
+      if (!projectExists) {
+        throw new Error("Projeto não encontrado.");
+      }
 
-    let uploadedDocuments: any = undefined;
-    // 2. Upload APENAS dos novos arquivos para o R2
-    if (newFiles && newFiles.length > 0) {
-      // Usa o ID do projeto para organizar a pasta, mantendo consistência
-      const folderName = `projects/${projectExists.id}`;
+      await checkUserPermissionForAsset(
+        "project",
+        userId,
+        projectExists,
+        "UPDATE",
+      );
 
-      const uploadPromises = newFiles.map(async (file) => {
-        const key = `${folderName}/${Date.now()}-${file.name}`;
-        const arrayBuffer = await file.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
+      // 2. Processamento de Arquivos (Idêntico ao Create)
+      let uploadedDocuments: any[] = [];
 
-        // Upload
-        const url = await this.storageService.upload(
-          buffer as any,
-          key,
-          file.type
+      if (newFiles && newFiles.length > 0) {
+        // Mantém a consistência usando o slug JÁ EXISTENTE do projeto para a pasta
+        const folderName = `projects/${projectExists.slug}`;
+
+        // Prepara os arquivos (Buffer, nome limpo, mimeType)
+        const preparedFiles = await Promise.all(
+          newFiles.map((file) => prepareFileToUpload({ file, folderName })),
         );
 
-        // Extração da extensão
-        const extension = file.name.split(".").pop() || "";
+        // Upload para o S3
+        uploadedDocuments = await Promise.all(
+          preparedFiles.map(async (p) => {
+            const uploadResult = await this.storageService.upload(
+              p.buffer,
+              p.key,
+              p.mimeType,
+            );
 
-        // Retorna o objeto com os metadados
-        return {
-          url: url,
-          originalName: file.name,
-          extension: extension,
-        };
+            return {
+              url: uploadResult.key, // Salva a Key retornada pelo S3/R2
+              originalName: p.originalName,
+              extension: p.extension,
+            };
+          }),
+        );
+      }
+
+      // 3. Atualiza no banco
+      // Tratamento de datas se vierem como string do formulário
+      const estimatedStartDate = updateData.estimatedStartDate
+        ? date(updateData.estimatedStartDate).toDate()
+        : undefined;
+
+      const endDate = updateData.endDate
+        ? new Date(updateData.endDate)
+        : undefined;
+
+      const project = await this.projectsRepository.update({
+        id,
+        ...updateData,
+        estimatedStartDate,
+        endDate,
+        // Só passa documents se houver novos uploads
+        documents: uploadedDocuments.length > 0 ? uploadedDocuments : undefined,
       });
 
-      uploadedDocuments = await Promise.all(uploadPromises);
+      return project;
+    } catch (error) {
+      handleErrors(error);
+      throw error;
     }
-
-    // 3. Atualiza no banco
-    // Passamos os dados de texto e o array de NOVAS urls.
-    // O Repositório deve ser inteligente para fazer o "connect" ou "create" dessas novas URLs.
-    const project = await this.projectsRepository.update({
-      id,
-      ...updateData,
-      documents: uploadedDocuments.length > 0 ? uploadedDocuments : undefined,
-    });
-
-    return project;
   }
 }

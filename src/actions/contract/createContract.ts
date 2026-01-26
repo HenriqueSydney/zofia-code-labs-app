@@ -3,6 +3,7 @@
 import { auth } from "@/auth";
 import { Contract } from "@/generated/prisma/client";
 import { date } from "@/lib/dayjs";
+import { ContractWithProjectDetails } from "@/repositories/IContractRepository";
 import { createContractSchema } from "@/schemas/contract/createContractSchema";
 import { makeCreateContractUseCase } from "@/useCases/contract/factories/makeCreateContractUseCase";
 import { revalidatePath } from "next/cache";
@@ -31,7 +32,7 @@ export async function createContractAction(formData: FormData) {
   }
 
   const useCase = makeCreateContractUseCase();
-  let success: Contract;
+  let success: ContractWithProjectDetails;
   try {
     const contract = await useCase.execute({
       projectId: validation.data.projectId,
@@ -43,18 +44,19 @@ export async function createContractAction(formData: FormData) {
 
     success = contract;
   } catch (error) {
-    console.error(error);
     return { error: "Erro ao criar o contrato." };
   }
 
   if (success) {
-    revalidatePath(`/projects/${success.projectId}/project`);
     revalidatePath(
-      `/projects/${success.projectId}/project/commercial/contract`
+      `/clients/${success.project.client.slug}/projects/${success.project.slug}`,
+    );
+    revalidatePath(
+      `/clients/${success.project.client.slug}/projects/${success.project.slug}/commercial/contracts`,
     );
     redirect(
-      `/projects/${success.projectId}/project/commercial/contracts?success=true`,
-      RedirectType.push
+      `/clients/${success.project.client.slug}/projects/${success.project.slug}/commercial/contracts?success=true`,
+      RedirectType.push,
     );
   }
 }

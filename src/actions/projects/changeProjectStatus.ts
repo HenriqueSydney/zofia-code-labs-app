@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/auth"; // Seu helper de auth (NextAuth/Auth.js)
 import { PROJECT_STATUS_FLOW } from "@/domain/project/ProjectWorkflow";
 import { makeChangeProjectStatusUseCase } from "@/useCases/projects/factories/makeChangeProjectStatusUseCase";
+import { handleErrors } from "@/errors/handleErrors";
 
 const changeStatusSchema = z.object({
   projectId: z.cuid(),
@@ -35,7 +36,7 @@ export async function changeProjectStatusAction(formData: {
     const changeStatusUseCase = makeChangeProjectStatusUseCase();
 
     // 4. Executar Use Case
-    await changeStatusUseCase.execute({
+    const updatedProject = await changeStatusUseCase.execute({
       projectId,
       newStatus,
       userId: session.user.id,
@@ -43,14 +44,16 @@ export async function changeProjectStatusAction(formData: {
     });
 
     // 5. Revalidar cache do Next.js (atualiza a UI)
-    revalidatePath(`/clients/${client.slug}/projects/${slug}`);
+    revalidatePath(
+      `/clients/${updatedProject.clientId.slug}/projects/${updatedProject.slug}`
+    );
     revalidatePath("/projects");
 
     return { success: true, message: "Status atualizado com sucesso." };
-  } catch (err: any) {
-    console.error("Change Status Error:", err);
+  } catch (error) {
     return {
-      error: err.message || "Erro inexperado. Tente novamente mais tarde.",
+      error:
+        handleErrors(error) || "Erro inexperado. Tente novamente mais tarde.",
     };
   }
 }

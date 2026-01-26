@@ -106,7 +106,6 @@ export class CreateContractUseCase {
         status: data.documentTemplateId ? undefined : ContractStatus.REVIEW,
       };
 
-      console.log(contractData);
 
       const contract = await this.contractRepository.create(contractData, tx);
 

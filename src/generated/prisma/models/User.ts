@@ -237,6 +237,7 @@ export type UserWhereInput = {
   reviwedcontracts?: Prisma.ContractListRelationFilter
   backlogItems?: Prisma.BacklogItemListRelationFilter
   clientEmployees?: Prisma.ClientEmployeesListRelationFilter
+  projectMembers?: Prisma.ProjectMemberListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -265,6 +266,7 @@ export type UserOrderByWithRelationInput = {
   reviwedcontracts?: Prisma.ContractOrderByRelationAggregateInput
   backlogItems?: Prisma.BacklogItemOrderByRelationAggregateInput
   clientEmployees?: Prisma.ClientEmployeesOrderByRelationAggregateInput
+  projectMembers?: Prisma.ProjectMemberOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -296,6 +298,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   reviwedcontracts?: Prisma.ContractListRelationFilter
   backlogItems?: Prisma.BacklogItemListRelationFilter
   clientEmployees?: Prisma.ClientEmployeesListRelationFilter
+  projectMembers?: Prisma.ProjectMemberListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -355,6 +358,7 @@ export type UserCreateInput = {
   reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -382,6 +386,7 @@ export type UserUncheckedCreateInput = {
   reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -409,6 +414,7 @@ export type UserUpdateInput = {
   reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -436,6 +442,7 @@ export type UserUncheckedUpdateInput = {
   reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -747,6 +754,20 @@ export type UserUpdateOneRequiredWithoutCreatedProjectsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedProjectsInput, Prisma.UserUpdateWithoutCreatedProjectsInput>, Prisma.UserUncheckedUpdateWithoutCreatedProjectsInput>
 }
 
+export type UserCreateNestedOneWithoutProjectMembersInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProjectMembersInput, Prisma.UserUncheckedCreateWithoutProjectMembersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProjectMembersInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutProjectMembersNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProjectMembersInput, Prisma.UserUncheckedCreateWithoutProjectMembersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProjectMembersInput
+  upsert?: Prisma.UserUpsertWithoutProjectMembersInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProjectMembersInput, Prisma.UserUpdateWithoutProjectMembersInput>, Prisma.UserUncheckedUpdateWithoutProjectMembersInput>
+}
+
 export type UserCreateNestedOneWithoutProjectNotesInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutProjectNotesInput, Prisma.UserUncheckedCreateWithoutProjectNotesInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutProjectNotesInput
@@ -817,6 +838,7 @@ export type UserCreateWithoutOrganizationInput = {
   reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOrganizationInput = {
@@ -843,6 +865,7 @@ export type UserUncheckedCreateWithoutOrganizationInput = {
   reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOrganizationInput = {
@@ -911,6 +934,7 @@ export type UserCreateWithoutAccountsInput = {
   reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -937,6 +961,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -979,6 +1004,7 @@ export type UserUpdateWithoutAccountsInput = {
   reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -1005,6 +1031,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLoginHistoriesInput = {
@@ -1031,6 +1058,7 @@ export type UserCreateWithoutLoginHistoriesInput = {
   reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLoginHistoriesInput = {
@@ -1057,6 +1085,7 @@ export type UserUncheckedCreateWithoutLoginHistoriesInput = {
   reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLoginHistoriesInput = {
@@ -1099,6 +1128,7 @@ export type UserUpdateWithoutLoginHistoriesInput = {
   reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLoginHistoriesInput = {
@@ -1125,6 +1155,7 @@ export type UserUncheckedUpdateWithoutLoginHistoriesInput = {
   reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -1151,6 +1182,7 @@ export type UserCreateWithoutSessionsInput = {
   reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1177,6 +1209,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1219,6 +1252,7 @@ export type UserUpdateWithoutSessionsInput = {
   reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1245,6 +1279,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutClientEmployeesInput = {
@@ -1271,6 +1306,7 @@ export type UserCreateWithoutClientEmployeesInput = {
   approvedcontracts?: Prisma.ContractCreateNestedManyWithoutApprovedUserInput
   reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutAssigneeInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutClientEmployeesInput = {
@@ -1297,6 +1333,7 @@ export type UserUncheckedCreateWithoutClientEmployeesInput = {
   approvedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutApprovedUserInput
   reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutAssigneeInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutClientEmployeesInput = {
@@ -1339,6 +1376,7 @@ export type UserUpdateWithoutClientEmployeesInput = {
   approvedcontracts?: Prisma.ContractUpdateManyWithoutApprovedUserNestedInput
   reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUpdateManyWithoutAssigneeNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutClientEmployeesInput = {
@@ -1365,6 +1403,7 @@ export type UserUncheckedUpdateWithoutClientEmployeesInput = {
   approvedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutApprovedUserNestedInput
   reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutAssigneeNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCreatedProposalsInput = {
@@ -1391,6 +1430,7 @@ export type UserCreateWithoutCreatedProposalsInput = {
   reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedProposalsInput = {
@@ -1417,6 +1457,7 @@ export type UserUncheckedCreateWithoutCreatedProposalsInput = {
   reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedProposalsInput = {
@@ -1448,6 +1489,7 @@ export type UserCreateWithoutReviwedProposalsInput = {
   reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviwedProposalsInput = {
@@ -1474,6 +1516,7 @@ export type UserUncheckedCreateWithoutReviwedProposalsInput = {
   reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviwedProposalsInput = {
@@ -1505,6 +1548,7 @@ export type UserCreateWithoutApprovedProposalsInput = {
   reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApprovedProposalsInput = {
@@ -1531,6 +1575,7 @@ export type UserUncheckedCreateWithoutApprovedProposalsInput = {
   reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApprovedProposalsInput = {
@@ -1573,6 +1618,7 @@ export type UserUpdateWithoutCreatedProposalsInput = {
   reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedProposalsInput = {
@@ -1599,6 +1645,7 @@ export type UserUncheckedUpdateWithoutCreatedProposalsInput = {
   reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutReviwedProposalsInput = {
@@ -1636,6 +1683,7 @@ export type UserUpdateWithoutReviwedProposalsInput = {
   reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviwedProposalsInput = {
@@ -1662,6 +1710,7 @@ export type UserUncheckedUpdateWithoutReviwedProposalsInput = {
   reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutApprovedProposalsInput = {
@@ -1699,6 +1748,7 @@ export type UserUpdateWithoutApprovedProposalsInput = {
   reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApprovedProposalsInput = {
@@ -1725,6 +1775,7 @@ export type UserUncheckedUpdateWithoutApprovedProposalsInput = {
   reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCreatedcontractsInput = {
@@ -1751,6 +1802,7 @@ export type UserCreateWithoutCreatedcontractsInput = {
   reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedcontractsInput = {
@@ -1777,6 +1829,7 @@ export type UserUncheckedCreateWithoutCreatedcontractsInput = {
   reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedcontractsInput = {
@@ -1808,6 +1861,7 @@ export type UserCreateWithoutReviwedcontractsInput = {
   approvedcontracts?: Prisma.ContractCreateNestedManyWithoutApprovedUserInput
   backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviwedcontractsInput = {
@@ -1834,6 +1888,7 @@ export type UserUncheckedCreateWithoutReviwedcontractsInput = {
   approvedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutApprovedUserInput
   backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviwedcontractsInput = {
@@ -1865,6 +1920,7 @@ export type UserCreateWithoutApprovedcontractsInput = {
   reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApprovedcontractsInput = {
@@ -1891,6 +1947,7 @@ export type UserUncheckedCreateWithoutApprovedcontractsInput = {
   reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApprovedcontractsInput = {
@@ -1933,6 +1990,7 @@ export type UserUpdateWithoutCreatedcontractsInput = {
   reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedcontractsInput = {
@@ -1959,6 +2017,7 @@ export type UserUncheckedUpdateWithoutCreatedcontractsInput = {
   reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutReviwedcontractsInput = {
@@ -1996,6 +2055,7 @@ export type UserUpdateWithoutReviwedcontractsInput = {
   approvedcontracts?: Prisma.ContractUpdateManyWithoutApprovedUserNestedInput
   backlogItems?: Prisma.BacklogItemUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviwedcontractsInput = {
@@ -2022,6 +2082,7 @@ export type UserUncheckedUpdateWithoutReviwedcontractsInput = {
   approvedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutApprovedUserNestedInput
   backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutApprovedcontractsInput = {
@@ -2059,6 +2120,7 @@ export type UserUpdateWithoutApprovedcontractsInput = {
   reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApprovedcontractsInput = {
@@ -2085,6 +2147,7 @@ export type UserUncheckedUpdateWithoutApprovedcontractsInput = {
   reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCreatedProjectsInput = {
@@ -2111,6 +2174,7 @@ export type UserCreateWithoutCreatedProjectsInput = {
   reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedProjectsInput = {
@@ -2137,6 +2201,7 @@ export type UserUncheckedCreateWithoutCreatedProjectsInput = {
   reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedProjectsInput = {
@@ -2179,6 +2244,7 @@ export type UserUpdateWithoutCreatedProjectsInput = {
   reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedProjectsInput = {
@@ -2194,6 +2260,131 @@ export type UserUncheckedUpdateWithoutCreatedProjectsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  loginHistories?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  createdProposals?: Prisma.ProposalUncheckedUpdateManyWithoutCreatedUserNestedInput
+  approvedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutApprovedUserNestedInput
+  reviwedProposals?: Prisma.ProposalUncheckedUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUncheckedUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
+  backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutAssigneeNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutProjectMembersInput = {
+  id?: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutUsersInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  createdProjects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  loginHistories?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  projectNotes?: Prisma.ProjectNoteCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  createdProposals?: Prisma.ProposalCreateNestedManyWithoutCreatedUserInput
+  approvedProposals?: Prisma.ProposalCreateNestedManyWithoutApprovedUserInput
+  reviwedProposals?: Prisma.ProposalCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
+  backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutAssigneeInput
+  clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutProjectMembersInput = {
+  id?: string
+  organizationId: string
+  name?: string | null
+  email: string
+  emailVerified?: Date | string | null
+  passwordHash?: string | null
+  image?: string | null
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  createdProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  loginHistories?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  projectNotes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  createdProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutCreatedUserInput
+  approvedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutApprovedUserInput
+  reviwedProposals?: Prisma.ProposalUncheckedCreateNestedManyWithoutReviewUserInput
+  createdcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutCreatedUserInput
+  approvedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutApprovedUserInput
+  reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
+  backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutAssigneeInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutProjectMembersInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutProjectMembersInput, Prisma.UserUncheckedCreateWithoutProjectMembersInput>
+}
+
+export type UserUpsertWithoutProjectMembersInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutProjectMembersInput, Prisma.UserUncheckedUpdateWithoutProjectMembersInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProjectMembersInput, Prisma.UserUncheckedCreateWithoutProjectMembersInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutProjectMembersInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutProjectMembersInput, Prisma.UserUncheckedUpdateWithoutProjectMembersInput>
+}
+
+export type UserUpdateWithoutProjectMembersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutUsersNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  createdProjects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  loginHistories?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  projectNotes?: Prisma.ProjectNoteUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  createdProposals?: Prisma.ProposalUpdateManyWithoutCreatedUserNestedInput
+  approvedProposals?: Prisma.ProposalUpdateManyWithoutApprovedUserNestedInput
+  reviwedProposals?: Prisma.ProposalUpdateManyWithoutReviewUserNestedInput
+  createdcontracts?: Prisma.ContractUpdateManyWithoutCreatedUserNestedInput
+  approvedcontracts?: Prisma.ContractUpdateManyWithoutApprovedUserNestedInput
+  reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
+  backlogItems?: Prisma.BacklogItemUpdateManyWithoutAssigneeNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutProjectMembersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  createdProjects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   loginHistories?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
   projectNotes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -2231,6 +2422,7 @@ export type UserCreateWithoutProjectNotesInput = {
   reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProjectNotesInput = {
@@ -2257,6 +2449,7 @@ export type UserUncheckedCreateWithoutProjectNotesInput = {
   reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProjectNotesInput = {
@@ -2299,6 +2492,7 @@ export type UserUpdateWithoutProjectNotesInput = {
   reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProjectNotesInput = {
@@ -2325,6 +2519,7 @@ export type UserUncheckedUpdateWithoutProjectNotesInput = {
   reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBacklogItemsInput = {
@@ -2351,6 +2546,7 @@ export type UserCreateWithoutBacklogItemsInput = {
   approvedcontracts?: Prisma.ContractCreateNestedManyWithoutApprovedUserInput
   reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
   clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBacklogItemsInput = {
@@ -2377,6 +2573,7 @@ export type UserUncheckedCreateWithoutBacklogItemsInput = {
   approvedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutApprovedUserInput
   reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBacklogItemsInput = {
@@ -2419,6 +2616,7 @@ export type UserUpdateWithoutBacklogItemsInput = {
   approvedcontracts?: Prisma.ContractUpdateManyWithoutApprovedUserNestedInput
   reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
   clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBacklogItemsInput = {
@@ -2445,6 +2643,7 @@ export type UserUncheckedUpdateWithoutBacklogItemsInput = {
   approvedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutApprovedUserNestedInput
   reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -2471,6 +2670,7 @@ export type UserCreateWithoutAuditLogsInput = {
   reviwedcontracts?: Prisma.ContractCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -2497,6 +2697,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   reviwedcontracts?: Prisma.ContractUncheckedCreateNestedManyWithoutReviewUserInput
   backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutAssigneeInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -2539,6 +2740,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -2565,6 +2767,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyOrganizationInput = {
@@ -2603,6 +2806,7 @@ export type UserUpdateWithoutOrganizationInput = {
   reviwedcontracts?: Prisma.ContractUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrganizationInput = {
@@ -2629,6 +2833,7 @@ export type UserUncheckedUpdateWithoutOrganizationInput = {
   reviwedcontracts?: Prisma.ContractUncheckedUpdateManyWithoutReviewUserNestedInput
   backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutAssigneeNestedInput
   clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutOrganizationInput = {
@@ -2663,6 +2868,7 @@ export type UserCountOutputType = {
   reviwedcontracts: number
   backlogItems: number
   clientEmployees: number
+  projectMembers: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2680,6 +2886,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   reviwedcontracts?: boolean | UserCountOutputTypeCountReviwedcontractsArgs
   backlogItems?: boolean | UserCountOutputTypeCountBacklogItemsArgs
   clientEmployees?: boolean | UserCountOutputTypeCountClientEmployeesArgs
+  projectMembers?: boolean | UserCountOutputTypeCountProjectMembersArgs
 }
 
 /**
@@ -2790,6 +2997,13 @@ export type UserCountOutputTypeCountClientEmployeesArgs<ExtArgs extends runtime.
   where?: Prisma.ClientEmployeesWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountProjectMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectMemberWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2817,6 +3031,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   reviwedcontracts?: boolean | Prisma.User$reviwedcontractsArgs<ExtArgs>
   backlogItems?: boolean | Prisma.User$backlogItemsArgs<ExtArgs>
   clientEmployees?: boolean | Prisma.User$clientEmployeesArgs<ExtArgs>
+  projectMembers?: boolean | Prisma.User$projectMembersArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2878,6 +3093,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   reviwedcontracts?: boolean | Prisma.User$reviwedcontractsArgs<ExtArgs>
   backlogItems?: boolean | Prisma.User$backlogItemsArgs<ExtArgs>
   clientEmployees?: boolean | Prisma.User$clientEmployeesArgs<ExtArgs>
+  projectMembers?: boolean | Prisma.User$projectMembersArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2905,6 +3121,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     reviwedcontracts: Prisma.$ContractPayload<ExtArgs>[]
     backlogItems: Prisma.$BacklogItemPayload<ExtArgs>[]
     clientEmployees: Prisma.$ClientEmployeesPayload<ExtArgs>[]
+    projectMembers: Prisma.$ProjectMemberPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3326,6 +3543,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   reviwedcontracts<T extends Prisma.User$reviwedcontractsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviwedcontractsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   backlogItems<T extends Prisma.User$backlogItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$backlogItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BacklogItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   clientEmployees<T extends Prisma.User$clientEmployeesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$clientEmployeesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClientEmployeesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  projectMembers<T extends Prisma.User$projectMembersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$projectMembersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4094,6 +4312,30 @@ export type User$clientEmployeesArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.ClientEmployeesScalarFieldEnum | Prisma.ClientEmployeesScalarFieldEnum[]
+}
+
+/**
+ * User.projectMembers
+ */
+export type User$projectMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProjectMember
+   */
+  select?: Prisma.ProjectMemberSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProjectMember
+   */
+  omit?: Prisma.ProjectMemberOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectMemberInclude<ExtArgs> | null
+  where?: Prisma.ProjectMemberWhereInput
+  orderBy?: Prisma.ProjectMemberOrderByWithRelationInput | Prisma.ProjectMemberOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectMemberWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProjectMemberScalarFieldEnum | Prisma.ProjectMemberScalarFieldEnum[]
 }
 
 /**

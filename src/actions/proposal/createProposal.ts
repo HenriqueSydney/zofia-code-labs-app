@@ -1,8 +1,10 @@
 "use server";
 
 import { auth } from "@/auth";
+import { handleErrors } from "@/errors/handleErrors";
 import { Proposal } from "@/generated/prisma/client";
 import { date } from "@/lib/dayjs";
+import { ProposalCreateReturnWithDetails } from "@/repositories/IProposalRepository";
 import { createProposalSchema } from "@/schemas/proposal/createProposalSchema";
 import { makeCreateProposalUseCase } from "@/useCases/proposal/factories/makeCreateProposalUseCase";
 import { revalidatePath } from "next/cache";
@@ -44,7 +46,7 @@ export async function createProposalAction(formData: FormData) {
   }
 
   const useCase = makeCreateProposalUseCase();
-  let success: Proposal;
+  let success: ProposalCreateReturnWithDetails;
   try {
     const proposal = await useCase.execute({
       projectId: validation.data.projectId,
@@ -59,18 +61,19 @@ export async function createProposalAction(formData: FormData) {
 
     success = proposal;
   } catch (error) {
-    console.error(error);
-    return { error: "Erro ao criar a proposta comercial." };
+    return { error: handleErrors(error) };
   }
 
   if (success) {
-    revalidatePath(`/projects/${success.projectId}/project`);
     revalidatePath(
-      `/projects/${success.projectId}/project/commercial/proposal`
+      `/clients/${success.project.client.slug}/projects/${success.project.slug}`,
+    );
+    revalidatePath(
+      `/clients/${success.project.client.slug}/projects/${success.project.slug}/commercial/proposals`,
     );
     redirect(
-      `/projects/${success.projectId}/project/commercial/proposals?success=true`,
-      RedirectType.push
+      `/clients/${success.project.client.slug}/projects/${success.project.slug}/commercial/proposals?success=true`,
+      RedirectType.push,
     );
   }
 }

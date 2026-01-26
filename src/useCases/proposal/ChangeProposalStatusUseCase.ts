@@ -4,7 +4,6 @@ import { ProposalStatus } from "@/generated/prisma/enums";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { prisma } from "@/lib/prisma";
 import { IAuditLogRepository } from "@/repositories/IAuditLogRepository";
-import { IProjectsRepository } from "@/repositories/IProjectsRepository";
 import { IProposalRepository } from "@/repositories/IProposalRepository";
 import { ChangeProjectStatusUseCase } from "../projects/ChangeProjectStatusUseCase";
 
@@ -13,13 +12,14 @@ interface ChangeProposalStatusRequest {
   newStatus: ProposalStatus;
   userId: string;
   communicationChannel?: "whatsapp" | "email";
+  rejectFormDetails?: any;
 }
 
 export class ChangeProposalStatusUseCase {
   constructor(
     private proposalRepository: IProposalRepository,
     private chageProjectStatusUseCase: ChangeProjectStatusUseCase,
-    private auditLogRepository: IAuditLogRepository
+    private auditLogRepository: IAuditLogRepository,
   ) {}
 
   async execute({
@@ -27,6 +27,7 @@ export class ChangeProposalStatusUseCase {
     newStatus,
     userId,
     communicationChannel,
+    rejectFormDetails = {},
   }: ChangeProposalStatusRequest): Promise<Proposal> {
     const proposal = await this.proposalRepository.findById(proposalId);
 
@@ -37,7 +38,7 @@ export class ChangeProposalStatusUseCase {
     if (!this.isValidTransition(proposal.status, newStatus)) {
       throw new AppError(
         `Não é possível alterar o status de ${proposal.status} para ${newStatus}.`,
-        400
+        400,
       );
     }
 
@@ -45,14 +46,15 @@ export class ChangeProposalStatusUseCase {
       "proposal",
       userId,
       { proposal, organizationId: proposal.project.organizationId },
-      "UPDATE"
+      "UPDATE",
     );
 
     const updatedProposal = await prisma.$transaction(async (tx) => {
       const proposal = await this.proposalRepository.updateStatus(
         proposalId,
         newStatus,
-        tx
+        userId,
+        tx,
       );
 
       if (newStatus === "SENT" && communicationChannel) {
@@ -67,7 +69,7 @@ export class ChangeProposalStatusUseCase {
             data: { observation: "Proposta aceita pelo cliente." },
             userId: userId,
           },
-          tx
+          tx,
         );
       }
 
@@ -80,9 +82,10 @@ export class ChangeProposalStatusUseCase {
           changes: { status: { from: proposal.status, to: newStatus } },
           metadata: {
             proposalId: proposal.id,
+            ...rejectFormDetails,
           },
         },
-        tx
+        tx,
       );
       return proposal;
     });
@@ -93,7 +96,7 @@ export class ChangeProposalStatusUseCase {
   // Helper para validar a transição (State Machine Guard)
   private isValidTransition(
     current: ProposalStatus,
-    next: ProposalStatus
+    next: ProposalStatus,
   ): boolean {
     // Se o status for o mesmo, permite (idempotência) ou bloqueia, depende da sua preferência.
     if (current === next) return true;

@@ -63,6 +63,12 @@ export function ContractSigningDetails({
     readingStatus: getReadingStatusMapper(recipient.readStatus),
   }));
 
+  const hasNotSignRecipient =
+    signingDocument.recipients.findIndex(
+      (recipient) =>
+        recipient.role === "SIGNER" && recipient.signingStatus === "NOT_SIGNED",
+    ) > -1;
+
   function getDocumentRoleMapper(role: RecipientRole) {
     const roles: Record<RecipientRole, string> = {
       APPROVER: "Aprovador",
@@ -95,9 +101,9 @@ export function ContractSigningDetails({
   async function handleDownloadDocument() {
     // 1. Chame a sua rota de API ou Server Action que executa o getSignedDocument
     const [error, success] = await httpClient<Blob>(
-      `/api/document-sign/19/download`,
+      `/api/document-sign/${signingDocument.id}/download`,
       { method: "GET" },
-      "blob"
+      "blob",
     );
 
     if (error) throw new Error("Falha ao baixar arquivo");
@@ -111,7 +117,7 @@ export function ContractSigningDetails({
     // 4. Crie um elemento "a" invisível para disparar o download
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", `contrato-${19}.pdf`);
+    link.setAttribute("download", `${signingDocument.title}.pdf`);
 
     // 5. Adicione ao corpo, clique e remova
     document.body.appendChild(link);
@@ -136,14 +142,18 @@ export function ContractSigningDetails({
           <div className="p-4 border rounded-md col-span-3">
             <PDFViewer base64Data={signingDocument.documentData.data} />
           </div>
-          <div className="space-y-6 col-span-2">
+          <div className="space-y-6 col-span-2 max-h-[700px] overflow-y-auto pr-2 custom-scrollbar">
             <div className="p-4 border rounded-md space-y-4">
               <div className="space-y-4">
                 <h4 className="text-xl font-medium mb-0">
-                  Documento assinado por todos
+                  {!hasNotSignRecipient && "Documento assinado por todos"}
+                  {hasNotSignRecipient && "Há pendência de assinatura"}
                 </h4>
                 <span className="text-muted-foreground text-sm">
-                  Este documento foi assinado por todos os assinantes
+                  {!hasNotSignRecipient &&
+                    "Este documento foi assinado por todos os assinantes"}
+                  {hasNotSignRecipient &&
+                    "Algum dos assinantes ainda não realizou a assinatura do documento"}
                 </span>
               </div>
               <Separator />
@@ -167,7 +177,7 @@ export function ContractSigningDetails({
                   key={`information-${index}`}
                   className={cn(
                     "px-4 py-3 flex items-center justify-between",
-                    basicInformation.length > index + 1 && "border-b"
+                    basicInformation.length > index + 1 && "border-b",
                   )}
                 >
                   <span className="text-muted-foreground">{info.label}</span>
@@ -184,34 +194,36 @@ export function ContractSigningDetails({
                 return (
                   <div
                     key={`recipients-${index}`}
-                    className="px-4 py-3 flex items-center justify-between border-b "
+                    className="w-full px-4 py-3 flex items-center justify-between border-b "
                   >
-                    <div className="flex items-center gap-2">
+                    <div className="w-full flex items-center gap-2">
                       <UserAvatar size="small" />
-                      <div className="flex flex-col">
+                      <div className="flex flex-col flex-1">
                         <strong className="text-muted-foreground">
                           {recipient.name}
                         </strong>
                         <span className="text-muted-foreground">
                           {recipient.email}
                         </span>
-                        <span className="text-muted-foreground text-sm">
-                          {recipient.role}
-                        </span>
+                        <div className="w-full flex items-center justify-between mt-2">
+                          <span className="text-muted-foreground text-sm">
+                            {recipient.role}
+                          </span>
+                          {recipient.baseRole === "SIGNER" && (
+                            <Badge className="gap-2">
+                              <Signature className="w-4 h-4" />{" "}
+                              {recipient.signingStatus}
+                            </Badge>
+                          )}
+                          {recipient.baseRole !== "SIGNER" && (
+                            <Badge className="gap-2">
+                              <Eye className="w-4 h-4" />{" "}
+                              {recipient.readingStatus}
+                            </Badge>
+                          )}
+                        </div>
                       </div>
                     </div>
-
-                    {recipient.baseRole === "SIGNER" && (
-                      <Badge className="gap-2">
-                        <Signature className="w-4 h-4" />{" "}
-                        {recipient.signingStatus}
-                      </Badge>
-                    )}
-                    {recipient.baseRole !== "SIGNER" && (
-                      <Badge className="gap-2">
-                        <Eye className="w-4 h-4" /> {recipient.readingStatus}
-                      </Badge>
-                    )}
                   </div>
                 );
               })}

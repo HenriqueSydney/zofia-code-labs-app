@@ -19,6 +19,7 @@ export async function createServiceTypeAction(data: unknown) {
   const parsed = createServiceTypeSchema.safeParse(data);
 
   if (!parsed.success) {
+ 
     // Retorna o primeiro erro encontrado para simplificar
     return {
       success: false,

@@ -1,18 +1,20 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Package } from "lucide-react";
+import { FileCodeCorner, Package } from "lucide-react";
 
 import { SectionHeading } from "@/components/SectionHeading";
-import { CreateServiceTypeForm } from "./components/CreateServiceTypeForm";
+import { CreateServiceTypeForm } from "./_components/CreateServiceTypeForm";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { EmptyState } from "@/components/EmptyState";
 import { getParams } from "@/utils/getParams";
 import { fetchServiceTypeAction } from "@/actions/services/fetchServiceTypeAction";
 import { operationWrapper } from "@/lib/operationWrapper";
-import { ServiceTypeRemoveOrEdit } from "./components/ServiceTypeRemoveOrEdit";
+import { ServiceTypeRemoveOrEdit } from "./_components/ServiceTypeRemoveOrEdit";
 import { Tooltip } from "@/components/Tooltip";
 import { fetchServiceCategoryAction } from "@/actions/services/fetchServiceCategoryAction";
 import { QueryFilter } from "@/components/QueryFilter";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
 
 interface IParams {
   searchParams?: Promise<{ [key: string]: string | undefined }>;
@@ -30,7 +32,7 @@ const ServiceCatalog = async ({ searchParams }: IParams) => {
       },
       {
         cache: "no-cache",
-      }
+      },
     ),
     operationWrapper(
       "action",
@@ -40,7 +42,7 @@ const ServiceCatalog = async ({ searchParams }: IParams) => {
       },
       {
         cache: "no-cache",
-      }
+      },
     ),
   ]);
 
@@ -105,12 +107,18 @@ const ServiceCatalog = async ({ searchParams }: IParams) => {
               </CardHeader>
               <CardContent className="flex flex-1 flex-col justify-between space-y-3">
                 <div className="flex-1">
-                  <p className="text-sm text-muted-foreground line-clamp-2">
+                  <p className="text-sm text-muted-foreground line-clamp-3 whitespace-pre-line">
                     {service.description}
                   </p>
                 </div>
 
-                <div>
+                <div className="w-full flex items-center justify-between">
+                  <Link href={`${service.id}`}>
+                    <Button className="m-0" variant="outline" type="button">
+                      <FileCodeCorner className="w-4 h-4" />
+                      Detalhes do Serviço
+                    </Button>
+                  </Link>
                   <p className="text-xl font-bold text-primary text-end">
                     {formatCurrency(service.basePrice ?? 0)}
                   </p>

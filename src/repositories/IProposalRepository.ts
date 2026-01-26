@@ -45,19 +45,28 @@ export type ProposalWithDetails = Proposal & {
     template: { title: string | null } | null;
   } | null;
   project: {
+    slug: string;
     organizationId: string;
-    client: { tradeName: string; email: string };
+    client: { tradeName: string; email: string; slug: string };
   };
   createdUser: { name: string | null } | null;
   approvedUser: { name: string | null } | null;
   reviewUser: { name: string | null } | null;
 };
 
+export type ProposalCreateReturnWithDetails = Proposal & {
+  project: {
+    slug: string;
+    organizationId: string;
+    client: { tradeName: string; email: string; slug: string };
+  };
+};
+
 export interface IProposalRepository {
   create(
     data: CreateProposalDTO,
     tx?: Prisma.TransactionClient
-  ): Promise<Proposal>;
+  ): Promise<ProposalCreateReturnWithDetails>;
   findById(id: string): Promise<ProposalWithDetails | null>;
   findAllByClient(clientId: string): Promise<Proposal[]>;
   getHistory(projectId: string): Promise<ProposalWithDetails[]>;
@@ -69,6 +78,7 @@ export interface IProposalRepository {
   updateStatus(
     id: string,
     status: ProposalStatus,
+    userId: string,
     tx?: Prisma.TransactionClient
   ): Promise<Proposal>;
   cancel(id: string, tx?: Prisma.TransactionClient): Promise<void>;

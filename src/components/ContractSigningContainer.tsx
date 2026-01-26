@@ -20,6 +20,7 @@ import { ProposalDetails } from "@/components/ProposalDetail";
 import { Separator } from "./ui/separator";
 import { ContractSigningDetails } from "./ContractSigningDetails";
 import { cn } from "@/lib/utils";
+import { auth } from "@/auth";
 
 interface IContractSigningContainer {
   contractId: string;
@@ -28,16 +29,22 @@ interface IContractSigningContainer {
 export async function ContractSigningContainer({
   contractId,
 }: IContractSigningContainer) {
-  const [error, success] = await operationWrapper<ContractWithDetails>(
-    "action",
-    "getContractAction",
-    () => {
-      return getContractAction(contractId);
-    },
-    {
-      cache: "no-cache",
-    }
-  );
+  const [contractResponse, authData] = await Promise.all([
+    operationWrapper<ContractWithDetails>(
+      "action",
+      "getContractAction",
+      () => {
+        return getContractAction(contractId);
+      },
+      {
+        cache: "no-cache",
+      },
+    ),
+
+    auth(),
+  ]);
+
+  const [error, success] = contractResponse;
 
   if (error) {
     throw error;
@@ -55,22 +62,27 @@ export async function ContractSigningContainer({
     },
     {
       cache: "no-cache",
-    }
+    },
   );
 
   const signService = makeDocumentSignService();
 
-  const [tokens, document] = await Promise.all([
-    signService.getSigningTokens(success.externalSignId),
-    signService.getDocumentInfo(success.externalSignId),
-  ]);
+  const document = await signService.getDocumentInfo(success.externalSignId);
 
   const host = envVariables.DOCUMENSO_API_URL.split("/api")[0];
+
+  const signingToken = document.recipients.find(
+    (recipient) =>
+      // recipient.email === authData?.user.email &&
+      recipient.role === "SIGNER" && recipient.signingStatus === "NOT_SIGNED",
+  );
+
+
   return (
     <Card
       className={cn(
         "w-full shadow-lg border-t-4 border-t-primary",
-        document.status === "COMPLETED" ? "max-w-7xl" : "max-w-6xl"
+        document.status === "COMPLETED" ? "max-w-7xl" : "max-w-6xl",
       )}
     >
       <CardHeader className="text-center">
@@ -96,14 +108,14 @@ export async function ContractSigningContainer({
         <div
           className={cn(
             "bg-background rounded-[var(--radius)] border overflow-hidden ",
-            document.status === "COMPLETED" ? "" : "h-[800px]"
+            document.status === "COMPLETED" ? "" : "h-[800px]",
           )}
         >
-          {document.status !== "COMPLETED" && (
-            <DocumensoEmbedding signingToken={tokens[1].token} host={host} />
+          {document.status !== "COMPLETED" && signingToken && (
+            <DocumensoEmbedding signingToken={signingToken.token} host={host} />
           )}
 
-          {document.status === "COMPLETED" && (
+          {(document.status === "COMPLETED" || !signingToken) && (
             <ContractSigningDetails signingDocument={document} />
           )}
         </div>

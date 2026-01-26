@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
-import { ProjectTransitionDialog } from "@/components/features/projects/transitions/TransitionDialog";
+import { ProjectTransitionDialog } from "@/app/[locale]/(private)/clients/[client]/projects/[slug]/[parentTab]/@overview/transitions/TransitionDialog";
 import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 import { date } from "@/lib/dayjs";
 import { useState } from "react";
@@ -23,6 +23,7 @@ import { checkIfContractIsEditable } from "@/utils/checkIfContractIsEditable";
 import { getContractDownloadUrl } from "@/actions/contract/getContractDownloadUrl";
 import { toast } from "sonner";
 import { contractStatusBadge } from "@/mappers/contractStatusBadge";
+import { useSession } from "next-auth/react";
 
 interface IContractHistoryList {
   contract: ContractWithDetails;
@@ -33,6 +34,7 @@ export function ContractHistoryList({
   contract,
   project,
 }: IContractHistoryList) {
+  const { data: session } = useSession();
   const [showAdvanceDialog, setShowAdvanceDialog] = useState(false);
   const { isContractEditable } = checkIfContractIsEditable(contract);
   const nextStageContractLabel = project
@@ -53,6 +55,10 @@ export function ContractHistoryList({
     window.open(url, "_blank");
   };
 
+  const privateLink = `/clients/${contract.project.client.slug}/projects/${contract.project.slug}/commercial/contracts/signature/${contract.id}`;
+  const clientLink = `/clients/${contract.project.client.slug}/contracts/signature/${contract.id}`;
+  const finalLink = session?.user.role !== "OWNER" ? privateLink : clientLink;
+  
   return (
     <div key={contract.id} className="border rounded-lg p-4 space-y-3">
       <div className="flex flex-col">
@@ -98,7 +104,7 @@ export function ContractHistoryList({
               </p>
             </div>
           )}
-        </div>{" "}
+        </div>
       </div>
       <div className="flex items-start justify-end">
         <div className="flex items-center gap-2">
@@ -114,7 +120,7 @@ export function ContractHistoryList({
 
           {contract.externalSignId && (
             <Tooltip description="Visualizar assinaturas">
-              <Link href={`signature/${contract.id}`}>
+              <Link href={finalLink}>
                 <Button variant="ghost" size="icon">
                   <Signature className="h-4 w-4" />
                 </Button>

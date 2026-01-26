@@ -16,7 +16,7 @@ import {
 import { ProposalDetailsModal } from "./ProposalDetailsModal";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
-import { ProjectTransitionDialog } from "@/components/features/projects/transitions/TransitionDialog";
+import { ProjectTransitionDialog } from "@/app/[locale]/(private)/clients/[client]/projects/[slug]/[parentTab]/@overview/transitions/TransitionDialog";
 import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 import { Badge } from "@/components/ui/badge";
 import { date } from "@/lib/dayjs";
@@ -146,7 +146,7 @@ export function ProposalHistoryList({
             <p className="text-muted-foreground flex items-center gap-1">
               <Eye className="h-3 w-3" /> Revisado por
             </p>
-            <p className="font-medium">{proposal.reviewedBy}</p>
+            <p className="font-medium">{proposal.reviewUser?.name}</p>
             <p className="text-xs text-muted-foreground">
               {date(proposal.reviewedAt!).format("DD/MM/YYYY HH:mm")}
             </p>
@@ -157,7 +157,7 @@ export function ProposalHistoryList({
             <p className="text-muted-foreground flex items-center gap-1">
               <CheckCircle className="h-3 w-3" /> Aprovado por
             </p>
-            <p className="font-medium">{proposal.approvedBy}</p>
+            <p className="font-medium">{proposal.approvedUser?.name}</p>
             <p className="text-xs text-muted-foreground">
               {date(proposal.approvedAt!).format("DD/MM/YYYY HH:mm")}
             </p>

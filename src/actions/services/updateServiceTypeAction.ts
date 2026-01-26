@@ -1,11 +1,14 @@
 "use server";
 
 import { auth } from "@/auth";
-import { updateServiceTypeSchema } from "@/schemas/services/updateServiceTypeSchema";
+import {
+  UpdateServiceTypeSchema,
+  updateServiceTypeSchema,
+} from "@/schemas/services/updateServiceTypeSchema";
 import { makeUpdateServiceTypeUseCase } from "@/useCases/services/factories/makeUpdateServiceUseCase";
 import { revalidatePath } from "next/cache";
 
-export async function updateServiceTypeAction(data: unknown) {
+export async function updateServiceTypeAction(data: UpdateServiceTypeSchema) {
   const session = await auth();
 
   if (!session?.user?.organizationId) {
@@ -15,7 +18,10 @@ export async function updateServiceTypeAction(data: unknown) {
   const parsed = updateServiceTypeSchema.safeParse(data);
 
   if (!parsed.success) {
-    return { success: false, message: "Dados inválidos." };
+    return {
+      success: false,
+      message: parsed.error.issues[0].message || "Dados inválidos.",
+    };
   }
 
   const { id, basePrice, ...rest } = parsed.data;

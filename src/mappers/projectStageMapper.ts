@@ -18,7 +18,7 @@ import {
 
 export type ProjectStage = ProjectStatus;
 
-interface StageConfig {
+export interface StageConfig {
   key: ProjectStage;
   label: string;
   shortLabel: string;
@@ -90,11 +90,11 @@ export const commercialStages: StageConfig[] = [
 export const operationalStages: StageConfig[] = [
   {
     key: "PLANNED",
-    label: "Planejado",
-    shortLabel: "Planejado",
+    label: "Planejamento",
+    shortLabel: "Planejamento",
     icon: Calendar,
     color: "bg-cyan-500",
-    description: "Projeto planejado, pronto para iniciar",
+    description: "Projeto em planejamento em preparação para início",
     nextAction: "Iniciar Desenvolvimento",
   },
   {

@@ -13,6 +13,7 @@ interface IContractList {
 }
 
 export function ContractList({ contracts, totalOfRegister }: IContractList) {
+
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

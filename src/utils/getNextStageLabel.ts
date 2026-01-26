@@ -1,7 +1,7 @@
 import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 
 export const getProposalNextStepLabel = (
-  proposal: ProjectWithDetails["proposal"] | null
+  proposal: ProjectWithDetails["proposal"] | null,
 ) => {
   const proposalStatusLabel: Record<
     ProjectWithDetails["proposal"]["status"],
@@ -21,7 +21,7 @@ export const getProposalNextStepLabel = (
 };
 
 export const getContractNextStepLabel = (
-  contract: ProjectWithDetails["contract"] | null
+  contract: ProjectWithDetails["contract"] | null,
 ) => {
   const contractStatusLabel: Record<
     ProjectWithDetails["contract"]["status"],
@@ -32,9 +32,10 @@ export const getContractNextStepLabel = (
     SENT: "Confirmar assinatura",
     SIGNED: "Avançar para etapa de desenvolvimento",
     CANCELLED: "Proposta cancelada",
+    REJECTED: "Contrato rejeitado",
   };
 
   return !contract
-    ? "Gerar minuta de contrato"
+    ? contractStatusLabel["DRAFT"]
     : contractStatusLabel[contract.status];
 };

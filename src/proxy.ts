@@ -18,7 +18,7 @@ export default auth(async (req) => {
   const isApiRoute = nextUrl.pathname.startsWith("/api");
   const isAuthRoute = nextUrl.pathname.startsWith("/api/auth"); // Rotas internas do NextAuth
   const isDocumentSignRoute = nextUrl.pathname.includes(
-    "document-sign/webhook"
+    "/document-sign/webhook"
   );
 
   const requestHeaders = new Headers(req.headers);

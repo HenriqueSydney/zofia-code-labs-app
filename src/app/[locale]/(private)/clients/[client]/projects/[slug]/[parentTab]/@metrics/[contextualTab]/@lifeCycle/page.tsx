@@ -5,7 +5,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { SuccessToastComponent } from "@/components/SuccessToastComponent";
 import { getParams } from "@/utils/getParams";
 import { TabsContent } from "@/components/ui/tabs";
 import { CTAIntegration } from "../components/CTAIntegration";
@@ -110,7 +109,6 @@ export default async function LifeCycle({ params }: IParams) {
   if (doesProjectIsAlreadySetup === -1) {
     return (
       <TabsContent value="life-cycle" className="mt-6" forceMount>
-        <SuccessToastComponent />
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-lg">Ciclo de Vida</CardTitle>
@@ -141,7 +139,6 @@ export default async function LifeCycle({ params }: IParams) {
 
   return (
     <TabsContent value="life-cycle" className="mt-6">
-      <SuccessToastComponent />
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>

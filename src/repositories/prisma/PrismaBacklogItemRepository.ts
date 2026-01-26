@@ -64,7 +64,7 @@ export class PrismaBacklogItemsRepository implements IBacklogItemsRepository {
 
   async findAll(
     params: FindAllBacklogParams,
-    pagination?: Pagination
+    pagination?: Pagination,
   ): Promise<{
     totalOfRegisters: number;
     totalPoints: number;
@@ -188,7 +188,7 @@ export class PrismaBacklogItemsRepository implements IBacklogItemsRepository {
     itemId: string,
     newPositionIndex: number,
     allSortedIds: string[],
-    status?: BacklogStatus
+    status?: BacklogStatus,
   ): Promise<void> {
     // Pegamos o ID do item que ficaria ANTES e DEPOIS na nova posição
     const prevId = allSortedIds[newPositionIndex - 1];
@@ -217,5 +217,81 @@ export class PrismaBacklogItemsRepository implements IBacklogItemsRepository {
       where: { id: itemId },
       data: { order: newOrderValue, status },
     });
+  }
+
+  async syncFromServiceType(
+    projectId: string,
+    serviceTypeId: string,
+    organizationId: string,
+  ): Promise<number> {
+    // 1. Buscar os itens de origem (Template)
+    const sourceItems = await prisma.serviceDefaultBacklogItem.findMany({
+      where: {
+        serviceTypeId,
+        organizationId,
+        deletedAt: null, // Apenas itens ativos
+      },
+      orderBy: { order: "asc" },
+    });
+
+    if (sourceItems.length === 0) {
+      return 0;
+    }
+
+    // 2. Descobrir quais itens já foram importados neste projeto para não duplicar
+    const existingLinks = await prisma.backlogItem.findMany({
+      where: {
+        projectId,
+        serviceDefaultBacklogItemId: { in: sourceItems.map((i) => i.id) },
+      },
+      select: { serviceDefaultBacklogItemId: true },
+    });
+
+    const alreadyImportedIds = new Set(
+      existingLinks
+        .map((i) => i.serviceDefaultBacklogItemId)
+        .filter((id): id is string => id !== null),
+    );
+
+    // 3. Filtrar apenas os que ainda não foram importados
+    const itemsToCreate = sourceItems.filter(
+      (source) => !alreadyImportedIds.has(source.id),
+    );
+
+    if (itemsToCreate.length === 0) {
+      return 0;
+    }
+
+    // 4. Buscar a última ordem atual do projeto para anexar no final
+    const lastItemInProject = await prisma.backlogItem.findFirst({
+      where: { projectId },
+      orderBy: { order: "desc" },
+      select: { order: true },
+    });
+
+    let currentOrder = lastItemInProject ? lastItemInProject.order : 0;
+
+    // 5. Preparar dados para inserção em massa
+    const dataToInsert = itemsToCreate.map((source) => {
+      currentOrder += 1000; // Incrementa a ordem para manter a sequência original
+      return {
+        projectId,
+        organizationId,
+        title: source.title,
+        description: source.description,
+        points: source.points,
+        priority: source.priority,
+        status: "TODO" as BacklogStatus, // Status inicial padrão
+        serviceDefaultBacklogItemId: source.id, // Vínculo para evitar duplicação futura
+        order: currentOrder,
+      };
+    });
+
+    // 6. Executar criação em massa
+    const result = await prisma.backlogItem.createMany({
+      data: dataToInsert,
+    });
+
+    return result.count;
   }
 }

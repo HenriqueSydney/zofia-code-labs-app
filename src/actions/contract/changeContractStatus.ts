@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import { AppError } from "@/errors/AppError";
+import { handleErrors } from "@/errors/handleErrors";
 import { ContractStatus } from "@/generated/prisma/enums";
 import { makeChangeContractStatus } from "@/useCases/contract/factories/makeChangeContractStatusUseCase";
 import { revalidatePath } from "next/cache";
@@ -9,7 +10,7 @@ import { revalidatePath } from "next/cache";
 export async function changeContractStatusAction(
   contractId: string,
   newStatus: ContractStatus,
-  communicationChannel?: "whatsapp" | "email"
+  communicationChannel?: "whatsapp" | "email",
 ) {
   const session = await auth();
   if (!session?.user) return { error: "Não autorizado" };
@@ -28,18 +29,19 @@ export async function changeContractStatusAction(
       contractId,
       userId: session.user.id,
       newStatus,
-      communicationChannel
+      communicationChannel,
     });
 
-    revalidatePath(`/projects/${updatedContract.projectId}/project`);
+    revalidatePath(
+      `/clients/${updatedContract.project.client.slug}/projects/${updatedContract.project.slug}`,
+    );
+    revalidatePath(
+      `/clients/${updatedContract.project.client.slug}/projects/${updatedContract.project.slug}/commercial/contracts`,
+    );
     return { result: true, message: "Proposta encaminhada para próxima fase" };
   } catch (error) {
-    console.error(error);
     return {
-      error:
-        error instanceof Error
-          ? error.message
-          : "Erro ao encaminhar a proposta para próxima fase. Tente novamente mais tarde",
+      error: handleErrors(error),
     };
   }
 }

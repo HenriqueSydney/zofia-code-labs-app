@@ -30,6 +30,6 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts",
     "src/useCases/projects/factories/makeCancelProjectUseCase.ts"
-  ],
+, "src/repositories/factories/makeServiceDefaultBacklogItemsRepository.ts"  ],
   "exclude": ["node_modules"]
 }

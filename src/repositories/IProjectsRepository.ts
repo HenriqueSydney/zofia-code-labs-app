@@ -2,10 +2,13 @@ import { DocumentInput } from "@/@types/DocumentInput";
 import { Pagination } from "@/@types/Pagination";
 import { PrismaToPlain } from "@/@types/PrismaToPlain";
 import {
+  Client,
   Contract,
+  Priority,
   Prisma,
   Project,
   ProjectDocuments,
+  ProjectHealth,
   ProjectServices,
   ProjectStatus,
   Proposal,
@@ -38,7 +41,17 @@ export interface ICreateProjectDTO {
   clientId: string;
   createdBy: string;
   organizationId: string;
-  // Alterado de string[] para DocumentInput[]
+
+  priority?: Priority;
+  health?: ProjectHealth;
+  tags?: string[];
+
+  totalBudget?: number;
+
+  // Permite passar null para limpar a data se necessário
+  estimatedStartDate?: Date | null;
+  startDate?: Date | null;
+  endDate?: Date | null;
   documents?: DocumentInput[];
 }
 
@@ -47,42 +60,57 @@ export interface IUpdateProjectDTO {
   name?: string;
   description?: string;
   clientId?: string;
-  // Alterado de string[] para DocumentInput[]
+
+  priority?: Priority;
+  health?: ProjectHealth;
+  tags?: string[];
+
+  totalBudget?: number;
+
+  // Permite passar null para limpar a data se necessário
+  estimatedStartDate?: Date | null;
+  startDate?: Date | null;
+  endDate?: Date | null;
+
   documents?: DocumentInput[];
 }
+
+export type UpdateProjectReturn = PrismaToPlain<Project> & {
+  client: Client;
+};
 
 export interface IProjectsRepository {
   create(
     data: ICreateProjectDTO,
-    tx?: Prisma.TransactionClient
+    tx?: Prisma.TransactionClient,
   ): Promise<Omit<ProjectWithDetails, "projectServices" | "proposal">>;
   findById(id: string): Promise<ProjectWithDetails | null>;
   findBySlug(slug: string): Promise<ProjectWithDetails | null>;
   findAll(
     params: FindAllParams,
-    pagination?: Pagination
+    pagination?: Pagination,
   ): Promise<{
     totalOfRegisters: number;
     projects: Omit<ProjectWithDetails, "projectServices" | "proposal">[];
   }>;
   update(
     data: IUpdateProjectDTO,
-    tx?: Prisma.TransactionClient
+    tx?: Prisma.TransactionClient,
   ): Promise<Omit<ProjectWithDetails, "projectServices" | "proposal">>;
   updateStatus(
     id: string,
     status: ProjectStatus,
-    tx?: Prisma.TransactionClient
-  ): Promise<Project>;
+    tx?: Prisma.TransactionClient,
+  ): Promise<UpdateProjectReturn>;
   cancel(id: string): Promise<void>;
   deleteDocument(documentId: string): Promise<ProjectDocuments | null>;
   addDocuments(
     projectId: string,
-    documents: DocumentInput[]
+    documents: DocumentInput[],
   ): Promise<Omit<ProjectWithDetails, "projectServices" | "proposal">>;
   updateProjectServices(
     projectId: string,
     serviceIds: string[],
-    tx?: Prisma.TransactionClient
+    tx?: Prisma.TransactionClient,
   ): Promise<void>;
 }

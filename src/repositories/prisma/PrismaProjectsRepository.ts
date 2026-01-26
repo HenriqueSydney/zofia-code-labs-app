@@ -5,6 +5,7 @@ import {
   IUpdateProjectDTO,
   ProjectWithDetails,
   FindAllParams,
+  UpdateProjectReturn,
 } from "../IProjectsRepository";
 import { Pagination } from "@/@types/Pagination";
 import {
@@ -15,13 +16,12 @@ import {
 } from "@/generated/prisma/client";
 import { getPaginationQuery } from "@/utils/getPaginationQuery";
 import { normalizePrisma } from "@/utils/normalizePrisma";
-import { PrismaToPlain } from "@/@types/PrismaToPlain";
 import { DocumentInput } from "@/@types/DocumentInput";
 
 export class PrismaProjectsRepository implements IProjectsRepository {
   async create(
     data: ICreateProjectDTO,
-    tx?: Prisma.TransactionClient
+    tx?: Prisma.TransactionClient,
   ): Promise<Omit<ProjectWithDetails, "projectServices" | "proposal">> {
     const client = tx || prisma;
     // Desestrutura 'documents' ao invés de 'documentUrls'
@@ -65,7 +65,10 @@ export class PrismaProjectsRepository implements IProjectsRepository {
         },
         projectDocuments: true,
         proposal: {
-          where: { isCurrent: true },
+          where: {
+            isCurrent: true,
+            status: { notIn: ["CANCELLED", "REJECTED"] },
+          },
           take: 1, // Otimização para pegar apenas a atual
           include: {
             items: true,
@@ -107,7 +110,10 @@ export class PrismaProjectsRepository implements IProjectsRepository {
         },
         projectDocuments: true,
         proposal: {
-          where: { isCurrent: true },
+          where: {
+            isCurrent: true,
+            status: { notIn: ["CANCELLED", "REJECTED"] },
+          },
           take: 1, // Otimização para pegar apenas a atual
           include: {
             items: true,
@@ -142,7 +148,7 @@ export class PrismaProjectsRepository implements IProjectsRepository {
 
   async findAll(
     params: FindAllParams,
-    pagination?: Pagination
+    pagination?: Pagination,
   ): Promise<{
     totalOfRegisters: number;
     projects: Omit<ProjectWithDetails, "projectServices">[];
@@ -207,7 +213,7 @@ export class PrismaProjectsRepository implements IProjectsRepository {
 
   async update(
     data: IUpdateProjectDTO,
-    tx?: Prisma.TransactionClient
+    tx?: Prisma.TransactionClient,
   ): Promise<Omit<ProjectWithDetails, "projectServices" | "proposal">> {
     const client = tx || prisma;
     // Ajuste para receber documents
@@ -231,7 +237,9 @@ export class PrismaProjectsRepository implements IProjectsRepository {
         projectDocuments: documentsOperation,
       },
       include: {
-        client: { select: { id: true, companyName: true } },
+        client: {
+          select: { id: true, companyName: true, slug: true, tradeName: true },
+        },
         projectDocuments: true,
       },
     });
@@ -242,10 +250,13 @@ export class PrismaProjectsRepository implements IProjectsRepository {
   async updateStatus(
     id: string,
     status: ProjectStatus,
-    tx?: Prisma.TransactionClient
-  ): Promise<PrismaToPlain<Project>> {
+    tx?: Prisma.TransactionClient,
+  ): Promise<UpdateProjectReturn> {
     const client = tx || prisma;
     const project = await client.project.update({
+      include: {
+        client: true,
+      },
       where: { id },
       data: { status },
     });
@@ -270,7 +281,7 @@ export class PrismaProjectsRepository implements IProjectsRepository {
 
   async addDocuments(
     projectId: string,
-    documents: DocumentInput[]
+    documents: DocumentInput[],
   ): Promise<Omit<ProjectWithDetails, "projectServices" | "proposal">> {
     const project = await prisma.project.update({
       where: { id: projectId },
@@ -295,7 +306,7 @@ export class PrismaProjectsRepository implements IProjectsRepository {
   async updateProjectServices(
     projectId: string,
     serviceIds: string[],
-    tx?: Prisma.TransactionClient
+    tx?: Prisma.TransactionClient,
   ): Promise<void> {
     const client = tx || prisma;
 

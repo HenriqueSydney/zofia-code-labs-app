@@ -21,7 +21,7 @@ export class PrismaServiceTypeRepository implements IServiceTypeRepository {
 
   async update(
     id: string,
-    data: Partial<CreateServiceDTO>
+    data: Partial<CreateServiceDTO>,
   ): Promise<PrismaToPlain<ServiceType>> {
     const serviceType = await prisma.serviceType.update({
       where: { id },
@@ -85,23 +85,28 @@ export class PrismaServiceTypeRepository implements IServiceTypeRepository {
 
   async findById(
     id: string,
-    organizationId: string
-  ): Promise<PrismaToPlain<ServiceType> | null> {
+    organizationId: string,
+  ): Promise<FetchServiceTypeWithCategory | null> {
     const serviceType = await prisma.serviceType.findFirst({
       where: {
         id,
         organizationId, // CLÁUSULA DE SEGURANÇA MULTI-TENANT
       },
+      include: {
+        category: true,
+      },
     });
+
+    if (!serviceType) return null;
 
     const plain = normalizePrisma(serviceType);
 
-    return plain as PrismaToPlain<ServiceType> | null;
+    return plain;
   }
 
   async findManyByIds(
     serviceIds: string[],
-    organizationId: string
+    organizationId: string,
   ): Promise<PrismaToPlain<ServiceType>[]> {
     const serviceTypes = await prisma.serviceType.findMany({
       where: {
@@ -119,7 +124,7 @@ export class PrismaServiceTypeRepository implements IServiceTypeRepository {
 
   async findByName(
     name: string,
-    organizationId: string
+    organizationId: string,
   ): Promise<PrismaToPlain<ServiceType> | null> {
     const serviceType = await prisma.serviceType.findFirst({
       where: {

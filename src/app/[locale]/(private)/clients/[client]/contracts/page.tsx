@@ -24,12 +24,13 @@ export default async function Contracts({ params }: IContracts) {
     },
     {
       cache: "no-cache",
-    }
+    },
   );
 
   if (error) {
     throw new AppError("Falha ao tentar localizar o histórico de contratos");
   }
+
 
   return (
     <TabsContent value="contracts" className="mt-6">

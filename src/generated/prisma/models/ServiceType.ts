@@ -236,6 +236,7 @@ export type ServiceTypeWhereInput = {
   category?: Prisma.XOR<Prisma.ServiceCategoryScalarRelationFilter, Prisma.ServiceCategoryWhereInput>
   proposals?: Prisma.ProposalItemListRelationFilter
   projectServices?: Prisma.ProjectServicesListRelationFilter
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemListRelationFilter
 }
 
 export type ServiceTypeOrderByWithRelationInput = {
@@ -250,6 +251,7 @@ export type ServiceTypeOrderByWithRelationInput = {
   category?: Prisma.ServiceCategoryOrderByWithRelationInput
   proposals?: Prisma.ProposalItemOrderByRelationAggregateInput
   projectServices?: Prisma.ProjectServicesOrderByRelationAggregateInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemOrderByRelationAggregateInput
 }
 
 export type ServiceTypeWhereUniqueInput = Prisma.AtLeast<{
@@ -267,6 +269,7 @@ export type ServiceTypeWhereUniqueInput = Prisma.AtLeast<{
   category?: Prisma.XOR<Prisma.ServiceCategoryScalarRelationFilter, Prisma.ServiceCategoryWhereInput>
   proposals?: Prisma.ProposalItemListRelationFilter
   projectServices?: Prisma.ProjectServicesListRelationFilter
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemListRelationFilter
 }, "id">
 
 export type ServiceTypeOrderByWithAggregationInput = {
@@ -307,6 +310,7 @@ export type ServiceTypeCreateInput = {
   category: Prisma.ServiceCategoryCreateNestedOneWithoutServiceTypesInput
   proposals?: Prisma.ProposalItemCreateNestedManyWithoutServiceTypeInput
   projectServices?: Prisma.ProjectServicesCreateNestedManyWithoutServiceTypeInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutServiceTypeInput
 }
 
 export type ServiceTypeUncheckedCreateInput = {
@@ -319,6 +323,7 @@ export type ServiceTypeUncheckedCreateInput = {
   active?: boolean
   proposals?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutServiceTypeInput
   projectServices?: Prisma.ProjectServicesUncheckedCreateNestedManyWithoutServiceTypeInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutServiceTypeInput
 }
 
 export type ServiceTypeUpdateInput = {
@@ -331,6 +336,7 @@ export type ServiceTypeUpdateInput = {
   category?: Prisma.ServiceCategoryUpdateOneRequiredWithoutServiceTypesNestedInput
   proposals?: Prisma.ProposalItemUpdateManyWithoutServiceTypeNestedInput
   projectServices?: Prisma.ProjectServicesUpdateManyWithoutServiceTypeNestedInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutServiceTypeNestedInput
 }
 
 export type ServiceTypeUncheckedUpdateInput = {
@@ -343,6 +349,7 @@ export type ServiceTypeUncheckedUpdateInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   proposals?: Prisma.ProposalItemUncheckedUpdateManyWithoutServiceTypeNestedInput
   projectServices?: Prisma.ProjectServicesUncheckedUpdateManyWithoutServiceTypeNestedInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutServiceTypeNestedInput
 }
 
 export type ServiceTypeCreateManyInput = {
@@ -522,6 +529,20 @@ export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
+export type ServiceTypeCreateNestedOneWithoutServiceDefaultBacklogItemsInput = {
+  create?: Prisma.XOR<Prisma.ServiceTypeCreateWithoutServiceDefaultBacklogItemsInput, Prisma.ServiceTypeUncheckedCreateWithoutServiceDefaultBacklogItemsInput>
+  connectOrCreate?: Prisma.ServiceTypeCreateOrConnectWithoutServiceDefaultBacklogItemsInput
+  connect?: Prisma.ServiceTypeWhereUniqueInput
+}
+
+export type ServiceTypeUpdateOneRequiredWithoutServiceDefaultBacklogItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.ServiceTypeCreateWithoutServiceDefaultBacklogItemsInput, Prisma.ServiceTypeUncheckedCreateWithoutServiceDefaultBacklogItemsInput>
+  connectOrCreate?: Prisma.ServiceTypeCreateOrConnectWithoutServiceDefaultBacklogItemsInput
+  upsert?: Prisma.ServiceTypeUpsertWithoutServiceDefaultBacklogItemsInput
+  connect?: Prisma.ServiceTypeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ServiceTypeUpdateToOneWithWhereWithoutServiceDefaultBacklogItemsInput, Prisma.ServiceTypeUpdateWithoutServiceDefaultBacklogItemsInput>, Prisma.ServiceTypeUncheckedUpdateWithoutServiceDefaultBacklogItemsInput>
+}
+
 export type ServiceTypeCreateNestedOneWithoutProposalsInput = {
   create?: Prisma.XOR<Prisma.ServiceTypeCreateWithoutProposalsInput, Prisma.ServiceTypeUncheckedCreateWithoutProposalsInput>
   connectOrCreate?: Prisma.ServiceTypeCreateOrConnectWithoutProposalsInput
@@ -559,6 +580,7 @@ export type ServiceTypeCreateWithoutOrganizationInput = {
   category: Prisma.ServiceCategoryCreateNestedOneWithoutServiceTypesInput
   proposals?: Prisma.ProposalItemCreateNestedManyWithoutServiceTypeInput
   projectServices?: Prisma.ProjectServicesCreateNestedManyWithoutServiceTypeInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutServiceTypeInput
 }
 
 export type ServiceTypeUncheckedCreateWithoutOrganizationInput = {
@@ -570,6 +592,7 @@ export type ServiceTypeUncheckedCreateWithoutOrganizationInput = {
   active?: boolean
   proposals?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutServiceTypeInput
   projectServices?: Prisma.ProjectServicesUncheckedCreateNestedManyWithoutServiceTypeInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutServiceTypeInput
 }
 
 export type ServiceTypeCreateOrConnectWithoutOrganizationInput = {
@@ -620,6 +643,7 @@ export type ServiceTypeCreateWithoutCategoryInput = {
   organization: Prisma.OrganizationCreateNestedOneWithoutServiceTypesInput
   proposals?: Prisma.ProposalItemCreateNestedManyWithoutServiceTypeInput
   projectServices?: Prisma.ProjectServicesCreateNestedManyWithoutServiceTypeInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutServiceTypeInput
 }
 
 export type ServiceTypeUncheckedCreateWithoutCategoryInput = {
@@ -631,6 +655,7 @@ export type ServiceTypeUncheckedCreateWithoutCategoryInput = {
   active?: boolean
   proposals?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutServiceTypeInput
   projectServices?: Prisma.ProjectServicesUncheckedCreateNestedManyWithoutServiceTypeInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutServiceTypeInput
 }
 
 export type ServiceTypeCreateOrConnectWithoutCategoryInput = {
@@ -659,6 +684,70 @@ export type ServiceTypeUpdateManyWithWhereWithoutCategoryInput = {
   data: Prisma.XOR<Prisma.ServiceTypeUpdateManyMutationInput, Prisma.ServiceTypeUncheckedUpdateManyWithoutCategoryInput>
 }
 
+export type ServiceTypeCreateWithoutServiceDefaultBacklogItemsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  basePrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  active?: boolean
+  organization: Prisma.OrganizationCreateNestedOneWithoutServiceTypesInput
+  category: Prisma.ServiceCategoryCreateNestedOneWithoutServiceTypesInput
+  proposals?: Prisma.ProposalItemCreateNestedManyWithoutServiceTypeInput
+  projectServices?: Prisma.ProjectServicesCreateNestedManyWithoutServiceTypeInput
+}
+
+export type ServiceTypeUncheckedCreateWithoutServiceDefaultBacklogItemsInput = {
+  id?: string
+  organizationId: string
+  categoryId: string
+  name: string
+  description?: string | null
+  basePrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  active?: boolean
+  proposals?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutServiceTypeInput
+  projectServices?: Prisma.ProjectServicesUncheckedCreateNestedManyWithoutServiceTypeInput
+}
+
+export type ServiceTypeCreateOrConnectWithoutServiceDefaultBacklogItemsInput = {
+  where: Prisma.ServiceTypeWhereUniqueInput
+  create: Prisma.XOR<Prisma.ServiceTypeCreateWithoutServiceDefaultBacklogItemsInput, Prisma.ServiceTypeUncheckedCreateWithoutServiceDefaultBacklogItemsInput>
+}
+
+export type ServiceTypeUpsertWithoutServiceDefaultBacklogItemsInput = {
+  update: Prisma.XOR<Prisma.ServiceTypeUpdateWithoutServiceDefaultBacklogItemsInput, Prisma.ServiceTypeUncheckedUpdateWithoutServiceDefaultBacklogItemsInput>
+  create: Prisma.XOR<Prisma.ServiceTypeCreateWithoutServiceDefaultBacklogItemsInput, Prisma.ServiceTypeUncheckedCreateWithoutServiceDefaultBacklogItemsInput>
+  where?: Prisma.ServiceTypeWhereInput
+}
+
+export type ServiceTypeUpdateToOneWithWhereWithoutServiceDefaultBacklogItemsInput = {
+  where?: Prisma.ServiceTypeWhereInput
+  data: Prisma.XOR<Prisma.ServiceTypeUpdateWithoutServiceDefaultBacklogItemsInput, Prisma.ServiceTypeUncheckedUpdateWithoutServiceDefaultBacklogItemsInput>
+}
+
+export type ServiceTypeUpdateWithoutServiceDefaultBacklogItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutServiceTypesNestedInput
+  category?: Prisma.ServiceCategoryUpdateOneRequiredWithoutServiceTypesNestedInput
+  proposals?: Prisma.ProposalItemUpdateManyWithoutServiceTypeNestedInput
+  projectServices?: Prisma.ProjectServicesUpdateManyWithoutServiceTypeNestedInput
+}
+
+export type ServiceTypeUncheckedUpdateWithoutServiceDefaultBacklogItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proposals?: Prisma.ProposalItemUncheckedUpdateManyWithoutServiceTypeNestedInput
+  projectServices?: Prisma.ProjectServicesUncheckedUpdateManyWithoutServiceTypeNestedInput
+}
+
 export type ServiceTypeCreateWithoutProposalsInput = {
   id?: string
   name: string
@@ -668,6 +757,7 @@ export type ServiceTypeCreateWithoutProposalsInput = {
   organization: Prisma.OrganizationCreateNestedOneWithoutServiceTypesInput
   category: Prisma.ServiceCategoryCreateNestedOneWithoutServiceTypesInput
   projectServices?: Prisma.ProjectServicesCreateNestedManyWithoutServiceTypeInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutServiceTypeInput
 }
 
 export type ServiceTypeUncheckedCreateWithoutProposalsInput = {
@@ -679,6 +769,7 @@ export type ServiceTypeUncheckedCreateWithoutProposalsInput = {
   basePrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   active?: boolean
   projectServices?: Prisma.ProjectServicesUncheckedCreateNestedManyWithoutServiceTypeInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutServiceTypeInput
 }
 
 export type ServiceTypeCreateOrConnectWithoutProposalsInput = {
@@ -706,6 +797,7 @@ export type ServiceTypeUpdateWithoutProposalsInput = {
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutServiceTypesNestedInput
   category?: Prisma.ServiceCategoryUpdateOneRequiredWithoutServiceTypesNestedInput
   projectServices?: Prisma.ProjectServicesUpdateManyWithoutServiceTypeNestedInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutServiceTypeNestedInput
 }
 
 export type ServiceTypeUncheckedUpdateWithoutProposalsInput = {
@@ -717,6 +809,7 @@ export type ServiceTypeUncheckedUpdateWithoutProposalsInput = {
   basePrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   projectServices?: Prisma.ProjectServicesUncheckedUpdateManyWithoutServiceTypeNestedInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutServiceTypeNestedInput
 }
 
 export type ServiceTypeCreateWithoutProjectServicesInput = {
@@ -728,6 +821,7 @@ export type ServiceTypeCreateWithoutProjectServicesInput = {
   organization: Prisma.OrganizationCreateNestedOneWithoutServiceTypesInput
   category: Prisma.ServiceCategoryCreateNestedOneWithoutServiceTypesInput
   proposals?: Prisma.ProposalItemCreateNestedManyWithoutServiceTypeInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutServiceTypeInput
 }
 
 export type ServiceTypeUncheckedCreateWithoutProjectServicesInput = {
@@ -739,6 +833,7 @@ export type ServiceTypeUncheckedCreateWithoutProjectServicesInput = {
   basePrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   active?: boolean
   proposals?: Prisma.ProposalItemUncheckedCreateNestedManyWithoutServiceTypeInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutServiceTypeInput
 }
 
 export type ServiceTypeCreateOrConnectWithoutProjectServicesInput = {
@@ -766,6 +861,7 @@ export type ServiceTypeUpdateWithoutProjectServicesInput = {
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutServiceTypesNestedInput
   category?: Prisma.ServiceCategoryUpdateOneRequiredWithoutServiceTypesNestedInput
   proposals?: Prisma.ProposalItemUpdateManyWithoutServiceTypeNestedInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutServiceTypeNestedInput
 }
 
 export type ServiceTypeUncheckedUpdateWithoutProjectServicesInput = {
@@ -777,6 +873,7 @@ export type ServiceTypeUncheckedUpdateWithoutProjectServicesInput = {
   basePrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   proposals?: Prisma.ProposalItemUncheckedUpdateManyWithoutServiceTypeNestedInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutServiceTypeNestedInput
 }
 
 export type ServiceTypeCreateManyOrganizationInput = {
@@ -797,6 +894,7 @@ export type ServiceTypeUpdateWithoutOrganizationInput = {
   category?: Prisma.ServiceCategoryUpdateOneRequiredWithoutServiceTypesNestedInput
   proposals?: Prisma.ProposalItemUpdateManyWithoutServiceTypeNestedInput
   projectServices?: Prisma.ProjectServicesUpdateManyWithoutServiceTypeNestedInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutServiceTypeNestedInput
 }
 
 export type ServiceTypeUncheckedUpdateWithoutOrganizationInput = {
@@ -808,6 +906,7 @@ export type ServiceTypeUncheckedUpdateWithoutOrganizationInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   proposals?: Prisma.ProposalItemUncheckedUpdateManyWithoutServiceTypeNestedInput
   projectServices?: Prisma.ProjectServicesUncheckedUpdateManyWithoutServiceTypeNestedInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutServiceTypeNestedInput
 }
 
 export type ServiceTypeUncheckedUpdateManyWithoutOrganizationInput = {
@@ -837,6 +936,7 @@ export type ServiceTypeUpdateWithoutCategoryInput = {
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutServiceTypesNestedInput
   proposals?: Prisma.ProposalItemUpdateManyWithoutServiceTypeNestedInput
   projectServices?: Prisma.ProjectServicesUpdateManyWithoutServiceTypeNestedInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutServiceTypeNestedInput
 }
 
 export type ServiceTypeUncheckedUpdateWithoutCategoryInput = {
@@ -848,6 +948,7 @@ export type ServiceTypeUncheckedUpdateWithoutCategoryInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   proposals?: Prisma.ProposalItemUncheckedUpdateManyWithoutServiceTypeNestedInput
   projectServices?: Prisma.ProjectServicesUncheckedUpdateManyWithoutServiceTypeNestedInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutServiceTypeNestedInput
 }
 
 export type ServiceTypeUncheckedUpdateManyWithoutCategoryInput = {
@@ -867,11 +968,13 @@ export type ServiceTypeUncheckedUpdateManyWithoutCategoryInput = {
 export type ServiceTypeCountOutputType = {
   proposals: number
   projectServices: number
+  serviceDefaultBacklogItems: number
 }
 
 export type ServiceTypeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   proposals?: boolean | ServiceTypeCountOutputTypeCountProposalsArgs
   projectServices?: boolean | ServiceTypeCountOutputTypeCountProjectServicesArgs
+  serviceDefaultBacklogItems?: boolean | ServiceTypeCountOutputTypeCountServiceDefaultBacklogItemsArgs
 }
 
 /**
@@ -898,6 +1001,13 @@ export type ServiceTypeCountOutputTypeCountProjectServicesArgs<ExtArgs extends r
   where?: Prisma.ProjectServicesWhereInput
 }
 
+/**
+ * ServiceTypeCountOutputType without action
+ */
+export type ServiceTypeCountOutputTypeCountServiceDefaultBacklogItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ServiceDefaultBacklogItemWhereInput
+}
+
 
 export type ServiceTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -911,6 +1021,7 @@ export type ServiceTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   category?: boolean | Prisma.ServiceCategoryDefaultArgs<ExtArgs>
   proposals?: boolean | Prisma.ServiceType$proposalsArgs<ExtArgs>
   projectServices?: boolean | Prisma.ServiceType$projectServicesArgs<ExtArgs>
+  serviceDefaultBacklogItems?: boolean | Prisma.ServiceType$serviceDefaultBacklogItemsArgs<ExtArgs>
   _count?: boolean | Prisma.ServiceTypeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["serviceType"]>
 
@@ -954,6 +1065,7 @@ export type ServiceTypeInclude<ExtArgs extends runtime.Types.Extensions.Internal
   category?: boolean | Prisma.ServiceCategoryDefaultArgs<ExtArgs>
   proposals?: boolean | Prisma.ServiceType$proposalsArgs<ExtArgs>
   projectServices?: boolean | Prisma.ServiceType$projectServicesArgs<ExtArgs>
+  serviceDefaultBacklogItems?: boolean | Prisma.ServiceType$serviceDefaultBacklogItemsArgs<ExtArgs>
   _count?: boolean | Prisma.ServiceTypeCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ServiceTypeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -972,6 +1084,7 @@ export type $ServiceTypePayload<ExtArgs extends runtime.Types.Extensions.Interna
     category: Prisma.$ServiceCategoryPayload<ExtArgs>
     proposals: Prisma.$ProposalItemPayload<ExtArgs>[]
     projectServices: Prisma.$ProjectServicesPayload<ExtArgs>[]
+    serviceDefaultBacklogItems: Prisma.$ServiceDefaultBacklogItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1379,6 +1492,7 @@ export interface Prisma__ServiceTypeClient<T, Null = never, ExtArgs extends runt
   category<T extends Prisma.ServiceCategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ServiceCategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__ServiceCategoryClient<runtime.Types.Result.GetResult<Prisma.$ServiceCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   proposals<T extends Prisma.ServiceType$proposalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ServiceType$proposalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProposalItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projectServices<T extends Prisma.ServiceType$projectServicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ServiceType$projectServicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectServicesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  serviceDefaultBacklogItems<T extends Prisma.ServiceType$serviceDefaultBacklogItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ServiceType$serviceDefaultBacklogItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServiceDefaultBacklogItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1856,6 +1970,30 @@ export type ServiceType$projectServicesArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.ProjectServicesScalarFieldEnum | Prisma.ProjectServicesScalarFieldEnum[]
+}
+
+/**
+ * ServiceType.serviceDefaultBacklogItems
+ */
+export type ServiceType$serviceDefaultBacklogItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ServiceDefaultBacklogItem
+   */
+  select?: Prisma.ServiceDefaultBacklogItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ServiceDefaultBacklogItem
+   */
+  omit?: Prisma.ServiceDefaultBacklogItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ServiceDefaultBacklogItemInclude<ExtArgs> | null
+  where?: Prisma.ServiceDefaultBacklogItemWhereInput
+  orderBy?: Prisma.ServiceDefaultBacklogItemOrderByWithRelationInput | Prisma.ServiceDefaultBacklogItemOrderByWithRelationInput[]
+  cursor?: Prisma.ServiceDefaultBacklogItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ServiceDefaultBacklogItemScalarFieldEnum | Prisma.ServiceDefaultBacklogItemScalarFieldEnum[]
 }
 
 /**

@@ -5,11 +5,15 @@ import { ArrowLeft, Calendar, Clock, DollarSign, Users } from "lucide-react";
 import { SectionHeading } from "@/components/SectionHeading";
 import { StatusBadge } from "@/components/StatusBadge";
 import { StatsCard } from "@/components/StatsCard";
-import { ProjectTabs } from "./components/ProjectTabs";
+import { ProjectTabs } from "./_components/ProjectTabs";
 import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { getProjectBySlugAction } from "@/actions/projects/getProjectBySlug";
 import { AppError } from "@/errors/AppError";
+import { GoBackButton } from "@/components/GoBackButton";
+import { date } from "@/lib/dayjs";
+import { formatCurrency } from "@/utils/formatCurrency";
+import { getProjectHealthBadge } from "@/mappers/projectHealthMapper";
 
 interface LayoutProps {
   overview: React.ReactNode;
@@ -43,7 +47,7 @@ export default async function ProjectLayout({
     },
     {
       cache: "no-cache",
-    }
+    },
   );
 
   if (getProjectError) {
@@ -52,14 +56,52 @@ export default async function ProjectLayout({
 
   const project = getProjectSuccess.project;
 
+  const getDateDescription = (project: ProjectWithDetails) => {
+    const startDate = project.startDate
+      ? date(project.startDate)
+      : date(project.estimatedStartDate);
+
+    const endDate = project.endDate
+      ? date(project.endDate).format("DD/MM/YYYY")
+      : undefined;
+
+    if (endDate && startDate.isBefore(date())) {
+      return {
+        label: "Prazo para entrega (deadline)",
+        mainInformation: endDate,
+        description: `Inicio programado: ${startDate.format("DD/MM/YYYY")}`,
+      };
+    }
+
+    return {
+      label: project.startDate ? "Início" : "Previsão de Início",
+      mainInformation: startDate.format("DD/MM/YYYY"),
+      description: endDate,
+    };
+  };
+
+  const getBudgetIndicator = (project: ProjectWithDetails) => {
+    const totalBudget = Number(project.totalBudget);
+    const totalSpent = Number(project.totalSpent);
+
+    // Evita divisão por zero se o budget for 0
+    if (totalBudget === 0) return "text-gray-500";
+
+    const percentage = (totalSpent / totalBudget) * 100;
+
+    if (percentage > 90) return "bg-red-600/20"; // Crítico (> 90%)
+    if (percentage > 80) return "bg-orange-500/20"; // Alto Risco (> 80%)
+    if (percentage > 70) return "bg-yellow-600/20"; // Atenção (> 70%)
+
+    return "bg-green-600/20"; // Saudável (< 70%)
+  };
+
+  const deadlineCard = getDateDescription(project);
+
   return (
     <div className="space-y-6 mb-6">
-      <div className="flex gap-10">
-        <Link href="/projects" prefetch={false}>
-          <Button variant="ghost" size="icon">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </Link>
+      <div className="flex gap-5 items-start">
+        <GoBackButton withLabel={false} className="mt-2" />
         <SectionHeading
           title={project.name}
           description={`Cliente: ${project.client.companyName}`}
@@ -70,12 +112,26 @@ export default async function ProjectLayout({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatsCard label="Prazo" mainInformation="25/05/2025" Icon={Calendar} />
+        <StatsCard
+          label={deadlineCard.label}
+          mainInformation={deadlineCard.mainInformation}
+          description={deadlineCard.description}
+          Icon={Calendar}
+        />
         <StatsCard
           label="Orçamento"
-          mainInformation="R$ 100.000,00"
+          mainInformation={
+            project.totalBudget
+              ? formatCurrency(project.totalBudget)
+              : "R$ ---,--"
+          }
           Icon={DollarSign}
-          iconColor="bg-accent/10"
+          description={
+            project.remainingBudget
+              ? `Saldo: ${formatCurrency(project.remainingBudget)}`
+              : `Saldo: ${formatCurrency(project.totalBudget)}`
+          }
+          iconColor={getBudgetIndicator(project)}
         />
         <StatsCard label="Equipe" mainInformation="2" Icon={Users} />
         <StatsCard
@@ -83,6 +139,7 @@ export default async function ProjectLayout({
           mainInformation="70%"
           Icon={Clock}
           iconColor="bg-accent/10"
+          badge={getProjectHealthBadge(project.health)}
         />
       </div>
       <ProjectTabs>

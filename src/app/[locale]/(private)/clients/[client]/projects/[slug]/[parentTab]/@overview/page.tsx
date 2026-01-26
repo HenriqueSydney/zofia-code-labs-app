@@ -1,10 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
-import { ProjectNotes } from "./ProjectNotes";
 import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
-import { ProjectNotesForm } from "./ProjectNotesForm";
-import ProjectDocuments from "./ProjectDocuments";
-import ProjectActivityLog from "./ProjectActivityLog";
+import ProjectDocuments from "./_components/ProjectDocuments";
+import ProjectActivityLog from "./_components/ProjectActivityLog";
 import ProjectTimeline from "./ProjectTimeline";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { FetchServiceTypeWithCategory } from "@/repositories/IServiceTypeRepository";
@@ -14,6 +11,8 @@ import { AppError } from "@/errors/AppError";
 import { getProposalAction } from "@/actions/proposal/getProposal";
 import { ProposalWithDetails } from "@/repositories/IProposalRepository";
 import { getProjectBySlugAction } from "@/actions/projects/getProjectBySlug";
+import { ProjectSummary } from "./_components/ProjectSummary";
+import { ProjectNotesContainer } from "./_components/ProjectNotesContainer";
 
 interface IOverviewTab {
   params: Promise<{ slug: string }>;
@@ -35,7 +34,7 @@ export default async function OverviewTab({ params }: IOverviewTab) {
       },
       {
         cache: "no-cache",
-      }
+      },
     ),
     operationWrapper<{
       serviceTypes: FetchServiceTypeWithCategory[];
@@ -47,7 +46,7 @@ export default async function OverviewTab({ params }: IOverviewTab) {
       },
       {
         cache: "no-cache",
-      }
+      },
     ),
   ]);
 
@@ -72,7 +71,7 @@ export default async function OverviewTab({ params }: IOverviewTab) {
         },
         {
           cache: "no-cache",
-        }
+        },
       );
 
     if (!proposalError && proposalSuccess) contextualData = proposalSuccess;
@@ -82,47 +81,14 @@ export default async function OverviewTab({ params }: IOverviewTab) {
     <TabsContent value="overview" className="space-y-6 mt-6">
       {/* Summary Section */}
       <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2 h-full min-h-[400px] max-h-[400px] flex flex-col">
-          <CardHeader>
-            <CardTitle>Sumário do Projeto</CardTitle>
-          </CardHeader>
-          <CardContent className="overflow-y-auto space-y-6">
-            <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-              {project.description}
-            </p>
-            {project.projectServices.length > 0 && (
-              <>
-                <hr />
-                <p className="font-medium">Serviços associados ao projeto: </p>
-                <ul className="ml-10 list-disc text-muted-foreground">
-                  {project.projectServices.map((service) => (
-                    <li key={service.serviceTypeId}>
-                      {service.serviceType.name}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-          </CardContent>
-        </Card>
-
+        <ProjectSummary project={project} />
         <ProjectDocuments project={project} />
       </div>
       <ProjectTimeline project={project} contextData={contextualData} />
 
       {/* Observations Section */}
       <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2 h-full max-h-[800px] flex flex-col">
-          <CardHeader>
-            <CardTitle>Observações</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Add Observation */}
-            <ProjectNotesForm projectId={project.id} />
-            {/* Observations List */}
-            <ProjectNotes project={project} query="" />
-          </CardContent>
-        </Card>
+        <ProjectNotesContainer project={project} />
 
         <ProjectActivityLog />
       </div>

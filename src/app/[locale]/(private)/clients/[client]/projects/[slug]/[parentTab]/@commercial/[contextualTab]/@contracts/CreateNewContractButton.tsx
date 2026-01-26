@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { ContractCreationForm } from "@/components/features/projects/transitions/strategies/toWaitingSignatureSteps/ContractCreationForm";
+import { ContractCreationForm } from "@/app/[locale]/(private)/clients/[client]/projects/[slug]/[parentTab]/@overview/transitions/strategies/toWaitingSignatureSteps/ContractCreationForm";
 import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 import { useState } from "react";
 

@@ -14,7 +14,7 @@ export function SuccessToastComponent() {
       toast.success("Proposta gerada com sucesso!");
       const params = new URLSearchParams(searchParams.toString());
       params.delete("success");
-      router.push(`${pathname}?${params.toString()}`, { scroll: false });
+      router.push(`${pathname}?${params.toString()}`, { scroll: true });
     }
   }, [searchParams]);
 

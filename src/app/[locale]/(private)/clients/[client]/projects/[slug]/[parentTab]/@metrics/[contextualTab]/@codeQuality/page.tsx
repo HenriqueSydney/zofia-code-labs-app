@@ -5,7 +5,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { SuccessToastComponent } from "@/components/SuccessToastComponent";
 import { getParams } from "@/utils/getParams";
 import { TabsContent } from "@/components/ui/tabs";
 import { operationWrapper } from "@/lib/operationWrapper";
@@ -107,7 +106,6 @@ export default async function CodeQualityTab({ params }: IParams) {
   if (doesProjectIsAlreadySetup === -1) {
     return (
       <TabsContent value="code-quality" className="mt-6">
-        <SuccessToastComponent />
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-lg">Code Quality</CardTitle>

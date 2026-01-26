@@ -18,6 +18,7 @@ import { EditClientForm } from "./_components/EditClientForm";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { ClientHeaderWrapper } from "./_components/ClientHeaderWrapper";
+import { GoBackButton } from "@/components/GoBackButton";
 
 interface IClientLayout {
   children: React.ReactNode;
@@ -31,7 +32,7 @@ export default async function ClientLayout({
   const { client: slug } = await params;
 
   const [error, success] = await operationWrapper("action", "getClient", () =>
-    getClientAction(slug)
+    getClientAction(slug),
   );
 
   if (error) {
@@ -45,12 +46,8 @@ export default async function ClientLayout({
       {/* Header com Logo e Ações */}
       <ClientHeaderWrapper>
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" asChild>
-              <Link href="/clients">
-                <ArrowLeft className="h-5 w-5" />
-              </Link>
-            </Button>
+          <div className="flex gap-5 items-start">
+            <GoBackButton withLabel={false} className="mt-2" />
             <Avatar className="h-20 w-20 rounded-lg border-2 border-muted">
               <AvatarImage
                 src={client.logoReference || ""}

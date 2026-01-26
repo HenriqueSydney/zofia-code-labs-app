@@ -30,8 +30,9 @@ export interface ICreateBacklogItemDTO {
   externalLink?: string | null;
 }
 
-export interface IUpdateBacklogItemDTO
-  extends Partial<Omit<ICreateBacklogItemDTO, "projectId">> {
+export interface IUpdateBacklogItemDTO extends Partial<
+  Omit<ICreateBacklogItemDTO, "projectId">
+> {
   id: string;
 }
 
@@ -50,7 +51,7 @@ export interface IBacklogItemsRepository {
   findById(id: string): Promise<BacklogItemWithDetails | null>;
   findAll(
     params: FindAllBacklogParams,
-    pagination?: Pagination
+    pagination?: Pagination,
   ): Promise<{
     totalOfRegisters: number;
     totalPoints: number;
@@ -65,6 +66,12 @@ export interface IBacklogItemsRepository {
     itemId: string,
     newPositionIndex: number,
     allSortedIds: string[],
-    status?: BacklogStatus
+    status?: BacklogStatus,
   ): Promise<void>;
+
+  syncFromServiceType(
+    projectId: string,
+    serviceTypeId: string,
+    organizationId: string,
+  ): Promise<number>;
 }

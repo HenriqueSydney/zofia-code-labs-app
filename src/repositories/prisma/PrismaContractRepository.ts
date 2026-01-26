@@ -5,6 +5,7 @@ import {
   ContractWithDetails,
   UpdateContractDTO,
   ListContractParams,
+  ContractWithProjectDetails,
 } from "../IContractRepository";
 import { Prisma, Contract, ContractStatus } from "@/generated/prisma/client";
 import { normalizePrisma } from "@/utils/normalizePrisma";
@@ -14,8 +15,8 @@ import { getPaginationQuery } from "@/utils/getPaginationQuery";
 export class PrismaContractRepository implements IContractRepository {
   async create(
     data: CreateContractDTO,
-    tx?: Prisma.TransactionClient
-  ): Promise<Contract> {
+    tx?: Prisma.TransactionClient,
+  ): Promise<ContractWithProjectDetails> {
     if (tx) {
       return this.executeCreateLogic(data, tx);
     }
@@ -27,8 +28,8 @@ export class PrismaContractRepository implements IContractRepository {
 
   private async executeCreateLogic(
     data: CreateContractDTO,
-    tx: Prisma.TransactionClient
-  ): Promise<Contract> {
+    tx: Prisma.TransactionClient,
+  ): Promise<ContractWithProjectDetails> {
     // 1. Buscar a última versão para este projeto
     const lastContract = await tx.contract.findFirst({
       where: { projectId: data.projectId },
@@ -56,6 +57,19 @@ export class PrismaContractRepository implements IContractRepository {
         isCurrent: true,
         proposalId: data.proposalId,
       },
+      include: {
+        project: {
+          select: {
+            slug: true,
+            organizationId: true,
+            client: {
+              select: {
+                slug: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     return normalizePrisma(contract);
@@ -72,7 +86,8 @@ export class PrismaContractRepository implements IContractRepository {
           select: {
             name: true,
             organizationId: true,
-            client: { select: { tradeName: true, email: true } },
+            slug: true,
+            client: { select: { tradeName: true, email: true, slug: true } },
           }, // Otimização: trazer só o necessário
         },
         proposal: {
@@ -95,7 +110,7 @@ export class PrismaContractRepository implements IContractRepository {
 
   async list(
     { organizationId, query }: ListContractParams,
-    pagination: Pagination
+    pagination: Pagination,
   ): Promise<{ contracts: ContractWithDetails[]; totalOfRegister: number }> {
     const where: Prisma.ContractWhereInput = query
       ? {
@@ -154,7 +169,8 @@ export class PrismaContractRepository implements IContractRepository {
             select: {
               name: true,
               organizationId: true,
-              client: { select: { tradeName: true, email: true } },
+              slug: true,
+              client: { select: { tradeName: true, email: true, slug: true } },
             },
           },
           proposal: {
@@ -185,7 +201,7 @@ export class PrismaContractRepository implements IContractRepository {
 
   async getHistory(
     projectId: string,
-    pagination: Pagination
+    pagination: Pagination,
   ): Promise<{ contracts: ContractWithDetails[]; totalOfRegister: number }> {
     const paginationDef = getPaginationQuery(pagination);
     const [totalOfRegister, contracts] = await Promise.all([
@@ -197,7 +213,8 @@ export class PrismaContractRepository implements IContractRepository {
             select: {
               name: true,
               organizationId: true,
-              client: { select: { tradeName: true, email: true } },
+              slug: true,
+              client: { select: { tradeName: true, email: true, slug: true } },
             }, // Otimização: trazer só o necessário
           },
           contractTemplate: {
@@ -225,7 +242,7 @@ export class PrismaContractRepository implements IContractRepository {
 
   async findAllByClient(
     clientId: string,
-    pagination: Pagination
+    pagination: Pagination,
   ): Promise<{ contracts: ContractWithDetails[]; totalOfRegister: number }> {
     const paginationDef = getPaginationQuery(pagination);
     const [totalOfRegister, contracts] = await Promise.all([
@@ -239,7 +256,8 @@ export class PrismaContractRepository implements IContractRepository {
             select: {
               name: true,
               organizationId: true,
-              client: { select: { tradeName: true, email: true } },
+              slug: true,
+              client: { select: { tradeName: true, email: true, slug: true } },
             },
           },
           contractTemplate: {
@@ -268,8 +286,8 @@ export class PrismaContractRepository implements IContractRepository {
   async update(
     id: string,
     data: UpdateContractDTO,
-    tx?: Prisma.TransactionClient
-  ): Promise<Contract> {
+    tx?: Prisma.TransactionClient,
+  ): Promise<ContractWithProjectDetails> {
     const client = tx || prisma;
 
     return await client.contract.update({
@@ -277,18 +295,44 @@ export class PrismaContractRepository implements IContractRepository {
       data: {
         ...data,
       },
+      include: {
+        project: {
+          select: {
+            slug: true,
+            organizationId: true,
+            client: {
+              select: {
+                slug: true,
+              },
+            },
+          },
+        },
+      },
     });
   }
 
   async updateStatus(
     id: string,
     status: ContractStatus,
-    tx?: Prisma.TransactionClient
-  ): Promise<Contract> {
+    tx?: Prisma.TransactionClient,
+  ): Promise<ContractWithProjectDetails> {
     const client = tx || prisma;
     return await client.contract.update({
       where: { id },
       data: { status },
+      include: {
+        project: {
+          select: {
+            slug: true,
+            organizationId: true,
+            client: {
+              select: {
+                slug: true,
+              },
+            },
+          },
+        },
+      },
     });
   }
 
