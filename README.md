@@ -19,9 +19,10 @@ Requisito: Adicionar, remover e listar documentos do projeto
 
 Requisito: Lógica de transição de status (Rascunho -> Análise -> Contrato -> Pagamento -> Planned).
 
-- [/] Finalizar Sistemática de Templates (TipTap + Variáveis)
+- [x] Criar componentes de formulários
+- [ ] Alterar todos os campos de formulários para os componentes para os componentes criados
 
-Requisito: Função "Find & Replace" no backend para injetar dados do cliente/projeto no HTML antes de gerar o PDF.
+Requisito: Alterar todos os campos de formulários de todos os formulários para os componentes criados
 
 - [x] Integração do React.email (Notificações)
 - [x] Email: Verificação de Conta (Magic Link/Código)
@@ -87,6 +88,9 @@ Requisito: Envio automático do PDF do contrato e escuta do webhook COMPLETED.
 
 Requisito: Gerar cobrança dos 30% de entrada após assinatura e liberar o projeto após confirmação via webhook.
 
+- [ ] Finalizar Dashboard Financeiro
+- [ ] Finalizar Dashboard Principal
+
 🏁 MARCO: MVP READY (Uso Interno Viável) 🏁
 Neste ponto, o sistema já vende, assina e cobra sozinho. O fluxo comercial está resolvido.
 🔨 Fase 2: O Motor de Engenharia (Setup e Gestão)
@@ -96,6 +100,10 @@ Objetivo: Automatizar o setup técnico e organizar o escopo de entrega.
 - [x] Cadastrar backlogs defaults por serviço
 
 Requisito: Quebra do projeto em Épicos/Histórias dentro do sistema.
+
+- [/] Finalizar Sistemática de Templates (TipTap + Variáveis)
+
+Requisito: Função "Find & Replace" no backend para injetar dados do cliente/projeto no HTML antes de gerar o PDF.
 
 - [x] Cadastro de Integrações (Gerenciamento de Tokens)
 

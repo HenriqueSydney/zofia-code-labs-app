@@ -7,15 +7,7 @@ import { CheckedState } from "@radix-ui/react-checkbox";
 import { toast } from "sonner";
 import { Plus, Trash2, Key, ShieldCheck } from "lucide-react";
 
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import {
   Table,
   TableBody,
@@ -25,10 +17,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import {
@@ -37,7 +27,10 @@ import {
 } from "@/schemas/integration/integrationType";
 import { createIntegrationTypeAction } from "@/actions/integrations/createIntegrationTypeAction";
 import { updateIntegrationTypeAction } from "@/actions/integrations/updateIntegrationTypeAction";
-import { generateSlug } from "@/utils/generateSlug";
+import { FormSwitchCard } from "@/components/form/FormSwitchCard";
+import { FormInputSlug } from "@/components/form/FormInputSlug";
+import { FormTextarea } from "@/components/form/FormTextarea";
+import { FormInput } from "@/components/form/FormInput";
 
 interface IIntegrationFormProps {
   integration?: {
@@ -130,92 +123,39 @@ export function IntegrationTypeForm({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="grid grid-cols-1 gap-4">
             {/* ... Campos Nome, Logo, Descrição iguais ao anterior ... */}
-            <FormField
+            <FormInputSlug
               control={form.control}
               name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nome da Integração</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Ex: Stripe"
-                      disabled={isPending}
-                      {...field}
-                    />
-                  </FormControl>
-                  <span className="text-muted-foreground text-sm">
-                    <strong>Slug:</strong>{" "}
-                    {generateSlug({ title: field.value })}
-                  </span>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Nome da Integração"
+              placeholder="Ex: Stripe"
+              disabled={isPending}
             />
 
-            <FormField
+            <FormSwitchCard
               control={form.control}
               name="enableByol"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                  <div className="space-y-0.5">
-                    <FormLabel className="flex items-center gap-2">
-                      <ShieldCheck className="w-4 h-4 text-primary" /> Permite
-                      BYOL?
-                    </FormLabel>
-                    <FormDescription className="text-[11px]">
-                      Habilita o cliente a usar a própria instância/licença.
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
+              label="Permite BYOL?"
+              description=" Habilita o cliente a usar a própria instância/licença."
+              icon={ShieldCheck}
+              disabled={isPending}
             />
 
             {/* Logo e Descrição resumidos aqui para brevidade */}
-            <FormField
+            <FormTextarea
               control={form.control}
               name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Descrição</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="O que ela faz..."
-                      className="resize-none"
-                      rows={2}
-                      disabled={isPending}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Descrição"
+              placeholder="O que ela faz..."
+              rows={2}
+              disabled={isPending}
             />
-            <FormField
+            <FormInput
               control={form.control}
               name="externalDocsUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Documentação Externa</FormLabel>
-
-                  <FormControl>
-                    <Input
-                      placeholder="https://..."
-                      disabled={isPending}
-                      {...field}
-                      value={field.value ?? ""}
-                    />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Documentação Externa"
+              type="url" // <--- O segredo está aqui
+              placeholder="https://..."
+              disabled={isPending}
             />
           </div>
 

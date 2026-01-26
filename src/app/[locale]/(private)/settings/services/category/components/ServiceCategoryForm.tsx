@@ -1,20 +1,11 @@
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,6 +22,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { updateServiceCategoryAction } from "@/actions/services/updateServiceCategoryAction";
 import { CreateServiceCategoryDTO } from "@/repositories/IServiceCategoryRepository";
+import { FormInput } from "@/components/form/FormInput";
+import { FormTextarea } from "@/components/form/FormTextarea";
 
 export type CategoryOption = {
   id: string;
@@ -99,58 +92,30 @@ export function ServiceCategoryForm({
         className="space-y-6 max-w-lg"
       >
         {/* Nome */}
-        <FormField
+        <FormInput
+          label="Nome da Categoria de Serviço"
           control={form.control}
           name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nome da Categoria de Serviço</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Ex: Landing Page Express"
-                  disabled={isPending}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          placeholder="Ex: Landing Page Express"
+          disabled={isPending}
         />
 
-        <FormField
+        <FormInput
+          label="Código do Imposto (NF-E)"
           control={form.control}
           name="taxCode"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Código do Imposto (NF-E)</FormLabel>
-              <FormControl>
-                <Input placeholder="1.01" disabled={isPending} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          placeholder="1.01"
+          disabled={isPending}
         />
 
-        {/* Descrição */}
-        <FormField
+        <FormTextarea
+          label="Descrição"
           control={form.control}
           name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Descrição</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Detalhes do que está incluso..."
-                  className="resize-none"
-                  rows={4}
-                  disabled={isPending}
-                  {...field}
-                  value={field.value ?? ""}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          placeholder="Detalhes do que está incluso..."
+          className="resize-none"
+          rows={4}
+          disabled={isPending}
         />
 
         <div className="w-full flex justify-end">

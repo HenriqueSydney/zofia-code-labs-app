@@ -1,3 +1,4 @@
+import { GoBackButton } from "@/components/GoBackButton";
 import { SectionHeading } from "@/components/SectionHeading";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -39,14 +40,8 @@ export function ServiceHeaderDetails({ service }: ServiceHeaderDetailsProps) {
   return (
     <div className="space-y-4">
       {/* Cabeçalho com Título e Status */}
-      <div className="flex  gap-4">
-        <Link
-          className="mt-2"
-          href={`/settings/services/catalog/`}
-          title="Voltar"
-        >
-          <ArrowLeft className="w-6 h-6" />
-        </Link>
+      <div className="flex items-start gap-4">
+        <GoBackButton withLabel={false} className="mt-3" />
         <SectionHeading
           title={service.name}
           subDescription={`ID: ${service.id}`}

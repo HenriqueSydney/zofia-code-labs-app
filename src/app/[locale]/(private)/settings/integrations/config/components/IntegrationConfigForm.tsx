@@ -5,22 +5,14 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { ShieldCheck, Info } from "lucide-react";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormDescription,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { connectOrganizationIntegrationAction } from "@/actions/integrations/connectOrganizationIntegrationAction";
 import { updateOrganizationIntegrationAction } from "@/actions/integrations/updateOrganizationIntegrationAction";
 import { Integration } from "../page";
+import { FormSecretInput } from "@/components/form/FormSecretInput";
+import { FormSwitchCard } from "@/components/form/FormSwitchCard";
 
 interface IConnectIntegrationFormProps {
   integration: Integration;
@@ -40,12 +32,15 @@ export function IntegrationConfigForm({
   const form = useForm<Record<string, any>>({
     defaultValues: {
       enableByol: integration.enableByol
-        ? integration.orgIntegrationByol ?? false
+        ? (integration.orgIntegrationByol ?? false)
         : false,
-      ...integration.fieldsSchema.reduce((acc, field) => {
-        acc[field.key] = "";
-        return acc;
-      }, {} as Record<string, string>),
+      ...integration.fieldsSchema.reduce(
+        (acc, field) => {
+          acc[field.key] = "";
+          return acc;
+        },
+        {} as Record<string, string>,
+      ),
     },
   });
 
@@ -56,7 +51,7 @@ export function IntegrationConfigForm({
   const visibleFields = watchByol
     ? integration.fieldsSchema // Mostra tudo para o cliente configurar
     : integration.fieldsSchema.filter(
-        (f) => !f.dependsOnByol && !integration.enableByol
+        (f) => !f.dependsOnByol && !integration.enableByol,
       );
 
   const onSubmit = (values: Record<string, any>) => {
@@ -64,7 +59,7 @@ export function IntegrationConfigForm({
 
     // Filtramos apenas os campos que o usuário preencheu
     const secretValues = Object.fromEntries(
-      Object.entries(restValues).filter(([_, value]) => value !== "")
+      Object.entries(restValues).filter(([_, value]) => value !== ""),
     );
 
     startTransition(async () => {
@@ -95,29 +90,13 @@ export function IntegrationConfigForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {/* Controle BYOL (Apenas se a integração permitir no catálogo) */}
         {integration.enableByol && (
-          <FormField
+          <FormSwitchCard
             control={form.control}
             name="enableByol"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4 bg-muted/20">
-                <div className="space-y-0.5">
-                  <FormLabel className="flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-primary" />
-                    Trazer minha própria instância
-                  </FormLabel>
-                  <FormDescription className="text-xs">
-                    Ative para usar sua própria infraestrutura e licença.
-                  </FormDescription>
-                </div>
-                <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    disabled={isPending}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
+            label="Trazer minha própria instância"
+            description="Ative para usar sua própria infraestrutura e licença."
+            icon={ShieldCheck}
+            disabled={isPending}
           />
         )}
 
@@ -152,35 +131,18 @@ export function IntegrationConfigForm({
         {/* Renderização Dinâmica dos Campos */}
         <div className="space-y-4 transition-all duration-300">
           {visibleFields.map((field) => (
-            <FormField
+            <FormSecretInput
               key={field.key}
               control={form.control}
               name={field.key}
-              render={({ field: inputField }) => (
-                <FormItem>
-                  <div className="flex justify-between items-center">
-                    <FormLabel className="text-sm">{field.label}</FormLabel>
-                    {hints[field.key] && (
-                      <span className="text-[9px] font-mono text-muted-foreground bg-muted px-1.5 rounded border">
-                        {hints[field.key]}
-                      </span>
-                    )}
-                  </div>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder={
-                        hints[field.key]
-                          ? "••••••••••••"
-                          : `Insira o valor para ${field.label}`
-                      }
-                      disabled={isPending}
-                      {...inputField}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label={field.label}
+              hint={hints[field.key]}
+              disabled={isPending}
+              placeholder={
+                hints[field.key]
+                  ? "••••••••••••"
+                  : `Insira o valor para ${field.label}`
+              }
             />
           ))}
         </div>
@@ -199,8 +161,8 @@ export function IntegrationConfigForm({
               {isPending
                 ? "Processando..."
                 : isUpdate
-                ? "Salvar Alterações"
-                : "Conectar Serviço"}
+                  ? "Salvar Alterações"
+                  : "Conectar Serviço"}
             </Button>
           )}
         </div>

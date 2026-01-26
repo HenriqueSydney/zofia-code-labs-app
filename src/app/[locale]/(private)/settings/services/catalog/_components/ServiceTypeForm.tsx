@@ -1,26 +1,9 @@
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Form } from "@/components/ui/form";
 
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
 import { createServiceTypeAction } from "@/actions/services/createServiceTypeAction";
@@ -31,6 +14,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { updateServiceTypeAction } from "@/actions/services/updateServiceTypeAction";
 import { CreateServiceDTO } from "@/repositories/IServiceTypeRepository";
+import { FormInput } from "@/components/form/FormInput";
+import { FormSelect } from "@/components/form/FormSelect";
+import { FormTextarea } from "@/components/form/FormTextarea";
+import { FormCurrencyInput } from "@/components/form/FormCurrencyInput";
 
 export type CategoryOption = {
   id: string;
@@ -105,100 +92,43 @@ export function ServiceTypeForm({
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-6 max-w-2xl"
       >
-        {/* Nome */}
-        <FormField
+        <FormInput
+          label="Nome do Serviço"
           control={form.control}
           name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nome do Serviço</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Ex: Landing Page Express"
-                  disabled={isPending}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          placeholder="Ex: Landing Page Express"
+          disabled={isPending}
         />
 
-        {/* Categoria (Select do Shadcn requer tratamento especial no onChange) */}
-        <FormField
+        <FormSelect
+          label="Categoria (para NFe)"
           control={form.control}
           name="categoryId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Categoria (para NFe)</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value || undefined}
-                disabled={isPending}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione uma categoria..." />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {categories.map((cat) => (
-                    <SelectItem key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+          placeholder="Selecione uma categoria..."
+          options={categories.map((cat) => ({
+            value: cat.id,
+            label: cat.name,
+          }))}
+          disabled={isPending}
         />
 
-        {/* Preço Base */}
-        <FormField
+        <FormCurrencyInput
           control={form.control}
           name="basePrice"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Preço Base (R$)</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  step="0.01"
-                  placeholder="0.00"
-                  disabled={isPending}
-                  {...field}
-                  // O Zod coerce resolve a string -> number, mas mantemos o onChange padrão
-                />
-              </FormControl>
-              <FormDescription>
-                Deixe zerado se for sob orçamento.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Preço Base"
+          placeholder="R$ 0,00"
+          description="Deixe zerado ou vazio se for sob orçamento."
+          disabled={isPending}
         />
 
-        {/* Descrição */}
-        <FormField
+        <FormTextarea
+          label="Descrição"
           control={form.control}
           name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Descrição</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Detalhes do que está incluso..."
-                  className="resize-none"
-                  rows={4}
-                  disabled={isPending}
-                  {...field}
-                  value={field.value ?? ""}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          placeholder="Detalhes do que está incluso..."
+          className="resize-none"
+          rows={4}
+          disabled={isPending}
         />
 
         <div className="w-full flex justify-end">
