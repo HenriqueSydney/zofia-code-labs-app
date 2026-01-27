@@ -60,7 +60,7 @@ export default async function LifeCycle({ params }: IParams) {
       },
       {
         cache: "no-cache",
-      }
+      },
     ),
     operationWrapper<{
       data: IntegrationType | null;
@@ -72,7 +72,7 @@ export default async function LifeCycle({ params }: IParams) {
       },
       {
         cache: "no-cache",
-      }
+      },
     ),
   ]);
 
@@ -86,13 +86,13 @@ export default async function LifeCycle({ params }: IParams) {
 
   if (integrationTypeError) {
     throw new AppError(
-      "Tipo de integração não configurada globalmente, entre em contato com o suporte"
+      "Tipo de integração não configurada globalmente, entre em contato com o suporte",
     );
   }
 
   if (!integrationTypeSuccess.data) {
     throw new AppError(
-      "Tipo de integração não configurada globalmente, entre em contato com o suporte"
+      "Tipo de integração não configurada globalmente, entre em contato com o suporte",
     );
   }
 
@@ -103,12 +103,12 @@ export default async function LifeCycle({ params }: IParams) {
 
   const doesProjectIsAlreadySetup = success.data
     ? success.data.projectIntegrations.findIndex(
-        (integration) => integration.project.slug === slug
+        (integration) => integration.project.slug === slug,
       )
     : -1;
   if (doesProjectIsAlreadySetup === -1) {
     return (
-      <TabsContent value="life-cycle" className="mt-6" forceMount>
+      <TabsContent value="life-cycle" className="mt-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-lg">Ciclo de Vida</CardTitle>

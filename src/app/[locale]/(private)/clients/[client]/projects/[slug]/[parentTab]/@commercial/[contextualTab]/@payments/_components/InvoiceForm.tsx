@@ -4,34 +4,12 @@ import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { CalendarIcon, DollarSign, FileText, Landmark } from "lucide-react";
+import { FileText, Landmark } from "lucide-react";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
+import { Form } from "@/components/ui/form";
+import { Separator } from "@/components/ui/separator";
 
-import { cn } from "@/lib/utils";
-import { date } from "@/lib/dayjs";
 import {
   invoiceSchema,
   InvoiceFormData,
@@ -43,12 +21,21 @@ import {
   InternetBankingProvider,
   PaymentType,
 } from "@/generated/prisma/enums";
+import { FormInput } from "@/components/form/FormInput";
+import { FormNumberInput } from "@/components/form/FormNumberInput";
+import { FormDatePicker } from "@/components/form/FormDatePicker";
+import { FormSelect } from "@/components/form/FormSelect";
 
-// --- Mappers para evitar o uso do Enum direto no JSX e garantir tipagem ---
-const BANK_PROVIDERS = Object.values(
-  InternetBankingProvider
-) as InternetBankingProvider[];
-const PAYMENT_METHODS = Object.values(PaymentType) as PaymentType[];
+// Mapeamento de Opções
+const BANK_OPTIONS = Object.values(InternetBankingProvider).map((p) => ({
+  value: p,
+  label: p,
+}));
+
+const PAYMENT_OPTIONS = Object.values(PaymentType).map((t) => ({
+  value: t,
+  label: t.replace("_", " "),
+}));
 
 interface IInvoiceFormProps {
   projectSlug: string;
@@ -98,208 +85,87 @@ export function InvoiceForm({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* --- Coluna da Esquerda --- */}
           <div className="space-y-4">
-            <FormField
+            <FormInput
               control={form.control}
               name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Descrição da Fatura</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Ex: Desenvolvimento Web - Março"
-                      disabled={isPending}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Descrição da Fatura"
+              placeholder="Ex: Desenvolvimento Web - Março"
+              disabled={isPending}
             />
 
             <div className="grid grid-cols-2 gap-4">
-              <FormField
+              <FormNumberInput
                 control={form.control}
                 name="amount"
-                render={({ field: { value, ...fieldProps } }) => (
-                  <FormItem>
-                    <FormLabel>Valor (R$)</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <DollarSign className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          type="number"
-                          step="0.01"
-                          className="pl-9"
-                          disabled={isPending}
-                          {...fieldProps}
-                          // Cast explícito para satisfazer InputHTMLAttributes
-                          value={(value as number) ?? 0}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Valor (R$)"
+                placeholder="0.00"
+                min={0}
+                step={0.01}
+                disabled={isPending}
               />
 
-              <FormField
+              <FormDatePicker
                 control={form.control}
                 name="dueDate"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel className="mb-2">Vencimento</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            className={cn(
-                              "w-full pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                            disabled={isPending}
-                          >
-                            {/* Cast explícito para Date para o date() e Calendar */}
-                            {field.value ? (
-                              date(field.value as Date).format("DD/MM/YYYY")
-                            ) : (
-                              <span>Selecione</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value as Date | undefined}
-                          onSelect={field.onChange}
-                          disabled={(date) => date < new Date("1900-01-01")}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Vencimento"
+                placeholder="Selecione"
+                disabled={isPending}
               />
             </div>
           </div>
 
+          {/* --- Coluna da Direita --- */}
           <div className="space-y-4 lg:border-l lg:pl-6">
             <div className="grid grid-cols-2 gap-4">
-              <FormField
+              <FormSelect
                 control={form.control}
                 name="internetBankingProvider"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center gap-2">
-                      <Landmark className="w-4 h-4" /> Banco
-                    </FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      disabled={isPending}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {BANK_PROVIDERS.map((p) => (
-                          <SelectItem key={p} value={p}>
-                            {p}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Banco"
+                placeholder="Selecione"
+                options={BANK_OPTIONS}
+                disabled={isPending}
+                // Dica: Se quiser ícone no label, pode passar no prop label ou usar o componente original
               />
 
-              <FormField
+              <FormSelect
                 control={form.control}
                 name="paymentType"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Tipo de Recebimento</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      disabled={isPending}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {PAYMENT_METHODS.map((t) => (
-                          <SelectItem key={t} value={t}>
-                            {t.replace("_", " ")}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Tipo de Recebimento"
+                placeholder="Selecione"
+                options={PAYMENT_OPTIONS}
+                disabled={isPending}
               />
             </div>
 
-            <div className="space-y-4 pt-2">
-              <h3 className="text-sm font-semibold flex items-center gap-2">
+            <Separator className="my-2" />
+
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold flex items-center gap-2 text-muted-foreground">
                 <FileText className="w-4 h-4" /> Dados Fiscais (Opcional)
               </h3>
 
-              <FormField
+              <FormInput
                 control={form.control}
                 name="nfseNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[11px] uppercase">
-                      Número da NF-e
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Ex: 2024001"
-                        disabled={isPending}
-                        {...field}
-                        value={field.value ?? ""}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Número da NF-e"
+                placeholder="Ex: 2024001"
+                disabled={isPending}
               />
 
-              <FormField
+              <FormInput
                 control={form.control}
                 name="nfseLink"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[11px] uppercase">
-                      Link do PDF da Nota
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="https://..."
-                        disabled={isPending}
-                        {...field}
-                        value={field.value ?? ""}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Link do PDF da Nota"
+                placeholder="https://..."
+                disabled={isPending}
               />
             </div>
           </div>
         </div>
 
+        {/* Footer */}
         <div className="flex justify-end gap-3 pt-4 border-t">
           <Button
             variant="ghost"
@@ -313,8 +179,8 @@ export function InvoiceForm({
             {isPending
               ? "Processando..."
               : invoice
-              ? "Atualizar Fatura"
-              : "Gerar Fatura"}
+                ? "Atualizar Fatura"
+                : "Gerar Fatura"}
           </Button>
         </div>
       </form>

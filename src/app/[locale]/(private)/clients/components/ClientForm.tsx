@@ -1,23 +1,13 @@
 "use client";
 
-import { useTransition, useState } from "react"; // Adicionado useState
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Mail, Phone, Building2, ImagePlus, X } from "lucide-react"; // Novos ícones
+import { Phone, Building2 } from "lucide-react";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { InputMask } from "@/components/InputMask";
-import { Label } from "@/components/ui/label";
 
 import {
   clientFormSchema,
@@ -25,6 +15,9 @@ import {
 } from "@/schemas/clients/clientFormSchema";
 import { updateClientAction } from "@/actions/clients/updateClientAction";
 import { createClientAction } from "@/actions/clients/createClientAction";
+import { FormImageUpload } from "@/components/form/FormImageUpload";
+import { FormInput } from "@/components/form/FormInput";
+import { FormMaskInput } from "@/components/form/FormMaskInput";
 
 interface IClientFormProps {
   client?: {
@@ -34,18 +27,13 @@ interface IClientFormProps {
     cnpj?: string | null;
     email?: string | null;
     phone?: string | null;
-    logoUrl?: string | null; // Adicionado para exibir logo existente na edição
+    logoUrl?: string | File | null;
   };
   handleCloseModal: () => void;
 }
 
 export function ClientForm({ client, handleCloseModal }: IClientFormProps) {
   const [isPending, startTransition] = useTransition();
-  const [logoFile, setLogoFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(
-    client?.logoUrl || null
-  );
-
   const isEditing = !!client;
 
   const form = useForm<ClientFormSchemaType>({
@@ -56,18 +44,9 @@ export function ClientForm({ client, handleCloseModal }: IClientFormProps) {
       cnpj: client?.cnpj ?? "",
       email: client?.email ?? "",
       phone: client?.phone ?? "",
+      logo: client?.logoUrl ?? null,
     },
   });
-
-  // Função para lidar com a seleção da imagem
-  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setLogoFile(file);
-      const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
-    }
-  };
 
   const onSubmit = (data: ClientFormSchemaType) => {
     startTransition(async () => {
@@ -78,17 +57,22 @@ export function ClientForm({ client, handleCloseModal }: IClientFormProps) {
       formData.append("email", data.email || "");
       formData.append("phone", data.phone || "");
 
-      // Adiciona o arquivo do logo ao FormData
-      if (logoFile) {
-        formData.append("logo", logoFile);
-      }
+      // LÓGICA DE UPLOAD:
+      // 1. Se for File -> Usuário fez upload novo. Envia.
+      // 2. Se for String -> Usuário manteve a imagem antiga. Não envia nada (backend mantém a atual).
+      // 3. Se for Null -> Usuário removeu a imagem. (Dependendo do seu backend, envie uma flag ou nada).
 
-      let result;
-      if (isEditing) {
-        result = await updateClientAction(client.id, formData);
-      } else {
-        result = await createClientAction(formData);
+      if (data.logo instanceof File) {
+        formData.append("logo", data.logo);
       }
+      // Opcional: Se quiser tratar remoção explicita
+      // else if (data.logo === null && isEditing && client?.logoUrl) {
+      //   formData.append("removeLogo", "true");
+      // }
+
+      const result = isEditing
+        ? await updateClientAction(client.id, formData)
+        : await createClientAction(formData);
 
       if (!result.success) {
         toast.error(result.message);
@@ -103,157 +87,62 @@ export function ClientForm({ client, handleCloseModal }: IClientFormProps) {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4 max-w-lg"
-      >
-        {/* Campo de Logo com Preview */}
-        <div className="space-y-3 border p-4 rounded-md bg-muted/20 border-dashed">
-          <Label className="text-sm font-medium">Logo da Empresa</Label>
-
-          <div className="flex items-center gap-4">
-            {previewUrl ? (
-              <div className="relative h-20 w-20 border rounded-md overflow-hidden bg-white">
-                <img
-                  src={previewUrl}
-                  alt="Preview"
-                  className="h-full w-full object-contain"
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    setLogoFile(null);
-                    setPreviewUrl(null);
-                  }}
-                  className="absolute top-0 right-0 bg-destructive text-destructive-foreground p-0.5 rounded-bl-md"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </div>
-            ) : (
-              <div className="h-20 w-20 border-2 border-dashed rounded-md flex items-center justify-center bg-background">
-                <ImagePlus className="h-8 w-8 text-muted-foreground/40" />
-              </div>
-            )}
-
-            <div className="flex-1">
-              <Input
-                type="file"
-                accept="image/png, image/jpeg, image/webp"
-                className="cursor-pointer"
-                onChange={handleLogoChange}
-                disabled={isPending}
-              />
-              <p className="text-[10px] text-muted-foreground mt-2">
-                Formatos aceitos: PNG, JPG ou WebP. Máx 2MB.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Razão Social */}
-        <FormField
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 ">
+        {/* Componente limpo: Não precisa passar previewUrl manual, ele lê do control */}
+        <FormImageUpload
           control={form.control}
-          name="companyName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Razão Social</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Minha Empresa LTDA"
-                  disabled={isPending}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          name="logo"
+          label="Logo da Empresa"
+          description="Formatos aceitos: PNG, JPG ou WebP. Máx 5MB."
+          disabled={isPending}
         />
 
-        {/* Nome Fantasia */}
-        <FormField
+        <FormInput
+          control={form.control}
+          name="companyName"
+          label="Razão Social"
+          placeholder="Minha Empresa LTDA"
+          disabled={isPending}
+        />
+
+        <FormInput
           control={form.control}
           name="tradeName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nome Fantasia</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Nome comercial"
-                  disabled={isPending}
-                  {...field}
-                  value={field.value || ""}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Nome Fantasia"
+          placeholder="Nome comercial"
+          disabled={isPending}
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
+          <FormMaskInput
             control={form.control}
             name="cnpj"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <InputMask
-                    label="CNPJ"
-                    mask="00.000.000/0000-00"
-                    placeholder="00.000.000/0001-99"
-                    icon={<Building2 className="h-4 w-4" />}
-                    disabled={isPending}
-                    {...field}
-                    inputError={form.formState.errors.cnpj}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
+            label="CNPJ"
+            mask="00.000.000/0000-00"
+            placeholder="00.000.000/0001-99"
+            disabled={isPending}
+            Icon={Building2}
+            unmask={true}
           />
 
-          <FormField
+          <FormMaskInput
             control={form.control}
             name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <InputMask
-                    label="Telefone"
-                    mask="(00) 00000-0000"
-                    placeholder="(61) 99999-9999"
-                    icon={<Phone className="h-4 w-4" />}
-                    disabled={isPending}
-                    {...field}
-                    inputError={form.formState.errors.phone}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
+            label="Telefone"
+            mask="(00) 00000-0000"
+            placeholder="(61) 99999-9999"
+            disabled={isPending}
+            Icon={Phone}
           />
         </div>
 
-        <FormField
+        <FormInput
           control={form.control}
           name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>E-mail</FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <Input
-                    type="email"
-                    placeholder="contato@empresa.com"
-                    className="pl-9"
-                    disabled={isPending}
-                    {...field}
-                    value={field.value || ""}
-                  />
-                  <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="E-mail"
+          type="email"
+          placeholder="contato@empresa.com"
+          disabled={isPending}
         />
 
         <div className="w-full flex justify-end pt-4">
@@ -261,8 +150,8 @@ export function ClientForm({ client, handleCloseModal }: IClientFormProps) {
             {isPending
               ? "Salvando..."
               : isEditing
-              ? "Salvar Alterações"
-              : "Cadastrar Cliente"}
+                ? "Salvar Alterações"
+                : "Cadastrar Cliente"}
           </Button>
         </div>
       </form>

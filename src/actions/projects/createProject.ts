@@ -37,6 +37,7 @@ export async function createProjectAction(formData: FormData) {
   let projectId: string | null = null;
   let slug = "";
   let cliendSlug = "";
+
   const useCase = makeCreateProjectUseCase();
   try {
     const project = await useCase.execute({

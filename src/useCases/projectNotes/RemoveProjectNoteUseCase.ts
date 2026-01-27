@@ -1,7 +1,10 @@
 import { AppError } from "@/errors/AppError";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { date } from "@/lib/dayjs";
-import { IProjectNotesRepository } from "@/repositories/IProjectNotesRepository";
+import {
+  IProjectNotesRepository,
+  ProjectNotesWithDetails,
+} from "@/repositories/IProjectNotesRepository";
 import { IUserRepository } from "@/repositories/IUsersRepository";
 
 interface RemoveProjectNoteUseCaseRequest {
@@ -11,25 +14,21 @@ interface RemoveProjectNoteUseCaseRequest {
 }
 
 export class RemoveProjectNoteUseCase {
-  constructor(
-    private projectNotesRepository: IProjectNotesRepository,
-    private userRepository: IUserRepository
-  ) {}
+  constructor(private projectNotesRepository: IProjectNotesRepository) {}
 
   async execute({
     id,
     projectId,
     userId,
-  }: RemoveProjectNoteUseCaseRequest): Promise<void> {
-    const noteExists = await this.projectNotesRepository.findProjectNoteById(
-      id
-    );
+  }: RemoveProjectNoteUseCaseRequest): Promise<ProjectNotesWithDetails> {
+    const noteExists =
+      await this.projectNotesRepository.findProjectNoteById(id);
 
     if (!noteExists) throw new AppError("Observação não localizada");
 
     if (noteExists.projectId !== projectId) {
       throw new AppError(
-        "Ops! Um erro aparentemente ocorreu ao tentar editar a observação. Tente novamente mais tarde"
+        "Ops! Um erro aparentemente ocorreu ao tentar editar a observação. Tente novamente mais tarde",
       );
     }
 
@@ -39,17 +38,19 @@ export class RemoveProjectNoteUseCase {
 
     if (!canRemove) {
       throw new AppError(
-        "Observação não pode ser mais removida. Período para remoção já se expirou"
+        "Observação não pode ser mais removida. Período para remoção já se expirou",
       );
     }
 
     await checkUserPermissionForAsset(
       "projectNotes",
       userId,
-      { organizationId: noteExists.project.organizationId },
-      "DELETE"
+      { organizationId: noteExists.project.organizationId, ...noteExists },
+      "DELETE",
     );
 
     await this.projectNotesRepository.delete(id);
+
+    return noteExists;
   }
 }

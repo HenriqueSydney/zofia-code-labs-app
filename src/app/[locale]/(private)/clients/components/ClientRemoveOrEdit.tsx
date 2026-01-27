@@ -60,7 +60,7 @@ export function ClientRemoveOrEdit({ client }: IServiceTypeRemoveOrEdit) {
             <Edit className="h-4 w-4 " />
           </Button>
         </DialogTrigger>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>{"Editar Serviço"}</DialogTitle>
             <DialogDescription>Preencha os dados do serviço</DialogDescription>

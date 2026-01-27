@@ -8,7 +8,7 @@ export class AuthProjectNotesStrategy extends AuthBasePermissionStrategy<
   protected validateSpecific(
     user: UserContext,
     asset: ProjectNote,
-    operation: Operation
+    operation: Operation,
   ): void {
     // Regra: Qualquer um da empresa pode editar tarefas,
     // MAS apenas o criador ou admin pode deletar.

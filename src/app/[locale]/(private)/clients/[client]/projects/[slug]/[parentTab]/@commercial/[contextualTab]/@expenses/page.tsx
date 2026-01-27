@@ -8,8 +8,9 @@ import { CreateExpenseForm } from "./_components/CreateExpenseForm";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { ExpenseStatus } from "@/generated/prisma/enums";
 import { Separator } from "@/components/ui/separator";
-import { ArrowDownCircle, Wallet } from "lucide-react";
+import { ArrowDownCircle, BanknoteX, Wallet } from "lucide-react";
 import { listExpensesAction } from "@/actions/expenses/listExpenseAction";
+import { EmptyState } from "@/components/EmptyState";
 
 interface IParams {
   params?: Promise<{ slug: string }>;
@@ -27,7 +28,7 @@ export default async function ExpenseTab({ params }: IParams) {
     },
     {
       cache: "no-cache", // Garante dados frescos ao adicionar nova despesa
-    }
+    },
   );
 
   if (error) {
@@ -71,7 +72,7 @@ export default async function ExpenseTab({ params }: IParams) {
 
       return acc;
     },
-    { totalPaid: 0, totalProjected: 0, totalCanceled: 0 }
+    { totalPaid: 0, totalProjected: 0, totalCanceled: 0 },
   );
 
   return (
@@ -88,9 +89,12 @@ export default async function ExpenseTab({ params }: IParams) {
           {/* Lista de Despesas */}
           <div className="space-y-3">
             {expenses.length === 0 ? (
-              <div className="text-center py-10 text-muted-foreground text-sm border-2 border-dashed rounded-lg">
-                Nenhuma despesa registrada neste período.
-              </div>
+              <EmptyState
+                title="Nenhuma despesa "
+                description="Nenhum despesa registrada até o momento. Registre um pagamento ou aguarde o projeto chegar na fase de pagamento."
+                icon={BanknoteX}
+                action={<CreateExpenseForm projectSlug={slug} />}
+              />
             ) : (
               expenses.map((expense) => (
                 <ExpenseItem

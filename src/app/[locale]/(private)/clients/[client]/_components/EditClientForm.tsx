@@ -44,7 +44,7 @@ export function EditClientForm({ client }: IEditClientForm) {
           Editar Cliente
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Editar Cliente</DialogTitle>
           <DialogDescription>Preencha os dados do cliente</DialogDescription>

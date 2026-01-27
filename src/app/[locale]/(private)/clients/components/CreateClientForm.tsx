@@ -32,7 +32,7 @@ export function CreateClientForm() {
           Novo Cliente
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Novo cliente</DialogTitle>
           <DialogDescription>Preencha os dados do cliente</DialogDescription>

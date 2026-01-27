@@ -49,7 +49,7 @@ export class PrismaProjectsRepository implements IProjectsRepository {
         ...documentsCreateInput,
       },
       include: {
-        client: { select: { id: true, companyName: true } },
+        client: { select: { id: true, companyName: true, slug: true } },
         projectDocuments: true,
       },
     });

@@ -26,7 +26,7 @@ export function CreateInvoceForm({ projectSlug }: ICreateInvoceForm) {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button size="lg">
+        <Button>
           <Plus className="h-4 w-4 mr-2" />
           Novo Pagamento
         </Button>
@@ -37,7 +37,7 @@ export function CreateInvoceForm({ projectSlug }: ICreateInvoceForm) {
           <DialogDescription>Preencha os dados do pagamento</DialogDescription>
         </DialogHeader>
         <InvoiceForm
-          projectSlug={projectSlug}          
+          projectSlug={projectSlug}
           handleCloseModal={() => setIsDialogOpen(false)}
         />
       </DialogContent>

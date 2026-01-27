@@ -10,7 +10,7 @@ import { revalidatePath } from "next/cache";
 
 export async function updateProjectNoteAction(
   projectId: string,
-  data: UpdateProjectNoteSchemaValues
+  data: UpdateProjectNoteSchemaValues,
 ) {
   const session = await auth();
   if (!session?.user) {
@@ -35,16 +35,18 @@ export async function updateProjectNoteAction(
   try {
     const updateServiceCategoryUseCase = makeUpdateProjectNoteUseCase();
 
-    await updateServiceCategoryUseCase.execute({
+    const projectNotes = await updateServiceCategoryUseCase.execute({
       projectId,
       id,
       content,
-      userId: "cmizei38600018delhg5g4dpc", //session.user.id,
+      userId: session.user.id, //session.user.id,
     });
 
     // 5. Revalidação de cache (opcional, ajusta conforme sua rota)
     revalidatePath("/projects");
-    revalidatePath(`/clients/${client.slug}/projects/${slug}`);
+    revalidatePath(
+      `/clients/${projectNotes.project.client.slug}/projects/${projectNotes.project.slug}`,
+    );
 
     return { success: true };
   } catch (error) {

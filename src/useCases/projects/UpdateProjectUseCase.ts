@@ -18,8 +18,8 @@ interface UpdateProjectRequest {
   priority?: Priority;
   health?: ProjectHealth;
   totalBudget?: number;
-  estimatedStartDate?: string; // string que virá do form (Date input)
-  endDate?: string; // string que virá do form (Date input)
+  estimatedStartDate?: Date; // string que virá do form (Date input)
+  endDate?: Date; // string que virá do form (Date input)
   tags?: string[];
 
   newFiles?: File[]; // Arquivos novos
@@ -86,7 +86,7 @@ export class UpdateProjectUseCase {
         : undefined;
 
       const endDate = updateData.endDate
-        ? new Date(updateData.endDate)
+        ? date(updateData.endDate).toDate()
         : undefined;
 
       const project = await this.projectsRepository.update({

@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
 import { Mail, MapPin, Phone, Settings } from "lucide-react";
 import { ClientUsers } from "./_components/ClientUsers";
+import { mask } from "@/utils/mask";
 
 interface IClientPage {
   params: Promise<{ client: string }>;
@@ -14,7 +15,7 @@ export default async function ClientPage({ params }: IClientPage) {
   const { client: slug } = await params;
 
   const [error, success] = await operationWrapper("action", "getClient", () =>
-    getClientAction(slug)
+    getClientAction(slug),
   );
 
   if (error) {
@@ -52,7 +53,12 @@ export default async function ClientPage({ params }: IClientPage) {
                   <label className="text-xs font-semibold text-muted-foreground uppercase">
                     CNPJ
                   </label>
-                  <p className="font-medium">{client.cnpj}</p>
+                  <p className="font-medium">
+                    {" "}
+                    {client.cnpj.includes("/")
+                      ? client.cnpj
+                      : mask(client.cnpj, "##.###.###/####-##")}
+                  </p>
                 </div>
               </div>
 

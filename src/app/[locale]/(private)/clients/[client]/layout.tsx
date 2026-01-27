@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { ClientHeaderWrapper } from "./_components/ClientHeaderWrapper";
 import { GoBackButton } from "@/components/GoBackButton";
+import { mask } from "@/utils/mask";
 
 interface IClientLayout {
   children: React.ReactNode;
@@ -65,7 +66,10 @@ export default async function ClientLayout({
               />
               <div className="flex gap-4  text-sm text-muted-foreground">
                 <span className="flex items-center gap-1">
-                  <Building2 size={14} /> {client.cnpj}
+                  <Building2 size={14} />{" "}
+                  {client.cnpj.includes("/")
+                    ? client.cnpj
+                    : mask(client.cnpj, "##.###.###/####-##")}
                 </span>
                 <span className="flex items-center gap-1">
                   <Mail size={14} /> {client.email}

@@ -3,14 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { Plus, Loader2 } from "lucide-react";
 import {
   createProjectNoteSchema,
@@ -20,6 +13,7 @@ import { toast } from "sonner";
 import { createProjectNoteAction } from "@/actions/projectNotes/createProjectNoteAction";
 import { ProjectNotesWithDetails } from "@/repositories/IProjectNotesRepository";
 import { updateProjectNoteAction } from "@/actions/projectNotes/updateProjectNoteAction";
+import { FormTextarea } from "@/components/form/FormTextarea";
 
 interface ProjectNotesForm {
   projectId: string;
@@ -57,7 +51,7 @@ export function ProjectNotesForm({
       }
 
       toast.success(
-        "Observação atualizada com sucesso! O usuário possui 30 minutos para editá-la se desejar."
+        "Observação atualizada com sucesso! O usuário possui 30 minutos para editá-la se desejar.",
       );
 
       if (handleCloseModal) {
@@ -75,7 +69,7 @@ export function ProjectNotesForm({
     }
 
     toast.success(
-      "Observação criada com sucesso! O usuário possui 30 minutos para editá-la se desejar."
+      "Observação criada com sucesso! O usuário possui 30 minutos para editá-la se desejar.",
     );
 
     form.reset();
@@ -87,23 +81,12 @@ export function ProjectNotesForm({
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-4  w-full"
       >
-        <FormField
+        <FormTextarea
           control={form.control}
           name="content"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                {/* O {...field} substitui o value e onChange manuais */}
-                <Textarea
-                  placeholder="Adicionar nova observação..."
-                  className="resize-y"
-                  rows={4}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          placeholder="Adicionar nova observação..."
+          className="resize-y"
+          rows={4}
         />
 
         <div className="flex justify-end">

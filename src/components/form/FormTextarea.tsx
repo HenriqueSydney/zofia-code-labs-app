@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 interface FormTextareaProps {
   control: Control<any>;
   name: string;
-  label: string;
+  label?: string;
   placeholder?: string;
   description?: string;
   disabled?: boolean;
@@ -39,7 +39,7 @@ export function FormTextarea({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>{label}</FormLabel>
+          {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
             <Textarea
               placeholder={placeholder}

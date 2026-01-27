@@ -4,27 +4,10 @@ import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Mail, User, Briefcase, ShieldCheck } from "lucide-react";
+import { Mail, User, Briefcase } from "lucide-react";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-
-import { z } from "zod";
 
 // Importe suas novas actions aqui
 import { createClientEmployeeAction } from "@/actions/clients/createClientEmployeeAction";
@@ -35,6 +18,8 @@ import {
 } from "@/schemas/clients/employeeSchema";
 import { ClientEmployeeRoleMapper } from "@/mappers/clientEmployeeMappers";
 import { ClientEmployeeRole } from "@/generated/prisma/enums";
+import { FormInput } from "@/components/form/FormInput";
+import { FormSelect } from "@/components/form/FormSelect";
 
 interface IClientEmployeeFormProps {
   clientSlug: string; // ID fixo vindo do contexto do cliente
@@ -93,113 +78,53 @@ export function ClientEmployeeForm({
     });
   };
 
+  const USER_OPTIONS = [
+    { value: "USER", label: ClientEmployeeRoleMapper["USER"] },
+    { value: "ADMIN", label: ClientEmployeeRoleMapper["ADMIN"] },
+    { value: "VIEWER", label: ClientEmployeeRoleMapper["VIEWER"] },
+  ];
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
+        <FormInput
+          label="Nome Completo"
           control={form.control}
           name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nome Completo</FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <Input
-                    placeholder="João Silva"
-                    className="pl-9"
-                    disabled={isPending || isEditing} // Geralmente não editamos nome se atrelado ao User
-                    {...field}
-                  />
-                  <User className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          placeholder="João Silva"
+          disabled={isPending || isEditing}
+          Icon={User}
         />
 
-        {/* E-mail */}
-        <FormField
+        <FormInput
+          label="E-mail Corporativo"
           control={form.control}
           name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>E-mail Corporativo</FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <Input
-                    type="email"
-                    placeholder="joao@cliente.com"
-                    className="pl-9"
-                    disabled={isPending || isEditing} 
-                    {...field}
-                  />
-                  <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          type="email"
+          placeholder="joao@cliente.com"
+          disabled={isPending || isEditing}
+          Icon={Mail}
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Cargo */}
-          <FormField
+          <FormInput
+            label="Cargo"
             control={form.control}
             name="jobTitle"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Cargo</FormLabel>
-                <FormControl>
-                  <div className="relative">
-                    <Input
-                      placeholder="Ex: Gerente Financeiro"
-                      className="pl-9"
-                      disabled={isPending}
-                      {...field}
-                    />
-                    <Briefcase className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            placeholder="Ex: Gerente Financeiro"
+            disabled={isPending || isEditing}
+            Icon={Briefcase}
           />
 
-          {/* Nível de Permissão */}
-          <FormField
+          <FormSelect
+            label="Permissão"
             control={form.control}
             name="permissionRole"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Permissão</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  disabled={isPending}
-                >
-                  <FormControl>
-                    <SelectTrigger className="pl-9 relative">
-                      <ShieldCheck className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <SelectValue placeholder="Selecione um nível" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="USER">
-                      {ClientEmployeeRoleMapper["USER"]}
-                    </SelectItem>
-                    <SelectItem value="ADMIN">
-                      {ClientEmployeeRoleMapper["ADMIN"]}
-                    </SelectItem>
-                    <SelectItem value="VIEWER">
-                      {ClientEmployeeRoleMapper["VIEWER"]}
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
+            options={USER_OPTIONS}
+            disabled={isPending}
+            placeholder="Selecione um nível"
           />
+          {/* Nível de Permissão */}
         </div>
 
         <div className="w-full flex justify-end pt-4">
@@ -211,8 +136,8 @@ export function ClientEmployeeForm({
             {isPending
               ? "Processando..."
               : isEditing
-              ? "Atualizar Funcionário"
-              : "Convidar Funcionário"}
+                ? "Atualizar Funcionário"
+                : "Convidar Funcionário"}
           </Button>
         </div>
       </form>

@@ -7,10 +7,8 @@ let removeProjectNoteUseCase: RemoveProjectNoteUseCase;
 export function makeRemoveProjectNoteUseCase() {
   if (!removeProjectNoteUseCase) {
     const projectNoteRepository = makeProjectNotesRepository();
-    const userRepository = makeUserRepository();
     removeProjectNoteUseCase = new RemoveProjectNoteUseCase(
       projectNoteRepository,
-      userRepository
     );
   }
 

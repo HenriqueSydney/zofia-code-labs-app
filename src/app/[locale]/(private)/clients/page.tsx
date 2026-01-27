@@ -13,6 +13,7 @@ import { QueryFilter } from "@/components/QueryFilter";
 import { makeS3StorageService } from "@/services/s3Client/makeS3StorageService";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "@/i18n/navigation";
+import { mask } from "@/utils/mask";
 
 interface IParams {
   searchParams?: Promise<{ [key: string]: string | undefined }>;
@@ -29,7 +30,7 @@ const Clients = async ({ searchParams }: IParams) => {
     },
     {
       cache: "no-cache",
-    }
+    },
   );
 
   const rawClients = clientsError ? [] : clientsSuccess.clients;
@@ -41,7 +42,7 @@ const Clients = async ({ searchParams }: IParams) => {
         try {
           const signedUrl = await storageService.getSignedUrl(
             client.logoReference,
-            3600
+            3600,
           ); // expira em 1h
           return { ...client, logoUrl: signedUrl };
         } catch (error) {
@@ -50,7 +51,7 @@ const Clients = async ({ searchParams }: IParams) => {
         }
       }
       return { ...client, logoUrl: null };
-    })
+    }),
   );
 
   return (
@@ -106,7 +107,9 @@ const Clients = async ({ searchParams }: IParams) => {
                             variant="secondary"
                             className="mt-1 text-xs font-normal"
                           >
-                            {client.cnpj}
+                            {client.cnpj.includes("/")
+                              ? client.cnpj
+                              : mask(client.cnpj, "##.###.###/####-##")}
                           </Badge>
                         )}
                       </div>

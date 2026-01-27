@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { LucideIcon } from "lucide-react";
 
 interface FormInputProps {
   control: Control<any>;
@@ -19,6 +20,7 @@ interface FormInputProps {
   placeholder?: string;
   description?: string;
   disabled?: boolean;
+  Icon?: LucideIcon;
 }
 
 export function FormInput({
@@ -29,6 +31,7 @@ export function FormInput({
   placeholder,
   description,
   disabled,
+  Icon,
 }: FormInputProps) {
   return (
     <FormField
@@ -38,13 +41,18 @@ export function FormInput({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input
-              type={type}
-              placeholder={placeholder}
-              disabled={disabled}
-              {...field}
-              value={field.value ?? ""} // Proteção contra valor null
-            />
+            <div className="relative">
+              <Input
+                type={type}
+                placeholder={placeholder}
+                disabled={disabled}
+                {...field}
+                value={field.value ?? ""} // Proteção contra valor null
+              />
+              {Icon && (
+                <Icon className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground" />
+              )}
+            </div>
           </FormControl>
           {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />

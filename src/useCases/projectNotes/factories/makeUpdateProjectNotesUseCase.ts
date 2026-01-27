@@ -7,10 +7,8 @@ let updateProjectNoteUseCase: UpdateProjectNoteUseCase;
 export function makeUpdateProjectNoteUseCase() {
   if (!updateProjectNoteUseCase) {
     const projectNoteRepository = makeProjectNotesRepository();
-    const userRepository = makeUserRepository();
     updateProjectNoteUseCase = new UpdateProjectNoteUseCase(
       projectNoteRepository,
-      userRepository
     );
   }
 

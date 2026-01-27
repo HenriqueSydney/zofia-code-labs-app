@@ -1,7 +1,10 @@
 import { AppError } from "@/errors/AppError";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IProjectNotesRepository } from "@/repositories/IProjectNotesRepository";
-import { IProjectsRepository } from "@/repositories/IProjectsRepository";
+import {
+  IProjectsRepository,
+  ProjectWithDetails,
+} from "@/repositories/IProjectsRepository";
 
 interface CreateCreateProjectNoteUseCaseRequest {
   content: string;
@@ -12,24 +15,31 @@ interface CreateCreateProjectNoteUseCaseRequest {
 export class CreateProjectNoteUseCase {
   constructor(
     private projectNotesRepository: IProjectNotesRepository,
-    private projectRepository: IProjectsRepository
+    private projectRepository: IProjectsRepository,
   ) {}
 
   async execute({
     content,
     projectId,
     userId,
-  }: CreateCreateProjectNoteUseCaseRequest): Promise<void> {
+  }: CreateCreateProjectNoteUseCaseRequest): Promise<ProjectWithDetails> {
     const projectExists = await this.projectRepository.findById(projectId);
 
     if (!projectExists) throw new AppError("Projeto não localizado");
 
-    await checkUserPermissionForAsset('projectNotes', userId, projectExists, "CREATE");
+    await checkUserPermissionForAsset(
+      "projectNotes",
+      userId,
+      projectExists,
+      "CREATE",
+    );
 
     await this.projectNotesRepository.create({
       content,
       projectId,
       userId,
     });
+
+    return projectExists;
   }
 }

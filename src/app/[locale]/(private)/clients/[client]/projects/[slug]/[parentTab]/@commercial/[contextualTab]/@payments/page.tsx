@@ -9,7 +9,8 @@ import { CreateInvoceForm } from "./_components/CreateInvoiceForm";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { FinancialStatus } from "@/generated/prisma/enums";
 import { Separator } from "@/components/ui/separator";
-import { ArrowUpCircle } from "lucide-react";
+import { ArrowUpCircle, DollarSign } from "lucide-react";
+import { EmptyState } from "@/components/EmptyState";
 
 interface IParams {
   params?: Promise<{ slug: string }>;
@@ -26,7 +27,7 @@ export default async function PaymentTab({ params }: IParams) {
     },
     {
       cache: "no-cache",
-    }
+    },
   );
 
   if (error) {
@@ -59,7 +60,7 @@ export default async function PaymentTab({ params }: IParams) {
         totalRejected: acc.totalRejected + current.amount,
       };
     },
-    { totalPaid: 0, totalProjected: 0, totalRejected: 0 }
+    { totalPaid: 0, totalProjected: 0, totalRejected: 0 },
   );
 
   return (
@@ -71,60 +72,71 @@ export default async function PaymentTab({ params }: IParams) {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {payments.map((payment) => (
-              <PaymentItem
-                key={payment.id}
-                payment={payment}
-                projectSlug={slug}
+            {payments.length === 0 ? (
+              <EmptyState
+                title="Nenhum pagamento "
+                description="Nenhum pagamento reconhecido até o momento. Registre um pagamento ou aguarde o projeto chegar na fase de pagamento."
+                icon={DollarSign}
+                action={<CreateInvoceForm projectSlug={slug} />}
               />
-            ))}
+            ) : (
+              payments.map((payment) => (
+                <PaymentItem
+                  key={payment.id}
+                  payment={payment}
+                  projectSlug={slug}
+                />
+              ))
+            )}
           </div>
 
-          <div className="mt-6 flex justify-end ">
-            <div className="bg-muted/30 rounded-xl border p-6 w-full sm:w-[500px] space-y-4">
-              {/* Linha da Entrada */}
-              <div className="flex justify-between items-start">
-                <div className="space-y-0.5">
-                  <span className="text-xs uppercase tracking-wider font-bold text-muted-foreground">
-                    Valor Projetado
-                  </span>
-                  <p className="text-[10px] text-muted-foreground">
-                    Soma de pagos + pendentes
-                  </p>
-                </div>
-                <span className="text-lg font-semibold text-yellow-500">
-                  {formatCurrency(totalPayments.totalProjected)}
-                </span>
-              </div>
-              <div className="flex justify-between items-start">
-                <div className="space-y-0.5">
-                  <span className="text-xs uppercase tracking-wider font-bold text-muted-foreground">
-                    Valor Cancelado/Vencido
+          {payments.length > 0 && (
+            <div className="mt-6 flex justify-end ">
+              <div className="bg-muted/30 rounded-xl border p-6 w-full sm:w-[500px] space-y-4">
+                {/* Linha da Entrada */}
+                <div className="flex justify-between items-start">
+                  <div className="space-y-0.5">
+                    <span className="text-xs uppercase tracking-wider font-bold text-muted-foreground">
+                      Valor Projetado
+                    </span>
+                    <p className="text-[10px] text-muted-foreground">
+                      Soma de pagos + pendentes
+                    </p>
+                  </div>
+                  <span className="text-lg font-semibold text-yellow-500">
+                    {formatCurrency(totalPayments.totalProjected)}
                   </span>
                 </div>
-                <span className="text-lg font-semibold text-red-500">
-                  {formatCurrency(totalPayments.totalRejected)}
-                </span>
-              </div>
+                <div className="flex justify-between items-start">
+                  <div className="space-y-0.5">
+                    <span className="text-xs uppercase tracking-wider font-bold text-muted-foreground">
+                      Valor Cancelado/Vencido
+                    </span>
+                  </div>
+                  <span className="text-lg font-semibold text-red-500">
+                    {formatCurrency(totalPayments.totalRejected)}
+                  </span>
+                </div>
 
-              <Separator className="bg-border/50" />
+                <Separator className="bg-border/50" />
 
-              {/* Linha do Total */}
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-bold uppercase tracking-tight text-green-500">
-                    Total de Receitas
-                  </span>
-                  <ArrowUpCircle className="w-4 h-4 text-green-500" />
-                </div>
-                <div className="text-right">
-                  <span className="text-3xl font-black text-green-500 tracking-tighter">
-                    {formatCurrency(Number(totalPayments.totalPaid))}
-                  </span>
+                {/* Linha do Total */}
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-bold uppercase tracking-tight text-green-500">
+                      Total de Receitas
+                    </span>
+                    <ArrowUpCircle className="w-4 h-4 text-green-500" />
+                  </div>
+                  <div className="text-right">
+                    <span className="text-3xl font-black text-green-500 tracking-tighter">
+                      {formatCurrency(Number(totalPayments.totalPaid))}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </CardContent>
       </Card>
     </TabsContent>

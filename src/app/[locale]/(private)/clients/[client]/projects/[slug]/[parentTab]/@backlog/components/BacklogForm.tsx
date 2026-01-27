@@ -1,46 +1,33 @@
 "use client";
 
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSession } from "next-auth/react";
+import { useParams } from "next/navigation";
+import { toast } from "sonner";
 
-// Certifique-se de que o caminho do schema está correto
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+
+// Schemas e Actions
 import {
   BacklogItemSchema,
   backlogItemSchema,
-  BacklogStatusEnum, // Importado do arquivo de schema criado anteriormente
-  BacklogPriorityEnum, // Importado do arquivo de schema criado anteriormente
+  BacklogStatusEnum,
+  BacklogPriorityEnum,
 } from "@/schemas/backlog/backlogItemSchema";
 import { updateBacklogAction } from "@/actions/backlog/updateBacklogItemAction";
 import { createBacklogAction } from "@/actions/backlog/createBacklogItemAction";
 import { listUsersByOrganizationAction } from "@/actions/users/listUsersByOrganizationAction";
-import { useSession } from "next-auth/react";
 import {
   backlogPriorityMapper,
   backlogStatusMapper,
 } from "@/mappers/BacklogMappers";
-import { useParams } from "next/navigation";
+import { FormInput } from "@/components/form/FormInput";
+import { FormSelect } from "@/components/form/FormSelect";
+import { FormNumberInput } from "@/components/form/FormNumberInput";
+import { FormTextarea } from "@/components/form/FormTextarea";
 
 export type AssigneeOption = {
   id: string;
@@ -54,6 +41,17 @@ interface IBacklogForm {
   handleCloseModal: () => void;
 }
 
+// Mapeamento das opções estáticas para o formato { label, value }
+const STATUS_OPTIONS = BacklogStatusEnum.options.map((status) => ({
+  value: status,
+  label: backlogStatusMapper[status] ?? status,
+}));
+
+const PRIORITY_OPTIONS = BacklogPriorityEnum.options.map((prio) => ({
+  value: prio,
+  label: backlogPriorityMapper[prio] ?? prio,
+}));
+
 export function BacklogForm({
   projectId,
   backlog,
@@ -62,7 +60,7 @@ export function BacklogForm({
   const { data: session } = useSession();
   const params = useParams();
   const [assigneesOptions, setAssigneesOptions] = useState<AssigneeOption[]>(
-    []
+    [],
   );
   const [isPending, startTransition] = useTransition();
 
@@ -76,39 +74,58 @@ export function BacklogForm({
       priority: backlog?.priority ?? "LOW",
       points: backlog?.points ?? 0,
       externalLink: backlog?.externalLink ?? "",
-      assigneeId: backlog?.assigneeId ?? null,
+      // Truque para o Select funcionar bem: se for null, usa string "unassigned" no formulário
+      assigneeId: backlog?.assigneeId ?? "unassigned",
       projectId,
     },
   });
 
-  const onSubmit = (data: BacklogItemSchema) => {
+  // Busca usuários para o Select de Responsável
+  useEffect(() => {
+    async function populateAssignOptions() {
+      if (!session) return;
+      const orgUsers = await listUsersByOrganizationAction(
+        session.user.organizationId,
+      );
+
+      if (orgUsers.success) {
+        setAssigneesOptions(orgUsers.data.users);
+      }
+    }
+    populateAssignOptions();
+  }, [session]);
+
+  const onSubmit = (data: any) => {
+    // Tratamento reverso do Assignee: Se for "unassigned", vira null para o backend
+    const payload = {
+      ...data,
+      assigneeId: data.assigneeId === "unassigned" ? null : data.assigneeId,
+    };
+
     startTransition(async () => {
       try {
         if (backlog?.id) {
-          const result = await updateBacklogAction(data, params.slug as string);
-
+          const result = await updateBacklogAction(
+            payload,
+            params.slug as string,
+          );
           if (!result.success) {
             toast.error(result.message);
             return;
           }
-
           toast.success("Item atualizado com sucesso!");
         } else {
-          // --- MODO CRIAÇÃO ---
           const result = await createBacklogAction(
-            { ...data, projectId },
-            params.slug as string
+            { ...payload, projectId },
+            params.slug as string,
           );
-
           if (!result.success) {
             toast.error(result.message);
             return;
           }
-
           toast.success("Item criado com sucesso!");
           form.reset();
         }
-
         handleCloseModal();
       } catch (error) {
         toast.error("Ocorreu um erro inesperado.");
@@ -117,212 +134,96 @@ export function BacklogForm({
     });
   };
 
-  const populateAssignOptions = async () => {
-    if (!session) return;
-    const orgUsers = await listUsersByOrganizationAction(
-      session.user.organizationId
-    );
-
-    if (orgUsers.success) {
-      const assigneesOptions = orgUsers.data.users.map((orgUsers) => ({
-        id: orgUsers.id,
-        name: orgUsers.name,
-      }));
-
-      setAssigneesOptions(assigneesOptions);
-    }
-  };
-
-  useEffect(() => {
-    populateAssignOptions();
-  }, []);
+  // Prepara as opções de usuários para o FormSelect
+  const userOptions = [
+    { value: "unassigned", label: "-- Não atribuído --" },
+    ...assigneesOptions.map((u) => ({
+      value: u.id,
+      label: u.name ?? "Sem nome",
+    })),
+  ];
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {/* Título */}
-        <FormField
+        <FormInput
           control={form.control}
           name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Título da Tarefa</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Ex: Implementar Login OAuth"
-                  disabled={isPending}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Título da Tarefa"
+          placeholder="Ex: Implementar Login OAuth"
+          disabled={isPending}
         />
 
         {/* Linha: Status e Prioridade */}
         <div className="flex flex-col sm:flex-row gap-4">
-          <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel>Status</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  disabled={isPending}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {BacklogStatusEnum.options.map((status) => (
-                      <SelectItem key={status} value={status}>
-                        {backlogStatusMapper[status] ?? status}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="flex-1">
+            <FormSelect
+              control={form.control}
+              name="status"
+              label="Status"
+              placeholder="Selecione"
+              options={STATUS_OPTIONS}
+              disabled={isPending}
+            />
+          </div>
 
-          <FormField
-            control={form.control}
-            name="priority"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel>Prioridade</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  disabled={isPending}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Prioridade" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {BacklogPriorityEnum.options.map((prio) => (
-                      <SelectItem key={prio} value={prio}>
-                        {backlogPriorityMapper[prio] ?? prio}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="flex-1">
+            <FormSelect
+              control={form.control}
+              name="priority"
+              label="Prioridade"
+              placeholder="Selecione"
+              options={PRIORITY_OPTIONS}
+              disabled={isPending}
+            />
+          </div>
         </div>
 
         {/* Linha: Pontos e Responsável */}
         <div className="flex flex-col sm:flex-row gap-4">
-          <FormField
-            control={form.control}
-            name="points"
-            render={({ field }) => (
-              <FormItem className="w-full sm:w-32">
-                <FormLabel>Story Points</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="0"
-                    disabled={isPending}
-                    {...field}
-                    onChange={(e) => {
-                      // Converte para número ou undefined se estiver vazio
-                      const value =
-                        e.target.value === "" ? 0 : Number(e.target.value);
-                      field.onChange(value);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="w-full sm:w-32">
+            <FormNumberInput
+              control={form.control}
+              name="points"
+              label="Story Points"
+              placeholder="0"
+              min={0}
+              disabled={isPending}
+            />
+          </div>
 
-          <FormField
-            control={form.control}
-            name="assigneeId"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel>Responsável</FormLabel>
-                <Select
-                  onValueChange={(val) =>
-                    field.onChange(val === "unassigned" ? null : val)
-                  }
-                  value={field.value ?? "unassigned"}
-                  disabled={isPending}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione um responsável" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="unassigned">
-                      -- Não atribuído --
-                    </SelectItem>
-                    {assigneesOptions.map((user) => (
-                      <SelectItem key={user.id} value={user.id}>
-                        {user.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="flex-1">
+            <FormSelect
+              control={form.control}
+              name="assigneeId"
+              label="Responsável"
+              placeholder="Selecione um responsável"
+              options={userOptions}
+              disabled={isPending}
+            />
+          </div>
         </div>
 
         {/* Descrição */}
-        <FormField
+        <FormTextarea
           control={form.control}
           name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Descrição Detalhada</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Critérios de aceitação, detalhes técnicos..."
-                  className="resize-none min-h-[100px]"
-                  disabled={isPending}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Descrição Detalhada"
+          placeholder="Critérios de aceitação, detalhes técnicos..."
+          rows={5}
+          disabled={isPending}
         />
 
         {/* Link Externo */}
-        <FormField
+        <FormInput
           control={form.control}
           name="externalLink"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Link Externo (Opcional)</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="https://jira.company.com/browse/PROJ-123"
-                  disabled={isPending}
-                  {...field}
-                  value={field.value ?? ""}
-                />
-              </FormControl>
-              <FormDescription>
-                Link para Jira, Trello ou design.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
+          type="url"
+          label="Link Externo (Opcional)"
+          description="Link para Jira, Trello ou design."
+          placeholder="https://..."
+          disabled={isPending}
         />
 
         <div className="w-full flex justify-end pt-4">
@@ -331,6 +232,7 @@ export function BacklogForm({
             variant="outline"
             onClick={handleCloseModal}
             className="mr-2"
+            disabled={isPending}
           >
             Cancelar
           </Button>
@@ -338,8 +240,8 @@ export function BacklogForm({
             {isPending
               ? "Salvando..."
               : backlog?.id
-              ? "Salvar Alterações"
-              : "Criar Tarefa"}
+                ? "Salvar Alterações"
+                : "Criar Tarefa"}
           </Button>
         </div>
       </form>

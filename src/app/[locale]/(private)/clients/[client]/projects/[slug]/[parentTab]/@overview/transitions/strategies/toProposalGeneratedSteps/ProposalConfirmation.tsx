@@ -1,27 +1,42 @@
 "use client";
 
-import { useState } from "react";
-import { ThumbsUp, ThumbsDown, Send, Loader2, X } from "lucide-react";
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { ThumbsUp, ThumbsDown, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form } from "@/components/ui/form"; // Importante para o wrapper
 
 import { ProposalDetails } from "@/components/ProposalDetail";
 import { ProposalWithDetails } from "@/repositories/IProposalRepository";
 import { changeProposalStatusAction } from "@/actions/proposal/changeProposalStatus";
 import { date } from "@/lib/dayjs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { FormSelect } from "@/components/form/FormSelect";
+import { FormTextarea } from "@/components/form/FormTextarea";
+
+// --- Schema de Validação ---
+const rejectionSchema = z.object({
+  reason: z
+    .string({ error: "Selecione o motivo da rejeição" })
+    .min(1, "Selecione um motivo"),
+  notes: z.string().optional(),
+});
+
+type RejectionSchemaType = z.infer<typeof rejectionSchema>;
+
+const REJECTION_REASONS = [
+  { value: "Preço elevado", label: "Preço acima do orçamento" },
+  { value: "Prazo de entrega", label: "Prazo de entrega inviável" },
+  { value: "Concorrência", label: "Escolheu outro fornecedor" },
+  { value: "Escopo", label: "Escopo não atende às necessidades" },
+  { value: "Outro", label: "Outro motivo" },
+];
 
 interface IProposalConfirmation {
   proposal: ProposalWithDetails;
@@ -32,65 +47,64 @@ export function ProposalConfirmation({
   proposal,
   onSuccess,
 }: IProposalConfirmation) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const [isRejectFormOpen, setIsRejectFormOpen] = useState(false);
 
-  // Estados do formulário de rejeição
-  const [rejectionReason, setRejectionReason] = useState("");
-  const [rejectionNotes, setRejectionNotes] = useState("");
+  // Inicializa o formulário apenas para a rejeição
+  const form = useForm<RejectionSchemaType>({
+    resolver: zodResolver(rejectionSchema),
+    defaultValues: {
+      reason: "",
+      notes: "",
+    },
+  });
 
-  async function handleProposal(
+  // Função genérica para chamar a Server Action
+  async function executeAction(
     action: "REJECTED" | "ACCEPTED",
-    reason?: string,
-    notes?: string,
+    details?: { reason: string; notes?: string },
   ) {
     if (!proposal) return;
 
-    setIsLoading(true);
-    try {
-      let rejectFormDetails;
-      if (action === "REJECTED") {
-        rejectFormDetails = {
-          reason,
-          notes,
-        };
+    startTransition(async () => {
+      try {
+        const result = await changeProposalStatusAction(
+          proposal.id,
+          action,
+          undefined, // Canal (opcional)
+          details, // Detalhes da rejeição (se houver)
+        );
+
+        if (result?.error) {
+          toast.error(result.error);
+          return;
+        }
+
+        toast.success(
+          action === "ACCEPTED"
+            ? "Proposta aceita com sucesso!"
+            : "Rejeição registrada.",
+        );
+
+        onSuccess();
+      } catch (error: any) {
+        if (error.message === "NEXT_REDIRECT") return;
+        toast.error("Erro ao processar a requisição.");
       }
-      const result = await changeProposalStatusAction(
-        proposal.id,
-        action,
-        undefined, // Idealmente viria de um estado de seleção de canal
-        rejectFormDetails,
-      );
-
-      if (result?.error) {
-        toast.error(result.error);
-        return;
-      }
-
-      toast.success(
-        action === "ACCEPTED"
-          ? "Proposta aceita com sucesso!"
-          : "Rejeição registrada.",
-      );
-
-      onSuccess();
-    } catch (error: any) {
-      // Ignora erro de redirecionamento interno do Next.js
-      if (error.message === "NEXT_REDIRECT") return;
-
-      toast.error("Erro ao processar a requisição.");
-    } finally {
-      setIsLoading(false);
-    }
+    });
   }
 
-  const handleSubmitRejection = () => {
-    if (!rejectionReason) {
-      toast.error("Por favor, selecione um motivo para a rejeição.");
-      return;
-    }
-    const fullNotes = `Motivo: ${rejectionReason}. Obs: ${rejectionNotes}`;
-    handleProposal("REJECTED", rejectionReason, fullNotes);
+  // Handler para Aceite (Simples, sem form)
+  const handleAccept = () => {
+    executeAction("ACCEPTED");
+  };
+
+  // Handler para Rejeição (Vem do RHF)
+  const onSubmitRejection = (data: RejectionSchemaType) => {
+    executeAction("REJECTED", {
+      reason: data.reason,
+      notes: data.notes,
+    });
   };
 
   return (
@@ -116,24 +130,21 @@ export function ProposalConfirmation({
           </AlertDescription>
         </Alert>
 
-        {/* Ações Principais */}
+        {/* Ações Principais (Botões Iniciais) */}
         {!isRejectFormOpen && (
           <div className="flex flex-col sm:flex-row items-center justify-end gap-3">
             <Button
               variant="outline"
               className="hover:!bg-destructive/10 hover:text-destructive w-full sm:w-auto"
               onClick={() => setIsRejectFormOpen(true)}
-              disabled={isLoading}
+              disabled={isPending}
             >
               <ThumbsDown className="w-4 h-4 mr-2" />
               Informar Rejeição
             </Button>
 
-            <Button
-              onClick={() => handleProposal("ACCEPTED")}
-              disabled={isLoading}
-            >
-              {isLoading ? (
+            <Button onClick={handleAccept} disabled={isPending}>
+              {isPending ? (
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
               ) : (
                 <ThumbsUp className="w-4 h-4 mr-2" />
@@ -142,79 +153,72 @@ export function ProposalConfirmation({
             </Button>
           </div>
         )}
+
+        {/* Formulário de Rejeição (Renderizado Condicionalmente) */}
         {isRejectFormOpen && (
-          <Card>
-            <CardHeader className="w-full flex flex-row items-center justify-between ">
-              <CardTitle className="flex items-center gap-2">
-                <ThumbsDown className="w-4 h-4 text-destructive" />
+          <Card className="border-destructive/30 bg-destructive/5 animate-in fade-in slide-in-from-top-2">
+            <CardHeader className="w-full flex flex-row items-center justify-between pb-2">
+              <CardTitle className="flex items-center gap-2 text-destructive">
+                <ThumbsDown className="w-4 h-4" />
                 Detalhes da Rejeição
               </CardTitle>
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setIsRejectFormOpen(false)}
+                onClick={() => {
+                  setIsRejectFormOpen(false);
+                  form.reset(); // Limpa form ao fechar
+                }}
               >
                 <X className="w-4 h-4" />
               </Button>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="reason">Motivo Principal</Label>
-                  <Select onValueChange={setRejectionReason}>
-                    <SelectTrigger id="reason">
-                      <SelectValue placeholder="Selecione o motivo..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Preço elevado">
-                        Preço acima do orçamento
-                      </SelectItem>
-                      <SelectItem value="Prazo de entrega">
-                        Prazo de entrega inviável
-                      </SelectItem>
-                      <SelectItem value="Concorrência">
-                        Escolheu outro fornecedor
-                      </SelectItem>
-                      <SelectItem value="Escopo">
-                        Escopo não atende às necessidades
-                      </SelectItem>
-                      <SelectItem value="Outro">Outro motivo</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="notes">
-                    Observações Adicionais (opcional)
-                  </Label>
-                  <Textarea
-                    id="notes"
-                    placeholder="Descreva detalhes sobre a decisão do cliente..."
-                    className="min-h-[100px]"
-                    value={rejectionNotes}
-                    onChange={(e) => setRejectionNotes(e.target.value)}
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmitRejection)}
+                  className="grid gap-4"
+                >
+                  <FormSelect
+                    control={form.control}
+                    name="reason"
+                    label="Motivo Principal"
+                    placeholder="Selecione o motivo..."
+                    options={REJECTION_REASONS}
+                    disabled={isPending}
                   />
-                </div>
 
-                <div className="flex justify-end gap-2 pt-2">
-                  <Button
-                    variant="outline"
-                    onClick={() => setIsRejectFormOpen(false)}
-                  >
-                    Cancelar
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    onClick={handleSubmitRejection}
-                    disabled={isLoading || !rejectionReason}
-                  >
-                    {isLoading && (
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    )}
-                    Confirmar Rejeição
-                  </Button>
-                </div>
-              </div>
+                  <FormTextarea
+                    control={form.control}
+                    name="notes"
+                    label="Observações Adicionais (opcional)"
+                    placeholder="Descreva detalhes sobre a decisão do cliente..."
+                    rows={3}
+                    disabled={isPending}
+                  />
+
+                  <div className="flex justify-end gap-2 pt-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setIsRejectFormOpen(false)}
+                      disabled={isPending}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      type="submit"
+                      variant="destructive"
+                      disabled={isPending}
+                    >
+                      {isPending && (
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      )}
+                      Confirmar Rejeição
+                    </Button>
+                  </div>
+                </form>
+              </Form>
             </CardContent>
           </Card>
         )}

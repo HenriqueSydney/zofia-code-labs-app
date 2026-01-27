@@ -29,7 +29,7 @@ export function CreateExpenseForm({ projectSlug }: ICreateExpenseFormProps) {
       <DialogTrigger asChild>
         {/* Adicionei variant="destructive" como sugestão para indicar "saída/gasto", 
             mas pode remover para manter a cor padrão */}
-        <Button size="lg" variant="destructive">
+        <Button  variant="destructive">
           <Plus className="h-4 w-4 mr-2" />
           Nova Despesa
         </Button>

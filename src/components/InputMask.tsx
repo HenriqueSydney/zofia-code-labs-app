@@ -7,11 +7,10 @@ import { cn } from "@/lib/utils"; // Utilitário padrão do shadcn
 import { Label } from "@/components/ui/label"; // Se não tiver, troque por <label> nativo com classes
 import { convertPatternToIMask } from "@/utils/mask";
 
-interface InputMaskProps
-  extends Omit<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    "onChange" | "onBlur"
-  > {
+interface InputMaskProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "onChange" | "onBlur"
+> {
   label?: string;
   inputError?: FieldError;
   icon?: React.ReactNode;
@@ -39,17 +38,23 @@ const InputMaskBase: ForwardRefRenderFunction<
     value,
     ...rest
   },
-  ref
+  ref,
 ) => {
   // Converte padrão customizado (###.###) para padrão IMask (000.000)
   const imaskPattern = convertPatternToIMask(mask);
 
   // Classes padrão do Input do shadcn (copiadas do componente ui/input.tsx)
   const inputClasses = cn(
-    "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+    "file:text-foreground placeholder:text-muted-foreground selection:bg-primary",
+    "selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0",
+    "rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow]",
+    "outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium",
+    "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+    "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+    "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
     inputError && "border-destructive focus-visible:ring-destructive", // Estilo de erro
     icon && "pr-10", // Espaço extra à direita se houver ícone
-    className
+    className,
   );
 
   return (

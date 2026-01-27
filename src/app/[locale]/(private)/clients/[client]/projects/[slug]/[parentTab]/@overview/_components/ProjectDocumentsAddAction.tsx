@@ -1,6 +1,12 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { FilePlus, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,46 +16,54 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { DropzoneUpload } from "@/components/DropzoneUpload";
-import { FilePlus, FileText, X, Loader2 } from "lucide-react";
-import { toast } from "sonner";
+import { Form } from "@/components/ui/form";
 import { uploadDocumentsAction } from "@/actions/documents/uploadDocumentsAction";
-import { formatBytes } from "@/utils/formatBytes";
+import { FormMultiFileUpload } from "@/components/form/FormMultiFileUpload";
 
 interface IProjectDocumentsAddAction {
   projectId: string;
   variant?: "outline" | "default" | "ghost";
 }
 
+// Schema simples apenas para validar que existem arquivos
+const uploadSchema = z.object({
+  documents: z
+    .array(z.instanceof(File))
+    .min(1, "Selecione pelo menos um arquivo para enviar."),
+});
+
+type UploadSchemaType = z.infer<typeof uploadSchema>;
+
 export function ProjectDocumentsAddAction({
   projectId,
   variant = "ghost",
 }: IProjectDocumentsAddAction) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [files, setFiles] = useState<File[]>([]);
   const [isPending, startTransition] = useTransition();
 
-  const handleRemoveFile = (indexToRemove: number) => {
-    setFiles((prevFiles) => prevFiles.filter((_, i) => i !== indexToRemove));
-  };
+  const form = useForm<UploadSchemaType>({
+    resolver: zodResolver(uploadSchema),
+    defaultValues: {
+      documents: [],
+    },
+  });
 
-  const handleSubmit = async () => {
-    if (files.length === 0) return;
-
-    const formData = new FormData();
-    formData.append("projectId", projectId);
-
-    // Anexa todos os arquivos ao FormData
-    files.forEach((file) => {
-      formData.append("files", file);
-    });
-
+  const onSubmit = (data: UploadSchemaType) => {
     startTransition(async () => {
+      const formData = new FormData();
+      formData.append("projectId", projectId);
+
+      // Anexa os arquivos ao FormData
+      // Nota: O nome 'files' deve bater com o que seu Server Action espera receber
+      data.documents.forEach((file) => {
+        formData.append("files", file);
+      });
+
       const result = await uploadDocumentsAction(formData);
 
       if (result.success) {
         toast.success(result.message);
-        setFiles([]); // Limpa a lista
+        form.reset(); // Limpa o formulário
         setIsDialogOpen(false); // Fecha o modal
       } else {
         toast.error(result.message);
@@ -57,14 +71,16 @@ export function ProjectDocumentsAddAction({
     });
   };
 
+  const handleOpenChange = (open: boolean) => {
+    setIsDialogOpen(open);
+    if (!open) {
+      // Se fechar sem salvar, reseta o form para limpar os arquivos selecionados
+      setTimeout(() => form.reset(), 300);
+    }
+  };
+
   return (
-    <Dialog
-      open={isDialogOpen}
-      onOpenChange={(open) => {
-        setIsDialogOpen(open);
-        if (!open) setFiles([]); // Limpa arquivos ao fechar sem salvar
-      }}
-    >
+    <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant={variant} size="sm" className="gap-1">
           <FilePlus className="h-4 w-4" />
@@ -77,14 +93,21 @@ export function ProjectDocumentsAddAction({
           <DialogTitle>Adicionar arquivos ao projeto</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6 py-4">
-          {/* Área de Upload */}
-          <div className="space-y-4">
-            <DropzoneUpload
-              value={files}
-              onChange={setFiles} // Atualiza o estado local
-              multiple={true}
-              maxFiles={5}
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6 py-4"
+          >
+            {/* O componente novo substitui toda a lógica manual de Dropzone, 
+              listagem, remoção e ícones. 
+            */}
+            <FormMultiFileUpload
+              control={form.control}
+              name="documents"
+              label="Arquivos"
+              description="Arraste seus documentos aqui. Aceita PDF, Imagens, Word e Excel."
+              maxFiles={10} // Ajuste conforme sua regra de negócio
+              disabled={isPending}
               accept={{
                 "application/pdf": [".pdf"],
                 "image/*": [".png", ".jpg", ".jpeg"],
@@ -96,73 +119,36 @@ export function ProjectDocumentsAddAction({
               }}
             />
 
-            {/* Lista de Arquivos Selecionados */}
-            {files.length > 0 && (
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-muted-foreground">
-                  Arquivos selecionados ({files.length}):
-                </p>
-                <div className="grid gap-2 max-h-[200px] overflow-y-auto pr-2">
-                  {files.map((file, index) => (
-                    <div
-                      key={`${file.name}-${index}`}
-                      className="flex items-center justify-between p-3 border rounded-md bg-background hover:bg-accent/50 transition-colors"
-                    >
-                      <div className="flex items-center gap-3 overflow-hidden">
-                        <div className="p-2 rounded bg-primary/10 text-primary">
-                          <FileText className="w-5 h-5" />
-                        </div>
-                        <div className="flex flex-col truncate">
-                          <span className="text-sm font-medium truncate max-w-[200px] sm:max-w-[280px]">
-                            {file.name}
-                          </span>
-                          <span className="text-xs text-muted-foreground">
-                            {formatBytes(file.size)}
-                          </span>
-                        </div>
-                      </div>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsDialogOpen(false)}
+                disabled={isPending}
+              >
+                Cancelar
+              </Button>
 
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="text-muted-foreground hover:text-destructive h-8 w-8"
-                        onClick={() => handleRemoveFile(index)}
-                        disabled={isPending}
-                      >
-                        <X className="w-4 h-4" />
-                        <span className="sr-only">Remover arquivo</span>
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={() => setIsDialogOpen(false)}
-            disabled={isPending}
-          >
-            Cancelar
-          </Button>
-          <Button
-            onClick={handleSubmit}
-            disabled={files.length === 0 || isPending}
-          >
-            {isPending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Enviando...
-              </>
-            ) : (
-              "Salvar Arquivos"
-            )}
-          </Button>
-        </DialogFooter>
+              <Button
+                type="submit"
+                disabled={
+                  !form.formState.isValid ||
+                  isPending ||
+                  form.watch("documents")?.length === 0
+                }
+              >
+                {isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Enviando...
+                  </>
+                ) : (
+                  "Salvar Arquivos"
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

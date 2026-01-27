@@ -12,7 +12,7 @@ import { PrismaToPlain } from "@/@types/PrismaToPlain";
 export class PrismaProjectNotesRepository implements IProjectNotesRepository {
   async create(
     data: Prisma.ProjectNoteUncheckedCreateInput,
-    tx?: Prisma.TransactionClient
+    tx?: Prisma.TransactionClient,
   ): Promise<ProjectNote> {
     const client = tx || prisma;
 
@@ -24,7 +24,7 @@ export class PrismaProjectNotesRepository implements IProjectNotesRepository {
 
   async update(
     id: string,
-    data: Partial<Prisma.ProjectNoteUncheckedCreateInput>
+    data: Partial<Prisma.ProjectNoteUncheckedCreateInput>,
   ): Promise<ProjectNote> {
     return await prisma.projectNote.update({
       where: { id },
@@ -39,7 +39,7 @@ export class PrismaProjectNotesRepository implements IProjectNotesRepository {
   }
 
   async findProjectNoteById(
-    id: string
+    id: string,
   ): Promise<PrismaToPlain<ProjectNotesWithDetails> | null> {
     const projectNote = await prisma.projectNote.findUnique({
       include: {
@@ -48,7 +48,15 @@ export class PrismaProjectNotesRepository implements IProjectNotesRepository {
             passwordHash: true,
           },
         },
-        project: true,
+        project: {
+          include: {
+            client: {
+              select: {
+                slug: true,
+              },
+            },
+          },
+        },
       },
       where: { id },
     });
@@ -59,7 +67,7 @@ export class PrismaProjectNotesRepository implements IProjectNotesRepository {
   async fetchProjectNotesByProjectId(
     projectId: string,
     query?: string | null,
-    pagination?: Pagination
+    pagination?: Pagination,
   ): Promise<{
     totalOfRegisters: number;
     projectNotes: PrismaToPlain<ProjectNotesWithDetails>[];

@@ -20,7 +20,7 @@ Requisito: Adicionar, remover e listar documentos do projeto
 Requisito: Lógica de transição de status (Rascunho -> Análise -> Contrato -> Pagamento -> Planned).
 
 - [x] Criar componentes de formulários
-- [ ] Alterar todos os campos de formulários para os componentes para os componentes criados
+- [x] Alterar todos os campos de formulários para os componentes para os componentes criados
 
 Requisito: Alterar todos os campos de formulários de todos os formulários para os componentes criados
 

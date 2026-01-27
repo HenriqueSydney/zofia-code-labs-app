@@ -9,8 +9,8 @@ export const projectFormSchema = z.object({
   description: z.string().min(10, "A descrição deve ser mais detalhada."),
   clientId: z.string({ message: "Selecione um cliente." }),
   priority: z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]),
-  estimatedStartDate: z.string().optional(), // Ou z.date() dependendo de como você trata datas
-  endDate: z.string().optional(),
+  estimatedStartDate: z.coerce.date().optional(), // Ou z.date() dependendo de como você trata datas
+  endDate: z.coerce.date().optional(),
   totalBudget: z.number().min(0).optional(),
   tags: z
     .array(z.string(), { error: "O campo espera uma lista de Tags" })

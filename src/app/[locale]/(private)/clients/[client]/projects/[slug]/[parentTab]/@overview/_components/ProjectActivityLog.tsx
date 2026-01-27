@@ -9,7 +9,6 @@ import {
   Mail,
   CreditCard,
   CheckCircle,
-  AlertCircle,
   Webhook,
 } from "lucide-react";
 

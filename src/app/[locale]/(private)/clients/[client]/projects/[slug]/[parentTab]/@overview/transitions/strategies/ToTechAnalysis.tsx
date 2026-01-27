@@ -1,28 +1,28 @@
-import { useState } from "react";
+"use client";
+
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { TransitionStrategyProps } from "../types";
 import { changeProjectStatusAction } from "@/actions/projects/changeProjectStatus";
+import { FormMultiCheckbox } from "@/components/form/FormMultiCheckbox";
+import { FormTextarea } from "@/components/form/FormTextarea";
 
-// Schema de validação específico desta etapa
-const toTechAnalysis = z.object({
+// Componentes Refatorados
+
+// Schema
+const toTechAnalysisSchema = z.object({
   observation: z.string().min(10, "Informe uma observação técnica detalhada."),
   serviceIds: z.array(z.string()).min(1, "Selecione pelo menos um serviço."),
 });
 
-type FormValues = z.infer<typeof toTechAnalysis>;
+type FormValues = z.infer<typeof toTechAnalysisSchema>;
 
 export function ToTechAnalysis({
   project,
@@ -31,111 +31,93 @@ export function ToTechAnalysis({
   onCancel,
   contextData,
 }: TransitionStrategyProps) {
-  // Supondo que contextData venha com a lista de services (fetch feito pelo componente pai ou server component)
-  const availableServices = contextData || [];
+  const [isPending, startTransition] = useTransition();
 
-  const servicesIds = project.projectServices.map(
-    (service) => service.serviceTypeId
+  // Tratamento dos dados de contexto (Lista de serviços disponíveis)
+  const availableServices = (contextData as any[]) || [];
+
+  // IDs dos serviços que o projeto JÁ possui
+  const initialServiceIds = project.projectServices.map(
+    (service) => service.serviceTypeId,
   );
 
-  const [loading, setLoading] = useState(false);
   const form = useForm<FormValues>({
-    resolver: zodResolver(toTechAnalysis),
-    defaultValues: { observation: "", serviceIds: servicesIds },
+    resolver: zodResolver(toTechAnalysisSchema),
+    defaultValues: {
+      observation: "",
+      serviceIds: initialServiceIds,
+    },
   });
 
-  const onSubmit = async (data: FormValues) => {
-    setLoading(true);
-    // Aqui passamos os dados extras (services e obs) para a Server Action
-    const result = await changeProjectStatusAction({
-      projectId: project.id,
-      newStatus: targetStatus,
-      data,
+  const onSubmit = (data: FormValues) => {
+    startTransition(async () => {
+      try {
+        const result = await changeProjectStatusAction({
+          projectId: project.id,
+          newStatus: targetStatus,
+          data,
+        });
+
+        if (result.success) {
+          toast.success("Projeto enviado para análise técnica!");
+          onSuccess();
+        } else {
+          toast.error(result.error);
+        }
+      } catch (error) {
+        toast.error("Erro inesperado ao processar a solicitação.");
+      }
     });
-    setLoading(false);
-
-    if (result.success) onSuccess();
-    else alert(result.error);
   };
-
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        {/* Campo Observação */}
-        <FormField
-          control={form.control}
-          name="observation"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Observação/Análise para equipe técnica</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Descreva os detalhes técnicos para a proposta..."
-                  className="h-50"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="space-y-1">
+          <h3 className="font-medium">Solicitação de Análise</h3>
+          <p className="text-sm text-muted-foreground">
+            Defina o escopo preliminar e envie as instruções para o time
+            técnico.
+          </p>
+        </div>
 
-        {/* Campo Serviços (Checkboxes) */}
-        <FormField
+        {/* Componente de Checkbox Múltiplo Refatorado */}
+        <FormMultiCheckbox
           control={form.control}
           name="serviceIds"
-          render={() => (
-            <FormItem>
-              <FormLabel className="mb-2 mt-4 block">
-                Análise preliminar de serviços necessários
-              </FormLabel>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-100 overflow-y-auto p-2 rounded">
-                {availableServices.map((service: any) => (
-                  <FormField
-                    key={service.id}
-                    control={form.control}
-                    name="serviceIds"
-                    render={({ field }) => {
-                      return (
-                        <FormItem
-                          key={service.id}
-                          className="flex flex-row items-start space-x-3 space-y-0"
-                        >
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value?.includes(service.id)}
-                              onCheckedChange={(checked) => {
-                                return checked
-                                  ? field.onChange([...field.value, service.id])
-                                  : field.onChange(
-                                      field.value?.filter(
-                                        (value) => value !== service.id
-                                      )
-                                    );
-                              }}
-                            />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer">
-                            {service.name}
-                          </FormLabel>
-                        </FormItem>
-                      );
-                    }}
-                  />
-                ))}
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Análise preliminar de serviços"
+          description="Indique quais serviços devem ser avaliados pelo time técnico."
+          disabled={isPending}
+          className="grid-cols-1 md:grid-cols-2"
+          options={availableServices.map((s) => ({
+            id: s.id,
+            label: s.name,
+          }))}
         />
 
-        <div className="flex justify-end gap-2 pt-4">
-          <Button variant="outline" type="button" onClick={onCancel}>
+        {/* Componente de Textarea Refatorado */}
+        <FormTextarea
+          control={form.control}
+          name="observation"
+          label="Instruções para a Equipe Técnica"
+          placeholder="Descreva o que deve ser analisado, dúvidas específicas ou requisitos do cliente..."
+          rows={5}
+          disabled={isPending}
+        />
+
+        {/* Footer com Ações */}
+        <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-4 border-t">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            disabled={isPending}
+          >
             Cancelar
           </Button>
-          <Button type="submit" disabled={loading}>
-            Encaminhar para equipe técnica
+          <Button type="submit" disabled={isPending}>
+            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Encaminhar para Técnica
           </Button>
         </div>
       </form>

@@ -2,12 +2,14 @@
 
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import { Dialog, DialogClose, DialogContent, DialogTitle } from "./ui/dialog";
+import { cn } from "@/lib/utils";
 
 interface IModal {
   children: ReactNode;
   modalTitle: string;
   setIsModalOpen: Dispatch<SetStateAction<any | null>>;
   isModalOpen: boolean;
+  className?: string;
 }
 
 export function Modal({
@@ -15,10 +17,16 @@ export function Modal({
   modalTitle,
   setIsModalOpen,
   isModalOpen,
+  className,
 }: IModal) {
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <DialogContent className="max-w-5xl w-full p-0 bg-background/95 backdrop-blur-sm p-5">
+      <DialogContent
+        className={cn(
+          "max-w-2xl w-full  bg-background/95 backdrop-blur-sm p-5",
+          className,
+        )}
+      >
         <DialogTitle className="DialogTitle absolute top-5 left-5">
           {modalTitle}
         </DialogTitle>

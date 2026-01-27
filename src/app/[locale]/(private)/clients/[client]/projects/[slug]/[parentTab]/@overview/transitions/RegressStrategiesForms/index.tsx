@@ -1,19 +1,7 @@
+import { FormSelect } from "@/components/form/FormSelect";
 import { z } from "zod";
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+// Import Textarea se você usar ele em outro lugar do código,
+// mas para o Select ele não é mais necessário aqui dentro.
 
 export interface IRegressStrategy {
   schema: z.ZodObject<any>;
@@ -32,39 +20,25 @@ export const REGRESS_STRATEGIES: Record<string, IRegressStrategy> = {
         ["SCOPE_CHANGE", "TECHNICAL_ERROR", "MISSING_DOCS", "CLIENT_REQUEST"],
         {
           error: "Selecione o motivo técnico",
-        }
+        },
       ),
     }),
     defaultValues: { observation: "", motivation: "" },
     renderExtraFields: (form) => (
-      <FormField
+      <FormSelect
         control={form.control}
         name="motivation"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Motivo da Reanálise Técnica</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o motivo técnico..." />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                <SelectItem value="SCOPE_CHANGE">Mudança de Escopo</SelectItem>
-                <SelectItem value="TECHNICAL_ERROR">
-                  Inconsistência Identificada
-                </SelectItem>
-                <SelectItem value="MISSING_DOCS">
-                  Documentação Incompleta
-                </SelectItem>
-                <SelectItem value="CLIENT_REQUEST">
-                  Solicitação de Revisão pelo Cliente
-                </SelectItem>
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )}
+        label="Motivo da Reanálise Técnica"
+        placeholder="Selecione o motivo técnico..."
+        options={[
+          { value: "SCOPE_CHANGE", label: "Mudança de Escopo" },
+          { value: "TECHNICAL_ERROR", label: "Inconsistência Identificada" },
+          { value: "MISSING_DOCS", label: "Documentação Incompleta" },
+          {
+            value: "CLIENT_REQUEST",
+            label: "Solicitação de Revisão pelo Cliente",
+          },
+        ]}
       />
     ),
   },
@@ -84,41 +58,28 @@ export const REGRESS_STRATEGIES: Record<string, IRegressStrategy> = {
         ],
         {
           error: "Selecione o motivo comercial",
-        }
+        },
       ),
     }),
     defaultValues: { observation: "", motivation: "" },
     renderExtraFields: (form) => (
-      <FormField
+      <FormSelect
         control={form.control}
         name="motivation"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Motivo da Revisão Comercial</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o motivo comercial..." />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                <SelectItem value="PRICE_ADJUSTMENT">
-                  Ajuste de Valores/Descontos
-                </SelectItem>
-                <SelectItem value="TYPO_ERROR">
-                  Erro de Digitação/Dados
-                </SelectItem>
-                <SelectItem value="COMMERCIAL_NEGOTIATION">
-                  Nova Negociação Comercial
-                </SelectItem>
-                <SelectItem value="PAYMENT_TERM_CHANGE">
-                  Alteração de Condição de Pgto
-                </SelectItem>
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )}
+        label="Motivo da Revisão Comercial"
+        placeholder="Selecione o motivo comercial..."
+        options={[
+          { value: "PRICE_ADJUSTMENT", label: "Ajuste de Valores/Descontos" },
+          { value: "TYPO_ERROR", label: "Erro de Digitação/Dados" },
+          {
+            value: "COMMERCIAL_NEGOTIATION",
+            label: "Nova Negociação Comercial",
+          },
+          {
+            value: "PAYMENT_TERM_CHANGE",
+            label: "Alteração de Condição de Pgto",
+          },
+        ]}
       />
     ),
   },

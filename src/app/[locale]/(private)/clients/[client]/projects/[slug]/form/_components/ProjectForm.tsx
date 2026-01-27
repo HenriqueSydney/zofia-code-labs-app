@@ -15,14 +15,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { DropzoneUpload } from "@/components/DropzoneUpload";
 import {
   projectFormSchema,
@@ -37,6 +29,12 @@ import { Badge } from "@/components/ui/badge"; // Import do Badge para as tags
 import { priorityOptions } from "@/mappers/projectPriorityMapper";
 import { toast } from "sonner";
 import { date } from "@/lib/dayjs";
+import { FormInput } from "@/components/form/FormInput";
+import { FormSelect } from "@/components/form/FormSelect";
+import { FormCurrencyInput } from "@/components/form/FormCurrencyInput";
+import { FormTextarea } from "@/components/form/FormTextarea";
+import { FormDatePicker } from "@/components/form/FormDatePicker";
+import { FormMultiFileUpload } from "@/components/form/FormMultiFileUpload";
 
 interface ProjectFormProps {
   projectId?: string;
@@ -52,7 +50,7 @@ export function ProjectForm({
 }: ProjectFormProps) {
   const [tagInput, setTagInput] = useState("");
 
-  const form = useForm<ProjectFormValues>({
+  const form = useForm({
     resolver: zodResolver(projectFormSchema),
     defaultValues: {
       name: initialData?.name ?? "",
@@ -61,12 +59,12 @@ export function ProjectForm({
       priority: initialData?.priority ?? "MEDIUM",
       totalBudget: initialData?.totalBudget ?? 0,
       estimatedStartDate: initialData?.estimatedStartDate
-        ? date(initialData.estimatedStartDate).toISOString().split("T")[0]
-        : "",
+        ? date(initialData.estimatedStartDate).toDate()
+        : date().add(3, "days").toDate(),
 
       endDate: initialData?.endDate
-        ? date(initialData.endDate).toISOString().split("T")[0]
-        : "",
+        ? date(initialData.endDate).toDate()
+        : date().add(2, "week").add(3, "days").toDate(),
       tags: initialData?.tags ?? [],
       documents: [],
     },
@@ -108,9 +106,16 @@ export function ProjectForm({
 
     // Campos Numéricos/Datas
     formData.append("totalBudget", String(data.totalBudget));
-    if (data.estimatedStartDate)
-      formData.append("estimatedStartDate", data.estimatedStartDate);
-    if (data.endDate) formData.append("endDate", data.endDate);
+    if (data.estimatedStartDate) {
+      formData.append(
+        "estimatedStartDate",
+        data.estimatedStartDate.toISOString(),
+      );
+    }
+
+    if (data.endDate) {
+      formData.append("endDate", data.endDate.toISOString());
+    }
 
     // Arrays (Tags e Arquivos)
     data.tags?.forEach((tag) => formData.append("tags", tag));
@@ -145,133 +150,62 @@ export function ProjectForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* --- SEÇÃO 1: Identificação --- */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
+          <FormInput
+            label="Nome do Projeto *"
             control={form.control}
             name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nome do Projeto *</FormLabel>
-                <FormControl>
-                  <Input placeholder="Ex: Migração Cloud AWS" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            placeholder="Ex: Migração Cloud AWS"
           />
 
-          <FormField
+          <FormSelect
+            label="Cliente *"
             control={form.control}
+            disabled={!!initialData?.clientId}
             name="clientId"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Cliente *</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  disabled={!!initialData?.clientId} // Se veio bloqueado na prop
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione o cliente" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {clients.map((client) => (
-                      <SelectItem key={client.id} value={client.id}>
-                        {client.companyName}{" "}
-                        {client.tradeName && `(${client.tradeName})`}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
+            placeholder="Selecione o cliente"
+            options={clients.map((client) => ({
+              value: client.id,
+              label: client.tradeName
+                ? `${client.companyName} (${client.tradeName})`
+                : client.companyName,
+            }))}
           />
         </div>
 
         {/* --- SEÇÃO 2: Planejamento e Status --- */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <FormField
+          <FormSelect
+            label="Prioridade"
             control={form.control}
             name="priority"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Prioridade</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Prioridade" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {priorityOptions.map((prio) => (
-                      <SelectItem key={prio.value} value={prio.value}>
-                        {prio.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
+            placeholder="Prioridade"
+            options={priorityOptions.map((prio) => ({
+              value: prio.value,
+              label: prio.label,
+            }))}
           />
 
-          {/* Budget */}
-          <FormField
+          <FormCurrencyInput
+            label="Orçamento Total (R$)"
+            placeholder="R$ 0.00"
             control={form.control}
             name="totalBudget"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Orçamento Total (R$)</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="0.00"
-                    min={0}
-                    step="0.01"
-                    {...field}
-                    onChange={(e) => {
-                      // Se o campo estiver vazio, passa undefined ou 0, senão converte
-                      const value =
-                        e.target.value === "" ? "" : Number(e.target.value);
-                      field.onChange(value);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
           />
 
-          <FormField
+          <FormDatePicker
             control={form.control}
             name="estimatedStartDate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Previsão de Início</FormLabel>
-                <FormControl>
-                  <Input type="date" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Previsão de Início"
+            placeholder="Selecione a data"
+            minDate={date().toDate()}
           />
-          <FormField
+
+          <FormDatePicker
             control={form.control}
             name="endDate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Prazo Final (Deadline)</FormLabel>
-                <FormControl>
-                  <Input type="date" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Prazo Final (Deadline)"
+            placeholder="Selecione a data"
+            minDate={date().toDate()}
           />
 
           {/* Tags Input Manual */}
@@ -329,97 +263,29 @@ export function ProjectForm({
         </div>
 
         {/* --- SEÇÃO 4: Detalhes --- */}
-        <FormField
+        <FormTextarea
+          label="Descrição e Escopo Inicial *"
           control={form.control}
           name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Descrição e Escopo Inicial *</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Descreva os objetivos principais e requisitos do projeto..."
-                  className="resize-y custom-scrollbar"
-                  rows={6}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          className="resize-y custom-scrollbar"
+          rows={6}
+          placeholder="Descreva os objetivos principais e requisitos do projeto..."
         />
 
         {/* --- SEÇÃO 5: Documentos --- */}
-        <FormField
+        <FormMultiFileUpload
           control={form.control}
           name="documents"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Documentos de Referência</FormLabel>
-              <FormControl>
-                <div className="space-y-4">
-                  <DropzoneUpload
-                    value={field.value}
-                    onChange={field.onChange}
-                    multiple={true}
-                    maxFiles={5}
-                    accept={{
-                      "application/pdf": [".pdf"],
-                      "image/*": [".png", ".jpg", ".jpeg"],
-                      "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-                        [".docx"],
-                    }}
-                  />
-                  {field.value && field.value.length > 0 && (
-                    <div className="space-y-2">
-                      <p className="text-sm font-medium text-muted-foreground">
-                        Arquivos selecionados ({field.value.length}):
-                      </p>
-                      <div className="grid gap-2">
-                        {field.value.map((file, index) => (
-                          <div
-                            key={`${file.name}-${index}`}
-                            className="flex items-center justify-between p-3 border rounded-md bg-background hover:bg-accent/50 transition-colors"
-                          >
-                            <div className="flex items-center gap-3 overflow-hidden">
-                              <div className="p-2 rounded bg-primary/10 text-primary">
-                                <FileText className="w-5 h-5" />
-                              </div>
-                              <div className="flex flex-col truncate">
-                                <span className="text-sm font-medium truncate max-w-[200px]">
-                                  {file.name}
-                                </span>
-                                <span className="text-xs text-muted-foreground">
-                                  {formatBytes(file.size)}
-                                </span>
-                              </div>
-                            </div>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              className="text-muted-foreground hover:text-destructive"
-                              onClick={() => {
-                                const newFiles = field.value?.filter(
-                                  (_, i) => i !== index,
-                                );
-                                field.onChange(newFiles);
-                              }}
-                            >
-                              <X className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </FormControl>
-              <FormDescription>
-                Anexe especificações ou contratos (Máx 5 arquivos).
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Documentos de Referência"
+          description="Anexe especificações ou contratos."
+          maxFiles={5}
+          maxSize={10 * 1024 * 1024}
+          accept={{
+            "application/pdf": [".pdf"],
+            "image/*": [".png", ".jpg", ".jpeg"],
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+              [".docx"],
+          }}
         />
 
         <div className="flex justify-end pt-4 border-t">

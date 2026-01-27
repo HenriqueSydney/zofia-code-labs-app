@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/card";
 
 import { Link } from "@/i18n/navigation";
-import { SectionHeading } from "@/components/SectionHeading";
 import { fetchProjects } from "@/actions/projects/fetchProjects";
 import { getParams } from "@/utils/getParams";
 import { operationWrapper } from "@/lib/operationWrapper";

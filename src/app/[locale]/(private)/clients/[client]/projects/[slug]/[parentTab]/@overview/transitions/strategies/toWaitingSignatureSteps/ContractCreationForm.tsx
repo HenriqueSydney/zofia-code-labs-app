@@ -4,32 +4,22 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { UploadCloud, FileText } from "lucide-react";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { TransitionStrategyProps } from "../../types";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { fetchDocumentTemplatesAction } from "@/actions/templates/fetchDocumentTemplates";
-import { TemplateType } from "@/generated/prisma/enums";
-import { toast } from "sonner";
-import { createContractAction } from "@/actions/contract/createContract";
-import { ProposalDetails } from "@/components/ProposalDetail";
+import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
+
+// Actions e Types
+import { fetchDocumentTemplatesAction } from "@/actions/templates/fetchDocumentTemplates";
+import { createContractAction } from "@/actions/contract/createContract";
+import { TemplateType } from "@/generated/prisma/enums";
+import { TransitionStrategyProps } from "../../types";
+import { FormRadioCards } from "@/components/form/FormRadioCards";
+import { FormSelect } from "@/components/form/FormSelect";
 
 type DocumentTemplates = {
   type: TemplateType;
@@ -64,48 +54,15 @@ export function ContractCreationForm({
   });
 
   const mode = form.watch("mode");
+  const hasAvailableTemplate = availableTemplates.length > 0;
 
-  const handleSubmit = async (values: FormValues) => {
-    if (values.mode === "upload" && !file) {
-      toast.error("Selecione um arquivo PDF.");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const formData = new FormData();
-      formData.append("projectId", project.id);
-
-      if (values.mode === "template") {
-        if (!values.templateId) {
-          toast.error("Selecione um modelo de documento.");
-          setLoading(false);
-          return;
-        }
-        formData.append("documentTemplateId", values.templateId);
-      } else if (file) {
-        formData.append("document", file);
-      }
-
-      const result = await createContractAction(formData);
-      if (result?.error) {
-        toast.error("Erro ao gerar proposta.");
-      }
-    } catch (error: any) {
-      if (error.message === "NEXT_REDIRECT") {
-        return;
-      }
-      toast.error("Erro inesperado ao criar contrato.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Carrega templates ao montar
   useEffect(() => {
     async function fetchAvailableTemplates() {
       const templates = await fetchDocumentTemplatesAction("CONTRACT");
       if (templates.documentTemplates) {
         setAvailableTemplates(templates.documentTemplates as any);
+        // Define o modo padrão com base na disponibilidade
         form.setValue(
           "mode",
           templates.totalOfRegisters > 0 ? "template" : "upload",
@@ -115,112 +72,144 @@ export function ContractCreationForm({
     fetchAvailableTemplates();
   }, [form]);
 
-  const hasAvailableTemplate = availableTemplates.length > 0;
+  const handleSubmit = async (values: FormValues) => {
+    if (values.mode === "upload" && !file) {
+      toast.error("Selecione um arquivo PDF.");
+      return;
+    }
+
+    if (values.mode === "template" && !values.templateId) {
+      toast.error("Selecione um modelo de documento.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("projectId", project.id);
+
+      if (values.mode === "template") {
+        formData.append("documentTemplateId", values.templateId!);
+      } else if (file) {
+        formData.append("document", file);
+      }
+
+      const result = await createContractAction(formData);
+
+      if (result?.error) {
+        toast.error("Erro ao gerar contrato.");
+      }
+      // O redirect acontece no Server Action ou componente pai lida com sucesso
+    } catch (error: any) {
+      if (error.message !== "NEXT_REDIRECT") {
+        toast.error("Erro inesperado ao criar contrato.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
-      <div className="h-10 space-y-4 mb-6">
-        <h3 className="text-lg font-medium">Configuração do Contrato</h3>
-        <Separator />
+      <div className="space-y-2">
+        <h3 className="text-lg font-medium leading-none">
+          Configuração do Contrato
+        </h3>
+        <p className="text-sm text-muted-foreground">
+          Defina como o contrato jurídico deste projeto será gerado.
+        </p>
+        <Separator className="my-4" />
       </div>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-          <FormField
+          {/* Seleção de Modo via Cards */}
+          <FormRadioCards
             control={form.control}
             name="mode"
-            render={({ field }) => (
-              <FormItem>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  className="grid grid-cols-2 gap-4"
-                >
-                  <div>
-                    <RadioGroupItem
-                      value="template"
-                      disabled={!hasAvailableTemplate}
-                      id="template"
-                      className="peer sr-only"
-                    />
-                    <Label
-                      htmlFor="template"
-                      className="cursor-pointer flex flex-col items-center justify-center text-center h-20 rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5"
-                    >
-                      <span className="font-semibold text-sm">
-                        Gerar via Template
-                      </span>
-                    </Label>
-                  </div>
-                  <div>
-                    <RadioGroupItem
-                      value="upload"
-                      id="upload"
-                      className="peer sr-only"
-                    />
-                    <Label
-                      htmlFor="upload"
-                      className="cursor-pointer flex flex-col items-center justify-center text-center h-20 rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5"
-                    >
-                      <span className="font-semibold text-sm">
-                        Upload de PDF
-                      </span>
-                    </Label>
-                  </div>
-                </RadioGroup>
-              </FormItem>
-            )}
+            options={[
+              {
+                value: "template",
+                label: "Gerar via Template",
+                description: "Usar modelo padrão do sistema",
+                disabled: !hasAvailableTemplate,
+              },
+              {
+                value: "upload",
+                label: "Upload de PDF",
+                description: "Anexar contrato assinado/pronto",
+              },
+            ]}
           />
 
-          {mode === "template" ? (
-            <div className="space-y-4 border p-4 rounded-md shadow-sm">
-              <FormField
+          <div className="space-y-4 border p-4 rounded-md bg-card">
+            {mode === "template" ? (
+              <FormSelect
                 control={form.control}
                 name="templateId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Modelo de Documento</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione o template" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {availableTemplates.map((template) => (
-                          <SelectItem key={template.id} value={template.id}>
-                            {template.title}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Modelo de Documento"
+                placeholder="Selecione o template..."
+                options={availableTemplates.map((t) => ({
+                  value: t.id,
+                  label: t.title,
+                }))}
               />
-            </div>
-          ) : (
-            <div className="space-y-3 border p-6 rounded-md bg-muted/20 border-dashed">
-              <Label>Documento PDF do Contrato</Label>
-              <Input
-                type="file"
-                accept=".pdf"
-                onChange={(e) => setFile(e.target.files?.[0] || null)}
-              />
-              <p className="text-[10px] text-muted-foreground">
-                O arquivo será vinculado diretamente ao projeto.
-              </p>
-            </div>
-          )}
+            ) : (
+              // Área de Upload Manual (Visual Clean)
+              <div className="space-y-2 border-2 border-dashed border-muted-foreground/25 p-6 rounded-md bg-muted/5 hover:bg-muted/10 transition-colors flex flex-col items-center justify-center text-center">
+                <div className="p-3 bg-muted rounded-full mb-2">
+                  {file ? (
+                    <FileText className="h-6 w-6 text-primary" />
+                  ) : (
+                    <UploadCloud className="h-6 w-6 text-muted-foreground" />
+                  )}
+                </div>
 
-          <div className="flex justify-end gap-3 pt-4 mr-4">
-            <Button type="button" variant="ghost" onClick={onCancel}>
+                <Label
+                  htmlFor="contract-upload"
+                  className="cursor-pointer text-sm font-medium"
+                >
+                  {file ? (
+                    <span className="text-green-600 font-semibold">
+                      {file.name}
+                    </span>
+                  ) : (
+                    <>
+                      <span className="text-primary hover:underline">
+                        Clique para selecionar
+                      </span>{" "}
+                      ou arraste o PDF
+                    </>
+                  )}
+                </Label>
+
+                <Input
+                  id="contract-upload"
+                  type="file"
+                  accept=".pdf"
+                  className="hidden"
+                  onChange={(e) => setFile(e.target.files?.[0] || null)}
+                />
+
+                {!file && (
+                  <p className="text-xs text-muted-foreground">
+                    O arquivo será vinculado diretamente ao projeto.
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="flex justify-end gap-3 pt-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onCancel}
+              disabled={loading}
+            >
               Cancelar
             </Button>
-            <Button type="submit" disabled={loading} className="px-8">
+            <Button type="submit" disabled={loading} className="px-6">
               {loading ? "Processando..." : "Gerar Contrato"}
             </Button>
           </div>
