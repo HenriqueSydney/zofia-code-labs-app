@@ -24,8 +24,8 @@ export class UpdateClientEmployeeUseCase {
     await checkUserPermissionForAsset(
       "clientEmployee",
       authenticatedUserId,
-      { organizationId: employee.organizationId },
-      "UPDATE"
+      employee,
+      "UPDATE",
     );
 
     return await this.clientEmployeesRepository.update(employeeId, data);

@@ -29,7 +29,7 @@ export async function MainProfileCard({ user }: IMainProfileCard) {
     hour: "2-digit",
     minute: "2-digit",
   };
-
+ 
   return (
     <div className="bg-card rounded-2xl shadow-xl overflow-hidden mb-6 border border">
       <div className="bg-hero-gradient h-32"></div>

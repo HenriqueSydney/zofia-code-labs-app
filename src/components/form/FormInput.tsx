@@ -11,8 +11,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LucideIcon } from "lucide-react";
+import { ComponentProps } from "react";
 
-interface FormInputProps {
+interface FormInputProps extends ComponentProps<"input"> {
   control: Control<any>;
   name: string;
   label: string;
@@ -32,6 +33,7 @@ export function FormInput({
   description,
   disabled,
   Icon,
+  ...props
 }: FormInputProps) {
   return (
     <FormField
@@ -45,8 +47,9 @@ export function FormInput({
               <Input
                 type={type}
                 placeholder={placeholder}
-                disabled={disabled}
+                disabled={disabled || props.readOnly}
                 {...field}
+                {...props}
                 value={field.value ?? ""} // Proteção contra valor null
               />
               {Icon && (

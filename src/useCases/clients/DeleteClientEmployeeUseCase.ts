@@ -11,8 +11,8 @@ export class DeleteClientEmployeeUseCase {
     await checkUserPermissionForAsset(
       "clientEmployee",
       authenticatedUserId,
-      { organizationId: employee.organizationId },
-      "DELETE"
+      employee,
+      "UPDATE",
     );
 
     await this.clientEmployeesRepository.delete(employeeId);

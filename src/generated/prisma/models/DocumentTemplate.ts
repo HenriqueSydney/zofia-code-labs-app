@@ -29,6 +29,7 @@ export type DocumentTemplateMinAggregateOutputType = {
   organizationId: string | null
   title: string | null
   type: $Enums.TemplateType | null
+  isSystem: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -38,6 +39,7 @@ export type DocumentTemplateMaxAggregateOutputType = {
   organizationId: string | null
   title: string | null
   type: $Enums.TemplateType | null
+  isSystem: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -48,6 +50,7 @@ export type DocumentTemplateCountAggregateOutputType = {
   title: number
   content: number
   type: number
+  isSystem: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -59,6 +62,7 @@ export type DocumentTemplateMinAggregateInputType = {
   organizationId?: true
   title?: true
   type?: true
+  isSystem?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -68,6 +72,7 @@ export type DocumentTemplateMaxAggregateInputType = {
   organizationId?: true
   title?: true
   type?: true
+  isSystem?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -78,6 +83,7 @@ export type DocumentTemplateCountAggregateInputType = {
   title?: true
   content?: true
   type?: true
+  isSystem?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -161,6 +167,7 @@ export type DocumentTemplateGroupByOutputType = {
   title: string
   content: runtime.JsonValue
   type: $Enums.TemplateType
+  isSystem: boolean | null
   createdAt: Date
   updatedAt: Date
   _count: DocumentTemplateCountAggregateOutputType | null
@@ -192,6 +199,7 @@ export type DocumentTemplateWhereInput = {
   title?: Prisma.StringFilter<"DocumentTemplate"> | string
   content?: Prisma.JsonFilter<"DocumentTemplate">
   type?: Prisma.EnumTemplateTypeFilter<"DocumentTemplate"> | $Enums.TemplateType
+  isSystem?: Prisma.BoolNullableFilter<"DocumentTemplate"> | boolean | null
   createdAt?: Prisma.DateTimeFilter<"DocumentTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DocumentTemplate"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
@@ -205,6 +213,7 @@ export type DocumentTemplateOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  isSystem?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   organization?: Prisma.OrganizationOrderByWithRelationInput
@@ -221,6 +230,7 @@ export type DocumentTemplateWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"DocumentTemplate"> | string
   content?: Prisma.JsonFilter<"DocumentTemplate">
   type?: Prisma.EnumTemplateTypeFilter<"DocumentTemplate"> | $Enums.TemplateType
+  isSystem?: Prisma.BoolNullableFilter<"DocumentTemplate"> | boolean | null
   createdAt?: Prisma.DateTimeFilter<"DocumentTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DocumentTemplate"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
@@ -234,6 +244,7 @@ export type DocumentTemplateOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  isSystem?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.DocumentTemplateCountOrderByAggregateInput
@@ -250,6 +261,7 @@ export type DocumentTemplateScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"DocumentTemplate"> | string
   content?: Prisma.JsonWithAggregatesFilter<"DocumentTemplate">
   type?: Prisma.EnumTemplateTypeWithAggregatesFilter<"DocumentTemplate"> | $Enums.TemplateType
+  isSystem?: Prisma.BoolNullableWithAggregatesFilter<"DocumentTemplate"> | boolean | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DocumentTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"DocumentTemplate"> | Date | string
 }
@@ -259,6 +271,7 @@ export type DocumentTemplateCreateInput = {
   title: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.TemplateType
+  isSystem?: boolean | null
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutTemplatesInput
@@ -272,6 +285,7 @@ export type DocumentTemplateUncheckedCreateInput = {
   title: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.TemplateType
+  isSystem?: boolean | null
   createdAt?: Date | string
   updatedAt?: Date | string
   proposalTemplates?: Prisma.ProposalTemplateUncheckedCreateNestedManyWithoutTemplateInput
@@ -283,6 +297,7 @@ export type DocumentTemplateUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
+  isSystem?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutTemplatesNestedInput
@@ -296,6 +311,7 @@ export type DocumentTemplateUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
+  isSystem?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   proposalTemplates?: Prisma.ProposalTemplateUncheckedUpdateManyWithoutTemplateNestedInput
@@ -308,6 +324,7 @@ export type DocumentTemplateCreateManyInput = {
   title: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.TemplateType
+  isSystem?: boolean | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -317,6 +334,7 @@ export type DocumentTemplateUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
+  isSystem?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -327,6 +345,7 @@ export type DocumentTemplateUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
+  isSystem?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -347,6 +366,7 @@ export type DocumentTemplateCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  isSystem?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -356,6 +376,7 @@ export type DocumentTemplateMaxOrderByAggregateInput = {
   organizationId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  isSystem?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -365,6 +386,7 @@ export type DocumentTemplateMinOrderByAggregateInput = {
   organizationId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  isSystem?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -420,6 +442,10 @@ export type EnumTemplateTypeFieldUpdateOperationsInput = {
   set?: $Enums.TemplateType
 }
 
+export type NullableBoolFieldUpdateOperationsInput = {
+  set?: boolean | null
+}
+
 export type DocumentTemplateCreateNestedOneWithoutProposalTemplatesInput = {
   create?: Prisma.XOR<Prisma.DocumentTemplateCreateWithoutProposalTemplatesInput, Prisma.DocumentTemplateUncheckedCreateWithoutProposalTemplatesInput>
   connectOrCreate?: Prisma.DocumentTemplateCreateOrConnectWithoutProposalTemplatesInput
@@ -453,6 +479,7 @@ export type DocumentTemplateCreateWithoutOrganizationInput = {
   title: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.TemplateType
+  isSystem?: boolean | null
   createdAt?: Date | string
   updatedAt?: Date | string
   proposalTemplates?: Prisma.ProposalTemplateCreateNestedManyWithoutTemplateInput
@@ -464,6 +491,7 @@ export type DocumentTemplateUncheckedCreateWithoutOrganizationInput = {
   title: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.TemplateType
+  isSystem?: boolean | null
   createdAt?: Date | string
   updatedAt?: Date | string
   proposalTemplates?: Prisma.ProposalTemplateUncheckedCreateNestedManyWithoutTemplateInput
@@ -505,6 +533,7 @@ export type DocumentTemplateScalarWhereInput = {
   title?: Prisma.StringFilter<"DocumentTemplate"> | string
   content?: Prisma.JsonFilter<"DocumentTemplate">
   type?: Prisma.EnumTemplateTypeFilter<"DocumentTemplate"> | $Enums.TemplateType
+  isSystem?: Prisma.BoolNullableFilter<"DocumentTemplate"> | boolean | null
   createdAt?: Prisma.DateTimeFilter<"DocumentTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DocumentTemplate"> | Date | string
 }
@@ -514,6 +543,7 @@ export type DocumentTemplateCreateWithoutProposalTemplatesInput = {
   title: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.TemplateType
+  isSystem?: boolean | null
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutTemplatesInput
@@ -526,6 +556,7 @@ export type DocumentTemplateUncheckedCreateWithoutProposalTemplatesInput = {
   title: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.TemplateType
+  isSystem?: boolean | null
   createdAt?: Date | string
   updatedAt?: Date | string
   contractTemplates?: Prisma.ContractTemplateUncheckedCreateNestedManyWithoutTemplateInput
@@ -552,6 +583,7 @@ export type DocumentTemplateUpdateWithoutProposalTemplatesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
+  isSystem?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutTemplatesNestedInput
@@ -564,6 +596,7 @@ export type DocumentTemplateUncheckedUpdateWithoutProposalTemplatesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
+  isSystem?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contractTemplates?: Prisma.ContractTemplateUncheckedUpdateManyWithoutTemplateNestedInput
@@ -574,6 +607,7 @@ export type DocumentTemplateCreateWithoutContractTemplatesInput = {
   title: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.TemplateType
+  isSystem?: boolean | null
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutTemplatesInput
@@ -586,6 +620,7 @@ export type DocumentTemplateUncheckedCreateWithoutContractTemplatesInput = {
   title: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.TemplateType
+  isSystem?: boolean | null
   createdAt?: Date | string
   updatedAt?: Date | string
   proposalTemplates?: Prisma.ProposalTemplateUncheckedCreateNestedManyWithoutTemplateInput
@@ -612,6 +647,7 @@ export type DocumentTemplateUpdateWithoutContractTemplatesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
+  isSystem?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutTemplatesNestedInput
@@ -624,6 +660,7 @@ export type DocumentTemplateUncheckedUpdateWithoutContractTemplatesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
+  isSystem?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   proposalTemplates?: Prisma.ProposalTemplateUncheckedUpdateManyWithoutTemplateNestedInput
@@ -634,6 +671,7 @@ export type DocumentTemplateCreateManyOrganizationInput = {
   title: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.TemplateType
+  isSystem?: boolean | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -643,6 +681,7 @@ export type DocumentTemplateUpdateWithoutOrganizationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
+  isSystem?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   proposalTemplates?: Prisma.ProposalTemplateUpdateManyWithoutTemplateNestedInput
@@ -654,6 +693,7 @@ export type DocumentTemplateUncheckedUpdateWithoutOrganizationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
+  isSystem?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   proposalTemplates?: Prisma.ProposalTemplateUncheckedUpdateManyWithoutTemplateNestedInput
@@ -665,6 +705,7 @@ export type DocumentTemplateUncheckedUpdateManyWithoutOrganizationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumTemplateTypeFieldUpdateOperationsInput | $Enums.TemplateType
+  isSystem?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -715,6 +756,7 @@ export type DocumentTemplateSelect<ExtArgs extends runtime.Types.Extensions.Inte
   title?: boolean
   content?: boolean
   type?: boolean
+  isSystem?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
@@ -729,6 +771,7 @@ export type DocumentTemplateSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   title?: boolean
   content?: boolean
   type?: boolean
+  isSystem?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
@@ -740,6 +783,7 @@ export type DocumentTemplateSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   title?: boolean
   content?: boolean
   type?: boolean
+  isSystem?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
@@ -751,11 +795,12 @@ export type DocumentTemplateSelectScalar = {
   title?: boolean
   content?: boolean
   type?: boolean
+  isSystem?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type DocumentTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "title" | "content" | "type" | "createdAt" | "updatedAt", ExtArgs["result"]["documentTemplate"]>
+export type DocumentTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "title" | "content" | "type" | "isSystem" | "createdAt" | "updatedAt", ExtArgs["result"]["documentTemplate"]>
 export type DocumentTemplateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   proposalTemplates?: boolean | Prisma.DocumentTemplate$proposalTemplatesArgs<ExtArgs>
@@ -782,6 +827,7 @@ export type $DocumentTemplatePayload<ExtArgs extends runtime.Types.Extensions.In
     title: string
     content: runtime.JsonValue
     type: $Enums.TemplateType
+    isSystem: boolean | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["documentTemplate"]>
@@ -1215,6 +1261,7 @@ export interface DocumentTemplateFieldRefs {
   readonly title: Prisma.FieldRef<"DocumentTemplate", 'String'>
   readonly content: Prisma.FieldRef<"DocumentTemplate", 'Json'>
   readonly type: Prisma.FieldRef<"DocumentTemplate", 'TemplateType'>
+  readonly isSystem: Prisma.FieldRef<"DocumentTemplate", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"DocumentTemplate", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"DocumentTemplate", 'DateTime'>
 }

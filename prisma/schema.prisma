@@ -36,10 +36,11 @@ enum IndustryType {
 /// A "Empresa" ou "Tenant" que utiliza o sistema.
 /// Permite que o software seja SaaS (Multi-tenancy).
 model Organization {
-  id   String  @id @default(cuid())
-  name String  @db.VarChar(255)
-  slug String  @unique @db.VarChar(50) /// Ex: 'zofia-labs' (usado em URLs)
-  cnpj String? @db.VarChar(20)
+  id      String  @id @default(cuid())
+  name    String  @db.VarChar(255)
+  slug    String  @unique @db.VarChar(50) /// Ex: 'zofia-labs' (usado em URLs)
+  cnpj    String? @db.VarChar(20)
+  logoUrl String?
 
   industry IndustryType @default(SOFTWARE_HOUSE)
   settings Json?        @db.JsonB
@@ -62,6 +63,7 @@ model Organization {
   expenses                   Expense[]
   budgetEntries              BudgetEntry[]
   serviceDefaultBacklogItems ServiceDefaultBacklogItem[]
+  customRoles                CustomRole[]
 
   @@map("organizations")
   @@schema("identity")
@@ -79,6 +81,11 @@ model User {
   passwordHash  String?   @map("password_hash")
   image         String?   @db.Text
   role          Role      @default(TENANT_MEMBER)
+
+  customRole   CustomRole? @relation(fields: [customRoleId], references: [id])
+  customRoleId String?
+
+  specificPermissions String[]
 
   // Relacionamentos NextAuth
   accounts Account[]
@@ -104,6 +111,23 @@ model User {
   projectMembers    ProjectMember[]
 
   @@map("users")
+  @@schema("identity")
+}
+
+model CustomRole {
+  id             String  @id @default(uuid())
+  name           String // Ex: "Gerente de Projetos (Empresa A)"
+  description    String?
+  organizationId String
+
+  // As permissões JSON ou Array de Strings deste perfil
+  permissions String[] // ["project:read", "project:create"]
+
+  users        User[]
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@unique([name, organizationId]) // Nomes únicos dentro da mesma empresa
+  @@map("custom_role")
   @@schema("identity")
 }
 
@@ -256,6 +280,7 @@ model DocumentTemplate {
   title             String             @db.VarChar(150)
   content           Json               @db.JsonB
   type              TemplateType
+  isSystem          Boolean?           @default(false)
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
   proposalTemplates ProposalTemplate[]

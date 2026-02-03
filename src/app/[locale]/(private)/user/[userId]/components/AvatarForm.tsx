@@ -13,6 +13,7 @@ import { Camera } from "lucide-react";
 import { cn } from "@/utils/twMerge";
 import { Modal } from "@/components/Modal";
 import { useTranslations } from "next-intl";
+import { useSession } from "next-auth/react";
 
 const clientSchema = z.object({
   file: z.instanceof(File, { message: "Selecione uma imagem." }),
@@ -21,7 +22,7 @@ const clientSchema = z.object({
 type FormSchema = z.infer<typeof clientSchema>;
 
 export function AvatarForm() {
-  const t = useTranslations();
+  const {update} = useSession()
   const [isPending, startTransition] = useTransition();
   const [preview, setPreview] = useState<string | null>(null);
   const [isModal, setIsModalOpen] = useState(false);

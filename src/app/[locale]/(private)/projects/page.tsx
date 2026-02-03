@@ -35,7 +35,7 @@ const Projects = async ({ searchParams }: IParams) => {
     },
     {
       cache: "no-cache",
-    }
+    },
   );
 
   if (fetchProjectsError) {
@@ -44,20 +44,10 @@ const Projects = async ({ searchParams }: IParams) => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <SectionHeading
-          title="Projetos"
-          description="Gerencie todos os projetos da empresa"
-        />
-
-        <Link href={`/projects/new-project`}>
-          <Button size="lg">
-            <Plus className="h-4 w-4 mr-2" />
-            Novo Projeto
-          </Button>
-        </Link>
-      </div>
-
+      <SectionHeading
+        title="Projetos"
+        description="Gerencie todos os projetos da empresa"
+      />
       <QueryFilter placeholder="Buscar projetos por nome ou cliente..." />
 
       <ProjectList

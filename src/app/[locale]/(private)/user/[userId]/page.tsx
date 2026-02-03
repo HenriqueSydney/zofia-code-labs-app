@@ -2,13 +2,15 @@ import { auth } from "@/auth";
 import { AppError } from "@/errors/AppError";
 import { date } from "@/lib/dayjs";
 import { repositoryClient } from "@/lib/repositoryClient";
-import { makeUserRepository } from "@/repositories/factories/makeUserRepository";
 import { getLocale, getTranslations } from "next-intl/server";
 import { OrganizationInfo } from "@/components/OrganizationInfo";
 import { LoginHistorySection } from "./components/LoginHistorySection";
 import { ConnectedAccountsSection } from "./components/ConnectedAccountsSection";
 import { MainProfileCard } from "./components/MainProfileCard";
 import { SecuritySection } from "./components/SecuritySection";
+import { getUserInfoAction } from "@/actions/users/getUserInfoAction";
+import { operationWrapper } from "@/lib/operationWrapper";
+import { UserWithAllInfo } from "@/repositories/IUsersRepository";
 
 export default async function UserProfilePage({
   params,
@@ -35,17 +37,22 @@ export default async function UserProfilePage({
     throw new AppError(t("errors.unauthorizedAccess"));
   }
 
-  const userRepository = makeUserRepository();
+  const [userError, userSuccess] = await operationWrapper<{
+    success: boolean;
+    data: UserWithAllInfo | null;
+  }>("action", "getUserInfoAction", () => getUserInfoAction(userId), {
+    cache: "no-cache",
+  });
 
-  const [userError, user] = await repositoryClient(
-    "userRepository.findUserByIdAndReturnAllInfo(userId)",
-    () => userRepository.findUserByIdAndReturnAllInfo(userId),
-    {
-      cache: "no-cache",
-    }
-  );
+  if (userError) {
+    throw new AppError(t("errors.userNotFound"));
+  }
 
-  if (userError || !user) {
+  if (!userSuccess) {
+    throw new AppError(t("errors.userNotFound"));
+  }
+
+  if (!userSuccess.data) {
     throw new AppError(t("errors.userNotFound"));
   }
 
@@ -55,6 +62,7 @@ export default async function UserProfilePage({
   };
 
   const isSameUser = operatiorSession.user.id === userId;
+  const user = userSuccess.data;
 
   return (
     <div className="p-4">

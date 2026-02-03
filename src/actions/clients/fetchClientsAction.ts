@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import { AppError } from "@/errors/AppError";
+import { handleErrors } from "@/errors/handleErrors";
 import { makeFetchClientUseCase } from "@/useCases/clients/factories/makeFetchClientUseCase";
 
 export async function fetchClientsAction(query?: string) {
@@ -17,6 +18,7 @@ export async function fetchClientsAction(query?: string) {
   const clients = await fetchClientUseCase.execute({
     organizationId: user.organizationId,
     query,
+    userId: user.id,
   });
 
   return clients;

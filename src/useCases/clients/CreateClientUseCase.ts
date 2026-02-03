@@ -1,4 +1,5 @@
 import { AppError } from "@/errors/AppError";
+import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import {
   IClientsRepository,
   ICreateClientDTO,
@@ -10,15 +11,22 @@ import { prepareFileToUpload } from "@/utils/prepareFileToUpload";
 export class CreateClientUseCase {
   constructor(
     private clientsRepository: IClientsRepository,
-    private storageService: IS3StorageService
+    private storageService: IS3StorageService,
   ) {}
 
-  async execute(data: Omit<ICreateClientDTO, "slug">) {
+  async execute(data: Omit<ICreateClientDTO, "slug">, userId: string) {
     const existingClient = await this.clientsRepository.findByCnpj(data.cnpj);
 
     if (existingClient) {
       throw new AppError("Empresa com mesmo CNPJ já cadastrada");
     }
+
+    await checkUserPermissionForAsset(
+      "client",
+      userId,
+      { organizationId: data.organizationId },
+      "UPDATE",
+    );
 
     const slug = generateSlug({ title: data.tradeName });
 
@@ -29,7 +37,7 @@ export class CreateClientUseCase {
       const uploadResult = await this.storageService.upload(
         file.buffer,
         file.key,
-        file.mimeType
+        file.mimeType,
       );
 
       uploadedDocument = {
@@ -44,7 +52,7 @@ export class CreateClientUseCase {
         ...dataWithoutFile,
         slug,
       },
-      uploadedDocument
+      uploadedDocument,
     );
   }
 }

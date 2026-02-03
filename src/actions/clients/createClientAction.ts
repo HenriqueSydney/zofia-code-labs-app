@@ -1,10 +1,16 @@
 "use server";
 
+import { auth } from "@/auth";
+import { handleErrors } from "@/errors/handleErrors";
 import { clientFormSchema } from "@/schemas/clients/clientFormSchema";
 import { makeCreateClientUseCase } from "@/useCases/clients/factories/makeCreateClientUseCase";
 import { revalidatePath } from "next/cache";
 
 export async function createClientAction(formData: FormData) {
+  const session = await auth();
+
+  if (!session?.user) return { success: false, message: "Não autorizado" };
+
   try {
     const rawData = {
       companyName: formData.get("companyName") as string,
@@ -24,16 +30,19 @@ export async function createClientAction(formData: FormData) {
 
     const useCase = makeCreateClientUseCase();
 
-    await useCase.execute({
-      organizationId: "cmizei37c00008del0bo3sbsq",
-      ...validatedData,
-      file,
-    });
+    await useCase.execute(
+      {
+        organizationId: "cmizei37c00008del0bo3sbsq",
+        ...validatedData,
+        file,
+      },
+      session.user.id,
+    );
 
     revalidatePath("/clients");
     return { success: true, message: "Cliente cadastrado com sucesso!" };
   } catch (error) {
-    console.error(error);
-    return { success: false, message: "Erro ao cadastrar cliente." };
+    const message = handleErrors(error);
+    return { success: false, message: message };
   }
 }

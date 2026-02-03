@@ -34,7 +34,7 @@ export class CreateBacklogItemUseCase {
       "backlog",
       userId,
       doesProjectExists,
-      "UPDATE"
+      "MANAGE"
     );
 
     const backlogItem = await this.backlogItemsRepository.create({

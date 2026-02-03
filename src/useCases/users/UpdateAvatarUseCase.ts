@@ -9,7 +9,7 @@ interface UpdateAvatarRequest {
 export class UpdateAvatarUseCase {
   constructor(
     private usersRepository: IUserRepository,
-    private storageService: IS3StorageService
+    private storageService: IS3StorageService,
   ) {}
 
   async execute({ userId, file }: UpdateAvatarRequest) {
@@ -26,11 +26,11 @@ export class UpdateAvatarUseCase {
     const avatarUrl = await this.storageService.upload(
       buffer,
       fileName,
-      file.type
+      file.type,
     );
 
     // 4. Persistir no banco de dados
-    const user = await this.usersRepository.updateAvatar(userId, avatarUrl);
+    const user = await this.usersRepository.updateAvatar(userId, avatarUrl.key);
 
     return user;
   }

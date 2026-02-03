@@ -76,7 +76,7 @@ export function StatsCard({
                 <span>{isNeutral ? "estável" : `${Math.abs(trend)}%`}</span>
               )}
               {description  && (
-                <span className="text-muted-foreground!">{description}</span>
+                <span className="text-muted-foreground! ml-1">{description}</span>
               )}
               {badge && badge}
             </div>

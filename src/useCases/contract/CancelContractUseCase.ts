@@ -11,7 +11,7 @@ interface CancelContractUseCaseParams {
 export class CancelContractUseCase {
   constructor(
     private contractRepository: IContractRepository,
-    private auditLogRepository: IAuditLogRepository
+    private auditLogRepository: IAuditLogRepository,
   ) {}
 
   async execute({
@@ -47,7 +47,7 @@ export class CancelContractUseCase {
             contractId: contract.id,
           },
         },
-        tx
+        tx,
       );
     });
 

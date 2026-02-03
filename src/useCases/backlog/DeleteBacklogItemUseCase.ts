@@ -16,7 +16,7 @@ export class DeleteBacklogItemUseCase {
       throw new Error("Item do backlog não encontrado.");
     }
 
-    await checkUserPermissionForAsset("backlog", userId, itemExists, "DELETE");
+    await checkUserPermissionForAsset("backlog", userId, itemExists, "MANAGE");
 
     await this.backlogItemsRepository.delete(id);
   }

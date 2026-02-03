@@ -1,32 +1,54 @@
-// lib/auth/permissions.ts
 import { makeUserRepository } from "@/repositories/factories/makeUserRepository";
-import { AuthProjectNotesStrategy } from "./strategies/auth-project-notes-strategy";
-import { AuthProjectStrategy } from "./strategies/auth-project-strategy";
 import { AppError } from "@/errors/AppError";
 import { Operation } from "./strategies/types";
-import { AuthProjectDocumentsStrategy } from "./strategies/auth-project-documents-strategy copy";
+
+// Importação das Strategies
+import { AuthProjectStrategy } from "./strategies/auth-project-strategy";
 import { AuthDocumentTemplateStrategy } from "./strategies/auth-document-template-strategy";
 import { AuthProposalStrategy } from "./strategies/auth-proposal-strategy";
+import { AuthContractStrategy } from "./strategies/auth-contract-strategy";
+import { AuthBacklogStrategy } from "./strategies/auth-backlog-strategy";
+import { AuthClientStrategy } from "./strategies/auth-client-strategy";
+import { AuthInstanceSettingsStrategy } from "./strategies/auth-instance-senttings-strategy";
+import { AuthSaasOwnerStrategy } from "./strategies/auth-saas-owner-strategy";
+import { AuthFinancialStrategy } from "./strategies/auth-financial-strategy";
+import { AuthServiceStrategy } from "./strategies/auth-service-strategy";
 
-// Mapa de estratégias
+const projectStrategy = new AuthProjectStrategy();
+const documentTemplateStrategy = new AuthDocumentTemplateStrategy();
+const proposalStrategy = new AuthProposalStrategy();
+const contractStrategy = new AuthContractStrategy();
+const backlogStrategy = new AuthBacklogStrategy();
+const clientStrategy = new AuthClientStrategy();
+const saasOwnerStrategy = new AuthSaasOwnerStrategy();
+const serviceStrategy = new AuthServiceStrategy();
+
+const userRepository = makeUserRepository();
+// 2. Mapeamos os recursos para as instâncias reaproveitadas
 const strategies = {
-  project: new AuthProjectStrategy(),
-  projectNotes: new AuthProjectNotesStrategy(),
-  documents: new AuthProjectDocumentsStrategy(),
-  documentTemplate: new AuthDocumentTemplateStrategy(),
-  proposal: new AuthProposalStrategy(),
-  contract: new AuthProposalStrategy(),
-  backlog: new AuthProposalStrategy(),
-  client: new AuthProposalStrategy(),
-  clientEmployee: new AuthProposalStrategy(),
-  expenseCategory: new AuthProposalStrategy(),
-  integrationType: new AuthProposalStrategy(),
-  organizationIntegration: new AuthProposalStrategy(),
-  invoice: new AuthProposalStrategy(),
-  expense: new AuthProposalStrategy(),
-  services: new AuthProposalStrategy()
-  // comment: new CommentStrategy(),
-} as const; // 'as const' ajuda na tipagem
+  project: projectStrategy,
+  projectNotes: projectStrategy,
+  documents: projectStrategy,
+
+  documentTemplate: documentTemplateStrategy,
+  proposal: proposalStrategy,
+  contract: contractStrategy,
+  backlog: backlogStrategy,
+
+  client: clientStrategy,
+  clientEmployee: clientStrategy,
+
+  expenseCategory: new AuthInstanceSettingsStrategy("EXPENSE_CATEGORY"),
+  organizationIntegration: new AuthInstanceSettingsStrategy("INTEGRATION"),
+
+  integrationType: saasOwnerStrategy,
+
+  invoice: new AuthFinancialStrategy("INVOICE"),
+  expense: new AuthFinancialStrategy("EXPENSE"),
+
+  services: serviceStrategy,
+  servicesBacklog: serviceStrategy,
+} as const;
 
 type ResourceType = keyof typeof strategies;
 
@@ -34,25 +56,21 @@ export async function checkUserPermissionForAsset<T extends ResourceType>(
   resourceType: T,
   userId: string,
   asset: any,
-  operation: Operation = "READ"
+  operation: Operation = "READ",
 ) {
-  const userRepository = makeUserRepository();
   const user = await userRepository.findUserById(userId);
 
   if (!user) throw new AppError("Usuário não localizado");
-
-  if (asset && user.organizationId !== asset.organizationId) {
-    throw new AppError("Usuário não autorizado para atualizar recurso");
-  }
 
   const strategy = strategies[resourceType];
 
   if (!strategy) {
     throw new Error(
-      `Estratégia de segurança não definida para: ${resourceType}`
+      `Estratégia de segurança não definida para: ${resourceType}`,
     );
   }
 
-  // Executa a validação
-  strategy.validate(user, asset, operation);
+  // Executa a validação específica da estratégia
+  // Se a strategy for síncrona, mantenha assim. Se for assíncrona, adicione o await.
+  return strategy.validate(user, asset, operation);
 }

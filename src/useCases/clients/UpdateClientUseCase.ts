@@ -1,3 +1,4 @@
+import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import {
   IClientsRepository,
   IUpdateClientDTO,
@@ -8,15 +9,17 @@ import { prepareFileToUpload } from "@/utils/prepareFileToUpload";
 export class UpdateClientUseCase {
   constructor(
     private clientsRepository: IClientsRepository,
-    private storageService: IS3StorageService
+    private storageService: IS3StorageService,
   ) {}
 
-  async execute(data: IUpdateClientDTO) {
+  async execute(data: IUpdateClientDTO, userId: string) {
     const client = await this.clientsRepository.findById(data.id);
 
     if (!client) {
       throw new Error("Cliente não encontrado.");
     }
+
+    await checkUserPermissionForAsset("client", userId, client, "READ");
 
     let uploadedDocument: any;
     if (data.file) {
@@ -25,7 +28,7 @@ export class UpdateClientUseCase {
       const uploadResult = await this.storageService.upload(
         file.buffer,
         file.key,
-        file.mimeType
+        file.mimeType,
       );
 
       uploadedDocument = {
@@ -39,7 +42,7 @@ export class UpdateClientUseCase {
 
     return await this.clientsRepository.update(
       dataWithoutFile,
-      uploadedDocument
+      uploadedDocument,
     );
   }
 }

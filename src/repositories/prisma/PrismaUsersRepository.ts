@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import {
   IUserRepository,
   UserSafe,
+  UserSafeWithPermissions,
   UserWithAllInfo,
 } from "../IUsersRepository";
 import { Pagination } from "@/@types/Pagination";
@@ -11,7 +12,7 @@ import { getPaginationQuery } from "@/utils/getPaginationQuery";
 export class PrismaUsersRepository implements IUserRepository {
   async create(
     data: Prisma.UserUncheckedCreateInput,
-    tx?: Prisma.TransactionClient
+    tx?: Prisma.TransactionClient,
   ): Promise<UserSafe> {
     const client = tx || prisma;
 
@@ -33,16 +34,41 @@ export class PrismaUsersRepository implements IUserRepository {
     return this.mapToSafeUser(user);
   }
 
-  async findUserById(userId: string): Promise<UserSafe | null> {
+  async findUserById(userId: string): Promise<UserSafeWithPermissions | null> {
+    // 1. Buscamos o usuário trazendo o relacionamento do CustomRole
     const user = await prisma.user.findUnique({
       where: {
         id: userId,
+      },
+      include: {
+        customRole: true, // Necessário para acessar as permissões do cargo
       },
     });
 
     if (!user) return null;
 
-    return this.mapToSafeUser(user);
+    // 2. Extraímos as permissões de ambas as fontes
+    const rolePermissions = user.customRole?.permissions || [];
+    const specificPermissions = user.specificPermissions || [];
+
+    // 3. "Achatamos" e removemos duplicatas usando Set
+    // O Set garante que se "project:read" existir nos dois, aparecerá apenas uma vez.
+    const uniquePermissions = Array.from(
+      new Set([...rolePermissions, ...specificPermissions]),
+    );
+
+    // 4. Mapeamos para o objeto seguro (reaproveitando lógica se possível)
+    // Como o 'user' aqui tem o 'customRole' no tipo devido ao include,
+    // precisamos ter cuidado ao passar para mappers genéricos ou fazer manualmente.
+
+    const { passwordHash, customRole, ...rest } = user;
+
+    return {
+      ...rest,
+      hasPassword: !!passwordHash,
+      permissions: uniquePermissions, // Array unificado de strings
+      roleName: customRole?.name ?? user.role, // Opcional: Fallback para o role padrão se não tiver custom
+    };
   }
 
   async findUserByEmail(email: string): Promise<UserSafe | null> {
@@ -73,7 +99,7 @@ export class PrismaUsersRepository implements IUserRepository {
   }
 
   async findUserByIdAndReturnAllInfo(
-    userId: string
+    userId: string,
   ): Promise<UserWithAllInfo | null> {
     const user = await prisma.user.findUnique({
       include: {
@@ -106,7 +132,7 @@ export class PrismaUsersRepository implements IUserRepository {
 
   async fetchUsers(
     query: string = "",
-    pagination?: Pagination
+    pagination?: Pagination,
   ): Promise<{ totalOfRecords: number; users: UserSafe[] }> {
     let where: Prisma.UserWhereInput = {};
 
@@ -145,7 +171,7 @@ export class PrismaUsersRepository implements IUserRepository {
 
   async fetchUsersByOrganizationId(
     organizationId: string,
-    pagination?: Pagination
+    pagination?: Pagination,
   ): Promise<{ totalOfRecords: number; users: UserSafe[] }> {
     let where: Prisma.UserWhereInput = {
       organizationId,

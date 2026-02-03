@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 type Organization = {
   id: string;
@@ -92,10 +93,12 @@ export function OrganizationInfo({ organization }: OrganizationInfoProps) {
                 </div>
               </div>
 
-              <Button variant="outline" className="gap-2 w-full sm:w-auto">
-                <Settings2 className="w-4 h-4" />
-                {t("manage") || "Gerenciar"}
-              </Button>
+              <Link href={`/organization/${organization.id}`}>
+                <Button variant="outline" className="gap-2 w-full sm:w-auto">
+                  <Settings2 className="w-4 h-4" />
+                  {t("manage") || "Gerenciar"}
+                </Button>
+              </Link>
             </div>
 
             {/* Item 2: Detalhes Técnicos (Grid interna) */}

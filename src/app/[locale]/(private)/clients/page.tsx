@@ -3,11 +3,11 @@ import { Badge } from "@/components/ui/badge";
 import { Building2, Mail, Phone } from "lucide-react"; // Ícones atualizados
 
 import { SectionHeading } from "@/components/SectionHeading";
-import { CreateClientForm } from "./components/CreateClientForm";
+import { CreateClientForm } from "./_components/CreateClientForm";
 import { EmptyState } from "@/components/EmptyState";
 import { getParams } from "@/utils/getParams";
 import { operationWrapper } from "@/lib/operationWrapper";
-import { ClientRemoveOrEdit } from "./components/ClientRemoveOrEdit";
+import { ClientRemoveOrEdit } from "./_components/ClientRemoveOrEdit";
 import { fetchClientsAction } from "@/actions/clients/fetchClientsAction";
 import { QueryFilter } from "@/components/QueryFilter";
 import { makeS3StorageService } from "@/services/s3Client/makeS3StorageService";

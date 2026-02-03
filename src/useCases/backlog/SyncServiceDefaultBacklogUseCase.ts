@@ -30,7 +30,7 @@ export class SyncServiceDefaultBacklogUseCase {
 
     // 2. Verifica se o usuário tem permissão para editar este projeto
     // Assumindo que adicionar itens ao backlog conta como "UPDATE" no projeto
-    await checkUserPermissionForAsset("backlog", userId, project, "UPDATE");
+    await checkUserPermissionForAsset("backlog", userId, project, "MANAGE");
 
     // 3. Executa a sincronização no repositório
     const itemsCreatedCount =

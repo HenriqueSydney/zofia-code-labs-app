@@ -51,6 +51,11 @@ export type Organization = Prisma.OrganizationModel
  */
 export type User = Prisma.UserModel
 /**
+ * Model CustomRole
+ * 
+ */
+export type CustomRole = Prisma.CustomRoleModel
+/**
  * Model Account
  * Contas vinculadas (OAuth)
  */

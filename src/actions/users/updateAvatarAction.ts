@@ -22,7 +22,7 @@ const uploadAvatarSchema = z.object({
     .refine((file) => file.size <= MAX_FILE_SIZE, `O tamanho máximo é 5MB.`)
     .refine(
       (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
-      "Apenas formatos .jpg, .jpeg, .png e .webp são suportados."
+      "Apenas formatos .jpg, .jpeg, .png e .webp são suportados.",
     ),
 });
 
@@ -36,7 +36,7 @@ export type UpdateAvatarState = {
 
 export async function updateAvatarAction(
   prevState: UpdateAvatarState,
-  formData: FormData
+  formData: FormData,
 ): Promise<UpdateAvatarState> {
   const session = await auth();
 
@@ -63,13 +63,12 @@ export async function updateAvatarAction(
     const storageService = makeS3StorageService();
     const useCase = new UpdateAvatarUseCase(usersRepository, storageService);
 
-    // 3. Execução
     await useCase.execute({
       userId: session.user.id,
       file: validatedFields.data.file,
     });
 
-    revalidatePath("/dashboard"); // Atualiza a UI onde a foto aparece
+    revalidatePath("/"); // Atualiza a UI onde a foto aparece
 
     return { success: true, message: "Avatar atualizado com sucesso!" };
   } catch (error) {

@@ -30,6 +30,7 @@ export type OrganizationMinAggregateOutputType = {
   name: string | null
   slug: string | null
   cnpj: string | null
+  logoUrl: string | null
   industry: $Enums.IndustryType | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -40,6 +41,7 @@ export type OrganizationMaxAggregateOutputType = {
   name: string | null
   slug: string | null
   cnpj: string | null
+  logoUrl: string | null
   industry: $Enums.IndustryType | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -50,6 +52,7 @@ export type OrganizationCountAggregateOutputType = {
   name: number
   slug: number
   cnpj: number
+  logoUrl: number
   industry: number
   settings: number
   createdAt: number
@@ -63,6 +66,7 @@ export type OrganizationMinAggregateInputType = {
   name?: true
   slug?: true
   cnpj?: true
+  logoUrl?: true
   industry?: true
   createdAt?: true
   updatedAt?: true
@@ -73,6 +77,7 @@ export type OrganizationMaxAggregateInputType = {
   name?: true
   slug?: true
   cnpj?: true
+  logoUrl?: true
   industry?: true
   createdAt?: true
   updatedAt?: true
@@ -83,6 +88,7 @@ export type OrganizationCountAggregateInputType = {
   name?: true
   slug?: true
   cnpj?: true
+  logoUrl?: true
   industry?: true
   settings?: true
   createdAt?: true
@@ -167,6 +173,7 @@ export type OrganizationGroupByOutputType = {
   name: string
   slug: string
   cnpj: string | null
+  logoUrl: string | null
   industry: $Enums.IndustryType
   settings: runtime.JsonValue | null
   createdAt: Date
@@ -199,6 +206,7 @@ export type OrganizationWhereInput = {
   name?: Prisma.StringFilter<"Organization"> | string
   slug?: Prisma.StringFilter<"Organization"> | string
   cnpj?: Prisma.StringNullableFilter<"Organization"> | string | null
+  logoUrl?: Prisma.StringNullableFilter<"Organization"> | string | null
   industry?: Prisma.EnumIndustryTypeFilter<"Organization"> | $Enums.IndustryType
   settings?: Prisma.JsonNullableFilter<"Organization">
   createdAt?: Prisma.DateTimeFilter<"Organization"> | Date | string
@@ -217,6 +225,7 @@ export type OrganizationWhereInput = {
   expenses?: Prisma.ExpenseListRelationFilter
   budgetEntries?: Prisma.BudgetEntryListRelationFilter
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemListRelationFilter
+  customRoles?: Prisma.CustomRoleListRelationFilter
 }
 
 export type OrganizationOrderByWithRelationInput = {
@@ -224,6 +233,7 @@ export type OrganizationOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   cnpj?: Prisma.SortOrderInput | Prisma.SortOrder
+  logoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   industry?: Prisma.SortOrder
   settings?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -242,6 +252,7 @@ export type OrganizationOrderByWithRelationInput = {
   expenses?: Prisma.ExpenseOrderByRelationAggregateInput
   budgetEntries?: Prisma.BudgetEntryOrderByRelationAggregateInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemOrderByRelationAggregateInput
+  customRoles?: Prisma.CustomRoleOrderByRelationAggregateInput
 }
 
 export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
@@ -252,6 +263,7 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.OrganizationWhereInput | Prisma.OrganizationWhereInput[]
   name?: Prisma.StringFilter<"Organization"> | string
   cnpj?: Prisma.StringNullableFilter<"Organization"> | string | null
+  logoUrl?: Prisma.StringNullableFilter<"Organization"> | string | null
   industry?: Prisma.EnumIndustryTypeFilter<"Organization"> | $Enums.IndustryType
   settings?: Prisma.JsonNullableFilter<"Organization">
   createdAt?: Prisma.DateTimeFilter<"Organization"> | Date | string
@@ -270,6 +282,7 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   expenses?: Prisma.ExpenseListRelationFilter
   budgetEntries?: Prisma.BudgetEntryListRelationFilter
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemListRelationFilter
+  customRoles?: Prisma.CustomRoleListRelationFilter
 }, "id" | "slug">
 
 export type OrganizationOrderByWithAggregationInput = {
@@ -277,6 +290,7 @@ export type OrganizationOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   cnpj?: Prisma.SortOrderInput | Prisma.SortOrder
+  logoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   industry?: Prisma.SortOrder
   settings?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -294,6 +308,7 @@ export type OrganizationScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Organization"> | string
   slug?: Prisma.StringWithAggregatesFilter<"Organization"> | string
   cnpj?: Prisma.StringNullableWithAggregatesFilter<"Organization"> | string | null
+  logoUrl?: Prisma.StringNullableWithAggregatesFilter<"Organization"> | string | null
   industry?: Prisma.EnumIndustryTypeWithAggregatesFilter<"Organization"> | $Enums.IndustryType
   settings?: Prisma.JsonNullableWithAggregatesFilter<"Organization">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Organization"> | Date | string
@@ -305,6 +320,7 @@ export type OrganizationCreateInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -323,6 +339,7 @@ export type OrganizationCreateInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateInput = {
@@ -330,6 +347,7 @@ export type OrganizationUncheckedCreateInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -348,6 +366,7 @@ export type OrganizationUncheckedCreateInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUpdateInput = {
@@ -355,6 +374,7 @@ export type OrganizationUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -373,6 +393,7 @@ export type OrganizationUpdateInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateInput = {
@@ -380,6 +401,7 @@ export type OrganizationUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -398,6 +420,7 @@ export type OrganizationUncheckedUpdateInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateManyInput = {
@@ -405,6 +428,7 @@ export type OrganizationCreateManyInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -416,6 +440,7 @@ export type OrganizationUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -427,6 +452,7 @@ export type OrganizationUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -438,6 +464,7 @@ export type OrganizationCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   cnpj?: Prisma.SortOrder
+  logoUrl?: Prisma.SortOrder
   industry?: Prisma.SortOrder
   settings?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -449,6 +476,7 @@ export type OrganizationMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   cnpj?: Prisma.SortOrder
+  logoUrl?: Prisma.SortOrder
   industry?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -459,6 +487,7 @@ export type OrganizationMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   cnpj?: Prisma.SortOrder
+  logoUrl?: Prisma.SortOrder
   industry?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -497,6 +526,20 @@ export type OrganizationUpdateOneRequiredWithoutUsersNestedInput = {
   upsert?: Prisma.OrganizationUpsertWithoutUsersInput
   connect?: Prisma.OrganizationWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutUsersInput, Prisma.OrganizationUpdateWithoutUsersInput>, Prisma.OrganizationUncheckedUpdateWithoutUsersInput>
+}
+
+export type OrganizationCreateNestedOneWithoutCustomRolesInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutCustomRolesInput, Prisma.OrganizationUncheckedCreateWithoutCustomRolesInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutCustomRolesInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutCustomRolesNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutCustomRolesInput, Prisma.OrganizationUncheckedCreateWithoutCustomRolesInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutCustomRolesInput
+  upsert?: Prisma.OrganizationUpsertWithoutCustomRolesInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutCustomRolesInput, Prisma.OrganizationUpdateWithoutCustomRolesInput>, Prisma.OrganizationUncheckedUpdateWithoutCustomRolesInput>
 }
 
 export type OrganizationCreateNestedOneWithoutServiceCategoriesInput = {
@@ -686,6 +729,7 @@ export type OrganizationCreateWithoutUsersInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -703,6 +747,7 @@ export type OrganizationCreateWithoutUsersInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutUsersInput = {
@@ -710,6 +755,7 @@ export type OrganizationUncheckedCreateWithoutUsersInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -727,6 +773,7 @@ export type OrganizationUncheckedCreateWithoutUsersInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutUsersInput = {
@@ -750,6 +797,7 @@ export type OrganizationUpdateWithoutUsersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -767,6 +815,7 @@ export type OrganizationUpdateWithoutUsersInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutUsersInput = {
@@ -774,10 +823,132 @@ export type OrganizationUncheckedUpdateWithoutUsersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
+  availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
+  serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutCustomRolesInput = {
+  id?: string
+  name: string
+  slug: string
+  cnpj?: string | null
+  logoUrl?: string | null
+  industry?: $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
+  serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
+  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
+  availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
+  serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutCustomRolesInput = {
+  id?: string
+  name: string
+  slug: string
+  cnpj?: string | null
+  logoUrl?: string | null
+  industry?: $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+  serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
+  availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
+  serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutCustomRolesInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutCustomRolesInput, Prisma.OrganizationUncheckedCreateWithoutCustomRolesInput>
+}
+
+export type OrganizationUpsertWithoutCustomRolesInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutCustomRolesInput, Prisma.OrganizationUncheckedUpdateWithoutCustomRolesInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutCustomRolesInput, Prisma.OrganizationUncheckedCreateWithoutCustomRolesInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutCustomRolesInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutCustomRolesInput, Prisma.OrganizationUncheckedUpdateWithoutCustomRolesInput>
+}
+
+export type OrganizationUpdateWithoutCustomRolesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
+  serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
+  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
+  availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
+  serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutCustomRolesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -798,6 +969,7 @@ export type OrganizationCreateWithoutServiceCategoriesInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -815,6 +987,7 @@ export type OrganizationCreateWithoutServiceCategoriesInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutServiceCategoriesInput = {
@@ -822,6 +995,7 @@ export type OrganizationUncheckedCreateWithoutServiceCategoriesInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -839,6 +1013,7 @@ export type OrganizationUncheckedCreateWithoutServiceCategoriesInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutServiceCategoriesInput = {
@@ -862,6 +1037,7 @@ export type OrganizationUpdateWithoutServiceCategoriesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -879,6 +1055,7 @@ export type OrganizationUpdateWithoutServiceCategoriesInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutServiceCategoriesInput = {
@@ -886,6 +1063,7 @@ export type OrganizationUncheckedUpdateWithoutServiceCategoriesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -903,6 +1081,7 @@ export type OrganizationUncheckedUpdateWithoutServiceCategoriesInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutServiceTypesInput = {
@@ -910,6 +1089,7 @@ export type OrganizationCreateWithoutServiceTypesInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -927,6 +1107,7 @@ export type OrganizationCreateWithoutServiceTypesInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutServiceTypesInput = {
@@ -934,6 +1115,7 @@ export type OrganizationUncheckedCreateWithoutServiceTypesInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -951,6 +1133,7 @@ export type OrganizationUncheckedCreateWithoutServiceTypesInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutServiceTypesInput = {
@@ -974,6 +1157,7 @@ export type OrganizationUpdateWithoutServiceTypesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -991,6 +1175,7 @@ export type OrganizationUpdateWithoutServiceTypesInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutServiceTypesInput = {
@@ -998,6 +1183,7 @@ export type OrganizationUncheckedUpdateWithoutServiceTypesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1015,6 +1201,7 @@ export type OrganizationUncheckedUpdateWithoutServiceTypesInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutServiceDefaultBacklogItemsInput = {
@@ -1022,6 +1209,7 @@ export type OrganizationCreateWithoutServiceDefaultBacklogItemsInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1039,6 +1227,7 @@ export type OrganizationCreateWithoutServiceDefaultBacklogItemsInput = {
   expenseCategories?: Prisma.ExpenseCategoryCreateNestedManyWithoutOrganizationInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutServiceDefaultBacklogItemsInput = {
@@ -1046,6 +1235,7 @@ export type OrganizationUncheckedCreateWithoutServiceDefaultBacklogItemsInput = 
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1063,6 +1253,7 @@ export type OrganizationUncheckedCreateWithoutServiceDefaultBacklogItemsInput = 
   expenseCategories?: Prisma.ExpenseCategoryUncheckedCreateNestedManyWithoutOrganizationInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutServiceDefaultBacklogItemsInput = {
@@ -1086,6 +1277,7 @@ export type OrganizationUpdateWithoutServiceDefaultBacklogItemsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1103,6 +1295,7 @@ export type OrganizationUpdateWithoutServiceDefaultBacklogItemsInput = {
   expenseCategories?: Prisma.ExpenseCategoryUpdateManyWithoutOrganizationNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutServiceDefaultBacklogItemsInput = {
@@ -1110,6 +1303,7 @@ export type OrganizationUncheckedUpdateWithoutServiceDefaultBacklogItemsInput = 
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1127,6 +1321,7 @@ export type OrganizationUncheckedUpdateWithoutServiceDefaultBacklogItemsInput = 
   expenseCategories?: Prisma.ExpenseCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutTemplatesInput = {
@@ -1134,6 +1329,7 @@ export type OrganizationCreateWithoutTemplatesInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1151,6 +1347,7 @@ export type OrganizationCreateWithoutTemplatesInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutTemplatesInput = {
@@ -1158,6 +1355,7 @@ export type OrganizationUncheckedCreateWithoutTemplatesInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1175,6 +1373,7 @@ export type OrganizationUncheckedCreateWithoutTemplatesInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutTemplatesInput = {
@@ -1198,6 +1397,7 @@ export type OrganizationUpdateWithoutTemplatesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1215,6 +1415,7 @@ export type OrganizationUpdateWithoutTemplatesInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutTemplatesInput = {
@@ -1222,6 +1423,7 @@ export type OrganizationUncheckedUpdateWithoutTemplatesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1239,6 +1441,7 @@ export type OrganizationUncheckedUpdateWithoutTemplatesInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutClientsInput = {
@@ -1246,6 +1449,7 @@ export type OrganizationCreateWithoutClientsInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1263,6 +1467,7 @@ export type OrganizationCreateWithoutClientsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutClientsInput = {
@@ -1270,6 +1475,7 @@ export type OrganizationUncheckedCreateWithoutClientsInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1287,6 +1493,7 @@ export type OrganizationUncheckedCreateWithoutClientsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutClientsInput = {
@@ -1310,6 +1517,7 @@ export type OrganizationUpdateWithoutClientsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1327,6 +1535,7 @@ export type OrganizationUpdateWithoutClientsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutClientsInput = {
@@ -1334,6 +1543,7 @@ export type OrganizationUncheckedUpdateWithoutClientsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1351,6 +1561,7 @@ export type OrganizationUncheckedUpdateWithoutClientsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutClientEmployeesInput = {
@@ -1358,6 +1569,7 @@ export type OrganizationCreateWithoutClientEmployeesInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1375,6 +1587,7 @@ export type OrganizationCreateWithoutClientEmployeesInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutClientEmployeesInput = {
@@ -1382,6 +1595,7 @@ export type OrganizationUncheckedCreateWithoutClientEmployeesInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1399,6 +1613,7 @@ export type OrganizationUncheckedCreateWithoutClientEmployeesInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutClientEmployeesInput = {
@@ -1422,6 +1637,7 @@ export type OrganizationUpdateWithoutClientEmployeesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1439,6 +1655,7 @@ export type OrganizationUpdateWithoutClientEmployeesInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutClientEmployeesInput = {
@@ -1446,6 +1663,7 @@ export type OrganizationUncheckedUpdateWithoutClientEmployeesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1463,6 +1681,7 @@ export type OrganizationUncheckedUpdateWithoutClientEmployeesInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutProjectsInput = {
@@ -1470,6 +1689,7 @@ export type OrganizationCreateWithoutProjectsInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1487,6 +1707,7 @@ export type OrganizationCreateWithoutProjectsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutProjectsInput = {
@@ -1494,6 +1715,7 @@ export type OrganizationUncheckedCreateWithoutProjectsInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1511,6 +1733,7 @@ export type OrganizationUncheckedCreateWithoutProjectsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutProjectsInput = {
@@ -1534,6 +1757,7 @@ export type OrganizationUpdateWithoutProjectsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1551,6 +1775,7 @@ export type OrganizationUpdateWithoutProjectsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutProjectsInput = {
@@ -1558,6 +1783,7 @@ export type OrganizationUncheckedUpdateWithoutProjectsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1575,6 +1801,7 @@ export type OrganizationUncheckedUpdateWithoutProjectsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutBacklogItemsInput = {
@@ -1582,6 +1809,7 @@ export type OrganizationCreateWithoutBacklogItemsInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1599,6 +1827,7 @@ export type OrganizationCreateWithoutBacklogItemsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutBacklogItemsInput = {
@@ -1606,6 +1835,7 @@ export type OrganizationUncheckedCreateWithoutBacklogItemsInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1623,6 +1853,7 @@ export type OrganizationUncheckedCreateWithoutBacklogItemsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutBacklogItemsInput = {
@@ -1646,6 +1877,7 @@ export type OrganizationUpdateWithoutBacklogItemsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1663,6 +1895,7 @@ export type OrganizationUpdateWithoutBacklogItemsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutBacklogItemsInput = {
@@ -1670,6 +1903,7 @@ export type OrganizationUncheckedUpdateWithoutBacklogItemsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1687,6 +1921,7 @@ export type OrganizationUncheckedUpdateWithoutBacklogItemsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutBudgetEntriesInput = {
@@ -1694,6 +1929,7 @@ export type OrganizationCreateWithoutBudgetEntriesInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1711,6 +1947,7 @@ export type OrganizationCreateWithoutBudgetEntriesInput = {
   expenseCategories?: Prisma.ExpenseCategoryCreateNestedManyWithoutOrganizationInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutBudgetEntriesInput = {
@@ -1718,6 +1955,7 @@ export type OrganizationUncheckedCreateWithoutBudgetEntriesInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1735,6 +1973,7 @@ export type OrganizationUncheckedCreateWithoutBudgetEntriesInput = {
   expenseCategories?: Prisma.ExpenseCategoryUncheckedCreateNestedManyWithoutOrganizationInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutBudgetEntriesInput = {
@@ -1758,6 +1997,7 @@ export type OrganizationUpdateWithoutBudgetEntriesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1775,6 +2015,7 @@ export type OrganizationUpdateWithoutBudgetEntriesInput = {
   expenseCategories?: Prisma.ExpenseCategoryUpdateManyWithoutOrganizationNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutBudgetEntriesInput = {
@@ -1782,6 +2023,7 @@ export type OrganizationUncheckedUpdateWithoutBudgetEntriesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1799,6 +2041,7 @@ export type OrganizationUncheckedUpdateWithoutBudgetEntriesInput = {
   expenseCategories?: Prisma.ExpenseCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutExpenseCategoriesInput = {
@@ -1806,6 +2049,7 @@ export type OrganizationCreateWithoutExpenseCategoriesInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1823,6 +2067,7 @@ export type OrganizationCreateWithoutExpenseCategoriesInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutExpenseCategoriesInput = {
@@ -1830,6 +2075,7 @@ export type OrganizationUncheckedCreateWithoutExpenseCategoriesInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1847,6 +2093,7 @@ export type OrganizationUncheckedCreateWithoutExpenseCategoriesInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutExpenseCategoriesInput = {
@@ -1870,6 +2117,7 @@ export type OrganizationUpdateWithoutExpenseCategoriesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1887,6 +2135,7 @@ export type OrganizationUpdateWithoutExpenseCategoriesInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutExpenseCategoriesInput = {
@@ -1894,6 +2143,7 @@ export type OrganizationUncheckedUpdateWithoutExpenseCategoriesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1911,6 +2161,7 @@ export type OrganizationUncheckedUpdateWithoutExpenseCategoriesInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutExpensesInput = {
@@ -1918,6 +2169,7 @@ export type OrganizationCreateWithoutExpensesInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1935,6 +2187,7 @@ export type OrganizationCreateWithoutExpensesInput = {
   expenseCategories?: Prisma.ExpenseCategoryCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutExpensesInput = {
@@ -1942,6 +2195,7 @@ export type OrganizationUncheckedCreateWithoutExpensesInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1959,6 +2213,7 @@ export type OrganizationUncheckedCreateWithoutExpensesInput = {
   expenseCategories?: Prisma.ExpenseCategoryUncheckedCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutExpensesInput = {
@@ -1982,6 +2237,7 @@ export type OrganizationUpdateWithoutExpensesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1999,6 +2255,7 @@ export type OrganizationUpdateWithoutExpensesInput = {
   expenseCategories?: Prisma.ExpenseCategoryUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutExpensesInput = {
@@ -2006,6 +2263,7 @@ export type OrganizationUncheckedUpdateWithoutExpensesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2023,6 +2281,7 @@ export type OrganizationUncheckedUpdateWithoutExpensesInput = {
   expenseCategories?: Prisma.ExpenseCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutInvoicesInput = {
@@ -2030,6 +2289,7 @@ export type OrganizationCreateWithoutInvoicesInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -2047,6 +2307,7 @@ export type OrganizationCreateWithoutInvoicesInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutInvoicesInput = {
@@ -2054,6 +2315,7 @@ export type OrganizationUncheckedCreateWithoutInvoicesInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -2071,6 +2333,7 @@ export type OrganizationUncheckedCreateWithoutInvoicesInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutInvoicesInput = {
@@ -2094,6 +2357,7 @@ export type OrganizationUpdateWithoutInvoicesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2111,6 +2375,7 @@ export type OrganizationUpdateWithoutInvoicesInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutInvoicesInput = {
@@ -2118,6 +2383,7 @@ export type OrganizationUncheckedUpdateWithoutInvoicesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2135,6 +2401,7 @@ export type OrganizationUncheckedUpdateWithoutInvoicesInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutAvailableIntegrationsInput = {
@@ -2142,6 +2409,7 @@ export type OrganizationCreateWithoutAvailableIntegrationsInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -2159,6 +2427,7 @@ export type OrganizationCreateWithoutAvailableIntegrationsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutAvailableIntegrationsInput = {
@@ -2166,6 +2435,7 @@ export type OrganizationUncheckedCreateWithoutAvailableIntegrationsInput = {
   name: string
   slug: string
   cnpj?: string | null
+  logoUrl?: string | null
   industry?: $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -2183,6 +2453,7 @@ export type OrganizationUncheckedCreateWithoutAvailableIntegrationsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutAvailableIntegrationsInput = {
@@ -2206,6 +2477,7 @@ export type OrganizationUpdateWithoutAvailableIntegrationsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2223,6 +2495,7 @@ export type OrganizationUpdateWithoutAvailableIntegrationsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutAvailableIntegrationsInput = {
@@ -2230,6 +2503,7 @@ export type OrganizationUncheckedUpdateWithoutAvailableIntegrationsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2247,6 +2521,7 @@ export type OrganizationUncheckedUpdateWithoutAvailableIntegrationsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 
@@ -2269,6 +2544,7 @@ export type OrganizationCountOutputType = {
   expenses: number
   budgetEntries: number
   serviceDefaultBacklogItems: number
+  customRoles: number
 }
 
 export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2286,6 +2562,7 @@ export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Exte
   expenses?: boolean | OrganizationCountOutputTypeCountExpensesArgs
   budgetEntries?: boolean | OrganizationCountOutputTypeCountBudgetEntriesArgs
   serviceDefaultBacklogItems?: boolean | OrganizationCountOutputTypeCountServiceDefaultBacklogItemsArgs
+  customRoles?: boolean | OrganizationCountOutputTypeCountCustomRolesArgs
 }
 
 /**
@@ -2396,12 +2673,20 @@ export type OrganizationCountOutputTypeCountServiceDefaultBacklogItemsArgs<ExtAr
   where?: Prisma.ServiceDefaultBacklogItemWhereInput
 }
 
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountCustomRolesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CustomRoleWhereInput
+}
+
 
 export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   slug?: boolean
   cnpj?: boolean
+  logoUrl?: boolean
   industry?: boolean
   settings?: boolean
   createdAt?: boolean
@@ -2420,6 +2705,7 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   expenses?: boolean | Prisma.Organization$expensesArgs<ExtArgs>
   budgetEntries?: boolean | Prisma.Organization$budgetEntriesArgs<ExtArgs>
   serviceDefaultBacklogItems?: boolean | Prisma.Organization$serviceDefaultBacklogItemsArgs<ExtArgs>
+  customRoles?: boolean | Prisma.Organization$customRolesArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["organization"]>
 
@@ -2428,6 +2714,7 @@ export type OrganizationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   name?: boolean
   slug?: boolean
   cnpj?: boolean
+  logoUrl?: boolean
   industry?: boolean
   settings?: boolean
   createdAt?: boolean
@@ -2439,6 +2726,7 @@ export type OrganizationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   name?: boolean
   slug?: boolean
   cnpj?: boolean
+  logoUrl?: boolean
   industry?: boolean
   settings?: boolean
   createdAt?: boolean
@@ -2450,13 +2738,14 @@ export type OrganizationSelectScalar = {
   name?: boolean
   slug?: boolean
   cnpj?: boolean
+  logoUrl?: boolean
   industry?: boolean
   settings?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type OrganizationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "cnpj" | "industry" | "settings" | "createdAt" | "updatedAt", ExtArgs["result"]["organization"]>
+export type OrganizationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "cnpj" | "logoUrl" | "industry" | "settings" | "createdAt" | "updatedAt", ExtArgs["result"]["organization"]>
 export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | Prisma.Organization$usersArgs<ExtArgs>
   clients?: boolean | Prisma.Organization$clientsArgs<ExtArgs>
@@ -2472,6 +2761,7 @@ export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.Interna
   expenses?: boolean | Prisma.Organization$expensesArgs<ExtArgs>
   budgetEntries?: boolean | Prisma.Organization$budgetEntriesArgs<ExtArgs>
   serviceDefaultBacklogItems?: boolean | Prisma.Organization$serviceDefaultBacklogItemsArgs<ExtArgs>
+  customRoles?: boolean | Prisma.Organization$customRolesArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2494,6 +2784,7 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     expenses: Prisma.$ExpensePayload<ExtArgs>[]
     budgetEntries: Prisma.$BudgetEntryPayload<ExtArgs>[]
     serviceDefaultBacklogItems: Prisma.$ServiceDefaultBacklogItemPayload<ExtArgs>[]
+    customRoles: Prisma.$CustomRolePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2503,6 +2794,7 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
      */
     slug: string
     cnpj: string | null
+    logoUrl: string | null
     industry: $Enums.IndustryType
     settings: runtime.JsonValue | null
     createdAt: Date
@@ -2915,6 +3207,7 @@ export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends run
   expenses<T extends Prisma.Organization$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   budgetEntries<T extends Prisma.Organization$budgetEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$budgetEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BudgetEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   serviceDefaultBacklogItems<T extends Prisma.Organization$serviceDefaultBacklogItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$serviceDefaultBacklogItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServiceDefaultBacklogItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  customRoles<T extends Prisma.Organization$customRolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$customRolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2948,6 +3241,7 @@ export interface OrganizationFieldRefs {
   readonly name: Prisma.FieldRef<"Organization", 'String'>
   readonly slug: Prisma.FieldRef<"Organization", 'String'>
   readonly cnpj: Prisma.FieldRef<"Organization", 'String'>
+  readonly logoUrl: Prisma.FieldRef<"Organization", 'String'>
   readonly industry: Prisma.FieldRef<"Organization", 'IndustryType'>
   readonly settings: Prisma.FieldRef<"Organization", 'Json'>
   readonly createdAt: Prisma.FieldRef<"Organization", 'DateTime'>
@@ -3673,6 +3967,30 @@ export type Organization$serviceDefaultBacklogItemsArgs<ExtArgs extends runtime.
   take?: number
   skip?: number
   distinct?: Prisma.ServiceDefaultBacklogItemScalarFieldEnum | Prisma.ServiceDefaultBacklogItemScalarFieldEnum[]
+}
+
+/**
+ * Organization.customRoles
+ */
+export type Organization$customRolesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CustomRole
+   */
+  select?: Prisma.CustomRoleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CustomRole
+   */
+  omit?: Prisma.CustomRoleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CustomRoleInclude<ExtArgs> | null
+  where?: Prisma.CustomRoleWhereInput
+  orderBy?: Prisma.CustomRoleOrderByWithRelationInput | Prisma.CustomRoleOrderByWithRelationInput[]
+  cursor?: Prisma.CustomRoleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CustomRoleScalarFieldEnum | Prisma.CustomRoleScalarFieldEnum[]
 }
 
 /**

@@ -5,7 +5,7 @@ import { IClientsRepository } from "@/repositories/IClientsRepository";
 export class ListClientEmployeeUseCase {
   constructor(
     private clientEmployeesRepository: IClientEmployeesRepository,
-    private clientsRepository: IClientsRepository
+    private clientsRepository: IClientsRepository,
   ) {}
 
   async execute(authenticatedUserId: string, slug: string) {
@@ -16,8 +16,8 @@ export class ListClientEmployeeUseCase {
     await checkUserPermissionForAsset(
       "clientEmployee",
       authenticatedUserId,
-      { organizationId: client.organizationId },
-      "READ"
+      client,
+      "READ",
     );
 
     return await this.clientEmployeesRepository.listByClient(client.id);

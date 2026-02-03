@@ -10,6 +10,7 @@
  */
 export type * from './models/Organization'
 export type * from './models/User'
+export type * from './models/CustomRole'
 export type * from './models/Account'
 export type * from './models/LoginHistory'
 export type * from './models/Session'

@@ -18,7 +18,7 @@ export class ResetClientEmployeePasswordUseCase {
   constructor(
     private clientEmployeesRepository: IClientEmployeesRepository,
     private clientsRepository: IClientsRepository,
-    private userRepository: IUserRepository
+    private userRepository: IUserRepository,
   ) {}
 
   async execute({
@@ -33,13 +33,12 @@ export class ResetClientEmployeePasswordUseCase {
     await checkUserPermissionForAsset(
       "clientEmployee",
       userId,
-      { organizationId: client.organizationId },
-      "UPDATE"
+      client,
+      "UPDATE",
     );
 
-    const employeeExists = await this.clientEmployeesRepository.findById(
-      employeeId
-    );
+    const employeeExists =
+      await this.clientEmployeesRepository.findById(employeeId);
 
     if (!employeeExists) {
       throw new AppError("Usuário não associado à empresa");
@@ -53,7 +52,7 @@ export class ResetClientEmployeePasswordUseCase {
 
     await this.userRepository.updatePassword(
       employeeExists.userId,
-      passwordHash
+      passwordHash,
     );
   }
 }

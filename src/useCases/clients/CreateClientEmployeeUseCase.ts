@@ -21,7 +21,7 @@ export class CreateClientEmployeeUseCase {
   constructor(
     private clientEmployeesRepository: IClientEmployeesRepository,
     private clientsRepository: IClientsRepository,
-    private userRepository: IUserRepository
+    private userRepository: IUserRepository,
   ) {}
 
   async execute({
@@ -39,8 +39,8 @@ export class CreateClientEmployeeUseCase {
     await checkUserPermissionForAsset(
       "clientEmployee",
       authenticatedUserId,
-      { organizationId: client.organizationId },
-      "CREATE"
+      client,
+      "UPDATE",
     );
 
     const userExists = await this.userRepository.findUserByEmail(email);
@@ -49,7 +49,7 @@ export class CreateClientEmployeeUseCase {
       const alreadyMember =
         await this.clientEmployeesRepository.findByClientAndUser(
           client.id,
-          userExists.id
+          userExists.id,
         );
 
       if (alreadyMember) {

@@ -23,7 +23,7 @@ export class UpdateBacklogItemUseCase {
       throw new Error("Item do backlog não encontrado.");
     }
 
-    await checkUserPermissionForAsset("backlog", userId, itemExists, "UPDATE");
+    await checkUserPermissionForAsset("backlog", userId, itemExists, "MANAGE");
 
     const updatedItem = await this.backlogItemsRepository.update(data);
 

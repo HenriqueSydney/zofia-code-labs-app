@@ -386,6 +386,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Organization: 'Organization',
   User: 'User',
+  CustomRole: 'CustomRole',
   Account: 'Account',
   LoginHistory: 'LoginHistory',
   Session: 'Session',
@@ -436,7 +437,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "organization" | "user" | "account" | "loginHistory" | "session" | "verificationToken" | "serviceCategory" | "serviceType" | "serviceDefaultBacklogItem" | "documentTemplate" | "client" | "clientEmployees" | "proposal" | "proposalTemplate" | "proposalItem" | "contract" | "contractTemplate" | "project" | "projectRoles" | "projectMember" | "projectDocuments" | "projectServices" | "projectNote" | "sprint" | "backlogItem" | "budgetEntry" | "expenseCategory" | "expense" | "invoice" | "integrationType" | "organizationIntegration" | "projectIntegration" | "sonarMetricSnapshot" | "sonarQualityGateCondition" | "umamiMetricSnapshot" | "webhookLog" | "auditLog"
+    modelProps: "organization" | "user" | "customRole" | "account" | "loginHistory" | "session" | "verificationToken" | "serviceCategory" | "serviceType" | "serviceDefaultBacklogItem" | "documentTemplate" | "client" | "clientEmployees" | "proposal" | "proposalTemplate" | "proposalItem" | "contract" | "contractTemplate" | "project" | "projectRoles" | "projectMember" | "projectDocuments" | "projectServices" | "projectNote" | "sprint" | "backlogItem" | "budgetEntry" | "expenseCategory" | "expense" | "invoice" | "integrationType" | "organizationIntegration" | "projectIntegration" | "sonarMetricSnapshot" | "sonarQualityGateCondition" | "umamiMetricSnapshot" | "webhookLog" | "auditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -585,6 +586,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    CustomRole: {
+      payload: Prisma.$CustomRolePayload<ExtArgs>
+      fields: Prisma.CustomRoleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CustomRoleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomRolePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CustomRoleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomRolePayload>
+        }
+        findFirst: {
+          args: Prisma.CustomRoleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomRolePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CustomRoleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomRolePayload>
+        }
+        findMany: {
+          args: Prisma.CustomRoleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomRolePayload>[]
+        }
+        create: {
+          args: Prisma.CustomRoleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomRolePayload>
+        }
+        createMany: {
+          args: Prisma.CustomRoleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CustomRoleCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomRolePayload>[]
+        }
+        delete: {
+          args: Prisma.CustomRoleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomRolePayload>
+        }
+        update: {
+          args: Prisma.CustomRoleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomRolePayload>
+        }
+        deleteMany: {
+          args: Prisma.CustomRoleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CustomRoleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CustomRoleUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomRolePayload>[]
+        }
+        upsert: {
+          args: Prisma.CustomRoleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomRolePayload>
+        }
+        aggregate: {
+          args: Prisma.CustomRoleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCustomRole>
+        }
+        groupBy: {
+          args: Prisma.CustomRoleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CustomRoleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CustomRoleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CustomRoleCountAggregateOutputType> | number
         }
       }
     }
@@ -3222,6 +3297,7 @@ export const OrganizationScalarFieldEnum = {
   name: 'name',
   slug: 'slug',
   cnpj: 'cnpj',
+  logoUrl: 'logoUrl',
   industry: 'industry',
   settings: 'settings',
   createdAt: 'createdAt',
@@ -3240,11 +3316,24 @@ export const UserScalarFieldEnum = {
   passwordHash: 'passwordHash',
   image: 'image',
   role: 'role',
+  customRoleId: 'customRoleId',
+  specificPermissions: 'specificPermissions',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const CustomRoleScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  organizationId: 'organizationId',
+  permissions: 'permissions'
+} as const
+
+export type CustomRoleScalarFieldEnum = (typeof CustomRoleScalarFieldEnum)[keyof typeof CustomRoleScalarFieldEnum]
 
 
 export const AccountScalarFieldEnum = {
@@ -3347,6 +3436,7 @@ export const DocumentTemplateScalarFieldEnum = {
   title: 'title',
   content: 'content',
   type: 'type',
+  isSystem: 'isSystem',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -4347,6 +4437,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   organization?: Prisma.OrganizationOmit
   user?: Prisma.UserOmit
+  customRole?: Prisma.CustomRoleOmit
   account?: Prisma.AccountOmit
   loginHistory?: Prisma.LoginHistoryOmit
   session?: Prisma.SessionOmit

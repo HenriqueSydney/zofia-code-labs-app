@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Organization: 'Organization',
   User: 'User',
+  CustomRole: 'CustomRole',
   Account: 'Account',
   LoginHistory: 'LoginHistory',
   Session: 'Session',
@@ -111,6 +112,7 @@ export const OrganizationScalarFieldEnum = {
   name: 'name',
   slug: 'slug',
   cnpj: 'cnpj',
+  logoUrl: 'logoUrl',
   industry: 'industry',
   settings: 'settings',
   createdAt: 'createdAt',
@@ -129,11 +131,24 @@ export const UserScalarFieldEnum = {
   passwordHash: 'passwordHash',
   image: 'image',
   role: 'role',
+  customRoleId: 'customRoleId',
+  specificPermissions: 'specificPermissions',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const CustomRoleScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  organizationId: 'organizationId',
+  permissions: 'permissions'
+} as const
+
+export type CustomRoleScalarFieldEnum = (typeof CustomRoleScalarFieldEnum)[keyof typeof CustomRoleScalarFieldEnum]
 
 
 export const AccountScalarFieldEnum = {
@@ -236,6 +251,7 @@ export const DocumentTemplateScalarFieldEnum = {
   title: 'title',
   content: 'content',
   type: 'type',
+  isSystem: 'isSystem',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

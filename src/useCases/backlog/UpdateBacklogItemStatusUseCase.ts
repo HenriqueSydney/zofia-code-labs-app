@@ -22,7 +22,7 @@ export class UpdateBacklogItemStatusUseCase {
       throw new Error("Item do backlog não encontrado.");
     }
 
-    await checkUserPermissionForAsset("backlog", userId, itemExists, "UPDATE");
+    await checkUserPermissionForAsset("backlog", userId, itemExists, "MANAGE");
 
     // Método otimizado criado no Repositório para update parcial
     await this.backlogItemsRepository.updateStatus(id, newStatus);

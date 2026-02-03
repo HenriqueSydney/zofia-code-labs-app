@@ -1,15 +1,13 @@
 import { BacklogStatus } from "@/generated/prisma/enums";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
-import {
-  IBacklogItemsRepository,
-} from "@/repositories/IBacklogItemsRepository";
+import { IBacklogItemsRepository } from "@/repositories/IBacklogItemsRepository";
 
 type ReorderBacklogItemParams = {
   id: string;
   newPositionIndex: number;
   allSortedIds: string[];
   userId: string;
-  status?: BacklogStatus
+  status?: BacklogStatus;
 };
 
 export class ReorderBacklogItemUseCase {
@@ -20,7 +18,7 @@ export class ReorderBacklogItemUseCase {
     newPositionIndex,
     allSortedIds,
     userId,
-    status
+    status,
   }: ReorderBacklogItemParams): Promise<void> {
     const itemExists = await this.backlogItemsRepository.findById(id);
 
@@ -28,14 +26,13 @@ export class ReorderBacklogItemUseCase {
       throw new Error("Item do backlog não encontrado.");
     }
 
-    await checkUserPermissionForAsset("backlog", userId, itemExists, "UPDATE");
-
+    await checkUserPermissionForAsset("backlog", userId, itemExists, "MANAGE");
 
     await this.backlogItemsRepository.reorderItem(
       id,
       newPositionIndex,
       allSortedIds,
-      status
+      status,
     );
   }
 }

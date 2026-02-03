@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { Edit } from "lucide-react";
-import { ClientForm } from "../../components/ClientForm";
+import { ClientForm } from "../../_components/ClientForm";
 
 interface IEditClientForm {
   client: {
