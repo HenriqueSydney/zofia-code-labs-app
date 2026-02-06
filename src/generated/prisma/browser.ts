@@ -29,6 +29,11 @@ export type Organization = Prisma.OrganizationModel
  */
 export type User = Prisma.UserModel
 /**
+ * Model Member
+ * 
+ */
+export type Member = Prisma.MemberModel
+/**
  * Model CustomRole
  * 
  */

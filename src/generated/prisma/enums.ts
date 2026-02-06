@@ -11,9 +11,7 @@
 
 export const Role = {
   OWNER: 'OWNER',
-  TENANT_ADMIN: 'TENANT_ADMIN',
-  TENANT_MEMBER: 'TENANT_MEMBER',
-  TENANT_OBSERVER: 'TENANT_OBSERVER'
+  USER: 'USER'
 } as const
 
 export type Role = (typeof Role)[keyof typeof Role]
@@ -28,6 +26,15 @@ export const IndustryType = {
 } as const
 
 export type IndustryType = (typeof IndustryType)[keyof typeof IndustryType]
+
+
+export const MemberRole = {
+  TENANT_ADMIN: 'TENANT_ADMIN',
+  TENANT_MEMBER: 'TENANT_MEMBER',
+  TENANT_OBSERVER: 'TENANT_OBSERVER'
+} as const
+
+export type MemberRole = (typeof MemberRole)[keyof typeof MemberRole]
 
 
 export const TemplateType = {

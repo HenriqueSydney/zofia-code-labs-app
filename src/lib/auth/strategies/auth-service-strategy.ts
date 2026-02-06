@@ -6,6 +6,7 @@ import { AuthBasePermissionStrategy } from "./auth-base-strategy";
 import { Operation, UserContext } from "./types";
 import { AppError } from "@/errors/AppError";
 import { PERMISSIONS, PermissionString } from "@/constants/permissions";
+import { UserDoesNotHavePermissionError } from "@/errors/UserDoesNotHavePermissionError";
 
 export class AuthServiceStrategy extends AuthBasePermissionStrategy<
   ServiceType | ServiceDefaultBacklogItem
@@ -37,10 +38,7 @@ export class AuthServiceStrategy extends AuthBasePermissionStrategy<
     const requiredPermission = this.getRequiredPermission(operation);
 
     if (!user.permissions.includes(requiredPermission)) {
-      throw new AppError(
-        `Acesso negado. Você precisa de permissão de gestor de catálogo: ${requiredPermission}`,
-        403,
-      );
+      throw new UserDoesNotHavePermissionError(requiredPermission);
     }
   }
 }

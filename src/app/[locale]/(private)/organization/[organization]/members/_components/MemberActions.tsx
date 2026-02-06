@@ -1,59 +1,93 @@
 "use client";
 
+import { useState } from "react";
+import {
+  MoreHorizontal,
+  UserCog,
+  Trash2,
+  Shield,
+  LucideIcon,
+} from "lucide-react";
+
 import { Button } from "@/components/ui/button";
+
+// Importe seus componentes
+import { EditMemberRoleDialog } from "./EditMemberRoleDialog";
+import { RemoveMemberAlertDialog } from "./RemoveMemberAlertDialog";
+import { GivePermissionToUserForm } from "./GivePermissionToUserForm";
+import { CustomRoleWithUsage } from "@/repositories/IOrganizationRepository";
 import {
   DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Edit, MoreHorizontal, Trash2, UserCog } from "lucide-react";
-import { useState } from "react";
-// Importar seus modais de edição/deleção aqui
+  DrowpdownMenuItemsType,
+} from "@/components/DropdownMenu";
 
 interface MemberActionsProps {
   orgId: string;
-  member: any; // Tipar corretamente com o retorno do Prisma
+  customRolesList: CustomRoleWithUsage[];
+  member: any; // Substituir pela tipagem correta (Prisma/Types)
 }
 
-export function MemberActions({ orgId, member }: MemberActionsProps) {
+export function MemberActions({
+  orgId,
+  member,
+  customRolesList,
+}: MemberActionsProps) {
   const [isEditRoleOpen, setIsEditRoleOpen] = useState(false);
   const [isRemoveOpen, setIsRemoveOpen] = useState(false);
+  const [isPermissionsOpen, setIsPermissionsOpen] = useState(false);
+
+  // Configuração do Menu (Map)
+  const menuItems: DrowpdownMenuItemsType[] = [
+    {
+      type: "action",
+      label: "Alterar Perfil/Cargo",
+      icon: UserCog,
+      onClick: () => setIsEditRoleOpen(true),
+    },
+    {
+      type: "action",
+      label: "Conceder Permissões", // Item solicitado
+      icon: Shield,
+      onClick: () => setIsPermissionsOpen(true),
+    },
+    {
+      type: "separator",
+    },
+    {
+      type: "action",
+      label: "Remover da Equipe",
+      icon: Trash2,
+      onClick: () => setIsRemoveOpen(true),
+      className: "text-destructive focus:text-destructive",
+    },
+  ];
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Abrir menu</span>
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Ações</DropdownMenuLabel>
+      <DropdownMenu label="Ações" menuItems={menuItems} />
 
-          <DropdownMenuItem onClick={() => setIsEditRoleOpen(true)}>
-            <UserCog className="mr-2 h-4 w-4" />
-            Alterar Perfil/Cargo
-          </DropdownMenuItem>
+      {/* Renderização dos Modais */}
+      <EditMemberRoleDialog
+        open={isEditRoleOpen}
+        onOpenChange={setIsEditRoleOpen}
+        member={member}
+        orgId={orgId}
+        customRolesList={customRolesList}
+      />
 
-          <DropdownMenuSeparator />
+      <GivePermissionToUserForm
+        open={isPermissionsOpen} // Você precisará adaptar o componente para receber 'open' via props se ainda não tiver
+        onOpenChange={setIsPermissionsOpen} // Adapte o componente para aceitar este callback
+        orgId={orgId}
+        member={member}
+      />
 
-          <DropdownMenuItem
-            className="text-destructive focus:text-destructive"
-            onClick={() => setIsRemoveOpen(true)}
-          >
-            <Trash2 className="mr-2 h-4 w-4" />
-            Remover da Equipe
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-
-      {/* Modais de controle */}
-      {/* <EditMemberRoleDialog open={isEditRoleOpen} ... /> */}
-      {/* <RemoveMemberAlertDialog open={isRemoveOpen} ... /> */}
+      <RemoveMemberAlertDialog
+        open={isRemoveOpen}
+        onOpenChange={setIsRemoveOpen}
+        member={member}
+        orgId={orgId}
+      />
     </>
   );
 }

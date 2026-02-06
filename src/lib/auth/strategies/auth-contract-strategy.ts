@@ -4,6 +4,7 @@ import { Operation, UserContext } from "./types";
 import { AppError } from "@/errors/AppError";
 import { PERMISSIONS, PermissionString } from "@/constants/permissions";
 import { contratMapper } from "@/mappers/contractStatusBadge";
+import { UserDoesNotHavePermissionError } from "@/errors/UserDoesNotHavePermissionError";
 
 export class AuthContractStrategy extends AuthBasePermissionStrategy<
   Contract & { organizationId: string }
@@ -41,10 +42,7 @@ export class AuthContractStrategy extends AuthBasePermissionStrategy<
     const requiredPermission = this.getRequiredPermission(operation);
 
     if (!user.permissions.includes(requiredPermission)) {
-      throw new AppError(
-        `Acesso negado. Necessária permissão: ${requiredPermission}`,
-        403,
-      );
+      throw new UserDoesNotHavePermissionError(requiredPermission);
     }
 
     // Se não tem asset (CREATE), encerra aqui.

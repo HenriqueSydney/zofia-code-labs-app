@@ -4,6 +4,9 @@ import {
   IndustryType,
   CustomRole,
   LoginHistory,
+  Role,
+  Member,
+  MemberRole,
 } from "@/generated/prisma/client";
 import { UserSafe } from "./IUsersRepository";
 
@@ -25,18 +28,22 @@ export interface IUpdateOrganizationDTO {
 }
 
 export type CustomRoleWithUsage = CustomRole & {
-  _count: { users: number };
+  _count: { members: number };
 };
 
 export type OrganizationWithStats = Organization & {
-  totalOfUsers: number;
+  totalOfMembers: number;
   totalOfCustomRoles: number;
   totalOfProjects: number;
 };
 
 // Tipo de retorno rico para a tabela de membros
-export type OrganizationMember = UserSafe & {
+export type OrganizationMember = Member & {
   customRole: CustomRole | null;
+  name: string | null;
+  email: string;
+  emailVerified: Date | null;
+  image: string | null;
   loginHistories: LoginHistory[];
 };
 
@@ -81,11 +88,31 @@ export interface IOrganizationsRepository {
 
   findMembers(organizationId: string): Promise<OrganizationMember[]>;
 
+  findMemberByMemberId(
+    memberId: string,
+    organizationId: string,
+  ): Promise<OrganizationMember | null>;
+
+  updateMemberCustomRole(memberId: string, customRoleId: string): Promise<void>;
+
+  updateMemberRole(memberId: string, role: MemberRole): Promise<void>;
+
+  removeMemberFromOrganization(
+    memberId: string,
+    organizationId: string,
+  ): Promise<void>;
+
+  updateMemberSpecificPermissions(
+    memberId: string,
+    permissions: string[],
+  ): Promise<OrganizationMember>;
+
   findCustomRoles(organizationId: string): Promise<CustomRoleWithUsage[]>;
 
   deleteCustomRole(roleId: string): Promise<void>;
 
   createCustomRole(data: ICreateCustomRoleDTO): Promise<CustomRole>;
+
   updateCustomRole(data: IUpdateCustomRoleDTO): Promise<CustomRole>;
 
   findCustomRoleById(id: string): Promise<CustomRole | null>;

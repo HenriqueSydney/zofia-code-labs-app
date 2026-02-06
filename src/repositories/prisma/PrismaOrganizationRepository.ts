@@ -12,11 +12,15 @@ import {
 import {
   CustomRole,
   LoginHistory,
+  Member,
+  MemberRole,
   Organization,
   Prisma,
+  Role,
   User,
 } from "@/generated/prisma/client";
 import { DocumentInput } from "@/@types/DocumentInput";
+import { date } from "@/lib/dayjs";
 
 type RawMember = User & {
   customRole: CustomRole | null;
@@ -111,24 +115,136 @@ export class PrismaOrganizationsRepository implements IOrganizationsRepository {
   }
 
   async findMembers(organizationId: string): Promise<OrganizationMember[]> {
-    const rawMembers = await prisma.user.findMany({
+    const rawMembers = await prisma.member.findMany({
       where: {
         organizationId,
       },
       include: {
         customRole: true,
-        loginHistories: {
-          take: 1,
-          orderBy: { createdAt: "desc" },
+        user: {
+          select: {
+            name: true,
+            email: true,
+            emailVerified: true,
+            image: true,
+            loginHistories: {
+              take: 1,
+              orderBy: { createdAt: "desc" },
+            },
+          },
         },
       },
       orderBy: {
-        name: "asc",
+        user: {
+          name: "asc",
+        },
       },
     });
 
     // Aplica o parse em cada item do array
-    return rawMembers.map((member) => this.mapToSafeMember(member));
+    return rawMembers.map((member) => this.flatMemberLoginHistory(member));
+  }
+
+  async findMemberByMemberId(
+    memberId: string,
+    organizationId: string,
+  ): Promise<OrganizationMember | null> {
+    const member = await prisma.member.findUnique({
+      where: {
+        id: memberId,
+        organizationId,
+      },
+      include: {
+        customRole: true,
+        user: {
+          select: {
+            name: true,
+            email: true,
+            emailVerified: true,
+            image: true,
+            loginHistories: {
+              take: 1,
+              orderBy: { createdAt: "desc" },
+            },
+          },
+        },
+      },
+    });
+
+    if (!member) {
+      return null;
+    }
+
+    // Aplica o parse em cada item do array
+    return this.flatMemberLoginHistory(member);
+  }
+
+  async updateMemberCustomRole(
+    memberId: string,
+    customRoleId: string,
+  ): Promise<void> {
+    await prisma.member.update({
+      where: {
+        id: memberId,
+      },
+      data: {
+        customRoleId,
+      },
+    });
+  }
+
+  async updateMemberRole(memberId: string, role: MemberRole): Promise<void> {
+    await prisma.member.update({
+      where: {
+        id: memberId,
+      },
+      data: {
+        role,
+      },
+    });
+  }
+
+  async updateMemberSpecificPermissions(
+    memberId: string,
+    permissions: string[],
+  ): Promise<OrganizationMember> {
+    const member = await prisma.member.update({
+      where: { id: memberId },
+      data: {
+        specificPermissions: permissions,
+      },
+      include: {
+        customRole: true,
+        user: {
+          select: {
+            name: true,
+            email: true,
+            emailVerified: true,
+            image: true,
+            loginHistories: {
+              take: 1,
+              orderBy: { createdAt: "desc" },
+            },
+          },
+        },
+      },
+    });
+    return this.flatMemberLoginHistory(member);
+  }
+
+  async removeMemberFromOrganization(
+    memberId: string,
+    organizationId: string,
+  ): Promise<void> {
+    await prisma.member.update({
+      where: {
+        id: memberId,
+        organizationId: organizationId,
+      },
+      data: {
+        removedAt: date().toDate(),
+      },
+    });
   }
 
   async findCustomRoles(
@@ -141,7 +257,7 @@ export class PrismaOrganizationsRepository implements IOrganizationsRepository {
       include: {
         _count: {
           select: {
-            users: true, // Conta quantos usuários possuem esse role
+            members: true, // Conta quantos usuários possuem esse role
           },
         },
       },
@@ -191,7 +307,7 @@ export class PrismaOrganizationsRepository implements IOrganizationsRepository {
     return {
       _count: {
         select: {
-          users: true,
+          members: true,
           customRoles: true,
           projects: true,
         },
@@ -201,25 +317,37 @@ export class PrismaOrganizationsRepository implements IOrganizationsRepository {
 
   private mapToStats(
     org: Organization & {
-      _count: { users: number; customRoles: number; projects: number };
+      _count: { members: number; customRoles: number; projects: number };
     },
   ): OrganizationWithStats {
     const { _count, ...rest } = org;
     return {
       ...rest,
-      totalOfUsers: _count.users,
+      totalOfMembers: _count.members,
       totalOfCustomRoles: _count.customRoles,
       totalOfProjects: _count.projects,
     };
   }
 
-  private mapToSafeMember(raw: RawMember): OrganizationMember {
-    // Desestrutura para separar o passwordHash do resto
-    const { passwordHash, ...rest } = raw;
+  private flatMemberLoginHistory(
+    memberWithLoginHistory: Member & {
+      customRole: CustomRole | null;
+      user: {
+        name: string | null;
+        email: string;
+        emailVerified: Date | null;
+        image: string | null;
+        loginHistories: LoginHistory[];
+      };
+    },
+  ): OrganizationMember {
+    const { user: rawUser, ...member } = memberWithLoginHistory;
+    const { loginHistories, ...user } = rawUser;
 
     return {
-      ...rest,
-      hasPassword: !!passwordHash, // Converte a existência da hash em boolean
+      ...member,
+      ...user,
+      loginHistories: loginHistories, // Converte a existência da hash em boolean
     };
   }
 }

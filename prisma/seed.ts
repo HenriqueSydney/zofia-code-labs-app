@@ -41,17 +41,34 @@ async function main() {
   ];
 
   for (const user of users) {
-    const existing = await prisma.user.findFirst({
+    let existingUser = await prisma.user.findFirst({
       where: { email: user.email },
     });
 
-    if (!existing) {
-      await prisma.user.create({
+    if (!existingUser) {
+      existingUser = await prisma.user.create({
         data: user,
       });
       console.log(`✅ Usuário criado: ${user.name}`);
     } else {
       console.log(`🔄 Usuário já existe: ${user.name}`);
+    }
+
+    const userLinked = await prisma.member.findFirst({
+      where: { userId: existingUser.id },
+    });
+
+    if (!userLinked) {
+      await prisma.member.create({
+        data: {
+          organizationId: organization.id,
+          userId: existingUser.id,
+          role: "TENANT_ADMIN",
+        },
+      });
+      console.log(`✅ Usuário vinculado à organização: ${user.name}`);
+    } else {
+      console.log(`🔄 Usuário já vinculado à organização: ${user.name}`);
     }
   }
 

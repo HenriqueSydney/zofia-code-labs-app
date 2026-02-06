@@ -58,13 +58,17 @@ export function FormSelect({
             disabled={disabled}
           >
             <FormControl>
-              <SelectTrigger>
+              <SelectTrigger className="cursor-pointer">
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
             <SelectContent>
               {options.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
+                <SelectItem
+                  key={option.value}
+                  value={option.value}
+                  className="cursor-pointer"
+                >
                   <div className="flex items-center gap-2">
                     {option.icon && (
                       <option.icon className="h-4 w-4 text-muted-foreground" />

@@ -32,6 +32,7 @@ import { Separator } from "@/components/ui/separator";
 
 import { PERMISSIONS_MAP } from "@/constants/permissions";
 import { saveCustomRoleAction } from "@/actions/organization/saveCustomRoleAction";
+import { FormInput } from "@/components/form/FormInput";
 
 const roleSchema = z.object({
   name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
@@ -129,35 +130,19 @@ export function RoleFormDialog({ orgId, roleToEdit }: RoleFormDialogProps) {
             {/* 1. ÁREA FIXA (Campos de Nome e Descrição) */}
             <div className="px-6 py-6 space-y-4 shrink-0 bg-background z-10">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <FormField
+                <FormInput
+                  label="Nome do Cargo"
                   control={form.control}
                   name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nome do Cargo</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Ex: Gestor de Projetos"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  placeholder="Ex: Gestor de Projetos"
                 />
+
                 <div className="col-span-2">
-                  <FormField
+                  <FormInput
+                    label="Descrição"
                     control={form.control}
                     name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Descrição</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Breve descrição..." {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    placeholder="Breve descrição..."
                   />
                 </div>
               </div>

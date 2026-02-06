@@ -57,6 +57,7 @@ export type ProjectMinAggregateOutputType = {
   createdBy: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  memberId: string | null
 }
 
 export type ProjectMaxAggregateOutputType = {
@@ -78,6 +79,7 @@ export type ProjectMaxAggregateOutputType = {
   createdBy: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  memberId: string | null
 }
 
 export type ProjectCountAggregateOutputType = {
@@ -100,6 +102,7 @@ export type ProjectCountAggregateOutputType = {
   createdBy: number
   createdAt: number
   updatedAt: number
+  memberId: number
   _all: number
 }
 
@@ -135,6 +138,7 @@ export type ProjectMinAggregateInputType = {
   createdBy?: true
   createdAt?: true
   updatedAt?: true
+  memberId?: true
 }
 
 export type ProjectMaxAggregateInputType = {
@@ -156,6 +160,7 @@ export type ProjectMaxAggregateInputType = {
   createdBy?: true
   createdAt?: true
   updatedAt?: true
+  memberId?: true
 }
 
 export type ProjectCountAggregateInputType = {
@@ -178,6 +183,7 @@ export type ProjectCountAggregateInputType = {
   createdBy?: true
   createdAt?: true
   updatedAt?: true
+  memberId?: true
   _all?: true
 }
 
@@ -287,6 +293,7 @@ export type ProjectGroupByOutputType = {
   createdBy: string
   createdAt: Date
   updatedAt: Date
+  memberId: string | null
   _count: ProjectCountAggregateOutputType | null
   _avg: ProjectAvgAggregateOutputType | null
   _sum: ProjectSumAggregateOutputType | null
@@ -332,6 +339,7 @@ export type ProjectWhereInput = {
   createdBy?: Prisma.StringFilter<"Project"> | string
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
+  memberId?: Prisma.StringNullableFilter<"Project"> | string | null
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
   invoices?: Prisma.InvoiceListRelationFilter
@@ -349,6 +357,7 @@ export type ProjectWhereInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotListRelationFilter
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotListRelationFilter
   projectMembers?: Prisma.ProjectMemberListRelationFilter
+  member?: Prisma.XOR<Prisma.MemberNullableScalarRelationFilter, Prisma.MemberWhereInput> | null
 }
 
 export type ProjectOrderByWithRelationInput = {
@@ -371,6 +380,7 @@ export type ProjectOrderByWithRelationInput = {
   createdBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  memberId?: Prisma.SortOrderInput | Prisma.SortOrder
   organization?: Prisma.OrganizationOrderByWithRelationInput
   client?: Prisma.ClientOrderByWithRelationInput
   invoices?: Prisma.InvoiceOrderByRelationAggregateInput
@@ -388,6 +398,7 @@ export type ProjectOrderByWithRelationInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotOrderByRelationAggregateInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotOrderByRelationAggregateInput
   projectMembers?: Prisma.ProjectMemberOrderByRelationAggregateInput
+  member?: Prisma.MemberOrderByWithRelationInput
 }
 
 export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -413,6 +424,7 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   createdBy?: Prisma.StringFilter<"Project"> | string
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
+  memberId?: Prisma.StringNullableFilter<"Project"> | string | null
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
   invoices?: Prisma.InvoiceListRelationFilter
@@ -430,6 +442,7 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotListRelationFilter
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotListRelationFilter
   projectMembers?: Prisma.ProjectMemberListRelationFilter
+  member?: Prisma.XOR<Prisma.MemberNullableScalarRelationFilter, Prisma.MemberWhereInput> | null
 }, "id" | "slug">
 
 export type ProjectOrderByWithAggregationInput = {
@@ -452,6 +465,7 @@ export type ProjectOrderByWithAggregationInput = {
   createdBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  memberId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ProjectCountOrderByAggregateInput
   _avg?: Prisma.ProjectAvgOrderByAggregateInput
   _max?: Prisma.ProjectMaxOrderByAggregateInput
@@ -482,6 +496,7 @@ export type ProjectScalarWhereWithAggregatesInput = {
   createdBy?: Prisma.StringWithAggregatesFilter<"Project"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
+  memberId?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
 }
 
 export type ProjectCreateInput = {
@@ -518,6 +533,7 @@ export type ProjectCreateInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotCreateNestedManyWithoutProjectInput
   projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  member?: Prisma.MemberCreateNestedOneWithoutCreatedProjectsInput
 }
 
 export type ProjectUncheckedCreateInput = {
@@ -540,6 +556,7 @@ export type ProjectUncheckedCreateInput = {
   createdBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
@@ -590,6 +607,7 @@ export type ProjectUpdateInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotUpdateManyWithoutProjectNestedInput
   projectMembers?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  member?: Prisma.MemberUpdateOneWithoutCreatedProjectsNestedInput
 }
 
 export type ProjectUncheckedUpdateInput = {
@@ -612,6 +630,7 @@ export type ProjectUncheckedUpdateInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
@@ -648,6 +667,7 @@ export type ProjectCreateManyInput = {
   createdBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
 }
 
 export type ProjectUpdateManyMutationInput = {
@@ -689,6 +709,7 @@ export type ProjectUncheckedUpdateManyInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ProjectListRelationFilter = {
@@ -726,6 +747,7 @@ export type ProjectCountOrderByAggregateInput = {
   createdBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  memberId?: Prisma.SortOrder
 }
 
 export type ProjectAvgOrderByAggregateInput = {
@@ -753,6 +775,7 @@ export type ProjectMaxOrderByAggregateInput = {
   createdBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  memberId?: Prisma.SortOrder
 }
 
 export type ProjectMinOrderByAggregateInput = {
@@ -774,6 +797,7 @@ export type ProjectMinOrderByAggregateInput = {
   createdBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  memberId?: Prisma.SortOrder
 }
 
 export type ProjectSumOrderByAggregateInput = {
@@ -863,6 +887,48 @@ export type ProjectUncheckedUpdateManyWithoutUserNestedInput = {
   connect?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
   update?: Prisma.ProjectUpdateWithWhereUniqueWithoutUserInput | Prisma.ProjectUpdateWithWhereUniqueWithoutUserInput[]
   updateMany?: Prisma.ProjectUpdateManyWithWhereWithoutUserInput | Prisma.ProjectUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.ProjectScalarWhereInput | Prisma.ProjectScalarWhereInput[]
+}
+
+export type ProjectCreateNestedManyWithoutMemberInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutMemberInput, Prisma.ProjectUncheckedCreateWithoutMemberInput> | Prisma.ProjectCreateWithoutMemberInput[] | Prisma.ProjectUncheckedCreateWithoutMemberInput[]
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutMemberInput | Prisma.ProjectCreateOrConnectWithoutMemberInput[]
+  createMany?: Prisma.ProjectCreateManyMemberInputEnvelope
+  connect?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
+}
+
+export type ProjectUncheckedCreateNestedManyWithoutMemberInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutMemberInput, Prisma.ProjectUncheckedCreateWithoutMemberInput> | Prisma.ProjectCreateWithoutMemberInput[] | Prisma.ProjectUncheckedCreateWithoutMemberInput[]
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutMemberInput | Prisma.ProjectCreateOrConnectWithoutMemberInput[]
+  createMany?: Prisma.ProjectCreateManyMemberInputEnvelope
+  connect?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
+}
+
+export type ProjectUpdateManyWithoutMemberNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutMemberInput, Prisma.ProjectUncheckedCreateWithoutMemberInput> | Prisma.ProjectCreateWithoutMemberInput[] | Prisma.ProjectUncheckedCreateWithoutMemberInput[]
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutMemberInput | Prisma.ProjectCreateOrConnectWithoutMemberInput[]
+  upsert?: Prisma.ProjectUpsertWithWhereUniqueWithoutMemberInput | Prisma.ProjectUpsertWithWhereUniqueWithoutMemberInput[]
+  createMany?: Prisma.ProjectCreateManyMemberInputEnvelope
+  set?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
+  disconnect?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
+  delete?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
+  connect?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
+  update?: Prisma.ProjectUpdateWithWhereUniqueWithoutMemberInput | Prisma.ProjectUpdateWithWhereUniqueWithoutMemberInput[]
+  updateMany?: Prisma.ProjectUpdateManyWithWhereWithoutMemberInput | Prisma.ProjectUpdateManyWithWhereWithoutMemberInput[]
+  deleteMany?: Prisma.ProjectScalarWhereInput | Prisma.ProjectScalarWhereInput[]
+}
+
+export type ProjectUncheckedUpdateManyWithoutMemberNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutMemberInput, Prisma.ProjectUncheckedCreateWithoutMemberInput> | Prisma.ProjectCreateWithoutMemberInput[] | Prisma.ProjectUncheckedCreateWithoutMemberInput[]
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutMemberInput | Prisma.ProjectCreateOrConnectWithoutMemberInput[]
+  upsert?: Prisma.ProjectUpsertWithWhereUniqueWithoutMemberInput | Prisma.ProjectUpsertWithWhereUniqueWithoutMemberInput[]
+  createMany?: Prisma.ProjectCreateManyMemberInputEnvelope
+  set?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
+  disconnect?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
+  delete?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
+  connect?: Prisma.ProjectWhereUniqueInput | Prisma.ProjectWhereUniqueInput[]
+  update?: Prisma.ProjectUpdateWithWhereUniqueWithoutMemberInput | Prisma.ProjectUpdateWithWhereUniqueWithoutMemberInput[]
+  updateMany?: Prisma.ProjectUpdateManyWithWhereWithoutMemberInput | Prisma.ProjectUpdateManyWithWhereWithoutMemberInput[]
   deleteMany?: Prisma.ProjectScalarWhereInput | Prisma.ProjectScalarWhereInput[]
 }
 
@@ -1158,6 +1224,7 @@ export type ProjectCreateWithoutOrganizationInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotCreateNestedManyWithoutProjectInput
   projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  member?: Prisma.MemberCreateNestedOneWithoutCreatedProjectsInput
 }
 
 export type ProjectUncheckedCreateWithoutOrganizationInput = {
@@ -1179,6 +1246,7 @@ export type ProjectUncheckedCreateWithoutOrganizationInput = {
   createdBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
@@ -1244,6 +1312,7 @@ export type ProjectScalarWhereInput = {
   createdBy?: Prisma.StringFilter<"Project"> | string
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
+  memberId?: Prisma.StringNullableFilter<"Project"> | string | null
 }
 
 export type ProjectCreateWithoutUserInput = {
@@ -1279,6 +1348,7 @@ export type ProjectCreateWithoutUserInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotCreateNestedManyWithoutProjectInput
   projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  member?: Prisma.MemberCreateNestedOneWithoutCreatedProjectsInput
 }
 
 export type ProjectUncheckedCreateWithoutUserInput = {
@@ -1300,6 +1370,7 @@ export type ProjectUncheckedCreateWithoutUserInput = {
   remainingBudget?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
@@ -1342,6 +1413,104 @@ export type ProjectUpdateManyWithWhereWithoutUserInput = {
   data: Prisma.XOR<Prisma.ProjectUpdateManyMutationInput, Prisma.ProjectUncheckedUpdateManyWithoutUserInput>
 }
 
+export type ProjectCreateWithoutMemberInput = {
+  id?: string
+  name: string
+  slug: string
+  description?: string | null
+  status: $Enums.ProjectStatus
+  priority?: $Enums.Priority
+  health?: $Enums.ProjectHealth
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  estimatedStartDate?: Date | string | null
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  totalBudget?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBudget?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutProjectsInput
+  client: Prisma.ClientCreateNestedOneWithoutProjectsInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutProjectInput
+  notes?: Prisma.ProjectNoteCreateNestedManyWithoutProjectInput
+  sprints?: Prisma.SprintCreateNestedManyWithoutProjectInput
+  backlog?: Prisma.BacklogItemCreateNestedManyWithoutProjectInput
+  user: Prisma.UserCreateNestedOneWithoutCreatedProjectsInput
+  proposal?: Prisma.ProposalCreateNestedManyWithoutProjectInput
+  integrations?: Prisma.ProjectIntegrationCreateNestedManyWithoutProjectInput
+  projectServices?: Prisma.ProjectServicesCreateNestedManyWithoutProjectInput
+  projectDocuments?: Prisma.ProjectDocumentsCreateNestedManyWithoutProjectInput
+  contracts?: Prisma.ContractCreateNestedManyWithoutProjectInput
+  budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutProjectInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
+  umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotCreateNestedManyWithoutProjectInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutMemberInput = {
+  id?: string
+  organizationId: string
+  name: string
+  slug: string
+  description?: string | null
+  clientId: string
+  status: $Enums.ProjectStatus
+  priority?: $Enums.Priority
+  health?: $Enums.ProjectHealth
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  estimatedStartDate?: Date | string | null
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  totalBudget?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBudget?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdBy: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
+  notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
+  sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
+  backlog?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutProjectInput
+  proposal?: Prisma.ProposalUncheckedCreateNestedManyWithoutProjectInput
+  integrations?: Prisma.ProjectIntegrationUncheckedCreateNestedManyWithoutProjectInput
+  projectServices?: Prisma.ProjectServicesUncheckedCreateNestedManyWithoutProjectInput
+  projectDocuments?: Prisma.ProjectDocumentsUncheckedCreateNestedManyWithoutProjectInput
+  contracts?: Prisma.ContractUncheckedCreateNestedManyWithoutProjectInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutProjectInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutProjectInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedCreateNestedManyWithoutProjectInput
+  umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotUncheckedCreateNestedManyWithoutProjectInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutMemberInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutMemberInput, Prisma.ProjectUncheckedCreateWithoutMemberInput>
+}
+
+export type ProjectCreateManyMemberInputEnvelope = {
+  data: Prisma.ProjectCreateManyMemberInput | Prisma.ProjectCreateManyMemberInput[]
+  skipDuplicates?: boolean
+}
+
+export type ProjectUpsertWithWhereUniqueWithoutMemberInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutMemberInput, Prisma.ProjectUncheckedUpdateWithoutMemberInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutMemberInput, Prisma.ProjectUncheckedCreateWithoutMemberInput>
+}
+
+export type ProjectUpdateWithWhereUniqueWithoutMemberInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutMemberInput, Prisma.ProjectUncheckedUpdateWithoutMemberInput>
+}
+
+export type ProjectUpdateManyWithWhereWithoutMemberInput = {
+  where: Prisma.ProjectScalarWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateManyMutationInput, Prisma.ProjectUncheckedUpdateManyWithoutMemberInput>
+}
+
 export type ProjectCreateWithoutClientInput = {
   id?: string
   name: string
@@ -1375,6 +1544,7 @@ export type ProjectCreateWithoutClientInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotCreateNestedManyWithoutProjectInput
   projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  member?: Prisma.MemberCreateNestedOneWithoutCreatedProjectsInput
 }
 
 export type ProjectUncheckedCreateWithoutClientInput = {
@@ -1396,6 +1566,7 @@ export type ProjectUncheckedCreateWithoutClientInput = {
   createdBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
@@ -1471,6 +1642,7 @@ export type ProjectCreateWithoutProposalInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotCreateNestedManyWithoutProjectInput
   projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  member?: Prisma.MemberCreateNestedOneWithoutCreatedProjectsInput
 }
 
 export type ProjectUncheckedCreateWithoutProposalInput = {
@@ -1493,6 +1665,7 @@ export type ProjectUncheckedCreateWithoutProposalInput = {
   createdBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
@@ -1557,6 +1730,7 @@ export type ProjectUpdateWithoutProposalInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotUpdateManyWithoutProjectNestedInput
   projectMembers?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  member?: Prisma.MemberUpdateOneWithoutCreatedProjectsNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutProposalInput = {
@@ -1579,6 +1753,7 @@ export type ProjectUncheckedUpdateWithoutProposalInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
@@ -1627,6 +1802,7 @@ export type ProjectCreateWithoutContractsInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotCreateNestedManyWithoutProjectInput
   projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  member?: Prisma.MemberCreateNestedOneWithoutCreatedProjectsInput
 }
 
 export type ProjectUncheckedCreateWithoutContractsInput = {
@@ -1649,6 +1825,7 @@ export type ProjectUncheckedCreateWithoutContractsInput = {
   createdBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
@@ -1713,6 +1890,7 @@ export type ProjectUpdateWithoutContractsInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotUpdateManyWithoutProjectNestedInput
   projectMembers?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  member?: Prisma.MemberUpdateOneWithoutCreatedProjectsNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutContractsInput = {
@@ -1735,6 +1913,7 @@ export type ProjectUncheckedUpdateWithoutContractsInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
@@ -1783,6 +1962,7 @@ export type ProjectCreateWithoutProjectMembersInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutProjectInput
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotCreateNestedManyWithoutProjectInput
+  member?: Prisma.MemberCreateNestedOneWithoutCreatedProjectsInput
 }
 
 export type ProjectUncheckedCreateWithoutProjectMembersInput = {
@@ -1805,6 +1985,7 @@ export type ProjectUncheckedCreateWithoutProjectMembersInput = {
   createdBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
@@ -1869,6 +2050,7 @@ export type ProjectUpdateWithoutProjectMembersInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutProjectNestedInput
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotUpdateManyWithoutProjectNestedInput
+  member?: Prisma.MemberUpdateOneWithoutCreatedProjectsNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutProjectMembersInput = {
@@ -1891,6 +2073,7 @@ export type ProjectUncheckedUpdateWithoutProjectMembersInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
@@ -1939,6 +2122,7 @@ export type ProjectCreateWithoutProjectDocumentsInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotCreateNestedManyWithoutProjectInput
   projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  member?: Prisma.MemberCreateNestedOneWithoutCreatedProjectsInput
 }
 
 export type ProjectUncheckedCreateWithoutProjectDocumentsInput = {
@@ -1961,6 +2145,7 @@ export type ProjectUncheckedCreateWithoutProjectDocumentsInput = {
   createdBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
@@ -2025,6 +2210,7 @@ export type ProjectUpdateWithoutProjectDocumentsInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotUpdateManyWithoutProjectNestedInput
   projectMembers?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  member?: Prisma.MemberUpdateOneWithoutCreatedProjectsNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutProjectDocumentsInput = {
@@ -2047,6 +2233,7 @@ export type ProjectUncheckedUpdateWithoutProjectDocumentsInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
@@ -2095,6 +2282,7 @@ export type ProjectCreateWithoutProjectServicesInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotCreateNestedManyWithoutProjectInput
   projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  member?: Prisma.MemberCreateNestedOneWithoutCreatedProjectsInput
 }
 
 export type ProjectUncheckedCreateWithoutProjectServicesInput = {
@@ -2117,6 +2305,7 @@ export type ProjectUncheckedCreateWithoutProjectServicesInput = {
   createdBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
@@ -2181,6 +2370,7 @@ export type ProjectUpdateWithoutProjectServicesInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotUpdateManyWithoutProjectNestedInput
   projectMembers?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  member?: Prisma.MemberUpdateOneWithoutCreatedProjectsNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutProjectServicesInput = {
@@ -2203,6 +2393,7 @@ export type ProjectUncheckedUpdateWithoutProjectServicesInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
@@ -2251,6 +2442,7 @@ export type ProjectCreateWithoutNotesInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotCreateNestedManyWithoutProjectInput
   projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  member?: Prisma.MemberCreateNestedOneWithoutCreatedProjectsInput
 }
 
 export type ProjectUncheckedCreateWithoutNotesInput = {
@@ -2273,6 +2465,7 @@ export type ProjectUncheckedCreateWithoutNotesInput = {
   createdBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutProjectInput
@@ -2337,6 +2530,7 @@ export type ProjectUpdateWithoutNotesInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotUpdateManyWithoutProjectNestedInput
   projectMembers?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  member?: Prisma.MemberUpdateOneWithoutCreatedProjectsNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutNotesInput = {
@@ -2359,6 +2553,7 @@ export type ProjectUncheckedUpdateWithoutNotesInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUncheckedUpdateManyWithoutProjectNestedInput
@@ -2407,6 +2602,7 @@ export type ProjectCreateWithoutSprintsInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotCreateNestedManyWithoutProjectInput
   projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  member?: Prisma.MemberCreateNestedOneWithoutCreatedProjectsInput
 }
 
 export type ProjectUncheckedCreateWithoutSprintsInput = {
@@ -2429,6 +2625,7 @@ export type ProjectUncheckedCreateWithoutSprintsInput = {
   createdBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutProjectInput
@@ -2493,6 +2690,7 @@ export type ProjectUpdateWithoutSprintsInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotUpdateManyWithoutProjectNestedInput
   projectMembers?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  member?: Prisma.MemberUpdateOneWithoutCreatedProjectsNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutSprintsInput = {
@@ -2515,6 +2713,7 @@ export type ProjectUncheckedUpdateWithoutSprintsInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUncheckedUpdateManyWithoutProjectNestedInput
@@ -2563,6 +2762,7 @@ export type ProjectCreateWithoutBacklogInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotCreateNestedManyWithoutProjectInput
   projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  member?: Prisma.MemberCreateNestedOneWithoutCreatedProjectsInput
 }
 
 export type ProjectUncheckedCreateWithoutBacklogInput = {
@@ -2585,6 +2785,7 @@ export type ProjectUncheckedCreateWithoutBacklogInput = {
   createdBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
@@ -2649,6 +2850,7 @@ export type ProjectUpdateWithoutBacklogInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotUpdateManyWithoutProjectNestedInput
   projectMembers?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  member?: Prisma.MemberUpdateOneWithoutCreatedProjectsNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutBacklogInput = {
@@ -2671,6 +2873,7 @@ export type ProjectUncheckedUpdateWithoutBacklogInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
@@ -2719,6 +2922,7 @@ export type ProjectCreateWithoutBudgetEntriesInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotCreateNestedManyWithoutProjectInput
   projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  member?: Prisma.MemberCreateNestedOneWithoutCreatedProjectsInput
 }
 
 export type ProjectUncheckedCreateWithoutBudgetEntriesInput = {
@@ -2741,6 +2945,7 @@ export type ProjectUncheckedCreateWithoutBudgetEntriesInput = {
   createdBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
@@ -2805,6 +3010,7 @@ export type ProjectUpdateWithoutBudgetEntriesInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotUpdateManyWithoutProjectNestedInput
   projectMembers?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  member?: Prisma.MemberUpdateOneWithoutCreatedProjectsNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutBudgetEntriesInput = {
@@ -2827,6 +3033,7 @@ export type ProjectUncheckedUpdateWithoutBudgetEntriesInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
@@ -2875,6 +3082,7 @@ export type ProjectCreateWithoutExpensesInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotCreateNestedManyWithoutProjectInput
   projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  member?: Prisma.MemberCreateNestedOneWithoutCreatedProjectsInput
 }
 
 export type ProjectUncheckedCreateWithoutExpensesInput = {
@@ -2897,6 +3105,7 @@ export type ProjectUncheckedCreateWithoutExpensesInput = {
   createdBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
@@ -2961,6 +3170,7 @@ export type ProjectUpdateWithoutExpensesInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotUpdateManyWithoutProjectNestedInput
   projectMembers?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  member?: Prisma.MemberUpdateOneWithoutCreatedProjectsNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutExpensesInput = {
@@ -2983,6 +3193,7 @@ export type ProjectUncheckedUpdateWithoutExpensesInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
@@ -3031,6 +3242,7 @@ export type ProjectCreateWithoutInvoicesInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotCreateNestedManyWithoutProjectInput
   projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  member?: Prisma.MemberCreateNestedOneWithoutCreatedProjectsInput
 }
 
 export type ProjectUncheckedCreateWithoutInvoicesInput = {
@@ -3053,6 +3265,7 @@ export type ProjectUncheckedCreateWithoutInvoicesInput = {
   createdBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
   backlog?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutProjectInput
@@ -3117,6 +3330,7 @@ export type ProjectUpdateWithoutInvoicesInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotUpdateManyWithoutProjectNestedInput
   projectMembers?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  member?: Prisma.MemberUpdateOneWithoutCreatedProjectsNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutInvoicesInput = {
@@ -3139,6 +3353,7 @@ export type ProjectUncheckedUpdateWithoutInvoicesInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
   backlog?: Prisma.BacklogItemUncheckedUpdateManyWithoutProjectNestedInput
@@ -3187,6 +3402,7 @@ export type ProjectCreateWithoutIntegrationsInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotCreateNestedManyWithoutProjectInput
   projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  member?: Prisma.MemberCreateNestedOneWithoutCreatedProjectsInput
 }
 
 export type ProjectUncheckedCreateWithoutIntegrationsInput = {
@@ -3209,6 +3425,7 @@ export type ProjectUncheckedCreateWithoutIntegrationsInput = {
   createdBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
@@ -3273,6 +3490,7 @@ export type ProjectUpdateWithoutIntegrationsInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotUpdateManyWithoutProjectNestedInput
   projectMembers?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  member?: Prisma.MemberUpdateOneWithoutCreatedProjectsNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutIntegrationsInput = {
@@ -3295,6 +3513,7 @@ export type ProjectUncheckedUpdateWithoutIntegrationsInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
@@ -3343,6 +3562,7 @@ export type ProjectCreateWithoutSonarMetricSnapshotsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutProjectInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotCreateNestedManyWithoutProjectInput
   projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  member?: Prisma.MemberCreateNestedOneWithoutCreatedProjectsInput
 }
 
 export type ProjectUncheckedCreateWithoutSonarMetricSnapshotsInput = {
@@ -3365,6 +3585,7 @@ export type ProjectUncheckedCreateWithoutSonarMetricSnapshotsInput = {
   createdBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
@@ -3429,6 +3650,7 @@ export type ProjectUpdateWithoutSonarMetricSnapshotsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutProjectNestedInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotUpdateManyWithoutProjectNestedInput
   projectMembers?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  member?: Prisma.MemberUpdateOneWithoutCreatedProjectsNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutSonarMetricSnapshotsInput = {
@@ -3451,6 +3673,7 @@ export type ProjectUncheckedUpdateWithoutSonarMetricSnapshotsInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
@@ -3499,6 +3722,7 @@ export type ProjectCreateWithoutUmamiMetricSnapshotsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutProjectInput
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotCreateNestedManyWithoutProjectInput
   projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutProjectInput
+  member?: Prisma.MemberCreateNestedOneWithoutCreatedProjectsInput
 }
 
 export type ProjectUncheckedCreateWithoutUmamiMetricSnapshotsInput = {
@@ -3521,6 +3745,7 @@ export type ProjectUncheckedCreateWithoutUmamiMetricSnapshotsInput = {
   createdBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
   notes?: Prisma.ProjectNoteUncheckedCreateNestedManyWithoutProjectInput
   sprints?: Prisma.SprintUncheckedCreateNestedManyWithoutProjectInput
@@ -3585,6 +3810,7 @@ export type ProjectUpdateWithoutUmamiMetricSnapshotsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutProjectNestedInput
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
   projectMembers?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  member?: Prisma.MemberUpdateOneWithoutCreatedProjectsNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutUmamiMetricSnapshotsInput = {
@@ -3607,6 +3833,7 @@ export type ProjectUncheckedUpdateWithoutUmamiMetricSnapshotsInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
@@ -3641,6 +3868,7 @@ export type ProjectCreateManyOrganizationInput = {
   createdBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
 }
 
 export type ProjectUpdateWithoutOrganizationInput = {
@@ -3676,6 +3904,7 @@ export type ProjectUpdateWithoutOrganizationInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotUpdateManyWithoutProjectNestedInput
   projectMembers?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  member?: Prisma.MemberUpdateOneWithoutCreatedProjectsNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutOrganizationInput = {
@@ -3697,6 +3926,7 @@ export type ProjectUncheckedUpdateWithoutOrganizationInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
@@ -3732,6 +3962,7 @@ export type ProjectUncheckedUpdateManyWithoutOrganizationInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ProjectCreateManyUserInput = {
@@ -3753,6 +3984,7 @@ export type ProjectCreateManyUserInput = {
   remainingBudget?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
 }
 
 export type ProjectUpdateWithoutUserInput = {
@@ -3788,6 +4020,7 @@ export type ProjectUpdateWithoutUserInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotUpdateManyWithoutProjectNestedInput
   projectMembers?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  member?: Prisma.MemberUpdateOneWithoutCreatedProjectsNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutUserInput = {
@@ -3809,6 +4042,7 @@ export type ProjectUncheckedUpdateWithoutUserInput = {
   remainingBudget?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
@@ -3844,6 +4078,123 @@ export type ProjectUncheckedUpdateManyWithoutUserInput = {
   remainingBudget?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type ProjectCreateManyMemberInput = {
+  id?: string
+  organizationId: string
+  name: string
+  slug: string
+  description?: string | null
+  clientId: string
+  status: $Enums.ProjectStatus
+  priority?: $Enums.Priority
+  health?: $Enums.ProjectHealth
+  tags?: Prisma.ProjectCreatetagsInput | string[]
+  estimatedStartDate?: Date | string | null
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  totalBudget?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBudget?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdBy: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ProjectUpdateWithoutMemberInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  health?: Prisma.EnumProjectHealthFieldUpdateOperationsInput | $Enums.ProjectHealth
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  estimatedStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  totalBudget?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBudget?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutProjectsNestedInput
+  client?: Prisma.ClientUpdateOneRequiredWithoutProjectsNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.ProjectNoteUpdateManyWithoutProjectNestedInput
+  sprints?: Prisma.SprintUpdateManyWithoutProjectNestedInput
+  backlog?: Prisma.BacklogItemUpdateManyWithoutProjectNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutCreatedProjectsNestedInput
+  proposal?: Prisma.ProposalUpdateManyWithoutProjectNestedInput
+  integrations?: Prisma.ProjectIntegrationUpdateManyWithoutProjectNestedInput
+  projectServices?: Prisma.ProjectServicesUpdateManyWithoutProjectNestedInput
+  projectDocuments?: Prisma.ProjectDocumentsUpdateManyWithoutProjectNestedInput
+  contracts?: Prisma.ContractUpdateManyWithoutProjectNestedInput
+  budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutProjectNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
+  umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotUpdateManyWithoutProjectNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutMemberInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  health?: Prisma.EnumProjectHealthFieldUpdateOperationsInput | $Enums.ProjectHealth
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  estimatedStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  totalBudget?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBudget?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
+  notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
+  sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
+  backlog?: Prisma.BacklogItemUncheckedUpdateManyWithoutProjectNestedInput
+  proposal?: Prisma.ProposalUncheckedUpdateManyWithoutProjectNestedInput
+  integrations?: Prisma.ProjectIntegrationUncheckedUpdateManyWithoutProjectNestedInput
+  projectServices?: Prisma.ProjectServicesUncheckedUpdateManyWithoutProjectNestedInput
+  projectDocuments?: Prisma.ProjectDocumentsUncheckedUpdateManyWithoutProjectNestedInput
+  contracts?: Prisma.ContractUncheckedUpdateManyWithoutProjectNestedInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutProjectNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutProjectNestedInput
+  sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUncheckedUpdateManyWithoutProjectNestedInput
+  umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotUncheckedUpdateManyWithoutProjectNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateManyWithoutMemberInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  health?: Prisma.EnumProjectHealthFieldUpdateOperationsInput | $Enums.ProjectHealth
+  tags?: Prisma.ProjectUpdatetagsInput | string[]
+  estimatedStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  totalBudget?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  totalSpent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  remainingBudget?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ProjectCreateManyClientInput = {
@@ -3865,6 +4216,7 @@ export type ProjectCreateManyClientInput = {
   createdBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  memberId?: string | null
 }
 
 export type ProjectUpdateWithoutClientInput = {
@@ -3900,6 +4252,7 @@ export type ProjectUpdateWithoutClientInput = {
   sonarMetricSnapshots?: Prisma.SonarMetricSnapshotUpdateManyWithoutProjectNestedInput
   umamiMetricSnapshots?: Prisma.UmamiMetricSnapshotUpdateManyWithoutProjectNestedInput
   projectMembers?: Prisma.ProjectMemberUpdateManyWithoutProjectNestedInput
+  member?: Prisma.MemberUpdateOneWithoutCreatedProjectsNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutClientInput = {
@@ -3921,6 +4274,7 @@ export type ProjectUncheckedUpdateWithoutClientInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
   notes?: Prisma.ProjectNoteUncheckedUpdateManyWithoutProjectNestedInput
   sprints?: Prisma.SprintUncheckedUpdateManyWithoutProjectNestedInput
@@ -3956,6 +4310,7 @@ export type ProjectUncheckedUpdateManyWithoutClientInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -4126,6 +4481,7 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   createdBy?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  memberId?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
   invoices?: boolean | Prisma.Project$invoicesArgs<ExtArgs>
@@ -4143,6 +4499,7 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   sonarMetricSnapshots?: boolean | Prisma.Project$sonarMetricSnapshotsArgs<ExtArgs>
   umamiMetricSnapshots?: boolean | Prisma.Project$umamiMetricSnapshotsArgs<ExtArgs>
   projectMembers?: boolean | Prisma.Project$projectMembersArgs<ExtArgs>
+  member?: boolean | Prisma.Project$memberArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
@@ -4166,9 +4523,11 @@ export type ProjectSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   createdBy?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  memberId?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  member?: boolean | Prisma.Project$memberArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
 export type ProjectSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -4191,9 +4550,11 @@ export type ProjectSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   createdBy?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  memberId?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  member?: boolean | Prisma.Project$memberArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
 export type ProjectSelectScalar = {
@@ -4216,9 +4577,10 @@ export type ProjectSelectScalar = {
   createdBy?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  memberId?: boolean
 }
 
-export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "name" | "slug" | "description" | "clientId" | "status" | "priority" | "health" | "tags" | "estimatedStartDate" | "startDate" | "endDate" | "totalBudget" | "totalSpent" | "remainingBudget" | "createdBy" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
+export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "name" | "slug" | "description" | "clientId" | "status" | "priority" | "health" | "tags" | "estimatedStartDate" | "startDate" | "endDate" | "totalBudget" | "totalSpent" | "remainingBudget" | "createdBy" | "createdAt" | "updatedAt" | "memberId", ExtArgs["result"]["project"]>
 export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
@@ -4237,17 +4599,20 @@ export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   sonarMetricSnapshots?: boolean | Prisma.Project$sonarMetricSnapshotsArgs<ExtArgs>
   umamiMetricSnapshots?: boolean | Prisma.Project$umamiMetricSnapshotsArgs<ExtArgs>
   projectMembers?: boolean | Prisma.Project$projectMembersArgs<ExtArgs>
+  member?: boolean | Prisma.Project$memberArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  member?: boolean | Prisma.Project$memberArgs<ExtArgs>
 }
 export type ProjectIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  member?: boolean | Prisma.Project$memberArgs<ExtArgs>
 }
 
 export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4270,6 +4635,7 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     sonarMetricSnapshots: Prisma.$SonarMetricSnapshotPayload<ExtArgs>[]
     umamiMetricSnapshots: Prisma.$UmamiMetricSnapshotPayload<ExtArgs>[]
     projectMembers: Prisma.$ProjectMemberPayload<ExtArgs>[]
+    member: Prisma.$MemberPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -4291,6 +4657,7 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     createdBy: string
     createdAt: Date
     updatedAt: Date
+    memberId: string | null
   }, ExtArgs["result"]["project"]>
   composites: {}
 }
@@ -4702,6 +5069,7 @@ export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.
   sonarMetricSnapshots<T extends Prisma.Project$sonarMetricSnapshotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$sonarMetricSnapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SonarMetricSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   umamiMetricSnapshots<T extends Prisma.Project$umamiMetricSnapshotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$umamiMetricSnapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UmamiMetricSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projectMembers<T extends Prisma.Project$projectMembersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$projectMembersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  member<T extends Prisma.Project$memberArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$memberArgs<ExtArgs>>): Prisma.Prisma__MemberClient<runtime.Types.Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4750,6 +5118,7 @@ export interface ProjectFieldRefs {
   readonly createdBy: Prisma.FieldRef<"Project", 'String'>
   readonly createdAt: Prisma.FieldRef<"Project", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Project", 'DateTime'>
+  readonly memberId: Prisma.FieldRef<"Project", 'String'>
 }
     
 
@@ -5479,6 +5848,25 @@ export type Project$projectMembersArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.ProjectMemberScalarFieldEnum | Prisma.ProjectMemberScalarFieldEnum[]
+}
+
+/**
+ * Project.member
+ */
+export type Project$memberArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Member
+   */
+  select?: Prisma.MemberSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Member
+   */
+  omit?: Prisma.MemberOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MemberInclude<ExtArgs> | null
+  where?: Prisma.MemberWhereInput
 }
 
 /**

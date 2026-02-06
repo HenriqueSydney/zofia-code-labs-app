@@ -104,7 +104,7 @@ export default async function OrganizationLayout({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatsCard
             label="Membros Ativos"
-            mainInformation={String(org.totalOfUsers || 0)}
+            mainInformation={String(org.totalOfMembers || 0)}
             Icon={Users}
             description="Usuários na plataforma"
           />

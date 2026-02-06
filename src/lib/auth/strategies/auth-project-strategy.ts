@@ -3,6 +3,7 @@ import { AuthBasePermissionStrategy } from "./auth-base-strategy";
 import { Operation, UserContext } from "./types";
 import { Project, ProjectStatus } from "@/generated/prisma/client";
 import { PERMISSIONS, PermissionString } from "@/constants/permissions";
+import { UserDoesNotHavePermissionError } from "@/errors/UserDoesNotHavePermissionError";
 
 export class AuthProjectStrategy extends AuthBasePermissionStrategy<Project> {
   // 1. Mapeamento: Qual operação exige qual permissão?
@@ -35,10 +36,7 @@ export class AuthProjectStrategy extends AuthBasePermissionStrategy<Project> {
 
     // Assume-se que user.permissions é um array de strings ["project:read", ...]
     if (!user.permissions.includes(requiredPermission)) {
-      throw new AppError(
-        `Acesso negado. Necessária permissão: ${requiredPermission}`,
-        403,
-      );
+      throw new UserDoesNotHavePermissionError(requiredPermission);
     }
 
     // -------------------------------------------------------------------------

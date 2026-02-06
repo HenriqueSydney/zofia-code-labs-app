@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 
 interface TooltipProps {
   children: ReactNode;
-  description?: string | null;
+  description?: ReactNode | string | null;
   className?: string;
   direction?: "right" | "left" | "bottom" | "top";
 }
@@ -21,14 +21,17 @@ export function Tooltip({
   direction = "right",
 }: TooltipProps) {
   if (!description) return children;
+
   return (
     <ShadnTooltip>
       <TooltipTrigger asChild>{children}</TooltipTrigger>
-      <TooltipContent
-        className={cn("max-w-2xl whitespace-pre-line", className)}
-        side={direction}
-      >
-        <p className="whitespace-pre-line">{description}</p>
+      <TooltipContent className={cn("max-w-2xl", className)} side={direction}>
+        {/* Verifica se é string. Se for, usa o <p>. Se for ReactNode (JSX), renderiza direto. */}
+        {typeof description === "string" ? (
+          <p className="whitespace-pre-line">{description}</p>
+        ) : (
+          description
+        )}
       </TooltipContent>
     </ShadnTooltip>
   );

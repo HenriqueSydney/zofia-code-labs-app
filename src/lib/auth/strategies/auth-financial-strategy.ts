@@ -3,6 +3,7 @@ import { AuthBasePermissionStrategy } from "./auth-base-strategy";
 import { Operation, UserContext } from "./types";
 import { AppError } from "@/errors/AppError";
 import { PERMISSIONS, PermissionString } from "@/constants/permissions";
+import { UserDoesNotHavePermissionError } from "@/errors/UserDoesNotHavePermissionError";
 
 // Tipo unificado para facilitar
 type FinancialAsset = Expense | Invoice;
@@ -62,10 +63,7 @@ export class AuthFinancialStrategy extends AuthBasePermissionStrategy<FinancialA
     const requiredPermission = this.getRequiredPermission(operation);
 
     if (!user.permissions.includes(requiredPermission)) {
-      throw new AppError(
-        `Acesso negado. Necessária permissão: ${requiredPermission}`,
-        403,
-      );
+      throw new UserDoesNotHavePermissionError(requiredPermission);
     }
 
     // Se não tem asset (CREATE), paramos aqui.

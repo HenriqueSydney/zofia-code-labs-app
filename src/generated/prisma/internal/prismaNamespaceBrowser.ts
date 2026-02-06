@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Organization: 'Organization',
   User: 'User',
+  Member: 'Member',
   CustomRole: 'CustomRole',
   Account: 'Account',
   LoginHistory: 'LoginHistory',
@@ -131,13 +132,26 @@ export const UserScalarFieldEnum = {
   passwordHash: 'passwordHash',
   image: 'image',
   role: 'role',
-  customRoleId: 'customRoleId',
-  specificPermissions: 'specificPermissions',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const MemberScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  organizationId: 'organizationId',
+  role: 'role',
+  customRoleId: 'customRoleId',
+  specificPermissions: 'specificPermissions',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  removedAt: 'removedAt'
+} as const
+
+export type MemberScalarFieldEnum = (typeof MemberScalarFieldEnum)[keyof typeof MemberScalarFieldEnum]
 
 
 export const CustomRoleScalarFieldEnum = {
@@ -403,7 +417,8 @@ export const ProjectScalarFieldEnum = {
   remainingBudget: 'remainingBudget',
   createdBy: 'createdBy',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  memberId: 'memberId'
 } as const
 
 export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]

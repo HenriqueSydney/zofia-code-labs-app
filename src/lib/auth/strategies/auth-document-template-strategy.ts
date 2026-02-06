@@ -3,6 +3,7 @@ import { AuthBasePermissionStrategy } from "./auth-base-strategy";
 import { Operation, UserContext } from "./types";
 import { AppError } from "@/errors/AppError";
 import { PERMISSIONS, PermissionString } from "@/constants/permissions";
+import { UserDoesNotHavePermissionError } from "@/errors/UserDoesNotHavePermissionError";
 
 export class AuthDocumentTemplateStrategy extends AuthBasePermissionStrategy<DocumentTemplate> {
   // Como definimos apenas 'document_template:manage' nas constantes,
@@ -22,12 +23,8 @@ export class AuthDocumentTemplateStrategy extends AuthBasePermissionStrategy<Doc
     const requiredPermission = this.getRequiredPermission(operation);
 
     if (!user.permissions.includes(requiredPermission)) {
-      throw new AppError(
-        `Acesso negado. Você precisa ser gestor de templates (${requiredPermission}).`,
-        403,
-      );
+      throw new UserDoesNotHavePermissionError(requiredPermission);
     }
-
     if (!asset) return;
 
     // -------------------------------------------------------------------------

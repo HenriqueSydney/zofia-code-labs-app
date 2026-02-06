@@ -16,9 +16,7 @@ datasource db {
 
 enum Role {
   OWNER
-  TENANT_ADMIN
-  TENANT_MEMBER
-  TENANT_OBSERVER
+  USER
 
   @@schema("identity")
 }
@@ -64,6 +62,7 @@ model Organization {
   budgetEntries              BudgetEntry[]
   serviceDefaultBacklogItems ServiceDefaultBacklogItem[]
   customRoles                CustomRole[]
+  members                    Member[]
 
   @@map("organizations")
   @@schema("identity")
@@ -80,12 +79,7 @@ model User {
   emailVerified DateTime? @map("email_verified")
   passwordHash  String?   @map("password_hash")
   image         String?   @db.Text
-  role          Role      @default(TENANT_MEMBER)
-
-  customRole   CustomRole? @relation(fields: [customRoleId], references: [id])
-  customRoleId String?
-
-  specificPermissions String[]
+  role          Role      @default(USER)
 
   // Relacionamentos NextAuth
   accounts Account[]
@@ -109,13 +103,53 @@ model User {
   backlogItems      BacklogItem[]
   clientEmployees   ClientEmployees[]
   projectMembers    ProjectMember[]
+  members           Member[]
 
   @@map("users")
   @@schema("identity")
 }
 
+enum MemberRole {
+  TENANT_ADMIN
+  TENANT_MEMBER
+  TENANT_OBSERVER
+
+  @@schema("identity")
+}
+
+model Member {
+  id String @id @default(cuid())
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
+
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  // AS PERMISSÕES MUDAM PARA CÁ
+  role MemberRole @default(TENANT_MEMBER)
+
+  // Se usar roles customizadas, o vínculo é aqui também
+  customRoleId String?     @map("custom_role_id")
+  customRole   CustomRole? @relation(fields: [customRoleId], references: [id])
+
+  // Permissões específicas só para ESTA organização
+  specificPermissions String[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  removedAt DateTime?
+
+  // Relacionamentos contextuais (O usuário criou algo COMO membro desta org)
+  createdProjects Project[] @relation("created_by_member")
+
+  @@unique([userId, organizationId]) // Um user só pode ser membro 1 vez da mesma org
+  @@map("members")
+  @@schema("identity")
+}
+
 model CustomRole {
-  id             String  @id @default(uuid())
+  id             String  @id @default(cuid())
   name           String // Ex: "Gerente de Projetos (Empresa A)"
   description    String?
   organizationId String
@@ -123,8 +157,8 @@ model CustomRole {
   // As permissões JSON ou Array de Strings deste perfil
   permissions String[] // ["project:read", "project:create"]
 
-  users        User[]
   organization Organization @relation(fields: [organizationId], references: [id])
+  members      Member[]
 
   @@unique([name, organizationId]) // Nomes únicos dentro da mesma empresa
   @@map("custom_role")
@@ -643,6 +677,8 @@ model Project {
   sonarMetricSnapshots SonarMetricSnapshot[]
   umamiMetricSnapshots UmamiMetricSnapshot[]
   projectMembers       ProjectMember[]
+  member               Member?               @relation(name: "created_by_member", fields: [memberId], references: [id])
+  memberId             String?
 
   @@map("projects")
   @@schema("projects")

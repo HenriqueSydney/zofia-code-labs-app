@@ -30,7 +30,7 @@ export async function getOrganizationAction(params: IParams) {
   });
 
   // Serializa os dados para passar do Server Component para o Client Component (se necessário)
-  return { organization: JSON.parse(JSON.stringify(organization)) };
+  return { organization: organization };
 }
 
 // Função auxiliar para limpar a lógica principal

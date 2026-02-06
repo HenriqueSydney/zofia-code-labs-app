@@ -1,8 +1,8 @@
 import { Client } from "@/generated/prisma/client";
 import { AuthBasePermissionStrategy } from "./auth-base-strategy";
 import { Operation, UserContext } from "./types";
-import { AppError } from "@/errors/AppError";
 import { PERMISSIONS, PermissionString } from "@/constants/permissions";
+import { UserDoesNotHavePermissionError } from "@/errors/UserDoesNotHavePermissionError";
 
 export class AuthClientStrategy extends AuthBasePermissionStrategy<Client> {
   // 1. Mapeia a intenção (Operation) para a Permissão (String)
@@ -32,10 +32,9 @@ export class AuthClientStrategy extends AuthBasePermissionStrategy<Client> {
     const requiredPermission = this.getRequiredPermission(operation);
 
     if (!user.permissions.includes(requiredPermission)) {
-      throw new AppError(
-        `Acesso negado. Necessária permissão: ${requiredPermission}`,
-        403,
-      );
+      if (!user.permissions.includes(requiredPermission)) {
+        throw new UserDoesNotHavePermissionError(requiredPermission);
+      }
     }
   }
 }

@@ -84,7 +84,7 @@ export default async function OrganizationRoles({
 
                 <TableCell>
                   <Badge variant="secondary">
-                    {role._count?.users || 0} usuários
+                    {role._count?.members || 0} usuários
                   </Badge>
                 </TableCell>
 
@@ -131,7 +131,7 @@ export default async function OrganizationRoles({
                     <DeleteRoleDialog
                       roleId={role.id}
                       roleName={role.name}
-                      disabled={role._count?.users > 0}
+                      disabled={role._count?.members > 0}
                     />
                   </div>
                 </TableCell>

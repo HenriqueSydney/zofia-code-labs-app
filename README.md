@@ -165,6 +165,10 @@ Feito: Tabela de usuários com visualização de cargos, status e "tratamento se
 Feito: Tela de visualização do plano, histórico de faturas e barras de progresso de consumo de recursos (Mock/UI Ready).
 
 - [ ] CRUD de Cadastramento de Organização
+- [x] CRUD de edição de perfil de acesso membro
+- [x] Deleção de membro da organização
+- [x] Formulário de associação de perfis específicos
+- [ ] Refatoramento Repository de Usuários e forma de buscar permissionamento => Acessar tabela User ou Member?
 
 Falta: Formulário inicial onde o usuário cria a empresa ("Minha Empresa S.A"), define o Slug e o CNPJ. (Atualmente estamos assumindo que a Org já existe).
 

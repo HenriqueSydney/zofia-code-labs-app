@@ -17,26 +17,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Form } from "@/components/ui/form";
+import { FormInput } from "@/components/form/FormInput";
+import { FormSelect } from "@/components/form/FormSelect";
 
 // Schema de validação
 const inviteMemberSchema = z.object({
-  email: z.string().email("Insira um e-mail válido"),
+  email: z.email("Insira um e-mail válido"),
+  nome: z
+    .string("Insira um nome válido")
+    .min(3, { error: "O nome deve ter no mínimo 3 caracteres" }),
   roleId: z.string().min(1, "Selecione um perfil de acesso"),
 });
 
@@ -79,6 +69,17 @@ export function InviteMemberForm({ orgId }: InviteMemberFormProps) {
     }
   }
 
+  const defaultRoleOptions = [
+    {
+      label: "Administrador (Padrão)",
+      value: "admin",
+    },
+    {
+      label: "Membro (Padrão)",
+      value: "member",
+    },
+  ];
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -98,56 +99,28 @@ export function InviteMemberForm({ orgId }: InviteMemberFormProps) {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {/* Campo de E-mail */}
-            <FormField
+            <FormInput
               control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>E-mail Corporativo</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        placeholder="colaborador@empresa.com"
-                        className="pl-9"
-                        {...field}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              name="name"
+              label="Nome"
+              Icon={Mail}
             />
 
-            {/* Campo de Perfil (Role) */}
-            <FormField
+            <FormInput
+              control={form.control}
+              name="email"
+              label="E-mail Corporativo"
+              type="email"
+              placeholder="colaborador@empresa.com"
+              Icon={Mail}
+            />
+
+            <FormSelect
+              label="Perfil de Acesso"
               control={form.control}
               name="roleId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Perfil de Acesso</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione um perfil" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {/* TODO: Buscar esses roles do banco via server component e passar como prop ou fetch client-side */}
-                      <SelectItem value="admin">
-                        Administrador (Padrão)
-                      </SelectItem>
-                      <SelectItem value="member">Membro (Padrão)</SelectItem>
-                      {/* Aqui entrariam os Custom Roles mapeados */}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
+              options={defaultRoleOptions}
+              placeholder="Selecione um perfil"
             />
 
             <DialogFooter className="pt-4">

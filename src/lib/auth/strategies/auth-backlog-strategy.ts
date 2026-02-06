@@ -3,6 +3,7 @@ import { AuthBasePermissionStrategy } from "./auth-base-strategy";
 import { Operation, UserContext } from "./types";
 import { BacklogItem } from "@/generated/prisma/client";
 import { PERMISSIONS, PermissionString } from "@/constants/permissions";
+import { UserDoesNotHavePermissionError } from "@/errors/UserDoesNotHavePermissionError";
 
 export class AuthBacklogStrategy extends AuthBasePermissionStrategy<BacklogItem> {
   // 1. Define qual permissão básica é necessária para entrar na sala
@@ -31,10 +32,7 @@ export class AuthBacklogStrategy extends AuthBasePermissionStrategy<BacklogItem>
     const requiredPermission = this.getRequiredPermission(operation);
 
     if (!user.permissions.includes(requiredPermission)) {
-      throw new AppError(
-        `Acesso negado. Necessária permissão: ${requiredPermission}`,
-        403,
-      );
+      throw new UserDoesNotHavePermissionError(requiredPermission);
     }
 
     // Se for CREATE, não temos asset para validar propriedade, então encerramos aqui.

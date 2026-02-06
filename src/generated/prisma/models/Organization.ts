@@ -226,6 +226,7 @@ export type OrganizationWhereInput = {
   budgetEntries?: Prisma.BudgetEntryListRelationFilter
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemListRelationFilter
   customRoles?: Prisma.CustomRoleListRelationFilter
+  members?: Prisma.MemberListRelationFilter
 }
 
 export type OrganizationOrderByWithRelationInput = {
@@ -253,6 +254,7 @@ export type OrganizationOrderByWithRelationInput = {
   budgetEntries?: Prisma.BudgetEntryOrderByRelationAggregateInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemOrderByRelationAggregateInput
   customRoles?: Prisma.CustomRoleOrderByRelationAggregateInput
+  members?: Prisma.MemberOrderByRelationAggregateInput
 }
 
 export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
@@ -283,6 +285,7 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   budgetEntries?: Prisma.BudgetEntryListRelationFilter
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemListRelationFilter
   customRoles?: Prisma.CustomRoleListRelationFilter
+  members?: Prisma.MemberListRelationFilter
 }, "id" | "slug">
 
 export type OrganizationOrderByWithAggregationInput = {
@@ -340,6 +343,7 @@ export type OrganizationCreateInput = {
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateInput = {
@@ -367,6 +371,7 @@ export type OrganizationUncheckedCreateInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUpdateInput = {
@@ -394,6 +399,7 @@ export type OrganizationUpdateInput = {
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateInput = {
@@ -421,6 +427,7 @@ export type OrganizationUncheckedUpdateInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateManyInput = {
@@ -526,6 +533,20 @@ export type OrganizationUpdateOneRequiredWithoutUsersNestedInput = {
   upsert?: Prisma.OrganizationUpsertWithoutUsersInput
   connect?: Prisma.OrganizationWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutUsersInput, Prisma.OrganizationUpdateWithoutUsersInput>, Prisma.OrganizationUncheckedUpdateWithoutUsersInput>
+}
+
+export type OrganizationCreateNestedOneWithoutMembersInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutMembersInput, Prisma.OrganizationUncheckedCreateWithoutMembersInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutMembersInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutMembersNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutMembersInput, Prisma.OrganizationUncheckedCreateWithoutMembersInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutMembersInput
+  upsert?: Prisma.OrganizationUpsertWithoutMembersInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutMembersInput, Prisma.OrganizationUpdateWithoutMembersInput>, Prisma.OrganizationUncheckedUpdateWithoutMembersInput>
 }
 
 export type OrganizationCreateNestedOneWithoutCustomRolesInput = {
@@ -748,6 +769,7 @@ export type OrganizationCreateWithoutUsersInput = {
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutUsersInput = {
@@ -774,6 +796,7 @@ export type OrganizationUncheckedCreateWithoutUsersInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutUsersInput = {
@@ -816,6 +839,7 @@ export type OrganizationUpdateWithoutUsersInput = {
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutUsersInput = {
@@ -828,6 +852,131 @@ export type OrganizationUncheckedUpdateWithoutUsersInput = {
   settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
+  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
+  availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
+  serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutMembersInput = {
+  id?: string
+  name: string
+  slug: string
+  cnpj?: string | null
+  logoUrl?: string | null
+  industry?: $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
+  serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
+  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
+  availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
+  serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutMembersInput = {
+  id?: string
+  name: string
+  slug: string
+  cnpj?: string | null
+  logoUrl?: string | null
+  industry?: $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+  serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
+  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
+  availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
+  serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutOrganizationInput
+  expenseCategories?: Prisma.ExpenseCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+  budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutMembersInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutMembersInput, Prisma.OrganizationUncheckedCreateWithoutMembersInput>
+}
+
+export type OrganizationUpsertWithoutMembersInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutMembersInput, Prisma.OrganizationUncheckedUpdateWithoutMembersInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutMembersInput, Prisma.OrganizationUncheckedCreateWithoutMembersInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutMembersInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutMembersInput, Prisma.OrganizationUncheckedUpdateWithoutMembersInput>
+}
+
+export type OrganizationUpdateWithoutMembersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
+  serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
+  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
+  availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
+  serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
+  backlogItems?: Prisma.BacklogItemUpdateManyWithoutOrganizationNestedInput
+  clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutOrganizationNestedInput
+  expenseCategories?: Prisma.ExpenseCategoryUpdateManyWithoutOrganizationNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
+  budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
+  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
+  customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutMembersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
+  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -868,6 +1017,7 @@ export type OrganizationCreateWithoutCustomRolesInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutCustomRolesInput = {
@@ -894,6 +1044,7 @@ export type OrganizationUncheckedCreateWithoutCustomRolesInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutCustomRolesInput = {
@@ -936,6 +1087,7 @@ export type OrganizationUpdateWithoutCustomRolesInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutCustomRolesInput = {
@@ -962,6 +1114,7 @@ export type OrganizationUncheckedUpdateWithoutCustomRolesInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutServiceCategoriesInput = {
@@ -988,6 +1141,7 @@ export type OrganizationCreateWithoutServiceCategoriesInput = {
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutServiceCategoriesInput = {
@@ -1014,6 +1168,7 @@ export type OrganizationUncheckedCreateWithoutServiceCategoriesInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutServiceCategoriesInput = {
@@ -1056,6 +1211,7 @@ export type OrganizationUpdateWithoutServiceCategoriesInput = {
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutServiceCategoriesInput = {
@@ -1082,6 +1238,7 @@ export type OrganizationUncheckedUpdateWithoutServiceCategoriesInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutServiceTypesInput = {
@@ -1108,6 +1265,7 @@ export type OrganizationCreateWithoutServiceTypesInput = {
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutServiceTypesInput = {
@@ -1134,6 +1292,7 @@ export type OrganizationUncheckedCreateWithoutServiceTypesInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutServiceTypesInput = {
@@ -1176,6 +1335,7 @@ export type OrganizationUpdateWithoutServiceTypesInput = {
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutServiceTypesInput = {
@@ -1202,6 +1362,7 @@ export type OrganizationUncheckedUpdateWithoutServiceTypesInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutServiceDefaultBacklogItemsInput = {
@@ -1228,6 +1389,7 @@ export type OrganizationCreateWithoutServiceDefaultBacklogItemsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutServiceDefaultBacklogItemsInput = {
@@ -1254,6 +1416,7 @@ export type OrganizationUncheckedCreateWithoutServiceDefaultBacklogItemsInput = 
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutServiceDefaultBacklogItemsInput = {
@@ -1296,6 +1459,7 @@ export type OrganizationUpdateWithoutServiceDefaultBacklogItemsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutServiceDefaultBacklogItemsInput = {
@@ -1322,6 +1486,7 @@ export type OrganizationUncheckedUpdateWithoutServiceDefaultBacklogItemsInput = 
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutTemplatesInput = {
@@ -1348,6 +1513,7 @@ export type OrganizationCreateWithoutTemplatesInput = {
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutTemplatesInput = {
@@ -1374,6 +1540,7 @@ export type OrganizationUncheckedCreateWithoutTemplatesInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutTemplatesInput = {
@@ -1416,6 +1583,7 @@ export type OrganizationUpdateWithoutTemplatesInput = {
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutTemplatesInput = {
@@ -1442,6 +1610,7 @@ export type OrganizationUncheckedUpdateWithoutTemplatesInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutClientsInput = {
@@ -1468,6 +1637,7 @@ export type OrganizationCreateWithoutClientsInput = {
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutClientsInput = {
@@ -1494,6 +1664,7 @@ export type OrganizationUncheckedCreateWithoutClientsInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutClientsInput = {
@@ -1536,6 +1707,7 @@ export type OrganizationUpdateWithoutClientsInput = {
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutClientsInput = {
@@ -1562,6 +1734,7 @@ export type OrganizationUncheckedUpdateWithoutClientsInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutClientEmployeesInput = {
@@ -1588,6 +1761,7 @@ export type OrganizationCreateWithoutClientEmployeesInput = {
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutClientEmployeesInput = {
@@ -1614,6 +1788,7 @@ export type OrganizationUncheckedCreateWithoutClientEmployeesInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutClientEmployeesInput = {
@@ -1656,6 +1831,7 @@ export type OrganizationUpdateWithoutClientEmployeesInput = {
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutClientEmployeesInput = {
@@ -1682,6 +1858,7 @@ export type OrganizationUncheckedUpdateWithoutClientEmployeesInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutProjectsInput = {
@@ -1708,6 +1885,7 @@ export type OrganizationCreateWithoutProjectsInput = {
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutProjectsInput = {
@@ -1734,6 +1912,7 @@ export type OrganizationUncheckedCreateWithoutProjectsInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutProjectsInput = {
@@ -1776,6 +1955,7 @@ export type OrganizationUpdateWithoutProjectsInput = {
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutProjectsInput = {
@@ -1802,6 +1982,7 @@ export type OrganizationUncheckedUpdateWithoutProjectsInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutBacklogItemsInput = {
@@ -1828,6 +2009,7 @@ export type OrganizationCreateWithoutBacklogItemsInput = {
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutBacklogItemsInput = {
@@ -1854,6 +2036,7 @@ export type OrganizationUncheckedCreateWithoutBacklogItemsInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutBacklogItemsInput = {
@@ -1896,6 +2079,7 @@ export type OrganizationUpdateWithoutBacklogItemsInput = {
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutBacklogItemsInput = {
@@ -1922,6 +2106,7 @@ export type OrganizationUncheckedUpdateWithoutBacklogItemsInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutBudgetEntriesInput = {
@@ -1948,6 +2133,7 @@ export type OrganizationCreateWithoutBudgetEntriesInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutBudgetEntriesInput = {
@@ -1974,6 +2160,7 @@ export type OrganizationUncheckedCreateWithoutBudgetEntriesInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutBudgetEntriesInput = {
@@ -2016,6 +2203,7 @@ export type OrganizationUpdateWithoutBudgetEntriesInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutBudgetEntriesInput = {
@@ -2042,6 +2230,7 @@ export type OrganizationUncheckedUpdateWithoutBudgetEntriesInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutExpenseCategoriesInput = {
@@ -2068,6 +2257,7 @@ export type OrganizationCreateWithoutExpenseCategoriesInput = {
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutExpenseCategoriesInput = {
@@ -2094,6 +2284,7 @@ export type OrganizationUncheckedCreateWithoutExpenseCategoriesInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutExpenseCategoriesInput = {
@@ -2136,6 +2327,7 @@ export type OrganizationUpdateWithoutExpenseCategoriesInput = {
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutExpenseCategoriesInput = {
@@ -2162,6 +2354,7 @@ export type OrganizationUncheckedUpdateWithoutExpenseCategoriesInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutExpensesInput = {
@@ -2188,6 +2381,7 @@ export type OrganizationCreateWithoutExpensesInput = {
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutExpensesInput = {
@@ -2214,6 +2408,7 @@ export type OrganizationUncheckedCreateWithoutExpensesInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutExpensesInput = {
@@ -2256,6 +2451,7 @@ export type OrganizationUpdateWithoutExpensesInput = {
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutExpensesInput = {
@@ -2282,6 +2478,7 @@ export type OrganizationUncheckedUpdateWithoutExpensesInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutInvoicesInput = {
@@ -2308,6 +2505,7 @@ export type OrganizationCreateWithoutInvoicesInput = {
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutInvoicesInput = {
@@ -2334,6 +2532,7 @@ export type OrganizationUncheckedCreateWithoutInvoicesInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutInvoicesInput = {
@@ -2376,6 +2575,7 @@ export type OrganizationUpdateWithoutInvoicesInput = {
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutInvoicesInput = {
@@ -2402,6 +2602,7 @@ export type OrganizationUncheckedUpdateWithoutInvoicesInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutAvailableIntegrationsInput = {
@@ -2428,6 +2629,7 @@ export type OrganizationCreateWithoutAvailableIntegrationsInput = {
   budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutAvailableIntegrationsInput = {
@@ -2454,6 +2656,7 @@ export type OrganizationUncheckedCreateWithoutAvailableIntegrationsInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
   customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutAvailableIntegrationsInput = {
@@ -2496,6 +2699,7 @@ export type OrganizationUpdateWithoutAvailableIntegrationsInput = {
   budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutAvailableIntegrationsInput = {
@@ -2522,6 +2726,7 @@ export type OrganizationUncheckedUpdateWithoutAvailableIntegrationsInput = {
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 
@@ -2545,6 +2750,7 @@ export type OrganizationCountOutputType = {
   budgetEntries: number
   serviceDefaultBacklogItems: number
   customRoles: number
+  members: number
 }
 
 export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2563,6 +2769,7 @@ export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Exte
   budgetEntries?: boolean | OrganizationCountOutputTypeCountBudgetEntriesArgs
   serviceDefaultBacklogItems?: boolean | OrganizationCountOutputTypeCountServiceDefaultBacklogItemsArgs
   customRoles?: boolean | OrganizationCountOutputTypeCountCustomRolesArgs
+  members?: boolean | OrganizationCountOutputTypeCountMembersArgs
 }
 
 /**
@@ -2680,6 +2887,13 @@ export type OrganizationCountOutputTypeCountCustomRolesArgs<ExtArgs extends runt
   where?: Prisma.CustomRoleWhereInput
 }
 
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MemberWhereInput
+}
+
 
 export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2706,6 +2920,7 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   budgetEntries?: boolean | Prisma.Organization$budgetEntriesArgs<ExtArgs>
   serviceDefaultBacklogItems?: boolean | Prisma.Organization$serviceDefaultBacklogItemsArgs<ExtArgs>
   customRoles?: boolean | Prisma.Organization$customRolesArgs<ExtArgs>
+  members?: boolean | Prisma.Organization$membersArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["organization"]>
 
@@ -2762,6 +2977,7 @@ export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.Interna
   budgetEntries?: boolean | Prisma.Organization$budgetEntriesArgs<ExtArgs>
   serviceDefaultBacklogItems?: boolean | Prisma.Organization$serviceDefaultBacklogItemsArgs<ExtArgs>
   customRoles?: boolean | Prisma.Organization$customRolesArgs<ExtArgs>
+  members?: boolean | Prisma.Organization$membersArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2785,6 +3001,7 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     budgetEntries: Prisma.$BudgetEntryPayload<ExtArgs>[]
     serviceDefaultBacklogItems: Prisma.$ServiceDefaultBacklogItemPayload<ExtArgs>[]
     customRoles: Prisma.$CustomRolePayload<ExtArgs>[]
+    members: Prisma.$MemberPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3208,6 +3425,7 @@ export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends run
   budgetEntries<T extends Prisma.Organization$budgetEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$budgetEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BudgetEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   serviceDefaultBacklogItems<T extends Prisma.Organization$serviceDefaultBacklogItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$serviceDefaultBacklogItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServiceDefaultBacklogItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   customRoles<T extends Prisma.Organization$customRolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$customRolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  members<T extends Prisma.Organization$membersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$membersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3991,6 +4209,30 @@ export type Organization$customRolesArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.CustomRoleScalarFieldEnum | Prisma.CustomRoleScalarFieldEnum[]
+}
+
+/**
+ * Organization.members
+ */
+export type Organization$membersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Member
+   */
+  select?: Prisma.MemberSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Member
+   */
+  omit?: Prisma.MemberOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MemberInclude<ExtArgs> | null
+  where?: Prisma.MemberWhereInput
+  orderBy?: Prisma.MemberOrderByWithRelationInput | Prisma.MemberOrderByWithRelationInput[]
+  cursor?: Prisma.MemberWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MemberScalarFieldEnum | Prisma.MemberScalarFieldEnum[]
 }
 
 /**
