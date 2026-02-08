@@ -1,11 +1,9 @@
-import { operationWrapper } from "@/lib/operationWrapper";
-import { getClientAction } from "@/actions/clients/getClientAction";
-import { AppError } from "@/errors/AppError";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
 import { Mail, MapPin, Phone, Settings } from "lucide-react";
 import { ClientUsers } from "./_components/ClientUsers";
 import { mask } from "@/utils/mask";
+import { getClientData } from "../_data/getClientData";
 
 interface IClientPage {
   params: Promise<{ client: string }>;
@@ -14,16 +12,7 @@ interface IClientPage {
 export default async function ClientPage({ params }: IClientPage) {
   const { client: slug } = await params;
 
-  const [error, success] = await operationWrapper("action", "getClient", () =>
-    getClientAction(slug),
-  );
-
-  if (error) {
-    throw new AppError(error.message);
-  }
-
-  const client = success.client;
-
+  const client = await getClientData(slug);
   return (
     <TabsContent value="overview" className="space-y-6 outline-none">
       <div className="space-y-6">
@@ -51,11 +40,11 @@ export default async function ClientPage({ params }: IClientPage) {
                 </div>
                 <div>
                   <label className="text-xs font-semibold text-muted-foreground uppercase">
-                    CNPJ
+                    CNPJ/CPF
                   </label>
                   <p className="font-medium">
                     {" "}
-                    {client.cnpj.includes("/")
+                    {client.cnpj.includes(".")
                       ? client.cnpj
                       : mask(client.cnpj, "##.###.###/####-##")}
                   </p>

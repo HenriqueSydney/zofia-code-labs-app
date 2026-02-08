@@ -13,13 +13,13 @@ interface FetchProjectsFilter {
 
 export async function fetchProjects(
   filter?: FetchProjectsFilter,
-  pagination?: { page?: number; numberPerPage?: number }
+  pagination?: { page?: number; numberPerPage?: number },
 ) {
   const session = await auth();
   if (!session?.user) throw new AppError("Usuário não autenticado");
 
   const useCase = makeFetchProjectUseCase();
-
+ 
   return await useCase.execute({
     filter,
     userId: session.user.id,

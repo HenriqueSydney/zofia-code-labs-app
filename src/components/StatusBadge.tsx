@@ -12,10 +12,19 @@ export function StatusBadge({ status }: IStatusBadge) {
 
   return (
     <Badge
-      className={cn(stage?.color, "flex items-center justify-between gap-1")}
+      // whitespace-nowrap impede que o texto "Em Andamento" quebre em duas linhas
+      // w-fit garante que o badge não estique além do necessário
+      className={cn(
+        stage?.color,
+        "flex items-center justify-center gap-1.5 flex-nowrap whitespace-nowrap w-fit px-2.5",
+      )}
     >
-      {stage?.icon && <stage.icon className="h-3 w-3 text-white" />}
-      {stage?.shortLabel}
+      {stage?.icon && (
+        <stage.icon className="h-3.5 w-3.5 text-white shrink-0" />
+      )}
+      <span className="leading-none text-[11px] font-semibold">
+        {stage?.shortLabel}
+      </span>
     </Badge>
   );
 }

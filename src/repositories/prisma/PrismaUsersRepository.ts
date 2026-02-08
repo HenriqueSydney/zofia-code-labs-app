@@ -34,22 +34,39 @@ export class PrismaUsersRepository implements IUserRepository {
     return this.mapToSafeUser(user);
   }
 
-  async findUserById(userId: string): Promise<UserSafeWithPermissions | null> {
+  async findUserById(
+    userId: string,
+    organizationId: string,
+  ): Promise<UserSafeWithPermissions | null> {
     // 1. Buscamos o usuário trazendo o relacionamento do CustomRole
     const user = await prisma.user.findUnique({
       where: {
         id: userId,
       },
       include: {
-        customRole: true, // Necessário para acessar as permissões do cargo
+        members: {
+          where: {
+            organizationId,
+          },
+          select: {
+            role: true,
+            specificPermissions: true,
+            customRole: true,
+          },
+          take: 1,
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
       },
     });
 
     if (!user) return null;
 
     // 2. Extraímos as permissões de ambas as fontes
-    const rolePermissions = user.customRole?.permissions || [];
-    const specificPermissions = user.specificPermissions || [];
+    const rolePermissions = user.members[0]?.customRole?.permissions || [];
+    const specificPermissions = user.members[0]?.specificPermissions || [];
+    const customRole = user.members[0]?.customRole;
 
     // 3. "Achatamos" e removemos duplicatas usando Set
     // O Set garante que se "project:read" existir nos dois, aparecerá apenas uma vez.
@@ -61,13 +78,13 @@ export class PrismaUsersRepository implements IUserRepository {
     // Como o 'user' aqui tem o 'customRole' no tipo devido ao include,
     // precisamos ter cuidado ao passar para mappers genéricos ou fazer manualmente.
 
-    const { passwordHash, customRole, ...rest } = user;
+    const { passwordHash, members, ...rest } = user;
 
     return {
       ...rest,
       hasPassword: !!passwordHash,
       permissions: uniquePermissions, // Array unificado de strings
-      roleName: customRole?.name ?? user.role, // Opcional: Fallback para o role padrão se não tiver custom
+      roleName: customRole?.name ?? user.members[0]?.role, // Opcional: Fallback para o role padrão se não tiver custom
     };
   }
 

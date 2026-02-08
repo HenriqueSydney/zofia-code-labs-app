@@ -32,7 +32,10 @@ export interface IUserRepository {
   findUserByIdWithPassword(
     userId: string,
   ): Promise<{ id: string; passwordHash: string | null } | null>;
-  findUserById(userId: string): Promise<UserSafeWithPermissions | null>;
+  findUserById(
+    userId: string,
+    organizationId: string,
+  ): Promise<UserSafeWithPermissions | null>;
   findUserByEmail(email: string): Promise<UserSafe | null>;
   findUserByIdAndReturnAllInfo(userId: string): Promise<UserWithAllInfo | null>;
   fetchUsers(

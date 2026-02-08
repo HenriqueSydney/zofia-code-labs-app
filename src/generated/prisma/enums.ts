@@ -169,6 +169,7 @@ export const BacklogStatus = {
   IN_PROGRESS: 'IN_PROGRESS',
   REVIEW: 'REVIEW',
   DONE: 'DONE',
+  WAITING_CLIENT: 'WAITING_CLIENT',
   CANCELED: 'CANCELED'
 } as const
 

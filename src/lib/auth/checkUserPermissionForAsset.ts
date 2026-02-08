@@ -58,7 +58,7 @@ export async function checkUserPermissionForAsset<T extends ResourceType>(
   asset: any,
   operation: Operation = "READ",
 ) {
-  const user = await userRepository.findUserById(userId);
+  const user = await userRepository.findUserById(userId, asset.organizationId);
 
   if (!user) throw new AppError("Usuário não localizado");
 

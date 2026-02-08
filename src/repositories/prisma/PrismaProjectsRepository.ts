@@ -172,7 +172,7 @@ export class PrismaProjectsRepository implements IProjectsRepository {
       };
     }
 
-    if (params.cliendId) {
+    if (params.clientSlug) {
       where = {
         ...where,
         client: {

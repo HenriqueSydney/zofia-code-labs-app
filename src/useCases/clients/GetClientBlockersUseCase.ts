@@ -1,23 +1,25 @@
 import { AppError } from "@/errors/AppError";
-import { Client } from "@/generated/prisma/client";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import {
-  ClientWithStats,
+  ClientBlockerItem,
   IClientsRepository,
 } from "@/repositories/IClientsRepository";
 
-interface GetClientUseCaseRequest {
+interface GetClientBlockersUseCaseRequest {
   slug: string;
   userId: string;
 }
 
-export class GetClientUseCase {
+export class GetClientBlockersUseCase {
   constructor(private clientRepository: IClientsRepository) {}
 
-  async execute({ slug, userId }: GetClientUseCaseRequest): Promise<{
-    client: ClientWithStats | null;
+  async execute({ slug, userId }: GetClientBlockersUseCaseRequest): Promise<{
+    blockerItens: ClientBlockerItem[];
   }> {
-    const client = await this.clientRepository.findBySlug(slug);
+    const [client, blockerItens] = await Promise.all([
+      this.clientRepository.findBySlug(slug),
+      this.clientRepository.getClientBlockers(slug),
+    ]);
 
     if (!client) {
       throw new AppError("Cliente não localizado");
@@ -25,6 +27,6 @@ export class GetClientUseCase {
 
     await checkUserPermissionForAsset("client", userId, client, "READ");
 
-    return { client };
+    return { blockerItens };
   }
 }

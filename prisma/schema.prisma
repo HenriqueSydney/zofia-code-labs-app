@@ -679,6 +679,7 @@ model Project {
   projectMembers       ProjectMember[]
   member               Member?               @relation(name: "created_by_member", fields: [memberId], references: [id])
   memberId             String?
+  projectRating        ProjectRating?
 
   @@map("projects")
   @@schema("projects")
@@ -717,6 +718,7 @@ model ProjectMember {
   // Adicione índices para busca rápida
   @@index([projectId, userId])
   @@index([userId])
+  @@index([leftAt])
   @@map("project_members")
   @@schema("projects")
 }
@@ -724,16 +726,36 @@ model ProjectMember {
 model ProjectDocuments {
   id String @id @default(cuid())
 
-  project Project @relation(fields: [projectId], references: [id])
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
 
-  name      String   @default("Attachment")
-  extension String   @default("pdf")
-  createdAt DateTime @default(now())
+  name      String @default("Attachment")
+  extension String @default("pdf")
 
   documentUrlReference String @map("document_url_reference")
-  projectId            String
 
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
   @@map("projects_documents")
+  @@schema("projects")
+}
+
+model ProjectRating {
+  id        String  @id @default(cuid())
+  projectId String  @unique @map("project_id")
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  rating  Int     @db.SmallInt()
+  comment String? @db.Text
+
+  techQuality   Int? @map("tech_quality")
+  communication Int? @map("communication")
+
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+  @@map("project_ratings")
   @@schema("projects")
 }
 
@@ -813,6 +835,7 @@ enum BacklogStatus {
   IN_PROGRESS
   REVIEW
   DONE
+  WAITING_CLIENT
   CANCELED
 
   @@schema("projects")

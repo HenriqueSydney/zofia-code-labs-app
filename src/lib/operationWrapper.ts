@@ -1,5 +1,3 @@
-"use server";
-
 import { SpanKind, SpanStatusCode, trace } from "@opentelemetry/api";
 import { apiLogger } from "./logger";
 import type {
@@ -13,7 +11,7 @@ export async function operationWrapper<T>(
   operationType: "repository" | "action",
   operationName: string,
   callback: () => Promise<T>,
-  options: OperationWrapperOptions = {}
+  options: OperationWrapperOptions = {},
 ): Promise<OperationWrapperResponse<T>> {
   const {
     cache = "force-cache",
@@ -53,7 +51,7 @@ export async function operationWrapper<T>(
               //   tags
               // );
               apiLogger.debug(
-                `Successfully invalidated cache for tags: ${tags.join(", ")}`
+                `Successfully invalidated cache for tags: ${tags.join(", ")}`,
               );
             } catch (error) {
               handleErrors(error, null, {
@@ -61,7 +59,7 @@ export async function operationWrapper<T>(
                 operationName,
                 tags,
                 message: `Failed to invalidate cache for tags: ${tags.join(
-                  ", "
+                  ", ",
                 )}`,
               });
             }
@@ -125,7 +123,7 @@ export async function operationWrapper<T>(
         span.setAttribute("cache.hit", false);
         span.setStatus({ code: SpanStatusCode.OK });
         apiLogger.debug(
-          `Error in operation Wrapper (${operationType}) (${operationName})`
+          `Error in operation Wrapper (${operationType}) (${operationName})`,
         );
 
         return [null, freshData as T] satisfies OperationWrapperResponse<T>;
@@ -135,13 +133,13 @@ export async function operationWrapper<T>(
         span.setStatus({ code: SpanStatusCode.ERROR, message: error.message }); // ERROR
         apiLogger.error(
           { stackTrace: error, operationName, operationType },
-          "Error in operation Wrapper"
+          "Error in operation Wrapper",
         );
         return [error as Error, null] satisfies OperationWrapperResponse<T>;
       } finally {
         span.setAttribute("execution.ms", performance.now() - start);
         span.end();
       }
-    }
+    },
   );
 }

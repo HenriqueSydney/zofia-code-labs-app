@@ -1,4 +1,6 @@
-import { Prisma, Role } from "@/generated/prisma/client";
+import { PERMISSIONS } from "@/constants/permissions";
+import { MemberRole, Prisma, Role } from "@/generated/prisma/client";
+import { date } from "@/lib/dayjs";
 import { prisma } from "@/lib/prisma";
 import { generateSlug } from "@/utils/generateSlug";
 import { hash } from "bcryptjs";
@@ -19,6 +21,59 @@ async function main() {
       },
     });
   }
+
+  const ALL_PERMISSIONS = Object.values(PERMISSIONS).flatMap((group) =>
+    Object.values(group),
+  );
+
+  const adminCustomRoleData: Prisma.CustomRoleUncheckedCreateInput = {
+    name: "Administrador",
+    organizationId: organization.id,
+    description: "Administrador da empresa",
+    permissions: ALL_PERMISSIONS,
+  };
+
+  const adminCustomRole = await prisma.customRole.create({
+    data: adminCustomRoleData,
+  });
+
+  const developerCustomRoleData: Prisma.CustomRoleUncheckedCreateInput = {
+    name: "Desenvolvedor Sênior",
+    organizationId: organization.id,
+    description: "Desenvolvedor sênior da organização",
+    permissions: [
+      // Projetos: Tudo menos deletar/arquivar (segurança operacional)
+      PERMISSIONS.PROJECT.READ,
+      PERMISSIONS.PROJECT.CREATE,
+      PERMISSIONS.PROJECT.UPDATE,
+
+      // Backlog: Controle total para gerir as sprints
+      PERMISSIONS.BACKLOG.READ,
+      PERMISSIONS.BACKLOG.MANAGE,
+
+      // CRM: Precisa ler dados de clientes para os projetos
+      PERMISSIONS.CLIENT.READ,
+
+      // Comercial: Pode ver propostas e contratos para entender o escopo técnica,
+      // mas não necessariamente criar/enviar/aprovar
+      PERMISSIONS.PROPOSAL.READ,
+      PERMISSIONS.CONTRACT.READ,
+
+      // Catálogo: Pode ver o que a empresa oferece
+      PERMISSIONS.SERVICE_CATALOG.READ,
+
+      // Financeiro: Acesso apenas a despesas (para lançar custos de ferramentas/infra do projeto)
+      PERMISSIONS.EXPENSE.READ,
+      PERMISSIONS.EXPENSE.CREATE,
+
+      // Configurações: Apenas integrações técnicas (GitHub, Vercel, etc)
+      PERMISSIONS.SETTINGS.MANAGE_INTEGRATIONS,
+    ],
+  };
+
+  const developerCustomRole = await prisma.customRole.create({
+    data: developerCustomRoleData,
+  });
 
   const passwordHash = await hash("123456", 6);
 
@@ -54,12 +109,12 @@ async function main() {
       console.log(`🔄 Usuário já existe: ${user.name}`);
     }
 
-    const userLinked = await prisma.member.findFirst({
+    let userLinked = await prisma.member.findFirst({
       where: { userId: existingUser.id },
     });
 
     if (!userLinked) {
-      await prisma.member.create({
+      userLinked = await prisma.member.create({
         data: {
           organizationId: organization.id,
           userId: existingUser.id,
@@ -69,6 +124,50 @@ async function main() {
       console.log(`✅ Usuário vinculado à organização: ${user.name}`);
     } else {
       console.log(`🔄 Usuário já vinculado à organização: ${user.name}`);
+    }
+
+    let member = await prisma.member.findFirst({
+      where: {
+        userId: existingUser.id,
+        organizationId: organization.id,
+      },
+    });
+
+    if (!member) {
+      // Definição de permissões baseada no e-mail (Regra de Negócio Zofia Labs)
+      let memberRole: MemberRole = MemberRole.TENANT_MEMBER;
+      let customRoleId: string = developerCustomRole.id;
+      let specificPermissions: string[] = [];
+      // Cristina como Responsável Legal / Admin
+      if (user.email === "mcristinaas.cruz@gmail.com") {
+        memberRole = MemberRole.TENANT_ADMIN;
+        customRoleId = adminCustomRole.id;
+      } else if (user.email === "henriquesydneylima@gmail.com") {
+        specificPermissions = [PERMISSIONS.SETTINGS.MANAGE_MEMBERS];
+      }
+
+      member = await prisma.member.create({
+        data: {
+          organizationId: organization.id,
+          userId: existingUser.id,
+          role: memberRole,
+          customRoleId: customRoleId, // Vincula a CustomRole criada anteriormente
+          specificPermissions,
+        },
+      });
+      console.log(`   ✅ Membro criado: ${user.name} com role ${memberRole}`);
+    } else {
+      // Opcional: Atualizar a customRole se o membro já existir para garantir sincronia do seed
+      await prisma.member.update({
+        where: { id: member.id },
+        data: {
+          customRoleId:
+            user.email === "mcristinaas.cruz@gmail.com"
+              ? adminCustomRole.id
+              : developerCustomRole.id,
+        },
+      });
+      console.log(`   🔄 Membro atualizado/verificado: ${user.name}`);
     }
   }
 
@@ -269,6 +368,16 @@ async function main() {
       phone: "(61) 99174-8160",
       address:
         "St. C Norte Edifício Prime Excelência Médica, Torre A, Sala 409 Taguatinga Norte, Brasília - DF",
+    },
+    {
+      organizationId: organization.id,
+      slug: generateSlug({ title: "Dr. Berthran Severo" }),
+      companyName: "Dr. Berthran Severo",
+      tradeName: "Dr. Berthran",
+      cnpj: "14160-DF",
+      email: "atendimento@drberthran.com",
+      phone: "(61) 99999-9999",
+      address: "",
     },
   ];
 
@@ -609,6 +718,144 @@ async function main() {
       create: { ...it, slug },
     });
   }
+
+  // ============================================================
+  // 7. PROJETOS
+  // ============================================================
+
+  const acolheKidsId = await prisma.client.findFirst({
+    where: {
+      slug: generateSlug({ title: "Acolhe Kids" }),
+    },
+  });
+
+  const gelateriaId = await prisma.client.findFirst({
+    where: {
+      slug: generateSlug({ title: "Gelateria Filo Di Latte" }),
+    },
+  });
+
+  const bertharmId = await prisma.client.findFirst({
+    where: {
+      slug: generateSlug({ title: "Dr. Berthran Severo" }),
+    },
+  });
+
+  const ownerEmail = await prisma.user.findUnique({
+    where: {
+      email: "mcristinaas.cruz@gmail.com",
+    },
+  });
+
+  const projects: Prisma.ProjectUncheckedCreateInput[] = [
+    {
+      organizationId: organization.id,
+      name: "Acolhe Kids: Plataforma de Conversão e Presença Digital",
+      slug: generateSlug({
+        title: "Acolhe Kids: Plataforma de Conversão e Presença Digital",
+      }),
+      description:
+        "Desenvolvimento de uma Landing Page de alta performance focada em conversão para a Clínica Acolhe Kids. O projeto priorizou a experiência do usuário (UX) e a velocidade de carregamento, utilizando Next.js com renderização estática para garantir SEO agressivo e baixo tempo de resposta.\n\nA solução incluiu a integração completa com o Google Places para otimização de busca local, além da implementação do Umami Analytics para monitoramento de tráfego focado em privacidade. O design foi concebido para transmitir acolhimento e segurança, alinhado ao público-alvo da clínica.",
+      clientId: acolheKidsId?.id ?? "",
+      status: "COMPLETED",
+      health: "ON_TRACK",
+      createdBy: ownerEmail?.id ?? "",
+      estimatedStartDate: date("2025-11-08").toDate(),
+      startDate: date("2025-11-08").toDate(),
+      endDate: date("2025-11-26").toDate(),
+      priority: "LOW",
+      totalBudget: 0,
+      totalSpent: 0,
+      remainingBudget: 0,
+      tags: ["Nextjs Fullstack", "UI/UX Frontend", "Google Place", "Umami"],
+    },
+    {
+      organizationId: organization.id,
+      name: "Gelateria Filó Di Latte: Experiência Digital Gastronômica",
+      slug: generateSlug({
+        title: "Gelateria Filó Di Latte: Experiência Digital Gastronômica",
+      }),
+      description:
+        "Criação de interface digital para a Gelateria Filó Di Latte, focada no apelo visual dos produtos e na facilidade de contato via canais digitais. O projeto utilizou o boilerplate de alta performance da Zofia Labs para garantir uma navegação fluida em dispositivos móveis, onde se concentra 90% do tráfego do cliente.\n\nAlém do frontend moderno com Tailwind CSS, o projeto foi construído para operar na Vercel, com deploy automático via sincronização com o GitHub. A estratégia de SEO local foi aplicada para aumentar a visibilidade da loja física em Brasília.",
+      clientId: gelateriaId?.id ?? "",
+      status: "COMPLETED",
+      health: "ON_TRACK",
+      createdBy: ownerEmail?.id ?? "",
+      estimatedStartDate: date("2025-10-20").toDate(),
+      startDate: date("2025-10-25").toDate(),
+      endDate: date("2025-11-04").toDate(),
+      priority: "LOW",
+      totalBudget: 0,
+      totalSpent: 0,
+      remainingBudget: 0,
+      tags: ["Nextjs Fullstack", "UI/UX Frontend", "Google Place", "Umami"],
+    },
+    {
+      organizationId: organization.id,
+      name: "Portal Institucional Dr. Berthran: Autoridade e Agendamento",
+      slug: generateSlug({
+        title: "Portal Institucional Dr. Berthran: Autoridade e Agendamento",
+      }),
+      description:
+        "Desenvolvimento de site institucional robusto para o Dr. Berthran, visando estabelecer autoridade digital e divulgar seu trabalho, em especial os procedimentos realizados por Cirurgia Robótica Minimamente Invasiva. \n\nO foco técnico reside na otimização de Core Web Vitals para garantir que a página figure entre os primeiros resultados de busca orgânica, utilizando estratégias avançadas de cache e minificação de assets.",
+      clientId: bertharmId?.id ?? "",
+      status: "IN_PROGRESS",
+      health: "ON_TRACK",
+      createdBy: ownerEmail?.id ?? "",
+      estimatedStartDate: date("2026-02-01").toDate(),
+      startDate: date("2026-02-01").toDate(),
+      endDate: undefined,
+      priority: "LOW",
+      totalBudget: 0,
+      totalSpent: 0,
+      remainingBudget: 0,
+      tags: ["Nextjs Fullstack", "UI/UX Frontend", "Google Place", "Umami"],
+    },
+  ];
+
+  for (const projectData of projects) {
+    // 1. Criar ou atualizar o projeto
+    const project = await prisma.project.upsert({
+      where: { slug: projectData.slug },
+      update: projectData,
+      create: projectData,
+    });
+
+    console.log(`🔎 Processando vínculos para: ${project.name}`);
+
+    // 2. Lógica de vinculação automática de serviços baseada no nome/tipo
+    let serviceName = "";
+    if (project.name.includes("Landing Page")) {
+      serviceName = "Landing Page Express (Template Otimizado)";
+    } else if (project.name.includes("Portal Institucional")) {
+      serviceName = "Site Institucional PME (Até 5 páginas)";
+    }
+
+    if (serviceName) {
+      const serviceType = await prisma.serviceType.findFirst({
+        where: { name: serviceName, organizationId: project.organizationId },
+      });
+
+      if (serviceType) {
+        await prisma.projectServices.upsert({
+          where: {
+            projectId_serviceTypeId: {
+              projectId: project.id,
+              serviceTypeId: serviceType.id,
+            },
+          },
+          update: {},
+          create: {
+            projectId: project.id,
+            serviceTypeId: serviceType.id,
+          },
+        });
+        console.log(`   🔗 Vinculado ao serviço: ${serviceName}`);
+      }
+    }
+  }
+
+  console.log("✅ Seed de projetos finalizado!");
 
   console.log("🏁 Seed ajustado para Zofia Code Labs finalizado!");
 }

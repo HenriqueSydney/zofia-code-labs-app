@@ -16,10 +16,10 @@ import { AppError } from "@/errors/AppError";
 import { ClientTabs } from "./_components/ClientTabs";
 import { EditClientForm } from "./_components/EditClientForm";
 import { Button } from "@/components/ui/button";
-import { Link } from "@/i18n/navigation";
 import { ClientHeaderWrapper } from "./_components/ClientHeaderWrapper";
 import { GoBackButton } from "@/components/GoBackButton";
 import { mask } from "@/utils/mask";
+import { getClientData } from "../_data/getClientData";
 
 interface IClientLayout {
   children: React.ReactNode;
@@ -32,15 +32,7 @@ export default async function ClientLayout({
 }: IClientLayout) {
   const { client: slug } = await params;
 
-  const [error, success] = await operationWrapper("action", "getClient", () =>
-    getClientAction(slug),
-  );
-
-  if (error) {
-    throw new AppError(error.message);
-  }
-
-  const client = success.client;
+  const client = await getClientData(slug);
 
   return (
     <div className="space-y-6 mb-10">
@@ -67,7 +59,7 @@ export default async function ClientLayout({
               <div className="flex gap-4  text-sm text-muted-foreground">
                 <span className="flex items-center gap-1">
                   <Building2 size={14} />{" "}
-                  {client.cnpj.includes("/")
+                  {client.cnpj.includes(".")
                     ? client.cnpj
                     : mask(client.cnpj, "##.###.###/####-##")}
                 </span>
@@ -91,24 +83,24 @@ export default async function ClientLayout({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatsCard
             label="Projetos Ativos"
-            mainInformation="05"
+            mainInformation={client.stats.activeProjects}
             Icon={LayoutDashboard}
           />
           <StatsCard
             label="Total em Contratos"
-            mainInformation="R$ 450.000,00"
+            mainInformation={client.stats.totalInContracts}
             Icon={FileText}
             iconColor="bg-blue-500/10"
           />
           <StatsCard
             label="Faturas em Aberto"
-            mainInformation="02"
+            mainInformation={client.stats.openInvoices}
             Icon={PieChart}
             iconColor="bg-orange-500/10"
           />
           <StatsCard
             label="Tempo de Casa"
-            mainInformation="1.2 anos"
+            mainInformation={client.stats.tenure}
             Icon={Presentation}
             iconColor="bg-green-500/10"
           />

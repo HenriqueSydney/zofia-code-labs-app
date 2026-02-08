@@ -117,7 +117,7 @@ export function ClientForm({ client, handleCloseModal }: IClientFormProps) {
           <FormMaskInput
             control={form.control}
             name="cnpj"
-            label="CNPJ"
+            label="CNPJ/CPF"
             mask="00.000.000/0000-00"
             placeholder="00.000.000/0001-99"
             disabled={isPending}
