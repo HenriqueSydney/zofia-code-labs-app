@@ -53,7 +53,7 @@ export function ServiceCategoryRemoveOrEdit({
             size="icon-sm"
             className="flex items-center justify-center"
           >
-            <Edit className="h-4 w-4 " />
+            <Edit className="h-4 w-4" />
           </Button>
         </DialogTrigger>
         <DialogContent className="max-w-lg">

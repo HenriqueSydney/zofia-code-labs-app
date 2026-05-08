@@ -21,7 +21,6 @@ export async function getProposalDownloadUrl(proposalId: string) {
 
     return { success: true, url };
   } catch (error) {
-    console.log(error);
     let message = "Erro ao localizar o arquivo para download";
     if (error instanceof Error) {
       message = error.message;

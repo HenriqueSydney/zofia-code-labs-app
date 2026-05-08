@@ -5,8 +5,17 @@ import { IIntegrationTypeRepository } from "@/repositories/IIntegrationTypeRepos
 export class ListIntegrationTypeUseCase {
   constructor(private repository: IIntegrationTypeRepository) {}
 
-  async execute(userId: string, query?: string): Promise<IntegrationType[]> {
-    await checkUserPermissionForAsset("integrationType", userId, null, "READ");
+  async execute(
+    userId: string,
+    organizationId: string,
+    query?: string,
+  ): Promise<IntegrationType[]> {
+    await checkUserPermissionForAsset(
+      "integrationType",
+      userId,
+      { organizationId },
+      "READ",
+    );
 
     return await this.repository.listAll(query);
   }

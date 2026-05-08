@@ -75,8 +75,9 @@ async function main() {
     data: developerCustomRoleData,
   });
 
-  const passwordHash = await hash("123456", 6);
-
+  const passwordHash = await hash("sei_muito_bem", 6);
+  const passwordHashTesterAdmin = await hash("usuario_ceub_admin", 6);
+  const passwordHashTesterMember = await hash("usuario_ceub_user", 6);
   const users: Prisma.UserUncheckedCreateInput[] = [
     {
       organizationId: organization.id,
@@ -92,6 +93,22 @@ async function main() {
       email: "mcristinaas.cruz@gmail.com",
       emailVerified: new Date(),
       role: Role.OWNER,
+    },
+    {
+      organizationId: organization.id,
+      name: "Usuario CEUB Total",
+      email: "teste_admin@zofiacodelabs.com",
+      passwordHash: passwordHashTesterAdmin,
+      emailVerified: new Date(),
+      role: Role.OWNER,
+    },
+    {
+      organizationId: organization.id,
+      name: "Usuario CEUB Member",
+      email: "teste_member@zofiacodelabs.com",
+      passwordHash: passwordHashTesterMember,
+      emailVerified: new Date(),
+      role: Role.USER,
     },
   ];
 

@@ -25,13 +25,7 @@ export class UpdateOrganizationIntegrationUseCase {
     enableByol,
     secretValues,
   }: UpdateRequest): Promise<OrganizationIntegration> {
-    console.log({
-      id,
-      enabled,
-      userId,
-      enableByol,
-      secretValues,
-    });
+   
     // 1. Busca a integração atual
     const integration = await this.repository.findById(id);
     if (!integration) throw new Error("Integração não encontrada.");

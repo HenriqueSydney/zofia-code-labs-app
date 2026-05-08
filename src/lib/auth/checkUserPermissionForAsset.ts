@@ -13,6 +13,7 @@ import { AuthInstanceSettingsStrategy } from "./strategies/auth-instance-senttin
 import { AuthSaasOwnerStrategy } from "./strategies/auth-saas-owner-strategy";
 import { AuthFinancialStrategy } from "./strategies/auth-financial-strategy";
 import { AuthServiceStrategy } from "./strategies/auth-service-strategy";
+import { Role } from "@/generated/prisma/enums";
 
 const projectStrategy = new AuthProjectStrategy();
 const documentTemplateStrategy = new AuthDocumentTemplateStrategy();
@@ -68,6 +69,10 @@ export async function checkUserPermissionForAsset<T extends ResourceType>(
     throw new Error(
       `Estratégia de segurança não definida para: ${resourceType}`,
     );
+  }
+
+  if (user.role === Role.OWNER) {
+    return;
   }
 
   // Executa a validação específica da estratégia

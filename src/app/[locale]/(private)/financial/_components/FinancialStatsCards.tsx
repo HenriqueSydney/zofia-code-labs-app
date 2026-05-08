@@ -14,7 +14,6 @@ export async function FinancialStatsCards() {
   const { data } = await getFinancialOverviewAction();
 
   if (!data) return null;
-  console.log(data);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

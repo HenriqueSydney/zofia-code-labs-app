@@ -32,7 +32,7 @@ export async function createClientAction(formData: FormData) {
 
     await useCase.execute(
       {
-        organizationId: "cmizei37c00008del0bo3sbsq",
+        organizationId: session.user.organizationId,
         ...validatedData,
         file,
       },

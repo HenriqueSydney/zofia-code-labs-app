@@ -7,7 +7,6 @@ import { ThemeProvider } from "next-themes";
 import { useEffect, useState } from "react";
 
 import { GoBackButton } from "@/components/GoBackButton";
-import { NavLinks } from "@/components/NavLinks";
 import { Button } from "@/components/ui/button";
 
 import { errorLogger } from "@/services/errorLogger";
@@ -117,9 +116,10 @@ export default function GlobalError({
                         Algo não previsto aconteceu
                       </h2>
                       <p className="text-lg text-muted-foreground max-w-md mx-auto lg:mx-0">
-                        Ops! Tivemos um imprevisto aqui. Já estou verificando e
+                        {error.message ||
+                          `Ops! Tivemos um imprevisto aqui. Já estou verificando e
                         logo tudo volta ao normal. Enquanto isso, que tal
-                        explorar outras áreas do meu portfólio?
+                        explorar outras áreas do meu portfólio?`}
                       </p>
                     </div>
 
@@ -149,9 +149,6 @@ export default function GlobalError({
                         <p className="text-sm text-muted-foreground mb-3">
                           Ou explore as seções principais:
                         </p>
-                        <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
-                          <NavLinks variant="notFoundPage" />
-                        </div>
                       </div>
                     </div>
                   </div>

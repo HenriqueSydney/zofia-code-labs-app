@@ -27,12 +27,13 @@ export default async function TemplateDocuments({ searchParams }: IParams) {
       },
       {
         cache: "no-cache",
-      }
+      },
     );
 
   if (fetchDocumentTemplatesError) {
     throw new AppError(
-      "Erro ao tentar localizar os templates de documentos. Tente novamente mais tarde"
+      fetchDocumentTemplatesError.message ||
+        "Erro ao tentar localizar os templates de documentos. Tente novamente mais tarde",
     );
   }
 
@@ -102,7 +103,7 @@ export default async function TemplateDocuments({ searchParams }: IParams) {
                       <span>
                         Atualizado:{" "}
                         {date(template.updatedAt ?? template.createdAt).format(
-                          "DD/MM/YYYY"
+                          "DD/MM/YYYY",
                         )}
                       </span>
                       {/* <span>•</span>

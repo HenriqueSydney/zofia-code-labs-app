@@ -24,7 +24,11 @@ export function Tooltip({
 
   return (
     <ShadnTooltip>
-      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipTrigger asChild={false}>     
+        <div className="contents">
+          {children}
+        </div>
+      </TooltipTrigger>
       <TooltipContent className={cn("max-w-2xl", className)} side={direction}>
         {/* Verifica se é string. Se for, usa o <p>. Se for ReactNode (JSX), renderiza direto. */}
         {typeof description === "string" ? (

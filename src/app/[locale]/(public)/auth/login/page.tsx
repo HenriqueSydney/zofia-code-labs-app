@@ -98,7 +98,7 @@ export default async function Login() {
             <CardContent className="space-y-6">
               <LoginForm />
               <Separator />
-              <LoginWithProviders />
+              {/* <LoginWithProviders /> */}
             </CardContent>
           </Card>
         </div>

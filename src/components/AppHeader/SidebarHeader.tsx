@@ -3,6 +3,7 @@
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import Image from "next/image";
 import { UserMenu } from "./UserMenu";
+import { ThemeToggle } from "../Header/ThemeToogle";
 
 export function SidebarHeader() {
   return (
@@ -19,7 +20,8 @@ export function SidebarHeader() {
           />
         </div>
 
-        <div>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
           <UserMenu />
         </div>
       </div>

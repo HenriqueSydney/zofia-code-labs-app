@@ -39,7 +39,6 @@ export class DocumensoDocumentSign implements IDocumentSignService {
     });
 
     if (!response.ok) {
-      console.log(response);
       const errorBody = await response.json(); // O Documenso costuma retornar um JSON com o erro
       console.error(
         "DETALHE DO ERRO DOCUMENSO:",

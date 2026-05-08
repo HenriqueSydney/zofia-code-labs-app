@@ -76,56 +76,50 @@ const ServiceCatalog = async ({ searchParams }: IParams) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
         {serviceTypes.map((service) => (
-          <Tooltip
+          <Card
             key={service.id}
-            description={service.description}
-            direction="top"
+            className="flex flex-col hover:shadow-lg hover:scale-101 transition-all h-60"
           >
-            <Card
-              key={service.id}
-              className="flex flex-col hover:shadow-lg hover:scale-101 transition-all h-60"
-            >
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-primary/10">
-                      <Package className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-lg">{service.name}</CardTitle>
-                      <Badge variant="outline" className="mt-1">
-                        {service.category.name}
-                      </Badge>
-                    </div>
+            <CardHeader className="pb-3">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <Package className="h-5 w-5 text-primary" />
                   </div>
-
-                  <ServiceTypeRemoveOrEdit
-                    service={service}
-                    categories={categories}
-                  />
-                </div>
-              </CardHeader>
-              <CardContent className="flex flex-1 flex-col justify-between space-y-3">
-                <div className="flex-1">
-                  <p className="text-sm text-muted-foreground line-clamp-3 whitespace-pre-line">
-                    {service.description}
-                  </p>
+                  <div>
+                    <CardTitle className="text-lg">{service.name}</CardTitle>
+                    <Badge variant="outline" className="mt-1">
+                      {service.category.name}
+                    </Badge>
+                  </div>
                 </div>
 
-                <div className="w-full flex items-center justify-between">
-                  <Link href={`${service.id}`}>
-                    <Button className="m-0" variant="outline" type="button">
-                      <FileCodeCorner className="w-4 h-4" />
-                      Detalhes do Serviço
-                    </Button>
-                  </Link>
-                  <p className="text-xl font-bold text-primary text-end">
-                    {formatCurrency(service.basePrice ?? 0)}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </Tooltip>
+                <ServiceTypeRemoveOrEdit
+                  service={service}
+                  categories={categories}
+                />
+              </div>
+            </CardHeader>
+            <CardContent className="flex flex-1 flex-col justify-between space-y-3">
+              <div className="flex-1">
+                <p className="text-sm text-muted-foreground line-clamp-3 whitespace-pre-line">
+                  {service.description}
+                </p>
+              </div>
+
+              <div className="w-full flex items-center justify-between">
+                <Link href={`${service.id}`}>
+                  <Button className="m-0" variant="outline" type="button">
+                    <FileCodeCorner className="w-4 h-4" />
+                    Detalhes do Serviço
+                  </Button>
+                </Link>
+                <p className="text-xl font-bold text-primary text-end">
+                  {formatCurrency(service.basePrice ?? 0)}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
 

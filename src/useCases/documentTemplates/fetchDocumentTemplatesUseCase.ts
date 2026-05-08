@@ -12,7 +12,7 @@ interface IFetchDocumentTemplatesUseCaseParams {
 
 export class FetchDocumentTemplatesUseCase {
   constructor(
-    private documentTemplateRepository: IDocumentTemplateRepository
+    private documentTemplateRepository: IDocumentTemplateRepository,
   ) {}
 
   async execute({
@@ -29,14 +29,16 @@ export class FetchDocumentTemplatesUseCase {
       "documentTemplate",
       userId,
       { organizationId: organizationId },
-      "READ"
+      "READ",
     );
+
     const documentTemplates =
       await this.documentTemplateRepository.fetchDocumentTemplates(
         { query, organizationId },
-        { numberPerPage, page }
+        { numberPerPage, page },
       );
 
+    console.log(documentTemplates);
     return documentTemplates;
   }
 }

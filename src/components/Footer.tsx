@@ -1,8 +1,8 @@
-import { getTranslations } from "next-intl/server";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 
-const Footer = async () => {
-  const t = await getTranslations();
+const Footer = () => {
+  const t = useTranslations();
 
   const currentYear = new Date().getFullYear();
 

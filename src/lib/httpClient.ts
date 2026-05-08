@@ -65,7 +65,6 @@ export async function httpClient<T>(
           envVariables.JWT_TOKEN_SECRET,
           { expiresIn: "2m" } // expira em 5 minutos
         );
-        console.log(url);
         const response = await fetch(url, {
           ...options,
           headers: {

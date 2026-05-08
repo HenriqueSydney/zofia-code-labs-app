@@ -14,7 +14,11 @@ export async function listIntegrationTypesAction(query?: string) {
       throw new AppError("Não autorizado.");
     }
     const useCase = makeListIntegrationTypeUseCase();
-    const integrations = await useCase.execute(session.user.id, query);
+    const integrations = await useCase.execute(
+      session.user.id,
+      session.user.organizationId,
+      query,
+    );
 
     return { success: true, data: integrations };
   } catch (error) {

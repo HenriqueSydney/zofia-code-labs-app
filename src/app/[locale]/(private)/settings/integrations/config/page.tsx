@@ -42,7 +42,7 @@ const Integrations = async ({ searchParams }: IParams) => {
       },
       {
         cache: "no-cache",
-      }
+      },
     ),
     operationWrapper(
       "action",
@@ -52,26 +52,31 @@ const Integrations = async ({ searchParams }: IParams) => {
       },
       {
         cache: "no-cache",
-      }
+      },
     ),
   ]);
 
   const [error, success] = integrationTypeResponse;
 
   if (error) {
-    throw new AppError("Erro ao listar os tipos de integração possíveis");
+    throw new AppError(
+      error.message || "Erro ao listar os tipos de integração possíveis",
+    );
   }
 
   const [organizationIntegrationError, organizationIntegrationSuccess] =
     orgIntegrationResponse;
 
   if (organizationIntegrationError) {
-    throw new AppError("Erro ao identificar as integrações da organização");
+    throw new AppError(
+      organizationIntegrationError.message ||
+        "Erro ao identificar as integrações da organização",
+    );
   }
 
   const integrations: Integration[] = success.data.map((integration) => {
     const intergrationConfig = organizationIntegrationSuccess.data.find(
-      (config) => config.integrationTypeId === integration.id
+      (config) => config.integrationTypeId === integration.id,
     );
     return {
       id: integration.id,

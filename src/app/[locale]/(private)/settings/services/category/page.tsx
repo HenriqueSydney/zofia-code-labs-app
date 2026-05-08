@@ -27,7 +27,7 @@ const ServiceCategory = async ({ searchParams }: IParams) => {
       },
       {
         cache: "no-cache",
-      }
+      },
     );
 
   const serviceCategories = serviceCategorysError
@@ -48,49 +48,43 @@ const ServiceCategory = async ({ searchParams }: IParams) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
         {serviceCategories.map((serviceCategory) => (
-          <Tooltip
+          <Card
             key={serviceCategory.id}
-            description={serviceCategory.description}
-            direction="top"
+            className="flex flex-col hover:shadow-lg hover:scale-101 transition-all h-40"
           >
-            <Card
-              key={serviceCategory.id}
-              className="flex flex-col hover:shadow-lg hover:scale-101 transition-all h-40"
-            >
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-primary/10">
-                      <Package className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-lg">
-                        {serviceCategory.name}
-                      </CardTitle>
-                    </div>
+            <CardHeader className="pb-3">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <Package className="h-5 w-5 text-primary" />
                   </div>
-
-                  <ServiceCategoryRemoveOrEdit
-                    serviceCategory={serviceCategory}
-                    categories={[]}
-                  />
-                </div>
-              </CardHeader>
-              <CardContent className="flex flex-1 flex-col justify-between space-y-3">
-                <div className="flex-1">
-                  <p className="text-sm text-muted-foreground line-clamp-1">
-                    {serviceCategory.description}
-                  </p>
+                  <div>
+                    <CardTitle className="text-lg">
+                      {serviceCategory.name}
+                    </CardTitle>
+                  </div>
                 </div>
 
-                <div>
-                  <p className="text-xl font-bold text-primary text-end">
-                    Cod. {serviceCategory.taxCode}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </Tooltip>
+                <ServiceCategoryRemoveOrEdit
+                  serviceCategory={serviceCategory}
+                  categories={[]}
+                />
+              </div>
+            </CardHeader>
+            <CardContent className="flex flex-1 flex-col justify-between space-y-3">
+              <div className="flex-1">
+                <p className="text-sm text-muted-foreground line-clamp-1">
+                  {serviceCategory.description}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-xl font-bold text-primary text-end">
+                  Cod. {serviceCategory.taxCode}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
 
