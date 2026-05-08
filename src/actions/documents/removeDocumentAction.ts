@@ -17,7 +17,7 @@ export async function removeDocument(documentId: string, projectId: string) {
     const removeDocumentUseCase = makeRemoveProjectDocumentUseCase();
 
     // Execução
-    await removeDocumentUseCase.execute({
+    const { slug, clientSlug } = await removeDocumentUseCase.execute({
       projectId,
       documentId,
       userId: session.user.id,
@@ -25,7 +25,7 @@ export async function removeDocument(documentId: string, projectId: string) {
 
     // Revalidação do Cache
     // Atualiza a página do projeto para remover o documento da lista visualmente
-    revalidatePath(`/clients/${client.slug}/projects/${slug}`);
+    revalidatePath(`/clients/${clientSlug}/projects/${slug}`);
     revalidatePath(`/projects`); // Opcional, se houver listagem global
 
     return { success: true, message: "Documento removido com sucesso." };

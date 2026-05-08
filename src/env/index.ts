@@ -14,11 +14,11 @@ export const envSchema = z.object({
   R2_PUBLIC_URL: z.string(),
   DOCUMENSO_API_KEY: z.string(),
   DOCUMENSO_API_URL: z.string(),
-  SMTP_HOST: z.string(),
-  SMTP_USER: z.string(),
-  SMTP_PASSWORD: z.string(),
-  GOOGLE_APP_PASSWORD: z.string(),
-  GOOGLE_EMAIL: z.email(),
+  SMTP_HOST: z.string().default("smtp.zofiacodelabs.com"),
+  SMTP_USER: z.string().default("teste_admin@zofiacodelabs.com"),
+  SMTP_PASSWORD: z.string().default("sei_muito_bem"),
+  GOOGLE_APP_PASSWORD: z.string().default("sei_muito_bem"),
+  GOOGLE_EMAIL: z.email().default("teste_admin@zofiacodelabs.com"),
 });
 
 const env = envSchema.safeParse(process.env);

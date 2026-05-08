@@ -98,9 +98,9 @@ export class GitHubService
     }
   }
 
-  async listRepositories(): Promise<MinimalRepositoryListDTO[]> {
+  async listRepositories(): Promise<MinimalRepositoryListDTO> {
     // Retorna repositórios do usuário e de organizações onde é membro
-    return this.request<MinimalRepositoryListDTO[]>(
+    return this.request<MinimalRepositoryListDTO>(
       `/user/repos?affiliation=owner,organization_member&sort=updated`
     );
   }

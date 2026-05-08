@@ -31,7 +31,7 @@ export async function tableFormAction({
       throw new AppError(error.message);
     }
 
-    tagsToRevalidate.forEach((tag) => revalidateTag(tag));
+    tagsToRevalidate.forEach((tag) => revalidateTag(tag, "layout"));
     pathsToRevalidate.forEach((path) => revalidatePath(path));
     return "Operação realizada com sucesso";
   } catch (error) {

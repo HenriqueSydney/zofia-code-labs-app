@@ -1,4 +1,4 @@
-import { ClientEmployeeRole } from "@/generated/prisma/enums";
+import { ClientEmployeeRole, Role } from "@/generated/prisma/enums";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { prisma } from "@/lib/prisma";
 import { IClientEmployeesRepository } from "@/repositories/IClientEmployeesRepository";
@@ -66,7 +66,7 @@ export class CreateClientEmployeeUseCase {
           email,
           organizationId: client.organizationId,
           name,
-          role: "TENANT_OBSERVER",
+          role: Role.USER,
           passwordHash,
         });
 

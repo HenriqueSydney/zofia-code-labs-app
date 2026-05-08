@@ -1,7 +1,7 @@
 import { AppError } from "@/errors/AppError";
 
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
-import { Role } from "@/generated/prisma/enums";
+import { MemberRole, Role } from "@/generated/prisma/enums";
 import { IOrganizationsRepository } from "@/repositories/IOrganizationRepository";
 
 interface UpdateOrganizationUserRoleUseCaseRequest {
@@ -13,7 +13,7 @@ interface UpdateOrganizationUserRoleUseCaseRequest {
 
 // Mapa de tradução para Roles Estáticas
 const STATIC_ROLES_MAP: Record<string, Omit<Role, "OWNER">> = {
-  admin: "TENANT_ADMIN", 
+  admin: "TENANT_ADMIN",
   viewer: "TENANT_OBSERVER",
   member: "TENANT_MEMBER",
 };
@@ -52,7 +52,7 @@ export class UpdateOrganizationUserRoleUseCase {
       // Aqui chamamos o método que atualiza o Enum do Prisma
       await this.organizationsRepository.updateMemberRole(
         memberId,
-        staticRoleEnum,
+        staticRoleEnum as MemberRole,
       );
 
       return { role: staticRoleEnum };

@@ -13,7 +13,12 @@ import { getCommercialStatsAction } from "@/actions/stats/getCommercialStatsActi
 
 interface LayoutProps {
   children: React.ReactNode;
-  params: Promise<{ slug: string; contextualTab: string }>;
+  params: Promise<{
+    locale: string;
+    client: string;
+    slug: string;
+    parentTab: string;
+  }>;
 }
 
 export default async function ProjectLayout({ children, params }: LayoutProps) {
@@ -73,7 +78,7 @@ export default async function ProjectLayout({ children, params }: LayoutProps) {
               : "bg-red-500/10 text-red-500"
           }
           description={`Margem de lucro atual: ${cards.result.profitMargin.toFixed(
-            1
+            1,
           )}%`}
         />
       </div>

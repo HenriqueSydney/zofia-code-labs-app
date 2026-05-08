@@ -16,8 +16,8 @@ export async function cancelProjectAction(projectId: string) {
 
     const useCase = makeCancelProjectUseCase();
 
-    await useCase.execute({ projectId, userId: session.user.id });
-    revalidatePath(`/clients/${client.slug}/projects/${slug}`);
+    const { slug, clientSlug } = await useCase.execute({ projectId, userId: session.user.id });
+    revalidatePath(`/clients/${clientSlug}/projects/${slug}`);
     revalidatePath("/projects");
     return { success: true, message: "Projecto cancelado com sucesso." };
   } catch (error) {

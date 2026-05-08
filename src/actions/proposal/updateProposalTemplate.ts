@@ -21,12 +21,12 @@ export async function updateProposalTemplateAction(formData: FormData) {
   }
 
   const useCase = makeUpdateProposalTemplateUseCase();
-  const { projectId } = await useCase.execute({
+  const { slug, clientSlug } = await useCase.execute({
     newContent: validation.data.content,
     userId: session.user.id,
     organizationId: session.user.organizationId,
     proposalId: validation.data.proposalId,
   });
 
-  revalidatePath(`/clients/${client.slug}/projects/${slug}`);
+  revalidatePath(`/clients/${clientSlug}/projects/${slug}`);
 }

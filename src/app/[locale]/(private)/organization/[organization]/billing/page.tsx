@@ -60,7 +60,7 @@ export default async function OrganizationBillingPage({
       expiry: "05/28",
     },
     limits: {
-      users: { total: 20, used: organization.totalOfUsers },
+      users: { total: 20, used: organization.totalOfMembers },
       projects: { total: 50, used: organization.totalOfProjects },
       storage: { total: 100, used: 45 }, // Exemplo: 100GB
     },

@@ -8,6 +8,7 @@ export const getBacklogStatusBadge = (status: BacklogStatus) => {
     REVIEW: "bg-primary/20 text-primary",
     DONE: "bg-green-500/20 text-green-600",
     CANCELED: "bg-red-500/20 text-red-600",
+    WAITING_CLIENT: "bg-yellow-500/20 text-yellow-600",
   };
 
   return (

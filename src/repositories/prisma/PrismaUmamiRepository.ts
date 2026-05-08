@@ -8,7 +8,7 @@ import {
 export class PrismaUmamiRepository implements IUmamiRepository {
   async saveSnapshot(
     projectId: string,
-    data: UmamiDashboardData
+    data: UmamiDashboardData,
   ): Promise<void> {
     await prisma.$transaction(async (tx) => {
       await tx.umamiMetricSnapshot.create({
@@ -29,7 +29,7 @@ export class PrismaUmamiRepository implements IUmamiRepository {
 
   async getSnapshotAt(
     projectId: string,
-    date: Date
+    date: Date,
   ): Promise<UmamiSnapshotEntity | null> {
     const result = await prisma.umamiMetricSnapshot.findFirst({
       where: {
@@ -43,7 +43,7 @@ export class PrismaUmamiRepository implements IUmamiRepository {
   }
 
   async getLatestSnapshot(
-    projectId: string
+    projectId: string,
   ): Promise<UmamiSnapshotEntity | null> {
     const result = await prisma.umamiMetricSnapshot.findFirst({
       where: { projectId },
@@ -55,7 +55,7 @@ export class PrismaUmamiRepository implements IUmamiRepository {
 
   async getHistory(
     projectId: string,
-    limit = 12
+    limit = 12,
   ): Promise<UmamiSnapshotEntity[]> {
     const results = await prisma.umamiMetricSnapshot.findMany({
       where: { projectId },
@@ -63,6 +63,6 @@ export class PrismaUmamiRepository implements IUmamiRepository {
       take: limit,
     });
 
-    return results as UmamiSnapshotEntity[];
+    return results as unknown as UmamiSnapshotEntity[];
   }
 }

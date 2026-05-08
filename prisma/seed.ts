@@ -880,6 +880,7 @@ async function main() {
 main()
   .then(async () => {
     console.info("Seed completed successfully");
+    process.exit(0);
   })
   .catch((e) => {
     console.error(e);

@@ -11,14 +11,14 @@ interface RemoveDocumentRequest {
 export class RemoveProjectDocumentUseCase {
   constructor(
     private projectsRepository: IProjectsRepository,
-    private storageService: IS3StorageService
+    private storageService: IS3StorageService,
   ) {}
 
   async execute({
     documentId,
     userId,
     projectId,
-  }: RemoveDocumentRequest): Promise<void> {
+  }: RemoveDocumentRequest): Promise<{ slug: string; clientSlug: string }> {
     const projectExists = await this.projectsRepository.findById(projectId);
     if (!projectExists) {
       throw new Error("Projeto não encontrado.");
@@ -28,19 +28,18 @@ export class RemoveProjectDocumentUseCase {
       "documents",
       userId,
       projectExists,
-      "DELETE"
+      "DELETE",
     );
 
-    const deletedDocument = await this.projectsRepository.deleteDocument(
-      documentId
-    );
+    const deletedDocument =
+      await this.projectsRepository.deleteDocument(documentId);
 
     if (!deletedDocument) {
       throw new Error("Documento não encontrado ou já excluído.");
     }
 
     const fileKey = this.extractKeyFromUrl(
-      deletedDocument.documentUrlReference
+      deletedDocument.documentUrlReference,
     );
 
     if (fileKey) {
@@ -50,10 +49,12 @@ export class RemoveProjectDocumentUseCase {
       } catch (error) {
         console.error(
           `Falha ao deletar arquivo físico no S3: ${fileKey}`,
-          error
+          error,
         );
       }
     }
+
+    return { slug: projectExists.slug, clientSlug: projectExists.client.slug };
   }
 
   // Função auxiliar para pegar o caminho relativo da URL

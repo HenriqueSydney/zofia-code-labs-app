@@ -81,9 +81,12 @@ export default async function OrganizationPage({ params }: IOrganizationPage) {
                   <Fingerprint className="w-3 h-3" /> CNPJ
                 </label>
                 <p className="font-medium">
-                  {org.cnpj.includes("/")
+                  {org.cnpj?.includes("/")
                     ? org.cnpj
-                    : mask(org.cnpj, "##.###.###/####-##")}
+                    : mask(
+                        org.cnpj || "##.###.###/####-##",
+                        "##.###.###/####-##",
+                      )}
                 </p>
               </div>
 
@@ -141,7 +144,7 @@ export default async function OrganizationPage({ params }: IOrganizationPage) {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Membros</span>
-                  <span>{org.users?.length} / 20</span>
+                  <span>{org.totalOfMembers} / 20</span>
                 </div>
               </div>
             </CardContent>

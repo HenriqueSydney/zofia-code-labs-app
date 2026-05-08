@@ -10,14 +10,14 @@ export async function cancelContractAction(contractId: string) {
 
   const useCase = makeCancelContractUseCase();
   try {
-    const { projectId } = await useCase.execute({
+    const { slug, clientSlug } = await useCase.execute({
       id: contractId,
       userId: session.user.id,
     });
 
-    revalidatePath(`/clients/${client.slug}/projects/${slug}`);
+    revalidatePath(`/clients/${clientSlug}/projects/${slug}`);
     revalidatePath(
-      `/clients/${client.slug}/projects/${slug}/commercial/contract`
+      `/clients/${clientSlug}/projects/${slug}/commercial/contract`,
     );
     return { success: true, message: "Contrato removida com sucesso." };
   } catch (error) {

@@ -12,12 +12,12 @@ type CreateProposalUseCaseParams = {
 export class UpdateProposalTemplateUseCase {
   constructor(
     private proposalRepository: IProposalRepository,
-    private proposalTemplateRepository: IProposalTemplateRepository
+    private proposalTemplateRepository: IProposalTemplateRepository,
   ) {}
 
   async execute(
-    data: CreateProposalUseCaseParams
-  ): Promise<{ projectId: string }> {
+    data: CreateProposalUseCaseParams,
+  ): Promise<{ projectId: string; slug: string; clientSlug: string }> {
     const proposal = await this.proposalRepository.findById(data.proposalId);
 
     if (!proposal) {
@@ -32,7 +32,7 @@ export class UpdateProposalTemplateUseCase {
       "proposal",
       data.userId,
       proposal,
-      "UPDATE"
+      "UPDATE",
     );
 
     await this.proposalTemplateRepository.update(proposal.proposalTemplate.id, {
@@ -40,6 +40,10 @@ export class UpdateProposalTemplateUseCase {
       content: data.newContent,
     });
 
-    return { projectId: proposal.projectId };
+    return {
+      projectId: proposal.projectId,
+      slug: proposal.project.slug,
+      clientSlug: proposal.project.client.slug,
+    };
   }
 }

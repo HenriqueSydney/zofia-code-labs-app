@@ -17,7 +17,7 @@ export class UpdateContractTemplateUseCase {
 
   async execute(
     data: CreateContractUseCaseParams
-  ): Promise<{ projectId: string }> {
+  ): Promise<{ projectId: string, slug: string, clientSlug: string }> {
     const contract = await this.contractRepository.findById(data.contractId);
 
     if (!contract) {
@@ -40,6 +40,6 @@ export class UpdateContractTemplateUseCase {
       content: data.newContent,
     });
 
-    return { projectId: contract.projectId };
+    return { projectId: contract.projectId, slug: contract.project.slug, clientSlug: contract.project.client.slug };
   }
 }

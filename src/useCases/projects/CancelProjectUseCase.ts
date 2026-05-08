@@ -9,7 +9,10 @@ interface ICancelProjectUseCase {
 export class CancelProjectUseCase {
   constructor(private projectsRepository: IProjectsRepository) {}
 
-  async execute({ projectId, userId }: ICancelProjectUseCase) {
+  async execute({
+    projectId,
+    userId,
+  }: ICancelProjectUseCase): Promise<{ slug: string; clientSlug: string }> {
     const projectExists = await this.projectsRepository.findById(projectId);
     if (!projectExists) {
       throw new Error("Projeto não encontrado.");
@@ -19,7 +22,7 @@ export class CancelProjectUseCase {
       "project",
       userId,
       projectExists,
-      "DELETE"
+      "DELETE",
     );
     // 1. Busca o projeto para pegar as URLs dos arquivos e deletar do R2
     const project = await this.projectsRepository.findById(projectId);
@@ -29,5 +32,7 @@ export class CancelProjectUseCase {
     }
 
     await this.projectsRepository.cancel(projectId);
+
+    return { slug: projectExists.slug, clientSlug: projectExists.client.slug };
   }
 }

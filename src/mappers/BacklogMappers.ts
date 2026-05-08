@@ -13,13 +13,14 @@ export const backlogStatusMapper: Record<BacklogStatus, string> = {
   REVIEW: "Revisão",
   DONE: "Concluído",
   CANCELED: "Cancelado",
+  WAITING_CLIENT: "Aguardando Cliente",
 } as const;
 
 export const backlogStatusArray = Object.keys(backlogStatusMapper) as [
   BacklogStatus,
-  ...BacklogStatus[]
+  ...BacklogStatus[],
 ];
 export const backlogPriorityArray = Object.keys(backlogPriorityMapper) as [
   BacklogPriority,
-  ...BacklogPriority[]
+  ...BacklogPriority[],
 ];

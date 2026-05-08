@@ -70,7 +70,7 @@ export interface IGitService {
    * Métodos Globais / Gerenciamento
    * Exigem owner pois podem atuar fora do contexto do projeto atual
    */
-  listRepositories(owner: string): Promise<MinimalRepositoryListDTO[]>;
+  listRepositories(owner: string): Promise<MinimalRepositoryListDTO>;
 
   createRepository(
     name: string,

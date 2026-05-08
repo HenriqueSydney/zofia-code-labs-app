@@ -32,13 +32,13 @@ export async function changeBacklogStatusAction(data: unknown) {
     const changeStatusUseCase = makeUpdateBacklogItemStatusUseCase();
 
     // 4. Execução
-    const projectId = await changeStatusUseCase.execute({
+    const { projectId, slug, clientSlug } = await changeStatusUseCase.execute({
       id,
       userId: session.user.id,
       newStatus: status,
     });
 
-    revalidatePath(`/clients/${client.slug}/projects/${slug}/backlogs`);
+    revalidatePath(`/clients/${clientSlug}/projects/${slug}/backlogs`);
 
     return { success: true };
   } catch (error) {

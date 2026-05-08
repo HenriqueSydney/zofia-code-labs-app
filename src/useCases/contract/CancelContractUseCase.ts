@@ -17,7 +17,11 @@ export class CancelContractUseCase {
   async execute({
     id,
     userId,
-  }: CancelContractUseCaseParams): Promise<{ projectId: string }> {
+  }: CancelContractUseCaseParams): Promise<{
+    projectId: string;
+    slug: string;
+    clientSlug: string;
+  }> {
     const contract = await this.contractRepository.findById(id);
 
     if (!contract) {
@@ -51,6 +55,10 @@ export class CancelContractUseCase {
       );
     });
 
-    return { projectId: contract.projectId };
+    return {
+      projectId: contract.projectId,
+      slug: contract.project.slug,
+      clientSlug: contract.project.client.slug,
+    };
   }
 }

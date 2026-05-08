@@ -9,6 +9,7 @@ import { Client } from "@/generated/prisma/client";
 import { AppError } from "@/errors/AppError";
 import { getClientAction } from "@/actions/clients/getClientAction";
 import { GoBackButton } from "@/components/GoBackButton";
+import { ClientWithStats } from "@/repositories/IClientsRepository";
 
 interface IProjectFormPage {
   params?: Promise<{ [key: string]: string | undefined }>;
@@ -33,7 +34,7 @@ export default async function ProjectFormPage({ params }: IProjectFormPage) {
   let clientId: string | undefined;
   if (client) {
     const [_, clientSuccess] = await operationWrapper<{
-      client: Client;
+      client: ClientWithStats | null;
     }>(
       "action",
       "getClientAction",
@@ -45,7 +46,7 @@ export default async function ProjectFormPage({ params }: IProjectFormPage) {
       },
     );
 
-    clientId = clientSuccess?.client.id;
+    clientId = clientSuccess?.client?.id;
   }
 
   const newProject = slug === "new-project";

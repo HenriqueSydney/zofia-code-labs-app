@@ -1,4 +1,4 @@
-import { getCachedUmamiMetrics } from "../_data/get-github-metrics";
+import { getCachedUmamiMetrics } from "../../@webAnalytics/_data/get-umami-metrics";
 import { ListsDetails } from "./ListsDetails";
 
 interface IListsContainer {

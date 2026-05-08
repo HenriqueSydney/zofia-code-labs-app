@@ -33,14 +33,21 @@ export function PrismaAdapter(prisma: PrismaClient): Adapter {
         };
       }
 
-      const role = data.role || Role.TENANT_MEMBER;
+      const role = data.role || Role.USER;
+
+      const organizationId = await prisma.organization.findFirst();
+
+      if (!organizationId) {
+        throw new Error("Organization not found");
+      }
 
       const newUser = await prisma.user.create({
         data: {
           name: data.name,
           email: data.email,
           image: data.image,
-          role: role,
+          role: role as Role,
+          organizationId: organizationId.id,
         },
       });
 

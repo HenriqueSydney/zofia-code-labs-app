@@ -73,7 +73,7 @@ export function GitHubIntegrationForm({
       return;
     }
 
-    setRepositories(result.data.repositories);
+    setRepositories(result.data);
   };
 
   useEffect(() => {

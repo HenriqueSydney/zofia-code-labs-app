@@ -10,9 +10,9 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { MetricsResponse } from "@/useCases/integration/umami/GetUmamiMetricsUseCase";
-import { CountriesTable } from "./CountriesTable";
+import { ReferrerTable } from "../../@webAnalytics/_components/ReferrerTable";
+import { CountriesTable } from "../../@webAnalytics/_components/CountriesTable";
 import { PagesTable } from "./PagesTable";
-import { ReferrerTable } from "./ReferrerTable";
 
 interface ListsDetailsProps {
   metrics: MetricsResponse["metrics"];
