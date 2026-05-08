@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import createMiddleware from "next-intl/middleware";
-import { jwtVerify } from "jose"; // Recomendado para Edge
+import { jwtVerify } from "jose";
 
 import { routing } from "./i18n/routing";
 import NextAuth from "next-auth";
@@ -16,18 +16,20 @@ export default auth(async (req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
   const isApiRoute = nextUrl.pathname.startsWith("/api");
-  const isAuthRoute = nextUrl.pathname.startsWith("/api/auth"); // Rotas internas do NextAuth
+  const isAuthRoute = nextUrl.pathname.startsWith("/api/auth");
   const isDocumentSignRoute = nextUrl.pathname.includes(
     "/document-sign/webhook"
   );
 
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set("x-pathname", nextUrl.pathname);
+
+  const locale = nextUrl.pathname.match(/^\/(pt|en)/)?.[1] ?? "pt";
+
   // ------------------------------------------------------------------
   // 1. PROTEÇÃO DE API (Bearer Token customizado)
   // ------------------------------------------------------------------
   if (isApiRoute && !isAuthRoute) {
-    // Se a API for pública, adicione exceção aqui.
     let token: string;
     if (isDocumentSignRoute) {
       const authHeader = req.headers.get("x-documenso-secret");
@@ -49,12 +51,9 @@ export default auth(async (req) => {
       }
 
       return NextResponse.next({
-        request: {
-          headers: requestHeaders,
-        },
+        request: { headers: requestHeaders },
       });
     } else {
-      // Caso contrário, verifica o Bearer Token:
       const authHeader = req.headers.get("authorization");
 
       if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -77,11 +76,8 @@ export default auth(async (req) => {
       );
     }
 
-    // Se passou, permite a requisição API passar
     return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
+      request: { headers: requestHeaders },
     });
   }
 
@@ -89,50 +85,39 @@ export default auth(async (req) => {
   // 2. PROTEÇÃO DE PÁGINAS (NextAuth + Next-Intl)
   // ------------------------------------------------------------------
 
-  // Se for rota de API interna do Auth, deixa passar
   if (isAuthRoute) return NextResponse.next();
 
-  // Remove o locale da URL para verificar os caminhos (ex: /pt/dashboard -> /dashboard)
   const pathnameWithoutLocale =
     nextUrl.pathname.replace(/^\/(pt|en)/, "") || "/";
 
   const isRootPage = pathnameWithoutLocale === "/";
 
   if (isLoggedIn && isRootPage) {
-    return NextResponse.redirect(new URL("/dashboard", nextUrl));
+    return NextResponse.redirect(new URL(`/${locale}/dashboard`, nextUrl));
   }
 
   if (!isLoggedIn && isRootPage) {
-    const loginUrl = new URL("/auth/login", nextUrl);
-    return NextResponse.redirect(loginUrl);
+    return NextResponse.redirect(new URL(`/${locale}/auth/login`, nextUrl));
   }
 
-  // Verifica se é uma página de autenticação (Login/Register)
   const isAuthPage = authPages.some((page) =>
     pathnameWithoutLocale.startsWith(page)
   );
 
-  // Se o usuário está logado e tenta acessar login, manda pro dashboard
   if (isLoggedIn && isAuthPage) {
-    return NextResponse.redirect(new URL("/dashboard", nextUrl));
+    return NextResponse.redirect(new URL(`/${locale}/dashboard`, nextUrl));
   }
 
-  // Se o usuário NÃO está logado e tenta acessar rota protegida
-  // Defina aqui se todas são protegidas exceto as públicas
   const isPublicPage = publicPages.some(
     (page) =>
       pathnameWithoutLocale === page || pathnameWithoutLocale.startsWith(page)
   );
 
   if (!isLoggedIn && !isPublicPage) {
-    // Redireciona para login mantendo o locale atual se possível
-    // O intlMiddleware cuidará da formatação correta do locale na URL se redirecionarmos para '/auth/login'
-    // Mas aqui forçamos o redirecionamento manual:
     let callbackUrl = nextUrl.pathname;
     if (nextUrl.search) callbackUrl += nextUrl.search;
 
-    // Constrói URL de login
-    const loginUrl = new URL("/auth/login", nextUrl);
+    const loginUrl = new URL(`/${locale}/auth/login`, nextUrl);
     loginUrl.searchParams.set("callbackUrl", callbackUrl);
 
     return NextResponse.redirect(loginUrl);
@@ -141,21 +126,16 @@ export default auth(async (req) => {
   // ------------------------------------------------------------------
   // 3. FINALIZA COM NEXT-INTL
   // ------------------------------------------------------------------
-  // Se passou por tudo, deixa o next-intl lidar com localização e resposta
   const response = intlMiddleware(req);
-
-  // 2. Injetar o pathname nos headers da RESPOSTA
-  // O Next.js propaga headers de resposta do middleware para o Server Component headers()
   response.headers.set("x-pathname", nextUrl.pathname);
 
   return response;
 });
 
 export const config = {
-  // Matcher ajustado para ignorar arquivos estáticos e internos do Next
   matcher: [
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:ico|png|jpg|jpeg|gif|svg|webp|css|js|woff|woff2|ttf|eot|xml|txt|map)$).*)",
     "/",
-    "/(pt|en)/:path*", // Ajuste conforme seus locales configurados no routing
+    "/(pt|en)/:path*",
   ],
 };
