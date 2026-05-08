@@ -24,8 +24,6 @@ export default auth(async (req) => {
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set("x-pathname", nextUrl.pathname);
 
-  const locale = nextUrl.pathname.match(/^\/(pt|en)/)?.[1] ?? "pt";
-
   // ------------------------------------------------------------------
   // 1. PROTEÇÃO DE API (Bearer Token customizado)
   // ------------------------------------------------------------------
@@ -93,11 +91,11 @@ export default auth(async (req) => {
   const isRootPage = pathnameWithoutLocale === "/";
 
   if (isLoggedIn && isRootPage) {
-    return NextResponse.redirect(new URL(`/${locale}/dashboard`, nextUrl));
+    return NextResponse.redirect(new URL("/dashboard", nextUrl));
   }
 
   if (!isLoggedIn && isRootPage) {
-    return NextResponse.redirect(new URL(`/${locale}/auth/login`, nextUrl));
+    return NextResponse.redirect(new URL("/auth/login", nextUrl));
   }
 
   const isAuthPage = authPages.some((page) =>
@@ -105,7 +103,7 @@ export default auth(async (req) => {
   );
 
   if (isLoggedIn && isAuthPage) {
-    return NextResponse.redirect(new URL(`/${locale}/dashboard`, nextUrl));
+    return NextResponse.redirect(new URL("/dashboard", nextUrl));
   }
 
   const isPublicPage = publicPages.some(
@@ -117,7 +115,7 @@ export default auth(async (req) => {
     let callbackUrl = nextUrl.pathname;
     if (nextUrl.search) callbackUrl += nextUrl.search;
 
-    const loginUrl = new URL(`/${locale}/auth/login`, nextUrl);
+    const loginUrl = new URL("/auth/login", nextUrl);
     loginUrl.searchParams.set("callbackUrl", callbackUrl);
 
     return NextResponse.redirect(loginUrl);
