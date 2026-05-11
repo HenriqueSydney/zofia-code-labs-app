@@ -1,193 +1,81 @@
-infisical = cofre de senha
+# Zofia Code Labs App
 
-🚀 Fase 1: O Motor de Vendas e Financeiro (Cashflow Automático)
-Objetivo: Desbloquear o comercial (sua esposa) e garantir o recebimento sem intervenção manual.
+Aplicação web para gestão comercial e operacional de projetos de software: clientes, propostas, contratos (Documenso), financeiro, backlogs, integrações (GitHub, Infisical, SonarQube, entre outras) e multi-tenant com RBAC. Interface em Next.js com internacionalização (next-intl).
 
-- [x] CRUD de Cadastramento de Clientes
+O roteiro de produto, fases e checklists de entrega estão em [backlog.md](./backlog.md).
 
-Requisito: Suporte completo a dados PJ (Razão Social, CNPJ, Endereço) para contratos.
+## Requisitos
 
-- [x] CRUD de Cadastramento de Projetos (Rascunho & Metadados)
+- **Node.js** 20 ou superior (alinhado ao `@types/node` do projeto)
+- **PostgreSQL** acessível por URL de conexão
+- **npm** (há `package-lock.json` na raiz)
 
-Requisito: Salvar valor, prazo estimado e escopo macro.
+## Instalação
 
-- [x] CRUD de Documentos
+```bash
+git clone <url-do-repositório>
+cd zofia-code-labs-app
+npm install
+```
 
-Requisito: Adicionar, remover e listar documentos do projeto
+Configure as variáveis de ambiente (veja a seção seguinte). O Prisma usa `DATABASE_URL` definido em `prisma.config.ts`.
 
-- [x] Criação do Fluxo de Trabalho (State Machine)
+```bash
+# gerar cliente e aplicar migrações em desenvolvimento
+npx prisma migrate dev
 
-Requisito: Lógica de transição de status (Rascunho -> Análise -> Contrato -> Pagamento -> Planned).
+# (opcional) popular o banco — o comando de seed em prisma.config.ts usa tsx;
+# se necessário: npm install -D tsx && npx prisma db seed
+npx prisma db seed
+```
 
-- [x] Criar componentes de formulários
-- [x] Alterar todos os campos de formulários para os componentes para os componentes criados
+## Variáveis de ambiente
 
-Requisito: Alterar todos os campos de formulários de todos os formulários para os componentes criados
+Ao inicializar a aplicação há a validação das variáveis em `src/env/index.ts`. Portanto, defina pelo menos:
 
-- [x] Integração do React.email (Notificações)
-- [x] Email: Verificação de Conta (Magic Link/Código)
-- [x] Email: Alerta de Novo Acesso (Dispositivo desconhecido)
-- [x] Email: Bem vindo! Cliente cadastrado;
-- [x] Email: Convite para Colaboração
-- [x] Email: Bem vindo! Usuário cadastrado (confirmação para o admin);
-- [x] Email: Confirmação de Alteração de Senha;
-- [x] Email: Esqueceu a senha;
-- [x] Email: Contrato disponibilizado para assinatura;
-- [x] Email: Pendência de assinatura de contrato;
-- [x] Email: Pendência de Pagamento;
-- [x] Email: Cobrança de Pagamento;
-- [x] Email: Comprovante de Pagamento Recebido;
-- [x] Email: Nota Fiscal Emitida (NFS-e);
-- [x] Email: Confirmação de aquisição de serviço adicional (analytics, segurança, ia...);
-- [x] Email: Informe de início do desenvolvimento;
-- [x] Email: Aguardando homologação da solução;
-- [x] Email: Report de Impedimento (Blocker)
-- [x] Email: Aviso de SLA Próximo do Vencimento
-- [x] Email: Status Report Semanal (Resumo)
-- [x] Email: Pesquisa de Satisfação (NPS)
-- [x] Email: Abertura de Chamado
-- [x] Email: Entrega Final do Projeto (Handover)
-- [x] Email: Admin: Email de notificação de pagamento;
-- [x] Email: Admin: Daily Briefing;
+| Variável | Descrição |
+|----------|-----------|
+| `DATABASE_URL` | URL do PostgreSQL (usada pelo Prisma; ver `prisma.config.ts`) |
+| `BASE_URL` | URL base da aplicação (ex.: `http://localhost:3000`) |
+| `AUTH_SECRET` | Segredo do NextAuth (ex.: `openssl rand -base64 32`) |
+| `JWT_TOKEN_SECRET` | Segredo para assinatura de tokens JWT em fluxos internos |
+| `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `CLOUDFLARE_ACCOUNT_ID`, `R2_BUCKET_NAME`, `R2_PUBLIC_URL` | Armazenamento de objetos (Cloudflare R2) |
+| `DOCUMENSO_API_KEY`, `DOCUMENSO_API_URL` | API Documenso para contratos |
+| `SMTP_HOST`, `SMTP_USER`, `SMTP_PASSWORD` | Envio de e-mail (valores padrão existem no schema apenas para desenvolvimento) |
+| `GOOGLE_APP_PASSWORD`, `GOOGLE_EMAIL` | Credenciais usadas pelo fluxo de e-mail configurado no projeto |
 
-- [ ] Implementação dos Emails onde são chamados
-- [ ] Email: Verificação de Conta (Magic Link/Código)
-- [ ] Email: Alerta de Novo Acesso (Dispositivo desconhecido)
-- [ ] Email: Bem vindo! Cliente cadastrado;
-- [ ] Email: Convite para Colaboração
-- [ ] Email: Bem vindo! Usuário cadastrado (confirmação para o admin);
-- [ ] Email: Confirmação de Alteração de Senha;
-- [ ] Email: Esqueceu a senha;
-- [ ] Email: Contrato disponibilizado para assinatura;
-- [ ] Email: Pendência de assinatura de contrato;
-- [ ] Email: Pendência de Pagamento;
-- [ ] Email: Cobrança de Pagamento;
-- [ ] Email: Comprovante de Pagamento Recebido;
-- [ ] Email: Nota Fiscal Emitida (NFS-e);
-- [ ] Email: Confirmação de aquisição de serviço adicional (analytics, segurança, ia...);
-- [ ] Email: Informe de início do desenvolvimento;
-- [ ] Email: Aguardando homologação da solução;
-- [ ] Email: Report de Impedimento (Blocker)
-- [ ] Email: Aviso de SLA Próximo do Vencimento
-- [ ] Email: Status Report Semanal (Resumo)
-- [ ] Email: Pesquisa de Satisfação (NPS)
-- [ ] Email: Abertura de Chamado
-- [ ] Email: Entrega Final do Projeto (Handover)
-- [ ] Email: Admin: Email de notificação de pagamento;
-- [ ] Email: Admin: Daily Briefing;
+Outras variáveis usadas em pontos específicos (não necessariamente no schema central):
 
-- Requisito: Emails transacionais para mudança de status (ex: "Nova proposta gerada", "Projeto aprovado").
+- `DOCUMENSO_WEBHOOK_KEY` — validação do webhook Documenso (`src/proxy.ts`)
+- `NEXT_PUBLIC_APP_URL` — URL pública opcional (ex.: links em logs; padrão `http://localhost:3000`)
+- Provedores OAuth do NextAuth (GitHub, GitLab, Google): `AUTH_URL` e chaves conforme documentação do [Auth.js / NextAuth](https://authjs.dev)
+- Integrações opcionais: `INFISICAL_*`, `SONARQUBE_URL`, `DEFECTDOJO_URL`, `UMAMI_API_URL`, `LOG_LEVEL`
 
-- [x] Integração com Documenso (Webhooks e Envio)
+Segredos de equipe em produção costumam ficar no **Infisical** (referência também no [backlog.md](./backlog.md)).
 
-Requisito: Envio automático do PDF do contrato e escuta do webhook COMPLETED.
+## Scripts npm
 
-- [ ] Integração com Gateway de Pagamento (Mercado Pago)
-- [ ] Integração com Gateway de Pagamento (Banco Inter)
-- [ ] Integração com Gateway de Pagamento (Stripe)
+| Comando | Descrição |
+|---------|-----------|
+| `npm run dev` | Servidor de desenvolvimento Next.js |
+| `npm run build` | `prisma generate`, `prisma migrate deploy` e `next build` (adequado a deploy com banco já migrado) |
+| `npm run build:dev` | Apenas `next build` (sem migrate no pipeline) |
+| `npm run start` | Servidor de produção (`next start`; use após `build`) |
+| `npm run lint` | ESLint |
+| `npm run email` | Preview dos templates React Email na porta 3333 |
 
-Requisito: Gerar cobrança dos 30% de entrada após assinatura e liberar o projeto após confirmação via webhook.
+## Stack principal
 
-- [x] Finalizar Dashboard Principal
-- [x] Finalizar Dashboard Financeiro
-- [ ] Implementação de regras de autorização
+- **Next.js** 16 (App Router), **React** 19, **TypeScript**
+- **Prisma** 7 com PostgreSQL e múltiplos schemas
+- **NextAuth** (Auth.js) com credenciais e OAuth
+- **Tailwind CSS** 4, **Radix UI**, formulários com **React Hook Form** e **Zod**
+- **React Email** + **Nodemailer**, **TipTap**, **Documenso** (embed), **AWS SDK** (S3 compatível / R2)
 
-🏁 MARCO: MVP READY (Uso Interno Viável) 🏁
-Neste ponto, o sistema já vende, assina e cobra sozinho. O fluxo comercial está resolvido.
-🔨 Fase 2: O Motor de Engenharia (Setup e Gestão)
-Objetivo: Automatizar o setup técnico e organizar o escopo de entrega.
+## Build de produção
 
-- [x] Cadastro de Observações e Backlogs
-- [x] Cadastrar backlogs defaults por serviço
+O `next.config.ts` define `output: "standalone"` para imagens Docker ou deploy com pasta `.next/standalone`. O script `build` aplica migrações automaticamente; garanta `DATABASE_URL` no ambiente de CI/CD.
 
-Requisito: Quebra do projeto em Épicos/Histórias dentro do sistema.
+## Licença
 
-- [/] Finalizar Sistemática de Templates (TipTap + Variáveis)
-
-Requisito: Função "Find & Replace" no backend para injetar dados do cliente/projeto no HTML antes de gerar o PDF.
-
-- [x] Cadastro de Integrações (Gerenciamento de Tokens)
-
-Requisito: Área segura (vault) para salvar Tokens (GitHub PAT, Sonar Token, etc).
-
-- [x] Integração com GitHub - Métricas
-- [ ] Permitir integrar mais de 1 projeto ao projeto.
-- [ ] Integração com GitHub (Provisionamento)
-- [ ] Permitir integrar mais de 1 projeto ao projeto.
-
-Requisito: Criação automática de repositório na Org, times e branches.
-
-- [x] Integração com Infisical (Gestão de Segredos)
-
-Requisito: Provisionamento automático de variáveis de ambiente do projeto.
-
-🛡️ Fase 3: Qualidade e Governança (Diferencial)
-Objetivo: Trazer visibilidade de qualidade para o painel do projeto.
-
-- [x] Integração com SonarQube
-- [ ] Permitir integrar mais de 1 projeto ao projeto.
-
-Requisito: Exibir métricas de qualidade/coverage no dashboard.
-
-- [ ] Integração com DefectDojo
-
-Requisito: Exibir relatórios de vulnerabilidade.
-
-📦 Fase 4: Expansão SaaS (Atual - Em Desenvolvimento)
-Objetivo: Preparar para multi-tenancy real, permitindo que empresas (Tenants) gerenciem seus próprios acessos e configurações.
-
-🔐 Governança e Permissões (RBAC)
-
-- [x] Arquitetura de Permissões (Strategy Pattern)
-
-Feito: Implementação do AuthBasePermissionStrategy, mapeamento de PERMISSIONS e lógica de checkUserPermissionForAsset.
-
-- [x] Gestão de Perfis de Acesso (Custom Roles)
-
-Feito: CRUD completo de perfis (Repository, UseCase, Action) e UI com Diálogo de seleção granular de permissões.
-
-- [x] Mapeamento de Permissões (Frontend/Backend)
-
-Feito: Criação do PERMISSIONS_MAP unificado para renderizar checkboxes e validar rotas.
-
-🏢 Gestão da Organização (Tenant)
-
-- [x] Dashboard da Organização (Overview)
-
-Feito: Tela de visão geral com estatísticas, dados cadastrais e layout com Abas (OrganizationLayout, OrganizationTabs).
-
-- [x] Listagem de Membros da Equipe
-
-Feito: Tabela de usuários com visualização de cargos, status e "tratamento seguro" de dados (remoção de password hash no repo).
-
-- [x] Interface de Assinatura (Billing UI)
-
-Feito: Tela de visualização do plano, histórico de faturas e barras de progresso de consumo de recursos (Mock/UI Ready).
-
-- [ ] CRUD de Cadastramento de Organização
-- [x] CRUD de edição de perfil de acesso membro
-- [x] Deleção de membro da organização
-- [x] Formulário de associação de perfis específicos
-- [ ] Refatoramento Repository de Usuários e forma de buscar permissionamento => Acessar tabela User ou Member?
-
-Falta: Formulário inicial onde o usuário cria a empresa ("Minha Empresa S.A"), define o Slug e o CNPJ. (Atualmente estamos assumindo que a Org já existe).
-
-- [ ] Formulário de Configuração da Empresa (Settings)
-
-Falta: Tela para editar logo, endereço e configurações globais do tenant.
-
-🤝 Onboarding e Convites
-
-- [x] UI de Convite de Membros
-
-Feito: Modal InviteMemberForm visualmente pronto.
-
-- [ ] Sistema de Convites (Backend)
-
-Falta: Implementar o envio de e-mail (Resend/SendGrid), geração de token de convite e a página pública de "Aceitar Convite / Criar Senha".
-
-💳 Motor Financeiro (Backend)
-
-- [ ] Integração de Billing Real
-
-Falta: Conectar a UI de Billing aos Webhooks do Gateway (Stripe/Asaas) para atualizar o status da assinatura e bloquear recursos automaticamente se o pagamento falhar.
+Projeto privado (`"private": true` no `package.json`).
