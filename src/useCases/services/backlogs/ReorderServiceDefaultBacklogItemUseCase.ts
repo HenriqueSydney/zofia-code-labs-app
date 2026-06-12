@@ -1,3 +1,4 @@
+import { ResourceNotFoundError } from "@/errors";
 import { BacklogStatus } from "@/generated/prisma/enums";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IServiceDefaultBacklogItemsRepository } from "@/repositories/IServiceDefaultBacklogItemsRepository";
@@ -24,10 +25,15 @@ export class ReorderServiceDefaultBacklogItemUseCase {
       await this.serviceDefaultBacklogItemsRepository.findById(id);
 
     if (!itemExists) {
-      throw new Error("Item do backlog do servço não encontrado.");
+      throw new ResourceNotFoundError("Item do backlog do servço não encontrado.");
     }
 
-    await checkUserPermissionForAsset("services", userId, itemExists, "UPDATE");
+    await checkUserPermissionForAsset(
+      "servicesBacklog",
+      userId,
+      itemExists,
+      "UPDATE",
+    );
 
     await this.serviceDefaultBacklogItemsRepository.reorderItem(
       id,

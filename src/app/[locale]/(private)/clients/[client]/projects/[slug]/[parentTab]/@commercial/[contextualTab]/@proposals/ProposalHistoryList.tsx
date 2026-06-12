@@ -9,12 +9,10 @@ import {
   ChevronRight,
   Download,
   Eye,
-  FileEdit,
   Send,
   User,
 } from "lucide-react";
 import { ProposalDetailsModal } from "./ProposalDetailsModal";
-import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { ProjectTransitionDialog } from "@/app/[locale]/(private)/clients/[client]/projects/[slug]/[parentTab]/@overview/transitions/TransitionDialog";
 import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
@@ -25,19 +23,30 @@ import { getProposalNextStepLabel } from "@/utils/getNextStageLabel";
 import { Tooltip } from "@/components/Tooltip";
 import { getProposalDownloadUrl } from "@/actions/proposal/getProposalDownloadUrl";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface IProposalHistoryList {
   proposal: ProposalWithDetails;
   project: ProjectWithDetails;
+  canCreateProposal: boolean;
 }
 
 export function ProposalHistoryList({
   proposal,
   project,
+  canCreateProposal,
 }: IProposalHistoryList) {
+  const tProposals = useTranslations("proposals");
+  const tHistory = useTranslations("proposals.history");
+  const tNextSteps = useTranslations("projects.transitions.nextSteps");
+  const translateNextStep = (key: string) =>
+    tNextSteps(key as Parameters<typeof tNextSteps>[0]);
   const [showAdvanceDialog, setShowAdvanceDialog] = useState(false);
   const { isProposalEditable } = checkIfProposalIsEditable(proposal.status);
-  const nextStageProposalLabel = getProposalNextStepLabel(project.proposal);
+  const nextStageProposalLabel = getProposalNextStepLabel(
+    project.proposal,
+    translateNextStep,
+  );
 
   const handleDownload = async (id: string) => {
     const result = await getProposalDownloadUrl(id);
@@ -58,37 +67,35 @@ export function ProposalHistoryList({
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-2">
-            {proposal.proposalTemplate?.template && (
-              <h4 className="font-medium">
-                {proposal.proposalTemplate?.template?.title}
-              </h4>
-            )}
-            <Badge variant="outline">Versão: {proposal.version}</Badge>
+            <h4 className="font-medium">{tProposals("modal.defaultTitle")}</h4>
+            <Badge variant="outline">
+              {tHistory("version", { version: proposal.version })}
+            </Badge>
           </div>
           <p className="text-lg font-semibold text-primary mt-1">
             {formatCurrency(Number(proposal.totalValue))}
           </p>
         </div>
         <div className="flex items-center gap-2">
-          {getProposalStatusBadge(proposal.status)}
+          {getProposalStatusBadge(proposal.status, (key) =>
+            tProposals(
+              key as
+                | "status.draft"
+                | "status.review"
+                | "status.approved"
+                | "status.sent"
+                | "status.accepted"
+                | "status.rejected"
+                | "status.cancelled",
+            ),
+          )}
           <ProposalDetailsModal proposal={proposal} />
-          {isProposalEditable &&
-            proposal.isCurrent &&
-            proposal.sourceType === "SYSTEM_TEMPLATE" && (
-              <Tooltip description="Editar proposta">
-                <Link href={proposal.id}>
-                  <Button variant="ghost" size="icon">
-                    <FileEdit className="h-4 w-4" />
-                  </Button>
-                </Link>
-              </Tooltip>
-            )}
           {(proposal.fileUrl || proposal.fileKey) && (
             <Tooltip
               description={
                 proposal.fileKey
-                  ? "Baixar documento"
-                  : "Erro ao localizar o documento"
+                  ? tHistory("downloadDocument")
+                  : tHistory("documentNotFound")
               }
             >
               <Button
@@ -102,7 +109,8 @@ export function ProposalHistoryList({
           )}
           {isProposalEditable &&
             proposal.isCurrent &&
-            project.status === "PROPOSAL" && (
+            project.status === "PROPOSAL" &&
+            canCreateProposal && (
               <>
                 <Tooltip description={nextStageProposalLabel}>
                   <Button
@@ -121,7 +129,7 @@ export function ProposalHistoryList({
                   onOpenChange={setShowAdvanceDialog}
                   project={project}
                   targetStatus="PROPOSAL_GENERATED"
-                  targetStatusLabel="Análise de Proposta"
+                  targetStatusLabel={tHistory("proposalAnalysis")}
                   contextData={proposal}
                 />
               </>
@@ -132,7 +140,7 @@ export function ProposalHistoryList({
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm pt-2 border-t">
         <div>
           <p className="text-muted-foreground flex items-center gap-1">
-            <User className="h-3 w-3" /> Criado por
+            <User className="h-3 w-3" /> {tHistory("createdBy")}
           </p>
           {proposal.createdUser && (
             <p className="font-medium">{proposal.createdUser?.name}</p>
@@ -144,7 +152,7 @@ export function ProposalHistoryList({
         {proposal.reviewedBy && (
           <div>
             <p className="text-muted-foreground flex items-center gap-1">
-              <Eye className="h-3 w-3" /> Revisado por
+              <Eye className="h-3 w-3" /> {tHistory("reviewedBy")}
             </p>
             <p className="font-medium">{proposal.reviewUser?.name}</p>
             <p className="text-xs text-muted-foreground">
@@ -155,7 +163,7 @@ export function ProposalHistoryList({
         {proposal.approvedBy && (
           <div>
             <p className="text-muted-foreground flex items-center gap-1">
-              <CheckCircle className="h-3 w-3" /> Aprovado por
+              <CheckCircle className="h-3 w-3" /> {tHistory("approvedBy")}
             </p>
             <p className="font-medium">{proposal.approvedUser?.name}</p>
             <p className="text-xs text-muted-foreground">
@@ -166,7 +174,7 @@ export function ProposalHistoryList({
         {proposal.status === "SENT" && (
           <div>
             <p className="text-muted-foreground flex items-center gap-1">
-              <Send className="h-3 w-3" /> Proposta enviada para o cliente
+              <Send className="h-3 w-3" /> {tHistory("sentToClient")}
             </p>
           </div>
         )}

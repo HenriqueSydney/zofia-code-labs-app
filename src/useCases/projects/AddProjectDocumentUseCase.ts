@@ -1,5 +1,6 @@
-import { AppError } from "@/errors/AppError";
+import { ValidationError, ResourceNotFoundError } from "@/errors";
 import { handleErrors } from "@/errors/handleErrors";
+import { assertClientEmployeePermission } from "@/lib/auth/assertClientEmployeePermission";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IProjectsRepository } from "@/repositories/IProjectsRepository";
 import { IS3StorageService } from "@/services/s3Client/IS3StorageService";
@@ -19,22 +20,29 @@ export class AddProjectDocumentUseCase {
 
   async execute({ projectId, files, userId }: AddDocumentsRequest) {
     if (!files || files.length === 0) {
-      throw new AppError("Nenhum arquivo enviado.");
+      throw new ValidationError("Nenhum arquivo enviado.");
     }
 
     // 1. Verifica se o projeto existe
     const projectExists = await this.projectsRepository.findById(projectId);
     if (!projectExists) {
-      throw new AppError("Projeto não encontrado.");
+      throw new ResourceNotFoundError("Projeto não encontrado.");
     }
 
-    // 2. Validação de permissão
-    await checkUserPermissionForAsset(
-      "documents",
-      userId,
-      projectExists,
-      "UPDATE"
-    );
+    try {
+      await assertClientEmployeePermission(
+        userId,
+        projectExists.clientId,
+        "UPLOAD_DOCUMENT",
+      );
+    } catch {
+      await checkUserPermissionForAsset(
+        "documents",
+        userId,
+        projectExists,
+        "UPDATE",
+      );
+    }
 
     // Utilizamos o slug para manter a estrutura de pastas organizada,
     // ou o id caso o slug não esteja disponível no objeto retornado

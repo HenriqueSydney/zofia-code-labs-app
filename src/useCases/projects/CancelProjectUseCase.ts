@@ -1,3 +1,4 @@
+import { ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IProjectsRepository } from "@/repositories/IProjectsRepository";
 
@@ -15,7 +16,7 @@ export class CancelProjectUseCase {
   }: ICancelProjectUseCase): Promise<{ slug: string; clientSlug: string }> {
     const projectExists = await this.projectsRepository.findById(projectId);
     if (!projectExists) {
-      throw new Error("Projeto não encontrado.");
+      throw new ResourceNotFoundError("Projeto não encontrado.");
     }
 
     await checkUserPermissionForAsset(
@@ -28,7 +29,7 @@ export class CancelProjectUseCase {
     const project = await this.projectsRepository.findById(projectId);
 
     if (!project) {
-      throw new Error("Projeto não encontrado.");
+      throw new ResourceNotFoundError("Projeto não encontrado.");
     }
 
     await this.projectsRepository.cancel(projectId);

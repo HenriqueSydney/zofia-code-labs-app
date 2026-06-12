@@ -11,13 +11,16 @@ import { CreateIntegrationTypeForm } from "./components/CreateIntegrationTypeFor
 import { getParams } from "@/utils/getParams";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { listIntegrationTypesAction } from "@/actions/integrations/listIntegrationTypesAction";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { IntegrationTypeRemoveOrEdit } from "./components/IntegrationTypeRemoveOrEdit";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
+import { auth } from "@/auth";
+import { Role } from "@/generated/prisma/client";
 
 interface IParams {
   searchParams?: Promise<{ [key: string]: string | undefined }>;
@@ -25,19 +28,25 @@ interface IParams {
 const Integrations = async ({ searchParams }: IParams) => {
   const { query } = await getParams(searchParams, ["query"]);
 
-  const [error, success] = await operationWrapper(
-    "action",
-    "listIntegrationTypesAction",
-    () => {
-      return listIntegrationTypesAction(query);
-    },
-    {
-      cache: "no-cache",
-    }
-  );
+  const [[error, success], t, session] = await Promise.all([
+    operationWrapper(
+      "action",
+      "listIntegrationTypesAction",
+      () => {
+        return listIntegrationTypesAction(query);
+      },
+      {
+        cache: "no-cache",
+      },
+    ),
+    getTranslations("settings.integrations.catalog"),
+    auth(),
+  ]);
+
+  const canManage = session?.user?.role === Role.OWNER;
 
   if (error) {
-    throw new AppError("Erro ao listar os tipos de integração");
+    throw new ValidationError(t("errors.listFailed"));
   }
 
   const integrations = success.data;
@@ -46,13 +55,13 @@ const Integrations = async ({ searchParams }: IParams) => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <SectionHeading
-          title="Catálogo de Integrações"
-          description=" Configure as integrações disponíveis na plataforma"
+          title={t("page.title")}
+          description={t("page.description")}
         />
-        <CreateIntegrationTypeForm />
+        {canManage && <CreateIntegrationTypeForm />}
       </div>
 
-      <QueryFilter placeholder="Buscar tipo de integração..." />
+      <QueryFilter placeholder={t("search")} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {integrations.map((integration) => {
@@ -86,12 +95,13 @@ const Integrations = async ({ searchParams }: IParams) => {
                         </Badge>
                       </div>
                       <CardDescription className="line-clamp-2 mt-1 text-xs leading-relaxed">
-                        {integration.description ??
-                          "Sem descrição definida para esta integração."}
+                        {integration.description ?? t("card.noDescription")}
                       </CardDescription>
                     </div>
                   </div>
-                  <IntegrationTypeRemoveOrEdit integration={integration} />
+                  {canManage && (
+                    <IntegrationTypeRemoveOrEdit integration={integration} />
+                  )}
                 </div>
               </CardHeader>
 
@@ -107,7 +117,8 @@ const Integrations = async ({ searchParams }: IParams) => {
                         size="sm"
                         className="h-auto p-0 text-xs text-primary"
                       >
-                        Ver Docs <ExternalLink className="ml-1 h-3 w-3" />
+                        {t("card.viewDocs")}{" "}
+                        <ExternalLink className="ml-1 h-3 w-3" />
                       </Button>
                     </Link>
                   )}

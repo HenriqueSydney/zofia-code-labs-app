@@ -1,3 +1,4 @@
+import { ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import {
   IBacklogItemsRepository,
@@ -19,7 +20,7 @@ export class GetBacklogItemUseCase {
     const item = await this.backlogItemsRepository.findById(id);
 
     if (!item) {
-      throw new Error("Item do backlog não encontrado.");
+      throw new ResourceNotFoundError("Item do backlog não encontrado.");
     }
 
     await checkUserPermissionForAsset("backlog", userId, item, "READ");

@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
 import { makeGetFinancialOverviewUseCase } from "@/useCases/stats/factories/makeGetFinancialOverviewUseCase";
 
@@ -12,7 +13,7 @@ export async function getFinancialOverviewAction() {
   if (!session?.user?.id) {
     return {
       success: false,
-      message: "Usuário não autenticado.",
+      message: await serverErrorMessage("unauthenticated"),
       data: null,
     };
   }

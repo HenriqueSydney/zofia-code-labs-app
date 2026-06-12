@@ -1,8 +1,8 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
-import { handleErrors } from "@/errors/handleErrors";
+import { UnauthorizedError, IntegrationError } from "@/errors";
 import { makeOrganizationIntegrationRepository } from "@/repositories/factories/makeOrganizationIntegrationRepository";
 import { IGitService } from "@/services/git/IGitService";
 import {
@@ -16,7 +16,7 @@ export async function fetchGitHubRepositoriesAction() {
   try {
     // Aqui você verificaria se o usuário é o ADMIN do sistema
     if (!session?.user) {
-      throw new AppError("Não autorizado.");
+      throw new UnauthorizedError("unauthorized");
     }
 
     const organizationIntegrationRepository =
@@ -29,7 +29,7 @@ export async function fetchGitHubRepositoriesAction() {
       );
 
     if (!organizationIntegration) {
-      throw new Error(`Integração do Projeto com o Umami não encontrada.`);
+      throw new IntegrationError("umamiIntegrationNotFound");
     }
 
     const integrationFactory = new IntegrationFactory();
@@ -51,10 +51,10 @@ export async function fetchGitHubRepositoriesAction() {
     return {
       success: true,
       data: result,
-      message: "Dados retornados com sucesso",
+      message: await resolveSuccessMessage("dataFetched"),
     };
   } catch (error) {
-    const message = handleErrors(error);
+    const message = await resolveActionErrorMessage(error);
     return { success: false, message };
   }
 }

@@ -1,5 +1,6 @@
-import { AppError } from "@/errors/AppError";
-import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
+import { ResourceNotFoundError } from "@/errors";
+import { assertClientAccessForUser } from "@/lib/auth/resolveClientAccess";
+import { MemberRole } from "@/generated/prisma/enums";
 import {
   IClientsRepository,
   ProjectPipelineMetric,
@@ -8,6 +9,7 @@ import {
 interface GetClientProjectPipelineUseCaseRequest {
   slug: string;
   userId: string;
+  memberRole?: MemberRole | null;
 }
 
 export class GetClientProjectPipelineUseCase {
@@ -16,6 +18,7 @@ export class GetClientProjectPipelineUseCase {
   async execute({
     slug,
     userId,
+    memberRole,
   }: GetClientProjectPipelineUseCaseRequest): Promise<{
     projectPipelineMetric: ProjectPipelineMetric[];
   }> {
@@ -25,10 +28,16 @@ export class GetClientProjectPipelineUseCase {
     ]);
 
     if (!client) {
-      throw new AppError("Cliente não localizado");
+      throw new ResourceNotFoundError("Cliente não localizado");
     }
 
-    await checkUserPermissionForAsset("client", userId, client, "READ");
+    await assertClientAccessForUser({
+      userId,
+      memberRole,
+      clientSlug: slug,
+      client,
+      operation: "READ",
+    });
 
     return { projectPipelineMetric };
   }

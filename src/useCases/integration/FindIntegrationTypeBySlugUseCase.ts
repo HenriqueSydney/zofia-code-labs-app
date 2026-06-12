@@ -5,10 +5,18 @@ import { IIntegrationTypeRepository } from "@/repositories/IIntegrationTypeRepos
 export class FindIntegrationTypeBySlugUseCase {
   constructor(private repository: IIntegrationTypeRepository) {}
 
-  async execute(userId: string, slug: string): Promise<IntegrationType | null> {
-    const integraitonType = await this.repository.findBySlug(slug);
-    await checkUserPermissionForAsset("integrationType", userId, null, "READ");
+  async execute(
+    userId: string,
+    organizationId: string,
+    slug: string,
+  ): Promise<IntegrationType | null> {
+    await checkUserPermissionForAsset(
+      "integrationType",
+      userId,
+      { organizationId },
+      "READ",
+    );
 
-    return integraitonType;
+    return await this.repository.findBySlug(slug);
   }
 }

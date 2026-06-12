@@ -15,13 +15,17 @@ import { Modal } from "@/components/Modal";
 import { useTranslations } from "next-intl";
 import { useSession } from "next-auth/react";
 
-const clientSchema = z.object({
-  file: z.instanceof(File, { message: "Selecione uma imagem." }),
-});
+const createClientSchema = (selectImageMessage: string) =>
+  z.object({
+    file: z.instanceof(File, { message: selectImageMessage }),
+  });
 
-type FormSchema = z.infer<typeof clientSchema>;
+type FormSchema = z.infer<ReturnType<typeof createClientSchema>>;
 
 export function AvatarForm() {
+  const t = useTranslations("userProfile");
+  const tForm = useTranslations("userProfile.avatarForm");
+  const tCommon = useTranslations("common");
   const {update} = useSession()
   const [isPending, startTransition] = useTransition();
   const [preview, setPreview] = useState<string | null>(null);
@@ -34,7 +38,7 @@ export function AvatarForm() {
     trigger,
     reset,
   } = useForm<FormSchema>({
-    resolver: zodResolver(clientSchema),
+    resolver: zodResolver(createClientSchema(tForm("selectImage"))),
   });
 
   const [state, formAction] = useActionState(updateAvatarAction, {
@@ -93,7 +97,7 @@ export function AvatarForm() {
       <Modal
         isModalOpen={isModal}
         setIsModalOpen={setIsModalOpen}
-        modalTitle={"Atualização de avatar"}
+        modalTitle={t("myProfile")}
       >
         <div className="space-y-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -114,7 +118,7 @@ export function AvatarForm() {
                 onFileSelect={onFileSelect}
                 accept="image/png, image/jpeg, image/webp"
                 maxFiles={1}
-                helperText="Máximo 5MB (PNG, JPG, WEBP)"
+                helperText={tForm("helperText")}
               />
 
               {/* Erros do Zod (Client) */}
@@ -138,7 +142,7 @@ export function AvatarForm() {
                 disabled={isPending || !preview}
                 className="w-full sm:w-auto"
               >
-                {isPending ? "Enviando..." : "Salvar Avatar"}
+                {isPending ? tCommon("saving") : tCommon("actions.saveChanges")}
               </Button>
             </div>
           </form>

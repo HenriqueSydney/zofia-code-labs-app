@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import {
   Dialog,
@@ -26,6 +27,7 @@ export function ServiceCategoryRemoveOrEdit({
   serviceCategory,
   categories,
 }: IServiceCategoryRemoveOrEdit) {
+  const t = useTranslations("settings.services.category.form");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   async function handleDelete(id: string) {
@@ -36,7 +38,7 @@ export function ServiceCategoryRemoveOrEdit({
       return;
     }
 
-    toast.success("Serviço criado com sucesso!");
+    toast.success(t("toastDeleteSuccess"));
   }
 
   return (
@@ -58,10 +60,8 @@ export function ServiceCategoryRemoveOrEdit({
         </DialogTrigger>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Editar Categoria</DialogTitle>
-            <DialogDescription>
-              Preencha os dados da categoria de serviço
-            </DialogDescription>
+            <DialogTitle>{t("dialogEditTitle")}</DialogTitle>
+            <DialogDescription>{t("dialogEditDescription")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4"></div>
           <ServiceCategoryForm

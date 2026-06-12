@@ -1,15 +1,16 @@
+import { v } from "@/schemas/validationMessages";
 import z from "zod";
 
 export const createServiceCategorySchema = z.object({
   organizationId: z.cuid().optional(),
   name: z
-    .string({ error: "O nome do serviço é obrigatório." })
-    .min(3, "O nome deve ter pelo menos 3 caracteres.")
-    .max(150, "O nome deve ter no máximo 150 caracteres."),
+    .string({ error: v.serviceNameRequired })
+    .min(3, v.nameMinLength)
+    .max(150, v.nameMaxLength),
   description: z.string().optional().nullable(),
   taxCode: z
     .string({
-      error: "O código do imposto para nota fiscal deve ser um valor válido.",
+      error: v.taxCodeInvalid,
     })
     .optional(),
 });

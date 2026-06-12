@@ -5,6 +5,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { Plus, Trash2, Key, ShieldCheck } from "lucide-react";
 
 import { Form } from "@/components/ui/form";
@@ -17,13 +18,25 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import {
+  IntegrationFieldInputType,
+  IntegrationFieldKeyType,
   IntegrationTypeData,
+  getDefaultInputTypeForKeyType,
+  integrationFieldInputTypes,
   integrationTypeSchema,
+  normalizeIntegrationFieldSchema,
 } from "@/schemas/integration/integrationType";
 import { createIntegrationTypeAction } from "@/actions/integrations/createIntegrationTypeAction";
 import { updateIntegrationTypeAction } from "@/actions/integrations/updateIntegrationTypeAction";
@@ -49,10 +62,45 @@ export function IntegrationTypeForm({
   integration,
   handleCloseModal,
 }: IIntegrationFormProps) {
+  const t = useTranslations("settings.integrations.catalog.form");
+
+  const getKeyTypeLabel = (keyType: IntegrationFieldKeyType) => {
+    switch (keyType) {
+      case "TAG":
+        return t("keyTypeOptions.tag");
+      case "PUBLIC_KEY":
+        return t("keyTypeOptions.publicKey");
+      case "SECRET":
+        return t("keyTypeOptions.secret");
+    }
+  };
+
+  const getInputTypeLabel = (inputType: IntegrationFieldInputType) => {
+    switch (inputType) {
+      case "text":
+        return t("inputTypeOptions.text");
+      case "password":
+        return t("inputTypeOptions.password");
+      case "email":
+        return t("inputTypeOptions.email");
+      case "url":
+        return t("inputTypeOptions.url");
+    }
+  };
+  const tCommon = useTranslations("common");
   const [isPending, startTransition] = useTransition();
 
   const [newFieldLabel, setNewFieldLabel] = useState("");
   const [newFieldKey, setNewFieldKey] = useState("");
+  const [newFieldKeyType, setNewFieldKeyType] =
+    useState<IntegrationFieldKeyType>("SECRET");
+  const [newFieldInputType, setNewFieldInputType] =
+    useState<IntegrationFieldInputType>("password");
+
+  const handleKeyTypeChange = (value: IntegrationFieldKeyType) => {
+    setNewFieldKeyType(value);
+    setNewFieldInputType(getDefaultInputTypeForKeyType(value));
+  };
 
   const form = useForm({
     resolver: zodResolver(integrationTypeSchema),
@@ -62,7 +110,9 @@ export function IntegrationTypeForm({
       logo: integration?.logo ?? "",
       enableByol: integration?.enableByol ?? false,
       externalDocsUrl: integration?.externalDocsUrl ?? "",
-      fieldsSchema: integration?.fieldsSchema ?? [],
+      fieldsSchema: (integration?.fieldsSchema ?? []).map(
+        normalizeIntegrationFieldSchema,
+      ),
     },
   });
 
@@ -71,32 +121,33 @@ export function IntegrationTypeForm({
     name: "fieldsSchema",
   });
 
-  const logoUrl = form.watch("logo");
   const isByolEnabled = form.watch("enableByol");
 
   const handleAddField = () => {
     if (!newFieldLabel || !newFieldKey) {
-      toast.error("Preencha o Nome e a Chave do campo.");
+      toast.error(t("fieldRequired"));
       return;
     }
 
     const exists = fields.some((f) => f.key === newFieldKey);
     if (exists) {
-      toast.error("Esta chave técnica já foi adicionada.");
+      toast.error(t("duplicateKey"));
       return;
     }
 
     append({
       label: newFieldLabel,
       key: newFieldKey.toUpperCase().replace(/\s+/g, "_"),
-      type: "password",
-      isSecret: true,
+      keyType: newFieldKeyType,
+      type: newFieldInputType,
       required: true,
       dependsOnByol: false, // Default falso ao criar
     });
 
     setNewFieldLabel("");
     setNewFieldKey("");
+    setNewFieldKeyType("SECRET");
+    setNewFieldInputType("password");
   };
 
   const onSubmit = (data: IntegrationTypeData) => {
@@ -112,7 +163,9 @@ export function IntegrationTypeForm({
         return;
       }
 
-      toast.success(integration ? "Atualizado!" : "Criado!");
+      toast.success(
+        integration ? t("toastUpdateSuccess") : t("toastCreateSuccess"),
+      );
       handleCloseModal();
     });
   };
@@ -122,38 +175,44 @@ export function IntegrationTypeForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="grid grid-cols-1 gap-4">
-            {/* ... Campos Nome, Logo, Descrição iguais ao anterior ... */}
             <FormInputSlug
               control={form.control}
               name="name"
-              label="Nome da Integração"
-              placeholder="Ex: Stripe"
+              label={t("name")}
+              placeholder={t("namePlaceholder")}
+              disabled={isPending}
+            />
+
+            <FormInput
+              control={form.control}
+              name="logo"
+              label={t("logo")}
+              placeholder="/nome-logo.png"
               disabled={isPending}
             />
 
             <FormSwitchCard
               control={form.control}
               name="enableByol"
-              label="Permite BYOL?"
-              description=" Habilita o cliente a usar a própria instância/licença."
+              label={t("byol")}
+              description={t("byolDescription")}
               icon={ShieldCheck}
               disabled={isPending}
             />
 
-            {/* Logo e Descrição resumidos aqui para brevidade */}
             <FormTextarea
               control={form.control}
               name="description"
-              label="Descrição"
-              placeholder="O que ela faz..."
+              label={t("description")}
+              placeholder={t("descriptionPlaceholder")}
               rows={2}
               disabled={isPending}
             />
             <FormInput
               control={form.control}
               name="externalDocsUrl"
-              label="Documentação Externa"
-              type="url" // <--- O segredo está aqui
+              label={t("externalDocs")}
+              type="url"
               placeholder="https://..."
               disabled={isPending}
             />
@@ -163,41 +222,97 @@ export function IntegrationTypeForm({
           <div className="space-y-4 lg:border-l lg:pl-6">
             <div className="flex flex-col gap-2">
               <h3 className="text-sm font-semibold flex items-center gap-2">
-                <Key className="w-4 h-4" /> Configuração de Campos
+                <Key className="w-4 h-4" /> {t("fieldsBuilderTitle")}
               </h3>
               <p className="text-xs text-muted-foreground">
-                Defina as chaves que serão armazenadas no Infisical.
+                {t("fieldsBuilderDescription")}
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-3 p-4 bg-muted/30 rounded-lg border border-dashed">
-              <div className="flex-1 space-y-1.5">
-                <span className="text-[10px] font-bold uppercase text-muted-foreground">
-                  Nome UI
-                </span>
-                <Input
-                  placeholder="Ex: API Key"
-                  value={newFieldLabel}
-                  onChange={(e) => setNewFieldLabel(e.target.value)}
-                />
+            <div className="flex flex-col p-4 bg-muted/30 rounded-lg border border-dashed">
+              <div className="gap-3 grid grid-cols-1 md:grid-cols-2">
+                <div className="flex-1 space-y-1.5">
+                  <span className="text-[10px] font-bold uppercase text-muted-foreground">
+                    {t("keyType")}
+                  </span>
+                  <Select
+                    value={newFieldKeyType}
+                    onValueChange={(value) =>
+                      handleKeyTypeChange(value as IntegrationFieldKeyType)
+                    }
+                  >
+                    <SelectTrigger className="h-8">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="TAG">
+                        {t("keyTypeOptions.tag")}
+                      </SelectItem>
+                      <SelectItem value="PUBLIC_KEY">
+                        {t("keyTypeOptions.publicKey")}
+                      </SelectItem>
+                      <SelectItem value="SECRET">
+                        {t("keyTypeOptions.secret")}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex-1 space-y-1.5">
+                  <span className="text-[10px] font-bold uppercase text-muted-foreground">
+                    {t("inputType")}
+                  </span>
+                  <Select
+                    value={newFieldInputType}
+                    onValueChange={(value) =>
+                      setNewFieldInputType(value as IntegrationFieldInputType)
+                    }
+                  >
+                    <SelectTrigger className="h-8">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {integrationFieldInputTypes.map((inputType) => (
+                        <SelectItem key={inputType} value={inputType}>
+                          {getInputTypeLabel(inputType)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-              <div className="flex-1 space-y-1.5">
-                <span className="text-[10px] font-bold uppercase text-muted-foreground">
-                  Chave
-                </span>
-                <Input
-                  placeholder="Ex: API_KEY"
-                  value={newFieldKey}
-                  onChange={(e) => setNewFieldKey(e.target.value)}
-                />
+              <div className="gap-3 grid grid-cols-1 md:grid-cols-2">
+                <div className="flex-1 space-y-1.5">
+                  <span className="text-[10px] font-bold uppercase text-muted-foreground">
+                    {t("uiNameLabel")}
+                  </span>
+                  <Input
+                    placeholder={t("uiNamePlaceholder")}
+                    value={newFieldLabel}
+                    onChange={(e) => setNewFieldLabel(e.target.value)}
+                    className="h-8"
+                  />
+                </div>
+                <div className="flex-1 space-y-1.5">
+                  <span className="text-[10px] font-bold uppercase text-muted-foreground">
+                    {t("keyLabel")}
+                  </span>
+                  <Input
+                    placeholder={t("keyPlaceholder")}
+                    value={newFieldKey}
+                    onChange={(e) => setNewFieldKey(e.target.value)}
+                    className="h-8"
+                  />
+                </div>
               </div>
+
               <Button
                 type="button"
                 variant="secondary"
                 onClick={handleAddField}
-                className="sm:self-end"
+                className="sm:self-end mt-4"
               >
                 <Plus className="w-4 h-4" />
+                {t("addField")}
               </Button>
             </div>
 
@@ -206,11 +321,21 @@ export function IntegrationTypeForm({
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-muted/50">
-                      <TableHead className="text-[11px]">Rótulo</TableHead>
-                      <TableHead className="text-[11px]">Chave</TableHead>
+                      <TableHead className="text-[11px]">
+                        {t("tableLabel")}
+                      </TableHead>
+                      <TableHead className="text-[11px]">
+                        {t("tableKey")}
+                      </TableHead>
+                      <TableHead className="text-[11px]">
+                        {t("tableKeyType")}
+                      </TableHead>
+                      <TableHead className="text-[11px]">
+                        {t("tableInputType")}
+                      </TableHead>
                       {isByolEnabled && (
                         <TableHead className="text-[11px] text-center w-[80px]">
-                          BYOL?
+                          {t("tableByol")}
                         </TableHead>
                       )}
                       <TableHead className="w-[40px]"></TableHead>
@@ -228,6 +353,16 @@ export function IntegrationTypeForm({
                             className="font-mono text-[10px] uppercase"
                           >
                             {item.key}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="py-2">
+                          <Badge variant="secondary" className="text-[10px]">
+                            {getKeyTypeLabel(item.keyType)}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="py-2">
+                          <Badge variant="secondary" className="text-[10px]">
+                            {getInputTypeLabel(item.type)}
                           </Badge>
                         </TableCell>
 
@@ -273,10 +408,10 @@ export function IntegrationTypeForm({
             onClick={handleCloseModal}
             disabled={isPending}
           >
-            Cancelar
+            {t("cancel")}
           </Button>
           <Button type="submit" disabled={isPending}>
-            {isPending ? "Salvando..." : "Salvar no Catálogo"}
+            {isPending ? tCommon("saving") : t("save")}
           </Button>
         </div>
       </form>

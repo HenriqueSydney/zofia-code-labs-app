@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
 import {
   UpdateServiceTypeSchema,
@@ -12,7 +13,7 @@ export async function updateServiceTypeAction(data: UpdateServiceTypeSchema) {
   const session = await auth();
 
   if (!session?.user?.organizationId) {
-    return { success: false, message: "Não autorizado." };
+    return { success: false, message: await serverErrorMessage("unauthorized") };
   }
 
   const parsed = updateServiceTypeSchema.safeParse(data);
@@ -20,7 +21,7 @@ export async function updateServiceTypeAction(data: UpdateServiceTypeSchema) {
   if (!parsed.success) {
     return {
       success: false,
-      message: parsed.error.issues[0].message || "Dados inválidos.",
+      message: parsed.error.issues[0].message || await serverErrorMessage("invalidData"),
     };
   }
 
@@ -36,6 +37,7 @@ export async function updateServiceTypeAction(data: UpdateServiceTypeSchema) {
     await useCase.execute({
       id,
       organizationId: session.user.organizationId,
+      userId: session.user.id,
       data: {
         ...rest,
         basePrice: finalPrice,
@@ -45,8 +47,6 @@ export async function updateServiceTypeAction(data: UpdateServiceTypeSchema) {
     revalidatePath("/dashboard/services");
     return { success: true };
   } catch (error) {
-    if (error instanceof Error)
-      return { success: false, message: error.message };
-    return { success: false, message: "Erro ao atualizar serviço." };
+    return { success: false, message: await resolveActionErrorMessage(error) };
   }
 }

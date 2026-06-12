@@ -3,17 +3,77 @@ import NextAuth from "next-auth";
 import authConfig from "@/lib/auth/auth.config";
 
 import { PrismaAdapter } from "./lib/auth/prisma-adapter";
+import { extractClientIp } from "./lib/auth/extractClientIp";
+import { loadUserProfileClaims } from "./lib/auth/loadUserProfileClaims";
+import { loadClientMemberships } from "./lib/auth/loadClientMemberships";
 import { prisma } from "./lib/prisma";
+import { makeRecordLoginHistoryUseCase } from "./useCases/auth/factories/makeRecordLoginHistoryUseCase";
 
 import Credentials from "next-auth/providers/credentials";
-import { compare, hash } from "bcryptjs";
-import { headers } from "next/headers";
+import { compare } from "bcryptjs";
+import { cookies, headers } from "next/headers";
+import { Role } from "@/generated/prisma/enums";
+import { ORG_INVITE_COOKIE } from "@/constants/orgInvite";
+import { applyOrgInviteSessionCookies } from "@/lib/auth/applyOrgInviteSessionCookies";
+import { parseSignedOrgInviteCookieValue } from "@/lib/auth/orgInviteCookie";
+import { makeCompleteOrganizationInviteLoginUseCase } from "@/useCases/organization/factories/makeCompleteOrganizationInviteLoginUseCase";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   ...authConfig,
   callbacks: {
     ...authConfig.callbacks,
+    async jwt({ token, user, trigger, session }) {
+      if (user?.id && user.organizationId) {
+        token.id = user.id;
+        token.role = user.role ?? Role.USER;
+        token.organizationId = user.organizationId;
+
+        const claims = await loadUserProfileClaims(
+          user.id,
+          user.organizationId,
+        );
+        token.permissions = claims.permissions;
+        token.memberRole = claims.memberRole;
+        token.roleName = claims.roleName;
+        token.customRoleId = claims.customRoleId;
+
+        const clientMemberships = await loadClientMemberships(
+          user.id,
+          user.organizationId,
+        );
+        token.clientMemberships = clientMemberships;
+        token.clientMembershipSlugs = clientMemberships
+          .filter((m) => m.status === "ACTIVE")
+          .map((m) => m.clientSlug);
+      }
+
+      if (trigger === "update" && token.id && token.organizationId) {
+        const claims = await loadUserProfileClaims(
+          token.id,
+          token.organizationId,
+        );
+        token.permissions = claims.permissions;
+        token.memberRole = claims.memberRole;
+        token.roleName = claims.roleName;
+        token.customRoleId = claims.customRoleId;
+
+        const clientMemberships = await loadClientMemberships(
+          token.id,
+          token.organizationId,
+        );
+        token.clientMemberships = clientMemberships;
+        token.clientMembershipSlugs = clientMemberships
+          .filter((m) => m.status === "ACTIVE")
+          .map((m) => m.clientSlug);
+
+        if (session?.user?.image) {
+          token.picture = session.user.image;
+        }
+      }
+
+      return token;
+    },
     // Estendemos o signIn aqui porque temos acesso ao Prisma para lógica complexa
     async signIn({ user, account, profile }) {
       // 1. Atualização de Perfil (seu código existente)
@@ -32,27 +92,22 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         }
       }
 
-      // 2. LOG DE HISTÓRICO DE LOGIN (Novo código)
       if (user?.id) {
         try {
-          // Captura os headers da requisição atual
           const headersList = await headers();
-          const ip = headersList.get("x-forwarded-for") || "unknown";
-          const userAgent = headersList.get("user-agent") || "unknown";
+          const clientIp = extractClientIp(headersList.get("x-forwarded-for"));
 
-          // Como o IP pode vir como uma lista (ex: "127.0.0.1, 10.0.0.1"), pegamos o primeiro
-          const clientIp = ip.split(",")[0].trim();
+          const recordLoginHistoryUseCase = makeRecordLoginHistoryUseCase();
 
-          await prisma.loginHistory.create({
-            data: {
-              userId: user.id,
-              ipAddress: clientIp,
-              userAgent: userAgent,
-            },
+          await recordLoginHistoryUseCase.execute({
+            userId: user.id,
+            userEmail: user.email,
+            userName: user.name,
+            ipAddress: clientIp,
+            userAgent: headersList.get("user-agent"),
           });
         } catch (error) {
-          console.error("Erro ao salvar histórico de login:", error);
-          // Importante: Não retornar false, senão o usuário não consegue logar se o log falhar
+          console.error("Erro ao registrar histórico de login:", error);
         }
       }
 
@@ -80,7 +135,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
         const isValid = await compare(
           credentials.password as string,
-          user.passwordHash
+          user.passwordHash,
         );
 
         if (!isValid) return null;
@@ -93,6 +148,47 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           role: user.role,
           organizationId: user.organizationId,
         };
+      },
+    }),
+    Credentials({
+      id: "org-invite",
+      name: "OrganizationInvite",
+      credentials: {
+        userId: { label: "User ID", type: "text" },
+      },
+      async authorize(credentials) {
+        const userId = credentials?.userId as string | undefined;
+
+        if (!userId) return null;
+
+        const cookieStore = await cookies();
+        const inviteCookie = cookieStore.get(ORG_INVITE_COOKIE);
+        const payload = inviteCookie?.value
+          ? parseSignedOrgInviteCookieValue(inviteCookie.value)
+          : null;
+
+        if (!payload || payload.userId !== userId) return null;
+
+        try {
+          const authenticatedUser =
+            await makeCompleteOrganizationInviteLoginUseCase().execute({
+              userId,
+              inviteToken: payload.token,
+            });
+
+          await applyOrgInviteSessionCookies(userId);
+
+          return {
+            id: authenticatedUser.id,
+            name: authenticatedUser.name,
+            email: authenticatedUser.email,
+            image: authenticatedUser.image,
+            role: authenticatedUser.role,
+            organizationId: authenticatedUser.organizationId,
+          };
+        } catch {
+          return null;
+        }
       },
     }),
   ],

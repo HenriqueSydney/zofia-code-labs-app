@@ -1,3 +1,4 @@
+import { ResourceNotFoundError } from "@/errors";
 import { handleErrors } from "@/errors/handleErrors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IProjectsRepository } from "@/repositories/IProjectsRepository";
@@ -39,7 +40,7 @@ export class UpdateProjectUseCase {
       const projectExists = await this.projectsRepository.findById(id);
 
       if (!projectExists) {
-        throw new Error("Projeto não encontrado.");
+        throw new ResourceNotFoundError("Projeto não encontrado.");
       }
 
       await checkUserPermissionForAsset(

@@ -1,4 +1,6 @@
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError } from "@/errors";
+import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
+import { toOrganizationAsset } from "@/lib/auth/toOrganizationAsset";
 import {
   CustomRoleWithUsage,
   IOrganizationsRepository,
@@ -25,13 +27,15 @@ export class FetchOrganizationCustomRolesUseCase {
       await this.organizationsRepository.findById(organizationId);
 
     if (!organization) {
-      throw new AppError("Organização não localizada.");
+      throw new ResourceNotFoundError("Organização não localizada.");
     }
 
-    // 2. Verifica Permissão
-    // Para ver roles, o usuário deve ter acesso de leitura à organização
-    // ou, se quiser ser mais restrito, acesso a SETTINGS.MANAGE_ROLES (se tiver implementado)
-    //await checkUserPermissionForAsset("client", userId, organization, "READ");
+    await checkUserPermissionForAsset(
+      "organization",
+      userId,
+      toOrganizationAsset(organization),
+      "READ",
+    );
 
     // 3. Busca os roles
     const roles =

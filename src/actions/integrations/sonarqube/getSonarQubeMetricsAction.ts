@@ -1,8 +1,8 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
-import { handleErrors } from "@/errors/handleErrors";
+import { UnauthorizedError } from "@/errors";
 import { makeGetSonarQubeMetricsUseCase } from "@/useCases/integration/sonarqube/factories/makeGetSonarQubeMetricsUseCase";
 
 export async function getSonarQubeMetricsAction(projectSlug: string) {
@@ -10,7 +10,7 @@ export async function getSonarQubeMetricsAction(projectSlug: string) {
 
   // Aqui você verificaria se o usuário é o ADMIN do sistema
   if (!session?.user) {
-    throw new AppError("Não autorizado.");
+    throw new UnauthorizedError("unauthorized");
   }
 
   try {
@@ -23,7 +23,7 @@ export async function getSonarQubeMetricsAction(projectSlug: string) {
 
     return { success: true, data: metrics };
   } catch (error) {
-    const message = handleErrors(error);
+    const message = await resolveActionErrorMessage(error);
     return { success: false, message };
   }
 }

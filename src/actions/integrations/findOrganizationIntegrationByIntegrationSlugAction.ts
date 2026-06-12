@@ -1,8 +1,8 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
-import { handleErrors } from "@/errors/handleErrors";
+import { UnauthorizedError } from "@/errors";
 import { makeFindOrganizationIntegrationByIntegrationSlugUseCase } from "@/useCases/integration/factories/makeFindOrganizationIntegrationByIntegrationSlugUseCase";
 
 export async function findOrganizationIntegrationByIntegrationSlugAction(
@@ -13,7 +13,7 @@ export async function findOrganizationIntegrationByIntegrationSlugAction(
   const organizationId = session?.user?.organizationId;
 
   if (!organizationId) {
-    throw new AppError("Sessão expirada ou organização não encontrada.");
+    throw new UnauthorizedError("sessionExpiredNoOrg");
   }
 
   try {
@@ -33,7 +33,7 @@ export async function findOrganizationIntegrationByIntegrationSlugAction(
       data: integration,
     };
   } catch (error) {
-    handleErrors(error);
+    await resolveActionErrorMessage(error);
     throw error;
   }
 }

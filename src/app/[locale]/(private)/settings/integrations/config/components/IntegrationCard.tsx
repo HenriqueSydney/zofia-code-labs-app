@@ -31,16 +31,25 @@ import Link from "next/link";
 import { Integration } from "../page";
 import { updateOrganizationIntegrationAction } from "@/actions/integrations/updateOrganizationIntegrationAction";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { Tooltip } from "@/components/Tooltip";
 import { testIntegrationConnectionAction } from "@/actions/integrations/testIntegrationConnectionAction";
 
-export function IntegrationCard({ integration }: { integration: Integration }) {
+export function IntegrationCard({
+  integration,
+  canManage,
+}: {
+  integration: Integration;
+  canManage: boolean;
+}) {
+  const t = useTranslations("settings.integrations.config.card");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const handleToggleActive = (enabled: boolean) => {
+    if (!canManage) return;
     if (!integration.orgIntegrationId) {
-      toast.error("Conecte a integração primeiro.");
+      toast.error(t("connectFirst"));
       return;
     }
 
@@ -51,29 +60,30 @@ export function IntegrationCard({ integration }: { integration: Integration }) {
       });
 
       if (!result.success) toast.error(result.message);
-      else
-        toast.success(enabled ? "Integração ativada" : "Integração desativada");
+      else toast.success(enabled ? t("activated") : t("deactivated"));
     });
   };
 
   const handleTestConnection = async () => {
+    if (!canManage) return;
+
     if (!integration.orgIntegrationId) {
-      toast.error("Serviço não configurado");
+      toast.error(t("notConfigured"));
       return;
     }
 
-    toast.info("Iniciando teste de conexão com o serviço");
+    toast.info(t("testStarting"));
     const result = await testIntegrationConnectionAction(
-      integration.orgIntegrationId
+      integration.orgIntegrationId,
     );
 
     toast.dismiss();
     if (!result.success) {
-      toast.error("Não foi possível acessar o serviço");
+      toast.error(t("testFailed"));
       return;
     }
 
-    toast.success("Serviço está saudável e comunicável");
+    toast.success(t("testSuccess"));
   };
   return (
     <>
@@ -100,7 +110,7 @@ export function IntegrationCard({ integration }: { integration: Integration }) {
                     <>
                       <br />
                       <span>
-                        <strong>Última sincronização: </strong>
+                        <strong>{t("lastSync")} </strong>
                         {integration.lastSync}
                       </span>
                     </>
@@ -115,46 +125,54 @@ export function IntegrationCard({ integration }: { integration: Integration }) {
                 variant={integration.isConnected ? "default" : "outline"}
               >
                 {integration.isConnected ? (
-                  <Tooltip description="Conectado">
+                  <Tooltip description={t("connected")}>
                     <Zap className="w-4 h-4 cursor-help" />
                   </Tooltip>
                 ) : (
-                  <Tooltip description="Desconectado">
+                  <Tooltip description={t("disconnected")}>
                     <ZapOff className="w-4 h-4 cursor-help" />
                   </Tooltip>
                 )}
               </Badge>
-              <Switch
-                disabled={isPending || !integration.orgIntegrationId}
-                checked={integration.isConnected}
-                onCheckedChange={handleToggleActive}
-              />
+              {canManage && (
+                <Switch
+                  disabled={isPending || !integration.orgIntegrationId}
+                  checked={integration.isConnected}
+                  onCheckedChange={handleToggleActive}
+                />
+              )}
             </div>
           </div>
         </CardHeader>
 
         <CardContent>
           <div className="flex justify-end gap-2 pt-4 border-t">
-            {integration.isConnected && (
+            {integration.isConnected && canManage && (
               <Button
                 variant="secondary"
                 onClick={handleTestConnection}
-                title="Testar conexão"
+                title={t("testConnection")}
               >
                 <TestTubeDiagonal className="w-4 h-4" />
               </Button>
             )}
-            <Button
-              variant="outline"
-              onClick={() => setIsModalOpen(true)}
-              className="hover:bg-primary hover:text-primary-foreground"
-            >
-              <Settings2 className="h-4 w-4" />
-              Editar configuração
-            </Button>
+            {canManage && (
+              <Button
+                variant="outline"
+                onClick={() => setIsModalOpen(true)}
+                className="hover:bg-primary hover:text-primary-foreground"
+              >
+                <Settings2 className="h-4 w-4" />
+                {t("editConfig")}
+              </Button>
+            )}
             {integration.externalDocsUrl && (
               <Link href={integration.externalDocsUrl} target="_blank">
-                <Button variant="outline" size="icon" title="Documentação">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  title={t("documentation")}
+                >
                   <ExternalLink className="h-4 w-4" />
                 </Button>
               </Link>
@@ -164,22 +182,23 @@ export function IntegrationCard({ integration }: { integration: Integration }) {
       </Card>
 
       {/* Modal de Configuração Dinâmica */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-xl">
-          <DialogHeader>
-            <DialogTitle>Configurar {integration.name}</DialogTitle>
-            <DialogDescription>
-              Insira as credenciais necessárias. Todos os dados são
-              criptografados e armazenados via Infisical.
-            </DialogDescription>
-          </DialogHeader>
+      {canManage && (
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <DialogContent className="max-w-xl">
+            <DialogHeader>
+              <DialogTitle>
+                {t("configureTitle", { name: integration.name })}
+              </DialogTitle>
+              <DialogDescription>{t("configureDescription")}</DialogDescription>
+            </DialogHeader>
 
-          <IntegrationConfigForm
-            integration={integration}
-            handleCloseModal={() => setIsModalOpen(false)}
-          />
-        </DialogContent>
-      </Dialog>
+            <IntegrationConfigForm
+              integration={integration}
+              handleCloseModal={() => setIsModalOpen(false)}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   );
 }

@@ -1,8 +1,8 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
-import { handleErrors } from "@/errors/handleErrors";
+import { UnauthorizedError } from "@/errors";
 import { makeGetSonarQubeIssueAndQualityGateUseCase } from "@/useCases/integration/sonarqube/factories/makeGetSonarQubeIssueAndQualityGateUseCase";
 
 export async function getSonarQubeIssueAndQualityGateAction(
@@ -11,7 +11,7 @@ export async function getSonarQubeIssueAndQualityGateAction(
   const session = await auth();
 
   if (!session?.user) {
-    throw new AppError("Não autorizado.");
+    throw new UnauthorizedError("unauthorized");
   }
   try {
     const useCase = makeGetSonarQubeIssueAndQualityGateUseCase();
@@ -20,7 +20,7 @@ export async function getSonarQubeIssueAndQualityGateAction(
 
     return { success: true, data };
   } catch (error) {
-    const message = handleErrors(error);
+    const message = await resolveActionErrorMessage(error);
     return { success: false, message };
   }
 }

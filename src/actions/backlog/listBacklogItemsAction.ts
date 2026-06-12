@@ -1,8 +1,8 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
-import { handleErrors } from "@/errors/handleErrors";
+import { ValidationError } from "@/errors";
 import {
   ListBacklogItemsInput,
   listBacklogItemsSchema,
@@ -12,14 +12,14 @@ import { makeListBacklogItemsUseCase } from "@/useCases/backlog/factories/makeLi
 export async function listBacklogsItemsAction(data: ListBacklogItemsInput) {
   const session = await auth();
   if (!session?.user?.organizationId) {
-    throw new AppError("Usuário não atenticado");
+    throw new ValidationError("unauthenticated");
   }
 
   // 2. Validação Zod
   const parsed = listBacklogItemsSchema.safeParse(data);
 
   if (!parsed.success) {
-    throw new AppError("Parâmetros de busca inválidos");
+    throw new ValidationError("invalidSearchParams");
   }
 
   // projectId é crucial aqui para filtrar no contexto da organização
@@ -44,7 +44,7 @@ export async function listBacklogsItemsAction(data: ListBacklogItemsInput) {
       data: result,
     };
   } catch (error) {
-    const message = handleErrors(error);
-    throw new AppError(message);
+    const message = await resolveActionErrorMessage(error);
+    throw new ValidationError(message);
   }
 }

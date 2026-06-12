@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
 import { changeBacklogItemStatusSchema } from "@/schemas/backlog/changeBacklogItemStatusSchema"; // Ex: { id, newStatus }
 import { makeUpdateBacklogItemStatusUseCase } from "@/useCases/backlog/factories/makeUpdateBacklogItemStatusUseCase";
@@ -11,7 +12,7 @@ export async function changeBacklogStatusAction(data: unknown) {
   if (!session?.user?.organizationId) {
     return {
       success: false,
-      message: "Sessão expirada.",
+      message: await serverErrorMessage("sessionExpired"),
     };
   }
 
@@ -21,7 +22,7 @@ export async function changeBacklogStatusAction(data: unknown) {
   if (!parsed.success) {
     return {
       success: false,
-      message: parsed.error.issues[0].message || "Status inválido.",
+      message: parsed.error.issues[0].message || await serverErrorMessage("invalidStatus"),
     };
   }
 
@@ -42,16 +43,9 @@ export async function changeBacklogStatusAction(data: unknown) {
 
     return { success: true };
   } catch (error) {
-    if (error instanceof Error) {
-      return {
-        success: false,
-        message: error.message,
-      };
-    }
-
     return {
       success: false,
-      message: "Erro interno ao alterar status.",
+      message: await resolveActionErrorMessage(error),
     };
   }
 }

@@ -7,6 +7,7 @@ import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 import { ThumbsUp } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface IContractToNextStep {
   project: ProjectWithDetails;
@@ -16,18 +17,16 @@ interface IContractToNextStep {
 }
 
 export function ContractToNextStep({
-  project,
   onSuccess,
-  onCancel,
-  contract
+  contract,
 }: IContractToNextStep) {
+  const t = useTranslations("projects.transitions.contractToNextStep");
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleContract(action: "CANCELLED" | "SIGNED") {
     if (!contract) return null;
     setIsLoading(true);
     try {
-      // Aqui você pode passar o data.communicationChannel para sua action se necessário
       const result = await changeContractStatusAction(contract.id, action);
 
       if (result.error) {
@@ -35,10 +34,10 @@ export function ContractToNextStep({
         return;
       }
 
-      toast.success("Proposta atualizada com sucesso");
+      toast.success(t("toastSuccess"));
       onSuccess();
-    } catch (error) {
-      toast.error("Erro inesperado ao encaminhar a proposta ao cliente.");
+    } catch {
+      toast.error(t("toastUnexpectedError"));
     } finally {
       setIsLoading(false);
     }
@@ -46,13 +45,17 @@ export function ContractToNextStep({
 
   return (
     <div className="flex flex-col sm:flex-row items-center justify-end gap-2">
-      <Button variant="outline" onClick={() => handleContract("CANCELLED")}>
+      <Button
+        variant="outline"
+        onClick={() => handleContract("CANCELLED")}
+        disabled={isLoading}
+      >
         <ThumbsUp className="w-4 h-4" />
-        Informar rejeição do contrato
+        {t("reportRejection")}
       </Button>
-      <Button onClick={() => handleContract("SIGNED")}>
+      <Button onClick={() => handleContract("SIGNED")} disabled={isLoading}>
         <ThumbsUp className="w-4 h-4" />
-        Confirmar assinatura do cliente
+        {t("confirmSignature")}
       </Button>
     </div>
   );

@@ -4,12 +4,14 @@ import { useParams } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link, usePathname } from "@/i18n/navigation"; // Use o seu Link customizado
 import { ReactNode } from "react";
+import { useTranslations } from "next-intl";
 
 interface IClientTabs {
   children: ReactNode;
 }
 
 export function ClientTabs({ children }: IClientTabs) {
+  const t = useTranslations("clients");
   const params = useParams();
   const pathname = usePathname();
 
@@ -23,10 +25,14 @@ export function ClientTabs({ children }: IClientTabs) {
       name: "Dashboard",
       href: `/clients/${client}/dashboard`,
     },
-    { key: "projects", name: "Projetos", href: `/clients/${client}/projects` },
+    {
+      key: "projects",
+      name: t("tabs.projects"),
+      href: `/clients/${client}/projects`,
+    },
     {
       key: "contracts",
-      name: "Contratos",
+      name: t("tabs.contracts"),
       href: `/clients/${client}/contracts`,
     },
     {
@@ -34,10 +40,14 @@ export function ClientTabs({ children }: IClientTabs) {
       name: "Analytics",
       href: `/clients/${client}/analytics`,
     },
-    { key: "metrics", name: "Métricas", href: `/clients/${client}/metrics` },
+    {
+      key: "metrics",
+      name: t("tabs.metrics"),
+      href: `/clients/${client}/metrics`,
+    },
     {
       key: "reports",
-      name: "ZofIA Reports",
+      name: t("aiReports.title"),
       href: `/clients/${client}/ai-reports`,
     },
   ];

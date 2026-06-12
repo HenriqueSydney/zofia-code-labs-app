@@ -6,11 +6,13 @@ import { Button } from "@/components/ui/button";
 import { IntegrationType } from "@/generated/prisma/browser";
 import { Link } from "@/i18n/navigation";
 import { OrganizationIntegrationWithDetails } from "@/repositories/IOrganizationIntegrationRepository";
-import { ListChecks, Settings2 } from "lucide-react"; // Sugestão de ícones de fallback
+import { ListChecks, Settings2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
-import { useEffect, useState, useTransition } from "react";
+import { useState } from "react";
 import { GitHubIntegrationForm } from "./GitHubIntegrationForm";
+
 interface ICTAIntegration {
   client: string;
   projectSlug: string;
@@ -18,16 +20,12 @@ interface ICTAIntegration {
   integrationType: IntegrationType;
 }
 
-const INTEGRATION_HOOKS: Record<string, string> = {
-  sonarqube:
-    "Reduza o custo de manutenção e elimine bugs antes que cheguem em produção. Monitore sua dívida técnica em tempo real.",
-  "umami-analytics":
-    "Entenda o comportamento dos seus usuários sem comprometer a privacidade. Dados claros para decisões baseadas em evidências.",
-  github:
-    "Automatize seu fluxo de trabalho, monitore PRs e acelere sua velocidade de entrega com métricas DORA.",
-  defectdojo:
-    "Centralize suas vulnerabilidades e mantenha seu projeto seguro e em conformidade com os padrões de segurança.",
-  cora: "Automatize suas cobranças e simplifique a gestão financeira do seu projeto.",
+const HOOK_KEYS: Record<string, string> = {
+  sonarqube: "sonarqube",
+  "umami-analytics": "umamiAnalytics",
+  github: "github",
+  defectdojo: "defectdojo",
+  cora: "cora",
 };
 
 export function CTAIntegration({
@@ -36,24 +34,27 @@ export function CTAIntegration({
   integration,
   integrationType,
 }: ICTAIntegration) {
+  const t = useTranslations("projects.metrics.integrations");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const hookMessage =
-    INTEGRATION_HOOKS[integrationType.slug as keyof typeof INTEGRATION_HOOKS] ||
-    "Potencialize a gestão do seu projeto com dados em tempo real.";
+  const hookKey = HOOK_KEYS[integrationType.slug] ?? "default";
+  const hookMessage = t(`hooks.${hookKey}` as never);
 
   // ESTADO 1: A Organização ainda não conectou este provedor (Ex: Não colocou o Token Global do Sonar)
   if (!integration) {
     return (
       <EmptyState
         title={integrationType.name}
-        description={`${hookMessage} Conecte sua conta global da ${integrationType.name} para liberar este recurso.`}
+        description={t("cta.connectGlobalDescription", {
+          hook: hookMessage,
+          name: integrationType.name,
+        })}
         image={integrationType.logo || ""}
         action={
           <Link href={`/settings/integrations/config`}>
             <Button type="button" variant="outline">
               <Settings2 className="mr-2 h-4 w-4" />
-              Configurar Provedor Global
+              {t("cta.configureGlobalProvider")}
             </Button>
           </Link>
         }
@@ -70,7 +71,7 @@ export function CTAIntegration({
       client,
       integration.id,
       projectSlug,
-      data
+      data,
     );
 
     if (!result.success) {
@@ -84,8 +85,8 @@ export function CTAIntegration({
   return (
     <>
       <EmptyState
-        title={`${integrationType.name} disponível`}
-        description={`${hookMessage} Ative agora para começar a coletar métricas neste projeto.`}
+        title={t("cta.availableTitle", { name: integrationType.name })}
+        description={t("cta.activateProjectDescription", { hook: hookMessage })}
         image={integrationType.logo || ""}
         action={
           <Button
@@ -93,7 +94,7 @@ export function CTAIntegration({
             onClick={() => setIsModalOpen(true)}
           >
             <ListChecks className="mr-2 h-4 w-4" />
-            Vincular este Projeto
+            {t("cta.linkProject")}
           </Button>
         }
       />

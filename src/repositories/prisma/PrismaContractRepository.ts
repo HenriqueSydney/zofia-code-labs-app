@@ -80,14 +80,24 @@ export class PrismaContractRepository implements IContractRepository {
       where: { id },
       include: {
         contractTemplate: {
-          include: { template: { select: { title: true } } },
+          select: { id: true, content: true },
         },
         project: {
           select: {
             name: true,
             organizationId: true,
             slug: true,
-            client: { select: { tradeName: true, email: true, slug: true } },
+            client: {
+              select: {
+                id: true,
+                tradeName: true,
+                companyName: true,
+                email: true,
+                slug: true,
+                responsibleName: true,
+                responsibleEmail: true,
+              },
+            },
           }, // Otimização: trazer só o necessário
         },
         proposal: {
@@ -163,14 +173,23 @@ export class PrismaContractRepository implements IContractRepository {
       prisma.contract.findMany({
         include: {
           contractTemplate: {
-            include: { template: { select: { title: true } } },
+            select: { id: true, content: true },
           },
           project: {
             select: {
               name: true,
               organizationId: true,
               slug: true,
-              client: { select: { tradeName: true, email: true, slug: true } },
+              client: {
+                select: {
+                  id: true,
+                  tradeName: true,
+                  email: true,
+                  slug: true,
+                  responsibleName: true,
+                  responsibleEmail: true,
+                },
+              },
             },
           },
           proposal: {
@@ -214,11 +233,20 @@ export class PrismaContractRepository implements IContractRepository {
               name: true,
               organizationId: true,
               slug: true,
-              client: { select: { tradeName: true, email: true, slug: true } },
+              client: {
+                select: {
+                  id: true,
+                  tradeName: true,
+                  email: true,
+                  slug: true,
+                  responsibleName: true,
+                  responsibleEmail: true,
+                },
+              },
             }, // Otimização: trazer só o necessário
           },
           contractTemplate: {
-            include: { template: { select: { title: true } } },
+            select: { id: true, content: true },
           },
           createdUser: {
             select: { name: true },
@@ -257,11 +285,20 @@ export class PrismaContractRepository implements IContractRepository {
               name: true,
               organizationId: true,
               slug: true,
-              client: { select: { tradeName: true, email: true, slug: true } },
+              client: {
+                select: {
+                  id: true,
+                  tradeName: true,
+                  email: true,
+                  slug: true,
+                  responsibleName: true,
+                  responsibleEmail: true,
+                },
+              },
             },
           },
           contractTemplate: {
-            include: { template: { select: { title: true } } },
+            select: { id: true, content: true },
           },
           createdUser: {
             select: { name: true },

@@ -12,7 +12,8 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { QualityGateTable } from "./QualityGateTable";
 import { RecentIssuesTable } from "./RecentIssuesTable";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/twMerge";
+import { useTranslations } from "next-intl";
 
 interface ProjectLiveDetailsProps {
   issues: any[];
@@ -23,6 +24,7 @@ export function ProjectLiveDetails({
   issues,
   qualityGate,
 }: ProjectLiveDetailsProps) {
+  const t = useTranslations("projects.metrics.codeQuality.projectLive");
   const [showIssues, setShowIssues] = useState(true);
 
   return (
@@ -30,14 +32,10 @@ export function ProjectLiveDetails({
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-7">
         <div className="space-y-1">
           <CardTitle>
-            {showIssues
-              ? "Problemas Identificados"
-              : "Condições do Quality Gate"}
+            {showIssues ? t("issuesTitle") : t("gateTitle")}
           </CardTitle>
           <CardDescription>
-            {showIssues
-              ? "Lista das 5 últimas issues detectadas na análise dinâmica."
-              : "Critérios de aceitação definidos para o projeto."}
+            {showIssues ? t("issuesDescription") : t("gateDescription")}
           </CardDescription>
         </div>
 
@@ -46,10 +44,10 @@ export function ProjectLiveDetails({
             htmlFor="view-mode"
             className={cn(
               "text-xs text-muted-foreground",
-              !showIssues && "text-primary"
+              !showIssues && "text-primary",
             )}
           >
-            Gate
+            {t("gateLabel")}
           </Label>
           <Switch
             id="view-mode"
@@ -61,10 +59,10 @@ export function ProjectLiveDetails({
             htmlFor="view-mode"
             className={cn(
               "text-xs text-muted-foreground",
-              showIssues && "text-primary"
+              showIssues && "text-primary",
             )}
           >
-            Issues
+            {t("issuesLabel")}
           </Label>
         </div>
       </CardHeader>

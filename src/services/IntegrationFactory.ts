@@ -1,7 +1,8 @@
+import { ValidationError } from "@/errors";
 import { SonarQubeService } from "./codeQuality/SonarQubeService";
 import { ResendEmailService } from "./email/implementations/IResendService";
 import { GitHubService } from "./git/implementations/GitHubService";
-import { CoraService } from "./paymentGateway/implementations/CoraService";
+import { InterService } from "./paymentGateway/implementations/InterService";
 import { MercadoPagoService } from "./paymentGateway/implementations/MercadoPagoService";
 import { StripeService } from "./paymentGateway/implementations/StripeService";
 import { InfisicalService } from "./secretManagement/InfisicalService";
@@ -12,7 +13,7 @@ import { UmamiWebAnalyticsService } from "./webAnalytics/UmamiWebAnalyticsServic
 export enum IntegrationType {
   STRIPE = "stripe",
   MERCADO_PAGO = "mercado-pago",
-  CORA = "cora-payment",
+  INTER = "inter",
   SONARQUBE = "sonarqube",
   DEFECTDOJO = "defectdojo",
   UMAMI = "umami-analytics",
@@ -29,7 +30,7 @@ type GetIntegrationParams = {
 // Definição do tipo para a função que cria a instância
 type IntegrationCreator = (
   secrets: Record<string, string>,
-  options?: any
+  options?: any,
 ) => any;
 
 // Mapa de estratégias de criação
@@ -41,19 +42,25 @@ const INTEGRATION_STRATEGIES: Record<IntegrationType, IntegrationCreator> = {
 
   [IntegrationType.MERCADO_PAGO]: (secrets) =>
     new MercadoPagoService({
+      gateway: "mercadopago",
       accessToken: secrets["MP_ACCESS_TOKEN"],
+      publicKey: secrets["MP_PUBLIC_KEY"],
+    }),
+
+  [IntegrationType.INTER]: (secrets) =>
+    new InterService({
+      gateway: "inter",
+      clientId: secrets["INTER_CLIENT_ID"],
+      clientSecret: secrets["INTER_CLIENT_SECRET"],
+      certPem: secrets["INTER_CERT_PEM"],
+      keyPem: secrets["INTER_KEY_PEM"],
+      pixKey: secrets["INTER_PIX_KEY"],
     }),
 
   [IntegrationType.SONARQUBE]: (secrets) =>
     new SonarQubeService({
       baseUrl: secrets["SONARQUBE_URL"],
       token: secrets["SONARQUBE_TOKEN"],
-    }),
-
-  [IntegrationType.CORA]: (secrets) =>
-    new CoraService({
-      clientId: secrets["CORA_CLIENT_ID"],
-      clientSecret: secrets["CORA_CLIENT_SECRET"],
     }),
 
   [IntegrationType.DEFECTDOJO]: (secrets) =>
@@ -105,8 +112,8 @@ export class IntegrationFactory {
     });
 
     if (!secrets || Object.keys(secrets).length === 0) {
-      throw new Error(
-        `Nenhum segredo encontrado para a integração ${type} no path ${path}`
+      throw new ValidationError(
+        `Nenhum segredo encontrado para a integração ${type} no path ${path}`,
       );
     }
 
@@ -140,7 +147,7 @@ export class IntegrationFactory {
 
     const createInstance = INTEGRATION_STRATEGIES[type];
     if (!createInstance) {
-      throw new Error(`Estratégia não definida para: ${type}`);
+      throw new ValidationError(`Estratégia não definida para: ${type}`);
     }
 
     // Passamos finalSecrets e o contexto para o criador

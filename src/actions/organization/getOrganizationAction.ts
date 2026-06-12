@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
+import { UnauthorizedError, ValidationError } from "@/errors";
 import { makeGetOrganizationUseCase } from "@/useCases/organization/factories/makeGetOrganizationUseCase";
 import { OrganizationIdentifierType } from "@/useCases/organization/GetOrganizationUseCase"; // Importe o tipo se necessário
 
@@ -15,7 +15,7 @@ export async function getOrganizationAction(params: IParams) {
   const session = await auth();
 
   if (!session) {
-    throw new AppError("Usuário não logado.");
+    throw new UnauthorizedError("notLoggedIn");
   }
 
   // 1. Helper para resolver qual identificador usar (Prioridade: ID > Slug > CNPJ)
@@ -52,5 +52,5 @@ function resolveIdentifier(params: IParams): {
     return { identifier: rawCnpj, type: "cnpj" };
   }
 
-  throw new AppError("Nenhum identificador da organização informado.");
+  throw new ValidationError("Nenhum identificador da organização informado.");
 }

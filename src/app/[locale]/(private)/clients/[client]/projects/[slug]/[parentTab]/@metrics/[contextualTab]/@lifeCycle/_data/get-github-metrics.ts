@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { cache } from "react";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { GitHubMetrics } from "@/useCases/integration/gitub/GetGitHubMetricsUseCase";
@@ -22,10 +22,10 @@ export const getCachedGitHubMetrics = cache(async (slug: string) => {
   );
 
   if (error) {
-    throw new AppError("Não foi possível recuperar a métricas");
+    throw new ValidationError("Não foi possível recuperar a métricas");
   }
   if (!success?.data) {
-    throw new AppError("Não foi possível recuperar a métricas");
+    throw new ValidationError("Não foi possível recuperar a métricas");
   }
 
   return success.data;

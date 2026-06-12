@@ -8,5 +8,6 @@ export class UserDoesNotHavePermissionError extends AppError {
       `Acesso negado. Necessária permissão: ${permissionInfo.label} (${requiredPermission})`,
       403,
     );
+    this.name = "UserDoesNotHavePermissionError";
   }
 }

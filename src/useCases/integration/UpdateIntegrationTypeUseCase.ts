@@ -1,3 +1,4 @@
+import { IntegrationError } from "@/errors";
 import { IntegrationType } from "@/generated/prisma/client";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IIntegrationTypeRepository } from "@/repositories/IIntegrationTypeRepository";
@@ -8,6 +9,7 @@ interface UpdateRequest {
   name?: string;
   logo?: string | null;
   description?: string;
+  organizationId: string;
 }
 
 export class UpdateIntegrationTypeUseCase {
@@ -16,19 +18,20 @@ export class UpdateIntegrationTypeUseCase {
   async execute({
     id,
     userId,
+    organizationId,
     ...data
   }: UpdateRequest): Promise<IntegrationType> {
+    const exists = await this.repository.findById(id);
+    if (!exists) {
+      throw new IntegrationError("Tipo de integração não encontrado.");
+    }
+
     await checkUserPermissionForAsset(
       "integrationType",
       userId,
-      null,
-      "UPDATE"
+      { organizationId },
+      "UPDATE",
     );
-    const exists = await this.repository.findById(id);
-
-    if (!exists) {
-      throw new Error("Tipo de integração não encontrado.");
-    }
 
     return await this.repository.update(id, data);
   }

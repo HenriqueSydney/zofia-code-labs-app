@@ -1,7 +1,7 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { handleErrors } from "@/errors/handleErrors";
 import { revalidatePath } from "next/cache";
 import {
   UpdateExpenseFormData,
@@ -15,7 +15,7 @@ export async function updateExpenseAction(
   data: UpdateExpenseFormData
 ) {
   const session = await auth();
-  if (!session?.user?.id) return { success: false, message: "Não autorizado" };
+  if (!session?.user?.id) return { success: false, message: await serverErrorMessage("unauthorized") };
 
   // Usamos o schema parcial aqui
   const validation = updateExpenseSchema.safeParse(data);
@@ -33,8 +33,8 @@ export async function updateExpenseAction(
     });
 
     revalidatePath(`/projects/${projectSlug}/financial`);
-    return { success: true, message: "Despesa atualizada com sucesso!" };
+    return { success: true, message: await resolveSuccessMessage("expenseUpdated") };
   } catch (error) {
-    return { success: false, message: handleErrors(error) };
+    return { success: false, message: await resolveActionErrorMessage(error) };
   }
 }

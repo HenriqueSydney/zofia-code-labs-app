@@ -3,11 +3,9 @@ import { IntegrationType, Prisma } from "@/generated/prisma/client";
 import { IIntegrationTypeRepository } from "../IIntegrationTypeRepository";
 import { date } from "@/lib/dayjs";
 
-export class PrismaIntegrationTypeRepository
-  implements IIntegrationTypeRepository
-{
+export class PrismaIntegrationTypeRepository implements IIntegrationTypeRepository {
   async create(
-    data: Prisma.IntegrationTypeCreateInput
+    data: Prisma.IntegrationTypeCreateInput,
   ): Promise<IntegrationType> {
     return await prisma.integrationType.create({
       data,
@@ -57,7 +55,7 @@ export class PrismaIntegrationTypeRepository
 
   async update(
     id: string,
-    data: Prisma.IntegrationTypeUpdateInput
+    data: Prisma.IntegrationTypeUpdateInput,
   ): Promise<IntegrationType> {
     return await prisma.integrationType.update({
       where: { id },

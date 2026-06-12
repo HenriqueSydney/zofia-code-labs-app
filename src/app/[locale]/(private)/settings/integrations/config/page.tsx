@@ -6,9 +6,17 @@ import { QueryFilter } from "@/components/QueryFilter";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { listIntegrationTypesAction } from "@/actions/integrations/listIntegrationTypesAction";
 import { getParams } from "@/utils/getParams";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { listOrganizationIntegrationsAction } from "@/actions/integrations/listOrganizationIntegrationsAction";
 import { date } from "@/lib/dayjs";
+import { getTranslations } from "next-intl/server";
+import { auth } from "@/auth";
+import { hasPermission } from "@/utils/hasPermission";
+import { PERMISSIONS } from "@/constants/permissions";
+import {
+  IntegrationFieldSchema,
+  normalizeIntegrationFieldSchema,
+} from "@/schemas/integration/integrationType";
 
 export interface Integration {
   id: string;
@@ -21,7 +29,7 @@ export interface Integration {
   apiKey?: string;
   lastSync?: string;
   externalDocsUrl?: string | null;
-  fieldsSchema: Array<{ key: string; label: string; dependsOnByol: boolean }>;
+  fieldsSchema: IntegrationFieldSchema[];
   isHealth: boolean;
   intergrationData: any;
   orgIntegrationByol: boolean;
@@ -33,44 +41,44 @@ interface IParams {
 const Integrations = async ({ searchParams }: IParams) => {
   const { query } = await getParams(searchParams, ["query"]);
 
-  const [integrationTypeResponse, orgIntegrationResponse] = await Promise.all([
-    operationWrapper(
-      "action",
-      "listIntegrationTypesAction",
-      () => {
-        return listIntegrationTypesAction(query);
-      },
-      {
-        cache: "no-cache",
-      },
-    ),
-    operationWrapper(
-      "action",
-      "listIntegrationTypesAction",
-      () => {
-        return listOrganizationIntegrationsAction();
-      },
-      {
-        cache: "no-cache",
-      },
-    ),
-  ]);
+  const [integrationTypeResponse, orgIntegrationResponse, t, session] =
+    await Promise.all([
+      operationWrapper(
+        "action",
+        "listIntegrationTypesAction",
+        () => {
+          return listIntegrationTypesAction(query);
+        },
+        {
+          cache: "no-cache",
+        },
+      ),
+      operationWrapper(
+        "action",
+        "listIntegrationTypesAction",
+        () => {
+          return listOrganizationIntegrationsAction();
+        },
+        {
+          cache: "no-cache",
+        },
+      ),
+      getTranslations("settings.integrations.config"),
+      auth(),
+    ]);
 
   const [error, success] = integrationTypeResponse;
 
   if (error) {
-    throw new AppError(
-      error.message || "Erro ao listar os tipos de integração possíveis",
-    );
+    throw new ValidationError(error.message || t("errors.listTypesFailed"));
   }
 
   const [organizationIntegrationError, organizationIntegrationSuccess] =
     orgIntegrationResponse;
 
   if (organizationIntegrationError) {
-    throw new AppError(
-      organizationIntegrationError.message ||
-        "Erro ao identificar as integrações da organização",
+    throw new ValidationError(
+      organizationIntegrationError.message || t("errors.identifyFailed"),
     );
   }
 
@@ -90,7 +98,9 @@ const Integrations = async ({ searchParams }: IParams) => {
         ? date(intergrationConfig.lastHealthCheck).format("DD/MM/YYYY HH:mm")
         : undefined,
       externalDocsUrl: integration.externalDocsUrl,
-      fieldsSchema: (integration.fieldsSchema as any) ?? [],
+      fieldsSchema: ((integration.fieldsSchema as any[]) ?? []).map(
+        normalizeIntegrationFieldSchema,
+      ),
       isHealth: intergrationConfig?.healthStatus === "HEALTHY",
       intergrationData: intergrationConfig?.config,
       orgIntegrationId: intergrationConfig?.id,
@@ -98,18 +108,17 @@ const Integrations = async ({ searchParams }: IParams) => {
     };
   });
 
+  const canManage = hasPermission(session?.user, PERMISSIONS.SETTINGS.MANAGE_INTEGRATIONS);
+
   return (
     <div className="space-y-6">
-      <SectionHeading
-        title="Integrações"
-        description="Configure chaves de API e conexões externas"
-      />
+      <SectionHeading title={t("title")} description={t("description")} />
 
-      <QueryFilter placeholder="Buscar integração..." />
+      <QueryFilter placeholder={t("search")} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {integrations.map((integration) => (
-          <IntegrationCard key={integration.id} integration={integration} />
+          <IntegrationCard key={integration.id} integration={integration} canManage={canManage} />
         ))}
       </div>
 

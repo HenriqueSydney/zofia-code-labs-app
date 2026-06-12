@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -14,15 +15,16 @@ import { changeProjectStatusAction } from "@/actions/projects/changeProjectStatu
 import { FormMultiCheckbox } from "@/components/form/FormMultiCheckbox";
 import { FormTextarea } from "@/components/form/FormTextarea";
 
-// Componentes Refatorados
+const createToTechAnalysisSchema = (
+  observationMin: string,
+  selectService: string,
+) =>
+  z.object({
+    observation: z.string().min(10, observationMin),
+    serviceIds: z.array(z.string()).min(1, selectService),
+  });
 
-// Schema
-const toTechAnalysisSchema = z.object({
-  observation: z.string().min(10, "Informe uma observação técnica detalhada."),
-  serviceIds: z.array(z.string()).min(1, "Selecione pelo menos um serviço."),
-});
-
-type FormValues = z.infer<typeof toTechAnalysisSchema>;
+type FormValues = z.infer<ReturnType<typeof createToTechAnalysisSchema>>;
 
 export function ToTechAnalysis({
   project,
@@ -31,12 +33,17 @@ export function ToTechAnalysis({
   onCancel,
   contextData,
 }: TransitionStrategyProps) {
+  const t = useTranslations("projects.transitions.toTechAnalysis");
+  const tCommon = useTranslations("projects.transitions.common");
   const [isPending, startTransition] = useTransition();
 
-  // Tratamento dos dados de contexto (Lista de serviços disponíveis)
+  const toTechAnalysisSchema = createToTechAnalysisSchema(
+    t("validation.observationMin"),
+    tCommon("validation.selectAtLeastOneService"),
+  );
+
   const availableServices = (contextData as any[]) || [];
 
-  // IDs dos serviços que o projeto JÁ possui
   const initialServiceIds = project.projectServices.map(
     (service) => service.serviceTypeId,
   );
@@ -59,13 +66,13 @@ export function ToTechAnalysis({
         });
 
         if (result.success) {
-          toast.success("Projeto enviado para análise técnica!");
+          toast.success(t("toast.success"));
           onSuccess();
         } else {
           toast.error(result.error);
         }
       } catch (error) {
-        toast.error("Erro inesperado ao processar a solicitação.");
+        toast.error(tCommon("errors.unexpected"));
       }
     });
   };
@@ -74,19 +81,15 @@ export function ToTechAnalysis({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-1">
-          <h3 className="font-medium">Solicitação de Análise</h3>
-          <p className="text-sm text-muted-foreground">
-            Defina o escopo preliminar e envie as instruções para o time
-            técnico.
-          </p>
+          <h3 className="font-medium">{t("title")}</h3>
+          <p className="text-sm text-muted-foreground">{t("description")}</p>
         </div>
 
-        {/* Componente de Checkbox Múltiplo Refatorado */}
         <FormMultiCheckbox
           control={form.control}
           name="serviceIds"
-          label="Análise preliminar de serviços"
-          description="Indique quais serviços devem ser avaliados pelo time técnico."
+          label={t("fields.services.label")}
+          description={t("fields.services.description")}
           disabled={isPending}
           className="grid-cols-1 md:grid-cols-2"
           options={availableServices.map((s) => ({
@@ -95,17 +98,15 @@ export function ToTechAnalysis({
           }))}
         />
 
-        {/* Componente de Textarea Refatorado */}
         <FormTextarea
           control={form.control}
           name="observation"
-          label="Instruções para a Equipe Técnica"
-          placeholder="Descreva o que deve ser analisado, dúvidas específicas ou requisitos do cliente..."
+          label={t("fields.observation.label")}
+          placeholder={t("fields.observation.placeholder")}
           rows={5}
           disabled={isPending}
         />
 
-        {/* Footer com Ações */}
         <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-4 border-t">
           <Button
             type="button"
@@ -113,11 +114,11 @@ export function ToTechAnalysis({
             onClick={onCancel}
             disabled={isPending}
           >
-            Cancelar
+            {tCommon("cancel")}
           </Button>
           <Button type="submit" disabled={isPending}>
             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Encaminhar para Técnica
+            {t("submit")}
           </Button>
         </div>
       </form>

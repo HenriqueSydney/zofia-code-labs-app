@@ -9,14 +9,15 @@ import { SectionHeading } from "@/components/SectionHeading"; // Assumindo exist
 import { StatsCard } from "@/components/StatsCard"; // Assumindo existência
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { operationWrapper } from "@/lib/operationWrapper";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { Button } from "@/components/ui/button";
 import { OrganizationTabs } from "./_components/OrganizationTabs";
 import { GoBackButton } from "@/components/GoBackButton"; // Assumindo existência
 import { mask } from "@/utils/mask";
-import { getOrganizationAction } from "@/actions/organization/getOrganizationAction"; // Criar esta action
+import { getOrganizationAction } from "@/actions/organization/getOrganizationAction";
 import { date } from "@/lib/dayjs";
 import { Link } from "@/i18n/navigation";
+import { getTranslations } from "next-intl/server";
 
 interface IOrganizationLayout {
   children: React.ReactNode;
@@ -28,6 +29,7 @@ export default async function OrganizationLayout({
   params,
 }: IOrganizationLayout) {
   const { organization } = await params;
+  const t = await getTranslations("organization.overview");
 
   // Busca a organização (incluindo contagem de users, projects, roles)
   const [error, success] = await operationWrapper(
@@ -37,7 +39,7 @@ export default async function OrganizationLayout({
   );
 
   if (error) {
-    throw new AppError(error.message);
+    throw new ValidationError(error.message);
   }
 
   const org = success.organization;
@@ -106,7 +108,7 @@ export default async function OrganizationLayout({
             label="Membros Ativos"
             mainInformation={String(org.totalOfMembers || 0)}
             Icon={Users}
-            description="Usuários na plataforma"
+            description={t("usersOnPlatform")}
           />
           <StatsCard
             label="Perfis Customizados"

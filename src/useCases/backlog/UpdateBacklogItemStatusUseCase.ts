@@ -1,3 +1,4 @@
+import { ResourceNotFoundError } from "@/errors";
 import { BacklogStatus } from "@/generated/prisma/client";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IBacklogItemsRepository } from "@/repositories/IBacklogItemsRepository";
@@ -27,7 +28,7 @@ export class UpdateBacklogItemStatusUseCase {
     const itemExists = await this.backlogItemsRepository.findById(id);
 
     if (!itemExists) {
-      throw new Error("Item do backlog não encontrado.");
+      throw new ResourceNotFoundError("Item do backlog não encontrado.");
     }
 
     await checkUserPermissionForAsset("backlog", userId, itemExists, "MANAGE");
@@ -40,7 +41,7 @@ export class UpdateBacklogItemStatusUseCase {
     );
 
     if (!project) {
-      throw new Error("Projeto não encontrado.");
+      throw new ResourceNotFoundError("Projeto não encontrado.");
     }
 
     return {

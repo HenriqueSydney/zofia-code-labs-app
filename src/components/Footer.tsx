@@ -16,8 +16,9 @@ const Footer = () => {
         <Image
           src="/zofia-logo.webp"
           alt="Zofia Code Lab Logo"
-          width={100}
-          height={100}
+          width={677}
+          height={369}
+          className="h-16 w-auto"
         />
       </div>
 

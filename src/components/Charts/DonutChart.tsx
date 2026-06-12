@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ChartContainer } from "./ChartContainer";
 import { ChartEmptyState } from "./ChartEmptyState";
 
 interface DonutChartProps {
@@ -38,13 +39,12 @@ export function DonutChart({
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col justify-center">
-        <div
-          style={{ height: `${height}px` }}
-          className="w-full flex items-center justify-center"
-        >
+        <div className="flex w-full min-w-0 items-center justify-center">
           {hasData ? (
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart margin={{ top: 20, right: 40, bottom: 20, left: 40 }}>
+            <ChartContainer height={height}>
+              {({ width, height: chartHeight }) => (
+                <ResponsiveContainer width={width} height={chartHeight}>
+                  <PieChart margin={{ top: 20, right: 40, bottom: 20, left: 40 }}>
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "hsl(var(--accent))",
@@ -76,8 +76,10 @@ export function DonutChart({
                     />
                   ))}
                 </Pie>
-              </PieChart>
-            </ResponsiveContainer>
+                  </PieChart>
+                </ResponsiveContainer>
+              )}
+            </ChartContainer>
           ) : (
             <ChartEmptyState />
           )}

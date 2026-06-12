@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
 import { BacklogItemWithDetails } from "@/repositories/IBacklogItemsRepository";
 import { SortableBacklogItem } from "./SortableBacklogItem";
@@ -20,24 +21,28 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { reorderBacklogItemAction } from "@/actions/backlog/reorderBacklogItemAction";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
-import { useRouter } from "@/i18n/navigation";
 import { ServiceDefaultBacklogItemWithDetails } from "@/repositories/IServiceDefaultBacklogItemsRepository";
 import { reorderServiceDefaultBacklogItemAction } from "@/actions/services/backlogs/reorderServiceDefaultBacklogItemAction";
 
 interface IBacklogList {
   serviceTypeId: string;
   backlog: ServiceDefaultBacklogItemWithDetails[];
+  canEditBacklog: boolean;
 }
 
-export function BacklogList({ backlog, serviceTypeId }: IBacklogList) {
+export function BacklogList({
+  backlog,
+  serviceTypeId,
+  canEditBacklog,
+}: IBacklogList) {
+  const t = useTranslations("settings.services.backlog");
+  const tCommon = useTranslations("common.errors");
   const [items, setItems] = useState(backlog);
   const [saveIndicator, setSaveIndicator] = useState<
-    "Error ao salvar..." | "Salvando..." | "Salvo" | null
+    "error" | "saving" | "saved" | null
   >(null);
-  const router = useRouter();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -47,10 +52,15 @@ export function BacklogList({ backlog, serviceTypeId }: IBacklogList) {
   );
 
   const handleDragEnd = async (event: DragEndEvent) => {
+    if (!canEditBacklog) {
+      toast.error(t("noEditPermission"));
+      return;
+    }
+
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
-    setSaveIndicator("Salvando...");
+    setSaveIndicator("saving");
 
     // 1. Calcule a nova lista PRIMEIRO (fora do setItems)
     const oldIndex = items.findIndex((item) => item.id === active.id);
@@ -76,18 +86,18 @@ export function BacklogList({ backlog, serviceTypeId }: IBacklogList) {
       );
 
       if (!result.success) {
-        toast.error("Erro ao sincronizar ordem. Revertendo...");
-        setSaveIndicator("Error ao salvar...");
+        toast.error(tCommon("syncOrder"));
+        setSaveIndicator("error");
         setItems(backlog); // Reverte para a prop inicial vinda do servidor
         return;
       }
 
-      setSaveIndicator("Salvo");
+      setSaveIndicator("saved");
       // Limpa o indicador após 2 segundos
       setTimeout(() => setSaveIndicator(null), 2000);
     } catch (error) {
-      setSaveIndicator("Error ao salvar...");
-      toast.error("Erro de conexão.");
+      setSaveIndicator("error");
+      toast.error(tCommon("connection"));
       setItems(backlog); // Reverte em caso de erro de rede
     }
   };
@@ -96,10 +106,10 @@ export function BacklogList({ backlog, serviceTypeId }: IBacklogList) {
     <Card>
       <CardHeader className="border-b">
         <div className="flex items-center justify-between">
-          <CardTitle>Backlog Padrão do Serviço</CardTitle>
-          {saveIndicator && (
+          <CardTitle>{t("listTitleService")}</CardTitle>
+          {canEditBacklog && saveIndicator && saveIndicator !== "error" && (
             <Badge variant="outline" className="text-muted-foreground">
-              {saveIndicator}
+              {t(`saveStatus.${saveIndicator}`)}
             </Badge>
           )}
         </div>
@@ -120,6 +130,7 @@ export function BacklogList({ backlog, serviceTypeId }: IBacklogList) {
                   key={item.id}
                   item={item}
                   marginBotton={items.length > index + 1}
+                  canEditBacklog={canEditBacklog}
                 />
               ))}
             </div>

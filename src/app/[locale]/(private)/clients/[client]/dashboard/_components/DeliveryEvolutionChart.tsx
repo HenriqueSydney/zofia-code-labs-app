@@ -1,31 +1,32 @@
-import { LineChart, LineChartCategory } from "@/components/Charts/LineChart"; // Seu componente ajustado
+import { LineChart, LineChartCategory } from "@/components/Charts/LineChart";
 import { getClientDeliveryEvolution } from "../_data/get-cached-delivery-evolution";
-
-// Configuração das Linhas (Cores e Labels)
-const chartCategories: LineChartCategory[] = [
-  {
-    key: "planned", // Deve bater com a chave do objeto do banco
-    label: "Previsto",
-    color: "hsl(var(--chart-2))", // Geralmente Laranja no tema Shadcn
-    dashed: true, // UX: Linha tracejada indica estimativa/meta
-  },
-  {
-    key: "completed", // Deve bater com a chave do objeto do banco
-    label: "Entregue",
-    color: "hsl(var(--chart-1))", // Geralmente Roxo/Azul no tema Shadcn
-    dashed: false,
-  },
-];
+import { getTranslations } from "next-intl/server";
 
 export async function DeliveryEvolutionChart({ slug }: { slug: string }) {
+  const t = await getTranslations("clients.dashboard.charts");
   const data = await getClientDeliveryEvolution(slug);
+
+  const chartCategories: LineChartCategory[] = [
+    {
+      key: "planned",
+      label: t("planned"),
+      color: "hsl(var(--chart-2))",
+      dashed: true,
+    },
+    {
+      key: "completed",
+      label: t("completed"),
+      color: "hsl(var(--chart-1))",
+      dashed: false,
+    },
+  ];
 
   return (
     <LineChart
-      title="Evolução das Entregas"
-      description="O que foi planejado vs. o que de fato entregamos."
+      title={t("deliveryEvolution")}
+      description={t("deliveryEvolutionDescription")}
       data={data}
-      indexKey="month" // Eixo X: Meses ("Jan", "Fev"...)
+      indexKey="month"
       categories={chartCategories}
       height={300}
     />

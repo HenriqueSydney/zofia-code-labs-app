@@ -1,3 +1,4 @@
+import { ValidationError } from "@/errors";
 import { makeDocumentSignService } from "@/services/documenso/makeDocumentSignService";
 import { NextResponse } from "next/server";
 
@@ -11,9 +12,7 @@ export async function GET(
     const buffer = await documentSignService.getSignedDocument(id);
 
     if (typeof buffer === "string") {
-      throw new Error(
-        "O serviço retornou uma string em vez de um buffer binário."
-      );
+      throw new ValidationError("O serviço retornou uma string em vez de um buffer binário.");
     }
 
     const body = new Uint8Array(buffer as Buffer);

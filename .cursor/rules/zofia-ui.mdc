@@ -1,0 +1,42 @@
+---
+description: Páginas RSC, componentes, i18n e formulários
+globs: "**/app/**/*.tsx,**/components/**"
+alwaysApply: false
+---
+
+# UI e páginas
+
+## Server Components (padrão)
+
+1. `page.tsx` — async, **sem** `'use client'`
+2. Dados: `operationWrapper` + action ou `_data/get-cached-*` com `cache()`
+3. Métricas no servidor, não no cliente
+4. `Link` de `@/i18n/navigation` (prefixo `[locale]`)
+5. `getTranslations` (server) / `useTranslations` (client)
+
+## Layout de listagem (quando aplicável)
+
+1. `PageHeader` ou `SectionHeading`
+2. `StatsCard` — só se o módulo já usa ou foi solicitado
+3. `QueryFilter` / filtros do domínio
+4. `Table` + `parseData` ou cards (ex.: `/clients`)
+
+## Projetos
+
+Parallel routes: `@overview`, `@commercial`, `@backlog`, `@metrics`, `@dashboard`. Transições de status: `@overview/transitions/`.
+
+## Client Components
+
+- `'use client'` em `*Form.tsx`, `*Action.tsx`, DnD, toasts, hooks
+- Formulários: `src/components/form/` + schemas Zod
+- Mutations chamam Server Actions; feedback via toast/mensagem i18n
+
+## Design system
+
+- `@/components/` e `@/components/ui/` antes de criar componente novo
+- Tailwind utilitário; Lucide para ícones
+- Gates: `hasPermission(session?.user, PERMISSIONS.*)` em botões sensíveis
+
+## i18n
+
+Chaves novas em `messages/pt.json` e `messages/en.json` — nunca texto fixo de produto em português só no TSX sem chave.

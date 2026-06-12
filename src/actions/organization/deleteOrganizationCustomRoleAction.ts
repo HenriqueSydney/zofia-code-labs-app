@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
+import { UnauthorizedError } from "@/errors";
 import { makeDeleteOrganizationCustomRoleUseCase } from "@/useCases/organization/factories/makeDeleteOrganizationCustomRoleUseCase";
 import { revalidatePath } from "next/cache"; // Importante para atualizar a lista
 
@@ -9,7 +9,7 @@ export async function deleteCustomRoleAction(roleId: string) {
   const session = await auth();
 
   if (!session) {
-    throw new AppError("Usuário não logado.", 401);
+    throw new UnauthorizedError("notLoggedIn");
   }
 
   const useCase = makeDeleteOrganizationCustomRoleUseCase();

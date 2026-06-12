@@ -1,3 +1,4 @@
+import { ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { prisma } from "@/lib/prisma";
 import { IAuditLogRepository } from "@/repositories/IAuditLogRepository";
@@ -21,7 +22,7 @@ export class UpdateContractUseCase {
 
   async execute(id: string, data: UpdateContractInput) {
     const contract = await this.contractRepository.findById(id);
-    if (!contract) throw new Error("Contrato não localizado");
+    if (!contract) throw new ResourceNotFoundError("Contrato não localizado");
 
     await checkUserPermissionForAsset(
       "contract",

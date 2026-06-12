@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth"; // Seu setup de auth
 import { createServiceTypeSchema } from "@/schemas/services/createServiceTypeSchema";
 import { makeCreateServiceTypeUseCase } from "@/useCases/services/factories/makeCreateServiceUseCase";
@@ -11,7 +12,7 @@ export async function createServiceTypeAction(data: unknown) {
   if (!session?.user?.organizationId) {
     return {
       success: false,
-      message: "Sessão expirada ou usuário sem organização vinculada.",
+      message: await serverErrorMessage("sessionExpiredNoOrg"),
     };
   }
 
@@ -19,11 +20,10 @@ export async function createServiceTypeAction(data: unknown) {
   const parsed = createServiceTypeSchema.safeParse(data);
 
   if (!parsed.success) {
- 
     // Retorna o primeiro erro encontrado para simplificar
     return {
       success: false,
-      message: parsed.error.issues[0].message || "Dados inválidos.",
+      message: parsed.error.issues[0].message || await serverErrorMessage("invalidData"),
     };
   }
 
@@ -39,6 +39,7 @@ export async function createServiceTypeAction(data: unknown) {
     // 4. Execução
     await createServiceTypeUseCase.execute({
       organizationId: session.user.organizationId, // Pega da sessão, NUNCA do form
+      userId: session.user.id,
       name,
       description,
       basePrice: finalPrice,
@@ -59,7 +60,7 @@ export async function createServiceTypeAction(data: unknown) {
 
     return {
       success: false,
-      message: "Erro interno ao criar serviço.",
+      message: await serverErrorMessage("serviceCreateFailed"),
     };
   }
 }

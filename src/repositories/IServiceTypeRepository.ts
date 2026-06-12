@@ -20,7 +20,7 @@ export interface IServiceTypeRepository {
     id: string,
     data: Partial<CreateServiceDTO>,
   ): Promise<PrismaToPlain<ServiceType>>;
-  list(query?: string | null): Promise<FetchServiceTypeWithCategory[]>;
+  list(organizationId: string, query?: string | null): Promise<FetchServiceTypeWithCategory[]>;
   findByName(
     name: string,
     organizationId: string,

@@ -1,10 +1,5 @@
 // dtos/proposal.dto.ts
-import {
-  DocumentTemplate,
-  Prisma,
-  Proposal,
-  ProposalItem,
-} from "@/generated/prisma/client";
+import { Prisma, Proposal, ProposalItem } from "@/generated/prisma/client";
 import {
   DiscountType,
   ProposalSource,
@@ -29,6 +24,8 @@ export interface CreateProposalDTO {
   validUntil?: Date;
   totalValue: number;
   items: CreateProposalItemDTO[];
+  paymentGatewayId?: string;
+  paymentMethod?: string;
 }
 
 export interface UpdateProposalDTO
@@ -42,9 +39,10 @@ export type ProposalWithDetails = Proposal & {
   items: (ProposalItem & { serviceType: { name: string } })[];
   proposalTemplate: {
     id: string;
-    template: { title: string | null } | null;
+    content: unknown;
   } | null;
   project: {
+    name: string;
     slug: string;
     organizationId: string;
     client: { tradeName: string; email: string; slug: string };

@@ -1,7 +1,7 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { handleErrors } from "@/errors/handleErrors";
 import { makeUpdateOrganizationIntegrationUseCase } from "@/useCases/integration/factories/makeUpdateOrganizationTypeUseCase";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -15,10 +15,10 @@ const updateSchema = z.object({
 
 export async function updateOrganizationIntegrationAction(data: unknown) {
   const session = await auth();
-  if (!session?.user?.id) return { success: false, message: "Não autorizado." };
+  if (!session?.user?.id) return { success: false, message: await serverErrorMessage("unauthorized") };
 
   const parsed = updateSchema.safeParse(data);
-  if (!parsed.success) return { success: false, message: "Dados inválidos." };
+  if (!parsed.success) return { success: false, message: await serverErrorMessage("invalidData") };
 
   try {
     const useCase = makeUpdateOrganizationIntegrationUseCase();
@@ -30,7 +30,7 @@ export async function updateOrganizationIntegrationAction(data: unknown) {
     revalidatePath("/settings/integration/config");
     return { success: true };
   } catch (error) {
-    const message = handleErrors(error);
+    const message = await resolveActionErrorMessage(error);
     return { success: false, message };
   }
 }

@@ -1,8 +1,11 @@
 import { Badge } from "@/components/ui/badge";
 import { BacklogPriority } from "@/generated/prisma/enums";
-import { backlogPriorityMapper } from "./BacklogMappers";
+import { getBacklogPriorityLabel } from "./BacklogMappers";
 
-export const getBacklogPriorityBadge = (priority: BacklogPriority) => {
+export const getBacklogPriorityBadge = (
+  priority: BacklogPriority,
+  t: (key: string) => string,
+) => {
   const variants: Record<
     BacklogPriority,
     "destructive" | "default" | "secondary"
@@ -15,7 +18,7 @@ export const getBacklogPriorityBadge = (priority: BacklogPriority) => {
 
   return (
     <Badge variant={variants[priority]}>
-      {backlogPriorityMapper[priority]}
+      {getBacklogPriorityLabel(priority, t)}
     </Badge>
   );
 };

@@ -5,7 +5,7 @@ import { operationWrapper } from "@/lib/operationWrapper";
 import { FetchServiceTypeWithCategory } from "@/repositories/IServiceTypeRepository";
 import { fetchServiceTypeAction } from "@/actions/services/fetchServiceTypeAction";
 import { getParams } from "@/utils/getParams";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { getProposalAction } from "@/actions/proposal/getProposal";
 import { ProposalWithDetails } from "@/repositories/IProposalRepository";
 import { getProjectBySlugAction } from "@/actions/projects/getProjectBySlug";
@@ -18,12 +18,14 @@ import { SprintProgressBarChart } from "./_components/SprintProgressBarChart";
 import { BacklogBurndownLineChart } from "./_components/BacklogBurndownLineChart";
 import { LineChartSkeleton } from "@/components/skeletons/LineChartSkeleton";
 import { FinancialHistoryChart } from "./_components/FinancialHistoryLineChart";
+import { getTranslations } from "next-intl/server";
 
 interface IOverviewTab {
   params: Promise<{ slug: string }>;
 }
 
 export default async function OverviewTab({ params }: IOverviewTab) {
+  const tErrors = await getTranslations("projects.errors");
   const { slug } = await getParams<{
     slug: string;
   }>(params, ["slug"]);
@@ -58,7 +60,7 @@ export default async function OverviewTab({ params }: IOverviewTab) {
   const [getProjectError, getProjectSuccess] = projectResponse;
 
   if (getProjectError) {
-    throw new AppError("Erro ao tentar localizar os projetos da Organização");
+    throw new ValidationError(tErrors("organizationProjects"));
   }
 
   const [fetchServicesError, fetchServicesSuccess] = serviceResponse;

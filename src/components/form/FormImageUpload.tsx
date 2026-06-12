@@ -13,7 +13,8 @@ import {
   FormMessage,
   FormDescription,
 } from "@/components/ui/form";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/twMerge";
+import { useTranslations } from "next-intl";
 
 interface FormImageUploadProps {
   control: Control<any>;
@@ -32,6 +33,8 @@ export function FormImageUpload({
   disabled,
   className,
 }: FormImageUploadProps) {
+  const t = useTranslations("components.form.imageUpload");
+
   return (
     <FormField
       control={control}
@@ -70,15 +73,15 @@ export function FormImageUpload({
             const error = fileRejections[0]?.errors[0];
             if (error) {
               if (error.code === "file-too-large") {
-                toast.error("O arquivo é muito grande. Máximo de 5MB.");
+                toast.error(t("errors.tooLarge"));
               } else if (error.code === "file-invalid-type") {
-                toast.error("Tipo de arquivo inválido. Use PNG, JPG ou WebP.");
+                toast.error(t("errors.invalidType"));
               } else {
                 toast.error(error.message);
               }
             }
           },
-          [],
+          [t],
         );
 
         const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -112,7 +115,7 @@ export function FormImageUpload({
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={preview}
-                      alt="Preview"
+                      alt={t("previewAlt")}
                       className="h-full w-full object-contain"
                     />
                   </div>
@@ -157,18 +160,13 @@ export function FormImageUpload({
                   <div className="space-y-1">
                     <p className="text-sm font-medium text-foreground">
                       {isDragActive ? (
-                        <span className="text-primary">Solte aqui</span>
+                        <span className="text-primary">{t("dropActive")}</span>
                       ) : (
-                        <>
-                          <span className="text-primary hover:underline">
-                            Selecione
-                          </span>{" "}
-                          ou arraste
-                        </>
+                        t("selectOrDrag")
                       )}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      PNG, JPG, WebP (max 5MB)
+                      {t("formats")}
                     </p>
                   </div>
                 </div>

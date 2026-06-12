@@ -1,8 +1,8 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
-import { handleErrors } from "@/errors/handleErrors";
+import { ValidationError } from "@/errors";
 import { ContractStatus } from "@/generated/prisma/enums";
 import { makeChangeContractStatus } from "@/useCases/contract/factories/makeChangeContractStatusUseCase";
 import { revalidatePath } from "next/cache";
@@ -10,18 +10,18 @@ import { revalidatePath } from "next/cache";
 export async function changeContractStatusAction(
   contractId: string,
   newStatus: ContractStatus,
-  communicationChannel?: "whatsapp" | "email",
+  communicationChannel?: "whatsapp" | "email" | "none",
 ) {
   const session = await auth();
-  if (!session?.user) return { error: "Não autorizado" };
+  if (!session?.user) return { error: await serverErrorMessage("unauthorized") };
 
   const useCase = makeChangeContractStatus();
 
   if (
     communicationChannel &&
-    !["whatsapp", "email"].includes(communicationChannel)
+    !["whatsapp", "email", "none"].includes(communicationChannel)
   ) {
-    throw new AppError("Canal de comunicação inválido");
+    throw new ValidationError("invalidCommunicationChannel");
   }
 
   try {
@@ -38,10 +38,10 @@ export async function changeContractStatusAction(
     revalidatePath(
       `/clients/${updatedContract.project.client.slug}/projects/${updatedContract.project.slug}/commercial/contracts`,
     );
-    return { result: true, message: "Proposta encaminhada para próxima fase" };
+    return { result: true, message: await resolveSuccessMessage("proposalAdvanced") };
   } catch (error) {
     return {
-      error: handleErrors(error),
+      error: await resolveActionErrorMessage(error),
     };
   }
 }

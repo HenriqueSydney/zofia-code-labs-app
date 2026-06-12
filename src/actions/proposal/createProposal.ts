@@ -1,7 +1,11 @@
 "use server";
 
+import {
+  resolveActionErrorMessage,
+  resolveSuccessMessage,
+  serverErrorMessage,
+} from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { handleErrors } from "@/errors/handleErrors";
 import { Proposal } from "@/generated/prisma/client";
 import { date } from "@/lib/dayjs";
 import { ProposalCreateReturnWithDetails } from "@/repositories/IProposalRepository";
@@ -12,7 +16,8 @@ import { redirect, RedirectType } from "next/navigation";
 
 export async function createProposalAction(formData: FormData) {
   const session = await auth();
-  if (!session?.user) return { error: "Não autorizado" };
+  if (!session?.user)
+    return { error: await serverErrorMessage("unauthorized") };
 
   let itemsParsed = [];
   const itemsRaw = formData.get("items");
@@ -21,7 +26,7 @@ export async function createProposalAction(formData: FormData) {
       itemsParsed = JSON.parse(itemsRaw);
     } catch (e) {
       console.error("Erro ao fazer parse dos itens:", e);
-      return { error: "Dados dos itens inválidos." };
+      return { error: await serverErrorMessage("invalidData") };
     }
   }
 
@@ -30,19 +35,20 @@ export async function createProposalAction(formData: FormData) {
     fileRaw instanceof File && fileRaw.size > 0 ? fileRaw : undefined;
 
   const rawData = {
-    documentTemplateId: formData.get("documentTemplateId"),
     projectId: formData.get("projectId"),
     document: file,
     items: itemsParsed,
     downPaymentPercentage: Number(formData.get("downPaymentPercentage")),
     validUntil: date(String(formData.get("validUntil"))).toDate(),
+    paymentGatewayId: formData.get("paymentGatewayId"),
+    paymentMethod: formData.get("paymentMethod"),
   };
 
   // 2. Validação Zod
   const validation = createProposalSchema.safeParse(rawData);
   if (!validation.success) {
     console.error("Erro de validação:", validation.error.flatten());
-    return { error: "Dados inválidos. Verifique os campos obrigatórios." };
+    return { error: await serverErrorMessage("checkFormFields") };
   }
 
   const useCase = makeCreateProposalUseCase();
@@ -50,18 +56,19 @@ export async function createProposalAction(formData: FormData) {
   try {
     const proposal = await useCase.execute({
       projectId: validation.data.projectId,
-      documentTemplateId: validation.data.documentTemplateId,
       createdBy: session.user.id,
       downPaymentPercentage: validation.data.downPaymentPercentage,
       organizationId: session.user.organizationId,
       validUntil: validation.data.validUntil,
       items: validation.data.items,
       file,
+      paymentGatewayId: validation.data.paymentGatewayId,
+      paymentMethod: validation.data.paymentMethod ?? "pix",
     });
 
     success = proposal;
   } catch (error) {
-    return { error: handleErrors(error) };
+    return { error: await resolveActionErrorMessage(error) };
   }
 
   if (success) {

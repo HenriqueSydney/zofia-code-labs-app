@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Card, CardContent } from "@/components/ui/card";
 import { StatusBadge } from "@/components/StatusBadge";
 import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
@@ -19,6 +20,8 @@ interface IProjectList {
 }
 
 export function ProjectList({ projects, totalOfRegister }: IProjectList) {
+  const t = useTranslations("projects.list");
+  const tCommon = useTranslations("common.loadingMore");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -41,7 +44,7 @@ export function ProjectList({ projects, totalOfRegister }: IProjectList) {
       // Se for uma página nova, anexa os itens evitando duplicatas
       setDisplayedProjects((prev) => {
         const newItems = projects.filter(
-          (p) => !prev.some((existing) => existing.id === p.id)
+          (p) => !prev.some((existing) => existing.id === p.id),
         );
         return [...prev, ...newItems];
       });
@@ -67,7 +70,7 @@ export function ProjectList({ projects, totalOfRegister }: IProjectList) {
           loadMore();
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.5 },
     );
 
     if (observerTarget.current) {
@@ -82,9 +85,9 @@ export function ProjectList({ projects, totalOfRegister }: IProjectList) {
       <div className="grid grid-cols-1 gap-4">
         {totalOfRegister === 0 && (
           <EmptyState
-            title="Nenhum projeto localizado"
+            title={t("emptyTitle")}
             icon={FolderKanban}
-            description="Nenhum projeto cadastrado até o momento. Cadastre o primeiro projeto e começe a ter controle sobre suas entregas"
+            description={t("emptyDescription")}
           />
         )}
         {displayedProjects.map((project) => (
@@ -118,7 +121,7 @@ export function ProjectList({ projects, totalOfRegister }: IProjectList) {
                         {project.startDate && "Iniciado: "}
                         {!project.startDate && "Criado: "}
                         {date(project.startDate ?? project.createdAt).format(
-                          "DD/MM/YYYY"
+                          "DD/MM/YYYY",
                         )}
                       </span>
                     </p>
@@ -135,9 +138,7 @@ export function ProjectList({ projects, totalOfRegister }: IProjectList) {
         <div ref={observerTarget} className="flex justify-center py-6">
           <div className="flex items-center gap-2 text-primary animate-pulse">
             <Loader2 className="h-5 w-5 animate-spin" />
-            <span className="text-sm font-medium">
-              Carregando mais projetos...
-            </span>
+            <span className="text-sm font-medium">{tCommon("projects")}</span>
           </div>
         </div>
       )}
@@ -147,9 +148,8 @@ export function ProjectList({ projects, totalOfRegister }: IProjectList) {
           {totalOfRegister === 1 && <>Todos os projetos foram carregados.</>}
           {totalOfRegister > 1 && (
             <>
-              Todos os
-              <strong>{totalOfRegister}</strong>
-              projetos foram carregados.
+              Todos os <strong>{totalOfRegister}</strong> projetos foram
+              carregados.
             </>
           )}
         </div>

@@ -10,7 +10,7 @@ export interface IServiceCategoryRepository {
     id: string,
     data: Partial<Prisma.ServiceCategoryUncheckedCreateInput>
   ): Promise<ServiceCategory>;
-  list(query?: string | null): Promise<ServiceCategory[]>;
+  list(organizationId: string, query?: string | null): Promise<ServiceCategory[]>;
   findByName(
     name: string,
     organizationId: string

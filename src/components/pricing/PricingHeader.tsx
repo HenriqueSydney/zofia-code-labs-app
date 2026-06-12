@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 interface PricingHeaderProps {
   badge?: string;
@@ -12,12 +13,13 @@ interface PricingHeaderProps {
   discountText?: string; // Ex: "-20%" ou "2 meses grátis"
 }
 
-export function PricingHeader({ 
-  badge = "Preços transparentes", 
-  title, 
-  description, 
-  discountText = "-20%" 
+export function PricingHeader({
+  badge,
+  title,
+  description,
+  discountText,
 }: PricingHeaderProps) {
+  const t = useTranslations("components.pricing");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -34,7 +36,7 @@ export function PricingHeader({
   return (
     <div className="text-center max-w-4xl mx-auto mb-16">
       <Badge variant="secondary" className="mb-4 px-4 py-1">
-        {badge}
+        {badge ?? t("header.defaultBadge")}
       </Badge>
       
       <h1 className="text-4xl md:text-6xl font-extrabold mb-6 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent tracking-tight">
@@ -53,7 +55,7 @@ export function PricingHeader({
             !isYearly ? "text-foreground" : "text-muted-foreground"
           }`}
         >
-          Mensal
+          {t("billing.monthly")}
         </Label>
         
         <Switch
@@ -70,13 +72,13 @@ export function PricingHeader({
               isYearly ? "text-foreground" : "text-muted-foreground"
             }`}
           >
-            Anual
+            {t("billing.yearly")}
           </Label>
           <Badge
             variant="outline"
             className="text-[10px] uppercase font-bold bg-accent/10 text-accent border-accent/20 animate-pulse"
           >
-            {discountText}
+            {discountText ?? t("billing.defaultDiscount")}
           </Badge>
         </div>
       </div>

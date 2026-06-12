@@ -61,7 +61,13 @@ export class PrismaProjectsRepository implements IProjectsRepository {
       where: { id },
       include: {
         client: {
-          select: { id: true, companyName: true, slug: true, tradeName: true },
+          select: {
+            id: true,
+            companyName: true,
+            slug: true,
+            tradeName: true,
+            email: true,
+          },
         },
         projectDocuments: true,
         proposal: {
@@ -76,7 +82,10 @@ export class PrismaProjectsRepository implements IProjectsRepository {
           },
         },
         contracts: {
-          where: { isCurrent: true },
+          where: {
+            isCurrent: true,
+            status: { notIn: ["CANCELLED", "REJECTED"] },
+          },
           take: 1,
           include: {
             contractTemplate: true,
@@ -106,7 +115,13 @@ export class PrismaProjectsRepository implements IProjectsRepository {
       where: { slug },
       include: {
         client: {
-          select: { id: true, companyName: true, slug: true, tradeName: true },
+          select: {
+            id: true,
+            companyName: true,
+            slug: true,
+            tradeName: true,
+            email: true,
+          },
         },
         projectDocuments: true,
         proposal: {
@@ -121,7 +136,10 @@ export class PrismaProjectsRepository implements IProjectsRepository {
           },
         },
         contracts: {
-          where: { isCurrent: true },
+          where: {
+            isCurrent: true,
+            status: { notIn: ["CANCELLED", "REJECTED"] },
+          },
           take: 1,
           include: {
             contractTemplate: true,
@@ -195,6 +213,7 @@ export class PrismaProjectsRepository implements IProjectsRepository {
               companyName: true,
               slug: true,
               tradeName: true,
+              email: true,
             },
           },
           projectDocuments: true,
@@ -238,7 +257,13 @@ export class PrismaProjectsRepository implements IProjectsRepository {
       },
       include: {
         client: {
-          select: { id: true, companyName: true, slug: true, tradeName: true },
+          select: {
+            id: true,
+            companyName: true,
+            slug: true,
+            tradeName: true,
+            email: true,
+          },
         },
         projectDocuments: true,
       },

@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { UnauthorizedError, ResourceNotFoundError } from "@/errors";
 import {
   IUserRepository,
   UserWithAllInfo,
@@ -26,7 +26,7 @@ export class GetUserAllInfoUseCase {
   }: IGetUserAllInfoRequest): Promise<IGetUserAllInfoResponse> {
     // 1. Verificação de Segurança: Apenas o próprio usuário pode ver seus dados sensíveis (logs, etc)
     if (targetUserId !== authenticatedUserId) {
-      throw new AppError("Usuário não autorizado");
+      throw new UnauthorizedError("Usuário não autorizado");
     }
 
     // 2. Busca os dados completos no banco
@@ -34,7 +34,7 @@ export class GetUserAllInfoUseCase {
       await this.usersRepository.findUserByIdAndReturnAllInfo(targetUserId);
 
     if (!user) {
-      throw new AppError("Usuário não localizado");
+      throw new ResourceNotFoundError("Usuário não localizado");
     }
 
     // 3. Transformação da Imagem: Gera o Presigned URL se existir uma imagem (key)

@@ -3,6 +3,7 @@ import { makeAuditLogRepository } from "@/repositories/factories/makeAuditLogRep
 import { makeContractRepository } from "@/repositories/factories/makeContractRepository";
 import { makeDocumentSignService } from "@/services/documenso/makeDocumentSignService";
 import { makeS3StorageService } from "@/services/s3Client/makeS3StorageService";
+import { makeProvisionClientPortalOwnerUseCase } from "@/useCases/clients/factories/makeProvisionClientPortalOwnerUseCase";
 import { makeChangeProjectStatusUseCase } from "@/useCases/projects/factories/makeChangeProjectStatusUseCase";
 
 let changeContractStatusUseCase: ChangeContractStatusUseCase;
@@ -14,12 +15,15 @@ export function makeChangeContractStatus() {
     const auditLogRepository = makeAuditLogRepository();
     const storageService = makeS3StorageService();
     const documentSignService = makeDocumentSignService();
+    const provisionClientPortalOwnerUseCase =
+      makeProvisionClientPortalOwnerUseCase();
     changeContractStatusUseCase = new ChangeContractStatusUseCase(
       contractRepository,
       changeProjectStatusUseCase,
       auditLogRepository,
       storageService,
-      documentSignService
+      documentSignService,
+      provisionClientPortalOwnerUseCase,
     );
   }
 

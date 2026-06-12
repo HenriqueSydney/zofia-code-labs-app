@@ -1,16 +1,16 @@
 import { ContractSigningContainer } from "@/components/ContractSigningContainer";
 import { SectionHeading } from "@/components/SectionHeading";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Link } from "@/i18n/navigation";
-import { AlertCircle, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 interface ISignature {
   params: Promise<{ contractId: string; slug: string }>;
 }
 
 export default async function Signature({ params }: ISignature) {
+  const t = await getTranslations("contracts.signing");
   const { contractId, slug } = await params;
 
   return (
@@ -25,11 +25,11 @@ export default async function Signature({ params }: ISignature) {
           </Button>
         </Link>
         <SectionHeading
-          title="Assinatura de Contrato"
-          description="Verifique o documento e assine o contrato para liberação do projeto para pagamento"
+          title={t("title")}
+          description={t("projectDescription")}
         />
       </div>
-      <div className="flex flex-col items-center justify-center space-y-6">      
+      <div className="flex flex-col items-center justify-center space-y-6">
         <ContractSigningContainer contractId={contractId} />
       </div>
     </div>

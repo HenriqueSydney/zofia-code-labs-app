@@ -1,3 +1,4 @@
+import { ValidationError, ExternalServiceError } from "@/errors";
 import {
   S3Client,
   PutObjectCommand,
@@ -51,7 +52,7 @@ export class R2StorageService implements IS3StorageService {
       const response = await this.client.send(command);
 
       if (!response.Body) {
-        throw new Error("Corpo do arquivo vazio.");
+        throw new ValidationError("Corpo do arquivo vazio.");
       }
 
       // Converte o stream de resposta em um array de bytes e depois em Buffer
@@ -59,7 +60,7 @@ export class R2StorageService implements IS3StorageService {
       return Buffer.from(bytes);
     } catch (error) {
       console.error(`Erro ao baixar buffer (Key: ${key}):`, error);
-      throw new Error("Não foi possível recuperar o conteúdo do arquivo.");
+      throw new ExternalServiceError("Storage", "Não foi possível recuperar o conteúdo do arquivo.");
     }
   }
 
@@ -81,7 +82,7 @@ export class R2StorageService implements IS3StorageService {
       return { key };
     } catch (error) {
       console.error(`Erro no upload (Key: ${key}):`, error);
-      throw new Error("Falha ao carregar arquivo para o storage.");
+      throw new ExternalServiceError("Storage", "Falha ao carregar arquivo para o storage.");
     }
   }
 
@@ -95,7 +96,7 @@ export class R2StorageService implements IS3StorageService {
       return await getSignedUrl(this.client, command, { expiresIn });
     } catch (error) {
       console.error(`Erro ao gerar URL assinada (Key: ${key}):`, error);
-      throw new Error("Falha ao gerar link temporário.");
+      throw new ExternalServiceError("Serviço externo", "Falha ao gerar link temporário.");
     }
   }
 
@@ -109,7 +110,7 @@ export class R2StorageService implements IS3StorageService {
       await this.client.send(command);
     } catch (error) {
       console.error(`Erro ao deletar (Key: ${key}):`, error);
-      throw new Error("Falha ao excluir arquivo do storage.");
+      throw new ExternalServiceError("Storage", "Falha ao excluir arquivo do storage.");
     }
   }
 
@@ -124,7 +125,7 @@ export class R2StorageService implements IS3StorageService {
       return (response.Contents || []) as R2Object[];
     } catch (error) {
       console.error(`Erro ao listar objetos (Prefix: ${prefix}):`, error);
-      throw new Error("Falha ao listar arquivos do storage.");
+      throw new ExternalServiceError("Storage", "Falha ao listar arquivos do storage.");
     }
   }
 }

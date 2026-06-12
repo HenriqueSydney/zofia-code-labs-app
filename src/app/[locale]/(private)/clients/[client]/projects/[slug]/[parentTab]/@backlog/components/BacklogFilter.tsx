@@ -10,20 +10,24 @@ import { Card, CardContent } from "@/components/ui/card";
 import { QueryFilter } from "@/components/QueryFilter";
 import { usePathname } from "@/i18n/navigation";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { BacklogCreateForm } from "./BacklogCreateForm";
+import { cn } from "@/utils/twMerge";
 
 interface IBacklogFilter {
   projectId: string;
+  canManageBacklog: boolean;
 }
 
-export function BacklogFilter({ projectId }: IBacklogFilter) {
+export function BacklogFilter({ projectId, canManageBacklog }: IBacklogFilter) {
+  const t = useTranslations("projects.backlog");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const handleFilterStatus = (statusValue: string) => {
     const params = new URLSearchParams(searchParams);
-    if (statusValue !== "all") {
+    if (statusValue === "ALL") {
       params.delete("status");
     } else {
       params.set("status", statusValue);
@@ -34,7 +38,7 @@ export function BacklogFilter({ projectId }: IBacklogFilter) {
 
   const handleFilterPriority = (priorityValue: string) => {
     const params = new URLSearchParams(searchParams);
-    if (priorityValue !== "all") {
+    if (priorityValue === "ALL") {
       params.delete("priority");
     } else {
       params.set("priority", priorityValue);
@@ -44,33 +48,38 @@ export function BacklogFilter({ projectId }: IBacklogFilter) {
   };
 
   const statusesOptions = [
-    { label: "ALL", value: "Todos os Status" },
-    { label: "TODO", value: "A Fazer" },
-    { label: "IN_PROGRESS", value: "Em Andamento" },
-    { label: "REVIEW", value: "Revisão" },
-    { label: "DONE", value: "Concluído" },
+    { value: "ALL", label: t("filter.status.all") },
+    { value: "TODO", label: t("filter.status.todo") },
+    { value: "IN_PROGRESS", label: t("filter.status.inProgress") },
+    { value: "REVIEW", label: t("filter.status.review") },
+    { value: "DONE", label: t("filter.status.done") },
   ];
 
   const priorityOptions = [
-    { label: "ALL", value: "Todos as prioriades" },
-    { label: "HIGH", value: "Alta" },
-    { label: "MEDIUM", value: "Média" },
-    { label: "LOW", value: "Baixa" },
+    { value: "ALL", label: t("filter.priority.all") },
+    { value: "HIGH", label: t("filter.priority.high") },
+    { value: "MEDIUM", label: t("filter.priority.medium") },
+    { value: "LOW", label: t("filter.priority.low") },
   ];
 
   return (
     <Card>
       <CardContent className="p-3 flex items-center justify-center">
-        <div className="w-full items-center justify-center grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <div
+          className={cn(
+            "w-full items-center justify-center grid grid-cols-1 lg:grid-cols-5 gap-6",
+            !canManageBacklog && "lg:grid-cols-4",
+          )}
+        >
           <div className="col-span-2">
-            <QueryFilter placeholder="Buscar no backlog..." />
+            <QueryFilter placeholder={t("searchPlaceholder")} />
           </div>
           <Select
-            defaultValue={searchParams.get("status")?.toString()}
+            defaultValue={searchParams.get("status")?.toString() ?? "ALL"}
             onValueChange={handleFilterStatus}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Status" />
+              <SelectValue placeholder={t("filter.statusPlaceholder")} />
             </SelectTrigger>
             <SelectContent>
               {statusesOptions.map((option) => (
@@ -81,11 +90,11 @@ export function BacklogFilter({ projectId }: IBacklogFilter) {
             </SelectContent>
           </Select>
           <Select
-            value={searchParams.get("priority")?.toString()}
+            value={searchParams.get("priority")?.toString() ?? "ALL"}
             onValueChange={handleFilterPriority}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Prioridade" />
+              <SelectValue placeholder={t("filter.priorityPlaceholder")} />
             </SelectTrigger>
             <SelectContent>
               {priorityOptions.map((option) => (
@@ -95,9 +104,7 @@ export function BacklogFilter({ projectId }: IBacklogFilter) {
               ))}
             </SelectContent>
           </Select>
-          <BacklogCreateForm
-            projectId={projectId}
-          />
+          {canManageBacklog && <BacklogCreateForm projectId={projectId} />}
         </div>
       </CardContent>
     </Card>

@@ -1,14 +1,14 @@
 "use server";
 
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
+import { UnauthorizedError } from "@/errors";
 import { makeGetServiceUseCase } from "@/useCases/services/factories/makeGetServiceTypeUseCase";
 
 export async function getServiceTypeAction(serviceId: string) {
   const session = await auth();
 
   if (!session?.user?.organizationId) {
-    throw new AppError("Usuário não autenticado");
+    throw new UnauthorizedError("sessionExpired");
   }
 
   const fetchServiceTypeUseCase = makeGetServiceUseCase();
@@ -16,6 +16,7 @@ export async function getServiceTypeAction(serviceId: string) {
   const serviceType = await fetchServiceTypeUseCase.execute({
     serviceId,
     organizationId: session.user.organizationId,
+    userId: session.user.id,
   });
 
   return serviceType;

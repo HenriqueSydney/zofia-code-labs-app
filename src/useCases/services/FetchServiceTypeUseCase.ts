@@ -1,4 +1,5 @@
-import { ServiceType } from "@/generated/prisma/client";
+
+import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import {
   FetchServiceTypeWithCategory,
   IServiceTypeRepository,
@@ -6,6 +7,8 @@ import {
 
 interface FetchServiceTypeUseCaseRequest {
   query?: string | null;
+  userId: string;
+  organizationId: string;
 }
 
 export class FetchServiceTypeUseCase {
@@ -13,10 +16,18 @@ export class FetchServiceTypeUseCase {
 
   async execute({
     query,
+    userId,
+    organizationId,
   }: FetchServiceTypeUseCaseRequest): Promise<{
     serviceTypes: FetchServiceTypeWithCategory[];
   }> {
-    const serviceTypes = await this.serviceTypeRepository.list(query);
+    const serviceTypes = await this.serviceTypeRepository.list(organizationId, query);
+    await checkUserPermissionForAsset(
+      "serviceType",
+      userId,
+      serviceTypes[0],
+      "READ",
+    );
 
     return { serviceTypes };
   }

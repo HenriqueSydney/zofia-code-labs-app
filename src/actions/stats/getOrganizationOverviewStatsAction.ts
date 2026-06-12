@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
 import { makeGetOrganizationOverviewStatsUseCase } from "@/useCases/stats/factories/makeGetOrganizationOverviewStatsUseCase";
 
@@ -12,7 +13,7 @@ export async function getOrganizationOverviewStatsAction() {
   if (!session?.user?.id) {
     return {
       success: false,
-      message: "Usuário não autenticado.",
+      message: await serverErrorMessage("unauthenticated"),
       data: null,
     };
   }
@@ -33,7 +34,7 @@ export async function getOrganizationOverviewStatsAction() {
     console.error("Erro ao buscar estatísticas gerais:", error);
     return {
       success: false,
-      message: error.message || "Erro ao carregar estatísticas do dashboard.",
+      message: error.message || await serverErrorMessage("dashboardStatsFailed"),
       data: null,
     };
   }

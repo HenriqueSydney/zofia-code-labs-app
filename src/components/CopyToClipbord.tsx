@@ -3,6 +3,7 @@
 import { CheckCircle, Copy } from "lucide-react";
 
 import { toast } from "@/hooks/use-toast";
+import { useTranslations } from "next-intl";
 
 import { Tooltip } from "./Tooltip";
 
@@ -19,6 +20,8 @@ export function CopyToClipboard({
   content,
   id,
 }: ICopyToClipboard) {
+  const t = useTranslations("components.copyToClipboard");
+
   function handleCopyContent() {
     if (content) {
       navigator.clipboard.writeText(content).then(() => {
@@ -35,7 +38,7 @@ export function CopyToClipboard({
     }
 
     toast({
-      title: "Conteúdo copiado com sucesso",
+      title: t("success"),
       action: (
         <CheckCircle className="h-7 w-7 text-green-500" />
       ),

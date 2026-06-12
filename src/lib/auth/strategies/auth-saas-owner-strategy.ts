@@ -1,7 +1,7 @@
 import { IntegrationType } from "@/generated/prisma/client";
 import { AuthBasePermissionStrategy } from "./auth-base-strategy";
 import { Operation, UserContext } from "./types";
-import { AppError } from "@/errors/AppError";
+import { ForbiddenError } from "@/errors";
 
 export class AuthSaasOwnerStrategy extends AuthBasePermissionStrategy<
   IntegrationType & { organizationId: string }
@@ -21,10 +21,7 @@ export class AuthSaasOwnerStrategy extends AuthBasePermissionStrategy<
   ): void {
     if (user.role !== "OWNER") {
       // Mensagem genérica de 403 para não expor que a rota existe
-      throw new AppError(
-        "Acesso negado. Apenas o administrador do sistema pode gerenciar o catálogo global.",
-        403,
-      );
+      throw new ForbiddenError("Acesso negado. Apenas o administrador do sistema pode gerenciar o catálogo global.");
     }
   }
 }

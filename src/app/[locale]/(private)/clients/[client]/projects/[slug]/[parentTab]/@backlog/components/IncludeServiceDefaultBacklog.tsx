@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/select";
 import { syncServiceBacklogToProjectAction } from "@/actions/backlog/syncServiceBacklogToProjectAction";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 // Interface básica para os itens do Select
 interface ServiceTypeOption {
@@ -48,20 +49,25 @@ interface IncludeServiceDefaultBacklogProps {
 }
 
 // Schema de validação
-const linkServiceSchema = z.object({
-  serviceTypeId: z.string().min(1, "Selecione um tipo de serviço."),
-});
+const createLinkServiceSchema = (validationMessage: string) =>
+  z.object({
+    serviceTypeId: z.string().min(1, validationMessage),
+  });
 
-type LinkServiceSchema = z.infer<typeof linkServiceSchema>;
+type LinkServiceSchema = z.infer<ReturnType<typeof createLinkServiceSchema>>;
 
 export function IncludeServiceDefaultBacklog({
   buttonLabel,
   projectId,
   availableServices,
 }: IncludeServiceDefaultBacklogProps) {
+  const t = useTranslations("projects.backlog.import");
+  const tActions = useTranslations("common.actions");
   const params = useParams();
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
+
+  const linkServiceSchema = createLinkServiceSchema(t("validationSelectService"));
 
   const form = useForm<LinkServiceSchema>({
     resolver: zodResolver(linkServiceSchema),
@@ -94,7 +100,7 @@ export function IncludeServiceDefaultBacklog({
         // router.refresh(); // Lembrar de dar refresh após criar a action
       } catch (error) {
         console.error(error);
-        toast.error("Erro ao sincronizar backlog.");
+        toast.error(t("toastSyncError"));
       }
     });
   };
@@ -105,20 +111,17 @@ export function IncludeServiceDefaultBacklog({
         <Button
           variant={buttonLabel ? "outline" : "ghost"}
           className="gap-2"
-          title="Importar Backlog Padrão"
+          title={t("title")}
         >
           <CopyPlus className="w-4 h-4" />
-          {buttonLabel && "Importar Backlog Padrão"}
+          {buttonLabel && t("title")}
         </Button>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-lg space-y-2">
         <DialogHeader>
-          <DialogTitle>Importar Backlog de Serviço</DialogTitle>
-          <DialogDescription>
-            Selecione um tipo de serviço para copiar seus itens de backlog
-            padrão para este projeto.
-          </DialogDescription>
+          <DialogTitle>{t("title")}</DialogTitle>
+          <DialogDescription>{t("description")}</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -128,7 +131,7 @@ export function IncludeServiceDefaultBacklog({
               name="serviceTypeId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tipo de Serviço</FormLabel>
+                  <FormLabel>{t("serviceTypeLabel")}</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -136,7 +139,7 @@ export function IncludeServiceDefaultBacklog({
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Selecione um serviço..." />
+                        <SelectValue placeholder={t("selectService")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -159,16 +162,16 @@ export function IncludeServiceDefaultBacklog({
                 onClick={() => setIsOpen(false)}
                 disabled={isPending}
               >
-                Cancelar
+                {tActions("cancel")}
               </Button>
               <Button type="submit" disabled={isPending}>
                 {isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Importando...
+                    {t("importing")}
                   </>
                 ) : (
-                  "Confirmar Importação"
+                  t("confirm")
                 )}
               </Button>
             </DialogFooter>

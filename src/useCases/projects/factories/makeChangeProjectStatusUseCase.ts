@@ -2,6 +2,7 @@ import { makeProjectRepository } from "@/repositories/factories/makeProjectRepos
 import { ChangeProjectStatusUseCase } from "../ChangeProjectStatusUseCase";
 import { makeProjectNotesRepository } from "@/repositories/factories/makeProjectNotesRepository";
 import { makeAuditLogRepository } from "@/repositories/factories/makeAuditLogRepository";
+import { makeUserRepository } from "@/repositories/factories/makeUserRepository";
 
 let changeProjectStatusUseCase: ChangeProjectStatusUseCase;
 
@@ -13,7 +14,8 @@ export function makeChangeProjectStatusUseCase() {
     changeProjectStatusUseCase = new ChangeProjectStatusUseCase(
       projectRepository,
       projectNotesRepository,
-      auditLogRepository
+      auditLogRepository,
+      makeUserRepository(),
     );
   }
 

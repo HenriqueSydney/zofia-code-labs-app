@@ -2,14 +2,12 @@
 
 import { reorderBacklogItemAction } from "@/actions/backlog/reorderBacklogItemAction";
 import { useRouter } from "@/i18n/navigation";
-import { backlogStatusMapper } from "@/mappers/BacklogMappers";
 import { BacklogItemWithDetails } from "@/repositories/IBacklogItemsRepository";
 import {
   closestCorners,
   DndContext,
   DragEndEvent,
   DragOverEvent,
-  DragStartEvent,
   PointerSensor,
   useSensor,
   useSensors,
@@ -17,39 +15,49 @@ import {
 import { arrayMove } from "@dnd-kit/sortable";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { KanbanColumn } from "./KanbanColumn"; // Importe o componente criado acima
-import { EmptyState } from "@/components/EmptyState";
-import { ListTodo } from "lucide-react";
-
-// ... (definição do statusColumns mantém igual)
-const statusColumns = [
-  { key: "TODO", label: backlogStatusMapper["TODO"], color: "bg-muted" },
-  {
-    key: "IN_PROGRESS",
-    label: backlogStatusMapper["IN_PROGRESS"],
-    color: "bg-accent/20",
-  },
-  {
-    key: "REVIEW",
-    label: backlogStatusMapper["REVIEW"],
-    color: "bg-primary/20",
-  },
-  { key: "DONE", label: backlogStatusMapper["DONE"], color: "bg-green-500/20" },
-  {
-    key: "CANCELED",
-    label: backlogStatusMapper["CANCELED"],
-    color: "bg-red-500/20",
-  },
-];
+import { KanbanColumn } from "./KanbanColumn";
+import { useTranslations } from "next-intl";
+import { getBacklogStatusLabel } from "@/mappers/BacklogMappers";
 
 interface IBacklogKanban {
   backlog: BacklogItemWithDetails[];
+  canManageBacklog: boolean;
 }
 
-export function BacklogKanban({ backlog }: IBacklogKanban) {
+export function BacklogKanban({ backlog, canManageBacklog }: IBacklogKanban) {
+  const tStatus = useTranslations("projects.backlog.status");
+  const tCommon = useTranslations("common");
+
+  const statusColumns = [
+    {
+      key: "TODO",
+      label: getBacklogStatusLabel("TODO", (k) => tStatus(k as never)),
+      color: "bg-muted",
+    },
+    {
+      key: "IN_PROGRESS",
+      label: getBacklogStatusLabel("IN_PROGRESS", (k) => tStatus(k as never)),
+      color: "bg-accent/20",
+    },
+    {
+      key: "REVIEW",
+      label: getBacklogStatusLabel("REVIEW", (k) => tStatus(k as never)),
+      color: "bg-primary/20",
+    },
+    {
+      key: "DONE",
+      label: getBacklogStatusLabel("DONE", (k) => tStatus(k as never)),
+      color: "bg-green-500/20",
+    },
+    {
+      key: "CANCELED",
+      label: getBacklogStatusLabel("CANCELED", (k) => tStatus(k as never)),
+      color: "bg-red-500/20",
+    },
+  ] as const;
   // Inicializa o estado com o backlog
   const [items, setItems] = useState<BacklogItemWithDetails[]>(backlog);
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const [_, setActiveId] = useState<string | null>(null);
   const router = useRouter();
 
   // Atualiza o estado se a prop backlog mudar (ex: vinda do servidor após refresh)
@@ -58,7 +66,7 @@ export function BacklogKanban({ backlog }: IBacklogKanban) {
   }, [backlog]);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
   );
 
   // Helper para achar a coluna (status) baseada em um ID (seja de item ou da própria coluna)
@@ -68,6 +76,8 @@ export function BacklogKanban({ backlog }: IBacklogKanban) {
   };
 
   const handleDragOver = (event: DragOverEvent) => {
+    if (!canManageBacklog) return;
+
     const { active, over } = event;
     if (!over) return;
 
@@ -109,6 +119,8 @@ export function BacklogKanban({ backlog }: IBacklogKanban) {
   };
 
   const handleDragEnd = async (event: DragEndEvent) => {
+    if (!canManageBacklog) return;
+
     const { active, over } = event;
 
     // Verifica se soltou fora ou no mesmo lugar (visualmente)
@@ -124,17 +136,17 @@ export function BacklogKanban({ backlog }: IBacklogKanban) {
 
     // 1. Prepara dados para o Backend
     const targetColumnItems = items.filter(
-      (item) => item.status === overColumn
+      (item) => item.status === overColumn,
     );
     const allSortedIds = targetColumnItems.map((i) => i.id);
 
     // Encontra o index do item dentro da sua NOVA coluna
     const newPositionIndex = targetColumnItems.findIndex(
-      (i) => i.id === active.id
+      (i) => i.id === active.id,
     );
 
     toast.dismiss();
-    toast.info("Salvando...");
+    toast.info(tCommon("saving"));
 
     try {
       await reorderBacklogItemAction({
@@ -144,10 +156,10 @@ export function BacklogKanban({ backlog }: IBacklogKanban) {
         status: overColumn as any,
       });
       toast.dismiss();
-      toast.success("Salvo!");
+      toast.success(tCommon("actions.saveChanges"));
     } catch (e) {
       toast.dismiss();
-      toast.error("Erro ao salvar.");
+      toast.error(tCommon("errors.connection"));
       setItems(backlog); // Reverte em caso de erro
       router.refresh();
     }
@@ -168,6 +180,7 @@ export function BacklogKanban({ backlog }: IBacklogKanban) {
             column={column}
             // Passa os items filtrados do estado ATUAL
             items={items.filter((item) => item.status === column.key)}
+            canManageBacklog={canManageBacklog}
           />
         ))}
       </div>

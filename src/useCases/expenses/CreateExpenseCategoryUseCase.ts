@@ -1,3 +1,4 @@
+import { ConflictError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IExpenseCategoryRepository } from "@/repositories/IExpenseCategoryRepository";
 
@@ -20,17 +21,15 @@ export class CreateExpenseCategoryUseCase {
     const categoryAlreadyExists =
       await this.expenseCategoryRepository.findByName(name, organizationId);
 
-    if (categoryAlreadyExists) {
-      await checkUserPermissionForAsset(
-        "expenseCategory",
-        userId,
-        categoryAlreadyExists,
-        "CREATE"
-      );
+    await checkUserPermissionForAsset(
+      "expenseCategory",
+      userId,
+      { organizationId },
+      "CREATE",
+    );
 
-      throw new Error(
-        "Já existe uma categoria de despesa cadastrada com este nome."
-      );
+    if (categoryAlreadyExists) {
+      throw new ConflictError("Já existe uma categoria de despesa cadastrada com este nome.",);
     }
 
     await this.expenseCategoryRepository.create({

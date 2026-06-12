@@ -16,7 +16,13 @@ import {
 } from "@/generated/prisma/client";
 
 export type ProjectWithDetails = PrismaToPlain<Project> & {
-  client: { id: string; companyName: string; slug: string; tradeName: string };
+  client: {
+    id: string;
+    companyName: string;
+    slug: string;
+    tradeName: string;
+    email: string;
+  };
   projectDocuments: ProjectDocuments[];
   proposal: PrismaToPlain<Proposal>;
   contract: Contract;

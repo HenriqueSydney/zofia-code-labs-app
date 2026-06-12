@@ -1,3 +1,4 @@
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
 import { makeGetProjectsVolumeChartUseCase } from "@/useCases/stats/factories/makeGetProjectsVolumeChartUseCase";
 
@@ -10,7 +11,7 @@ export async function getProjectsVolumeChartAction() {
   if (!session?.user?.id) {
     return {
       success: false,
-      message: "Usuário não autenticado.",
+      message: await serverErrorMessage("unauthenticated"),
       data: null,
     };
   }

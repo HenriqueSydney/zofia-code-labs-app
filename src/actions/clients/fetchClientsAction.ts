@@ -1,15 +1,14 @@
 "use server";
 
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
-import { handleErrors } from "@/errors/handleErrors";
+import { ValidationError } from "@/errors";
 import { makeFetchClientUseCase } from "@/useCases/clients/factories/makeFetchClientUseCase";
 
 export async function fetchClientsAction(query?: string) {
   const session = await auth();
 
   if (!session) {
-    throw new AppError("Usuário não logado.");
+    throw new ValidationError("notLoggedIn", { statusCode: 401, severity: "low" });
   }
 
   const { user } = session;

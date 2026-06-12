@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
 import { updateExpenseCategorySchema } from "@/schemas/expenses/expenseCategorySchema";
 import { makeUpdateExpenseCategoryUseCase } from "@/useCases/expenses/factories/makeUpdateExpenseCategoryUseCase";
@@ -9,13 +10,13 @@ export async function updateExpenseCategoryAction(data: unknown) {
   const session = await auth();
 
   if (!session?.user?.organizationId) {
-    return { success: false, message: "Sessão expirada." };
+    return { success: false, message: await serverErrorMessage("sessionExpired") };
   }
 
   const parsed = updateExpenseCategorySchema.safeParse(data);
 
   if (!parsed.success) {
-    return { success: false, message: "Dados inválidos para atualização." };
+    return { success: false, message: await serverErrorMessage("expenseUpdateInvalidData") };
   }
 
   const { id, ...rest } = parsed.data;
@@ -35,8 +36,7 @@ export async function updateExpenseCategoryAction(data: unknown) {
   } catch (error) {
     return {
       success: false,
-      message:
-        error instanceof Error ? error.message : "Erro ao atualizar categoria.",
+      message: await resolveActionErrorMessage(error),
     };
   }
 }

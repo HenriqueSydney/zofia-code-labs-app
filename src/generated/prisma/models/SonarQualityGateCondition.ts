@@ -165,7 +165,7 @@ export type SonarQualityGateConditionGroupByOutputType = {
   _max: SonarQualityGateConditionMaxAggregateOutputType | null
 }
 
-type GetSonarQualityGateConditionGroupByPayload<T extends SonarQualityGateConditionGroupByArgs> = Prisma.PrismaPromise<
+export type GetSonarQualityGateConditionGroupByPayload<T extends SonarQualityGateConditionGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<SonarQualityGateConditionGroupByOutputType, T['by']> &
       {
@@ -1157,6 +1157,11 @@ export type SonarQualityGateConditionFindManyArgs<ExtArgs extends runtime.Types.
    * Skip the first `n` SonarQualityGateConditions.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of SonarQualityGateConditions.
+   */
   distinct?: Prisma.SonarQualityGateConditionScalarFieldEnum | Prisma.SonarQualityGateConditionScalarFieldEnum[]
 }
 

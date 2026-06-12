@@ -34,13 +34,21 @@ export interface UpdateContractDTO extends Partial<CreateContractDTO> {
 export type ContractWithDetails = Contract & {
   contractTemplate: {
     id: string;
-    template: { title: string | null } | null;
+    content: unknown;
   } | null;
   project: {
     organizationId: string;
     name: string;
     slug: string;
-    client: { tradeName: string; email: string; slug: string };
+    client: {
+      id: string;
+      tradeName: string;
+      companyName: string;
+      email: string;
+      slug: string;
+      responsibleName?: string | null;
+      responsibleEmail?: string | null;
+    };
   };
   proposal: {
     totalValue: Decimal;

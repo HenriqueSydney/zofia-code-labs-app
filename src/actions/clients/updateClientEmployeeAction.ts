@@ -1,9 +1,10 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { revalidatePath } from "next/cache";
 import { makeUpdateClientEmployeeUseCase } from "@/useCases/clients/factories/makeUpdateClientEmployeeUseCase";
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 
 export async function updateClientEmployeeAction(
   id: string,
@@ -11,7 +12,7 @@ export async function updateClientEmployeeAction(
 ) {
   try {
     const session = await auth();
-    if (!session?.user) throw new AppError("Não autorizado");
+    if (!session?.user) throw new ValidationError("unauthorized", { statusCode: 401, severity: "low" });
 
     const data = {
       jobTitle: formData.get("jobTitle") as string,
@@ -29,8 +30,8 @@ export async function updateClientEmployeeAction(
     const clientSlug = formData.get("clientSlug");
 
     revalidatePath(`/clients/${clientSlug}`);
-    return { success: true, message: "Dados atualizados com sucesso!" };
+    return { success: true, message: await resolveSuccessMessage("dataUpdated") };
   } catch (error) {
-    return { success: false, message: "Falha na atualização." };
+    return { success: false, message: await serverErrorMessage("updateFailed") };
   }
 }

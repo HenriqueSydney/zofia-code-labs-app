@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import {
   IClientsRepository,
@@ -18,14 +18,14 @@ export class CreateClientUseCase {
     const existingClient = await this.clientsRepository.findByCnpj(data.cnpj);
 
     if (existingClient) {
-      throw new AppError("Empresa com mesmo CNPJ já cadastrada");
+      throw new ValidationError("Empresa com mesmo CNPJ já cadastrada");
     }
 
     await checkUserPermissionForAsset(
       "client",
       userId,
       { organizationId: data.organizationId },
-      "UPDATE",
+      "CREATE",
     );
 
     const slug = generateSlug({ title: data.tradeName });

@@ -1,7 +1,7 @@
 import { Proposal, ProposalStatus } from "@/generated/prisma/client";
 import { AuthBasePermissionStrategy } from "./auth-base-strategy";
 import { Operation, UserContext } from "./types";
-import { AppError } from "@/errors/AppError";
+import { BusinessRuleError, ValidationError } from "@/errors";
 import { PERMISSIONS, PermissionString } from "@/constants/permissions";
 import { UserDoesNotHavePermissionError } from "@/errors/UserDoesNotHavePermissionError";
 
@@ -59,10 +59,7 @@ export class AuthProposalStrategy extends AuthBasePermissionStrategy<
 
     if (isLocked) {
       if (operation === "UPDATE" || operation === "DELETE") {
-        throw new AppError(
-          `Não é possível alterar uma proposta finalizada (${asset.status}). Crie uma nova versão/duplicata.`,
-          400,
-        );
+        throw new BusinessRuleError(`Não é possível alterar uma proposta finalizada (${asset.status}). Crie uma nova versão/duplicata.`, { statusCode: 400 });
       }
     }
 
@@ -71,10 +68,7 @@ export class AuthProposalStrategy extends AuthBasePermissionStrategy<
       const isManager = user.permissions.includes(PERMISSIONS.PROPOSAL.APPROVE);
 
       if (!isOwner && !isManager) {
-        throw new AppError(
-          "Você só pode excluir propostas criadas por você.",
-          403,
-        );
+        throw new ValidationError("Você só pode excluir propostas criadas por você.", { statusCode: 403 });
       }
     }
   }

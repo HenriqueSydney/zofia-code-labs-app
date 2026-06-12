@@ -4,7 +4,7 @@ import {
   UpdateExpenseDTO,
 } from "@/repositories/IExpenseRepository";
 import { IProjectsRepository } from "@/repositories/IProjectsRepository";
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError } from "@/errors";
 import { date } from "@/lib/dayjs";
 
 interface UpdateExpenseUseCaseRequest {
@@ -26,14 +26,14 @@ export class UpdateExpenseUseCase {
     const expense = await this.expenseRepository.findById(expenseId);
 
     if (!expense) {
-      throw new AppError("Despesa não encontrada.");
+      throw new ResourceNotFoundError("Despesa não encontrada.");
     }
 
     // 2. Busca o projeto para validar permissão (A permissão é sobre o PROJETO)
     const project = await this.projectsRepository.findById(expense.projectId);
 
     if (!project) {
-      throw new AppError("Projeto vinculado à despesa não encontrado.");
+      throw new ResourceNotFoundError("Projeto vinculado à despesa não encontrado.");
     }
 
     await checkUserPermissionForAsset("expense", userId, project, "UPDATE");

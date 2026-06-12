@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, LoginSchema } from "@/schemas/auth/loginSchema";
+import { createLoginSchema, LoginSchema } from "@/schemas/auth/loginSchema";
 import { loginAction } from "@/actions/auth/loginAction";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
@@ -12,15 +12,21 @@ import { Input } from "@/components/ui/input";
 
 export function LoginForm() {
   const t = useTranslations();
+  const tValidation = useTranslations("validation");
   const [serverError, setServerError] = useState<string | null>(null);
   const [loading, startTransition] = useTransition();
+
+  const schema = useMemo(
+    () => createLoginSchema((key) => tValidation(key)),
+    [tValidation],
+  );
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginSchema>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(schema),
   });
 
   const onSubmit = (data: LoginSchema) => {
@@ -32,7 +38,7 @@ export function LoginForm() {
       // Se a função retornou algo, é porque deu erro ou não redirecionou.
       // Se tivesse redirecionado com sucesso, o fluxo teria sido interrompido pelo "throw error" no server
       if (result && !result.success) {
-        setServerError(result.message || "Erro desconhecido");
+        setServerError(result.message || t("auth.errors.unknown"));
       }
 
       // NÃO precisa de else { router.push }

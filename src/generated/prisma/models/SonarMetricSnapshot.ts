@@ -309,7 +309,7 @@ export type SonarMetricSnapshotGroupByOutputType = {
   _max: SonarMetricSnapshotMaxAggregateOutputType | null
 }
 
-type GetSonarMetricSnapshotGroupByPayload<T extends SonarMetricSnapshotGroupByArgs> = Prisma.PrismaPromise<
+export type GetSonarMetricSnapshotGroupByPayload<T extends SonarMetricSnapshotGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<SonarMetricSnapshotGroupByOutputType, T['by']> &
       {
@@ -1768,6 +1768,11 @@ export type SonarMetricSnapshotFindManyArgs<ExtArgs extends runtime.Types.Extens
    * Skip the first `n` SonarMetricSnapshots.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of SonarMetricSnapshots.
+   */
   distinct?: Prisma.SonarMetricSnapshotScalarFieldEnum | Prisma.SonarMetricSnapshotScalarFieldEnum[]
 }
 

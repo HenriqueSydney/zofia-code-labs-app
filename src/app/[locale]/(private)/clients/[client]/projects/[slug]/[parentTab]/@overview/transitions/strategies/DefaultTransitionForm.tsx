@@ -12,6 +12,7 @@ import { Form } from "@/components/ui/form";
 import { changeProjectStatusAction } from "@/actions/projects/changeProjectStatus";
 import { TransitionStrategyProps } from "../types";
 import { FormTextarea } from "@/components/form/FormTextarea";
+import { useTranslations } from "next-intl";
 
 // Schema de validação
 const transitionSchema = z.object({
@@ -27,6 +28,9 @@ export function DefaultTransitionForm({
   onCancel,
   contextData,
 }: TransitionStrategyProps) {
+  const t = useTranslations("projects.transitions");
+  const tCommon = useTranslations("projects.transitions.common");
+  const tErrors = useTranslations("common.errors");
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<TransitionFormValues>({
@@ -48,13 +52,13 @@ export function DefaultTransitionForm({
         });
 
         if (result.success) {
-          toast.success("Status atualizado com sucesso!");
+          toast.success(t("statusUpdated"));
           onSuccess();
         } else {
-          toast.error(result.error || "Erro ao atualizar status.");
+          toast.error(result.error || tErrors("statusUpdate"));
         }
       } catch (error) {
-        toast.error("Erro inesperado ao processar a solicitação.");
+        toast.error(tCommon("errors.unexpected"));
       }
     });
   };
@@ -64,10 +68,10 @@ export function DefaultTransitionForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {/* Banner Informativo */}
         <div className="text-sm text-muted-foreground bg-muted/30 p-3 rounded-md border border-border/50">
-          <p>Deseja realmente avançar o status deste projeto?</p>
+          <p>{t("confirmAdvance")}</p>
           {contextData?.targetLabel && (
             <p className="mt-1">
-              O novo status será:{" "}
+              {t("newStatusWillBe")}{" "}
               <strong className="text-primary font-semibold">
                 {contextData.targetLabel}
               </strong>
@@ -79,8 +83,8 @@ export function DefaultTransitionForm({
         <FormTextarea
           control={form.control}
           name="observation"
-          label="Observações (Opcional)"
-          placeholder="Adicione um comentário ou justificativa para esta mudança..."
+          label={t("observations")}
+          placeholder={t("observationsPlaceholder")}
           rows={3}
           disabled={isPending}
         />
@@ -94,7 +98,7 @@ export function DefaultTransitionForm({
             disabled={isPending}
             className="w-full sm:w-auto mt-2 sm:mt-0"
           >
-            Cancelar
+            {tCommon("cancel")}
           </Button>
           <Button
             type="submit"
@@ -102,7 +106,7 @@ export function DefaultTransitionForm({
             className="w-full sm:w-auto"
           >
             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Confirmar Avanço
+            {t("confirmButton")}
           </Button>
         </div>
       </form>

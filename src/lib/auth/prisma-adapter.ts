@@ -1,5 +1,18 @@
-import { PrismaClient, Role } from "@/generated/prisma/client";
+import { ResourceNotFoundError } from "@/errors";
+import { PrismaClient, Role, User } from "@/generated/prisma/client";
 import { Adapter } from "next-auth/adapters";
+
+function toAdapterUser(user: User) {
+  return {
+    id: user.id,
+    email: user.email!,
+    emailVerified: null,
+    name: user.name,
+    image: user.image,
+    role: user.role,
+    organizationId: user.organizationId,
+  };
+}
 
 export function PrismaAdapter(prisma: PrismaClient): Adapter {
   return {
@@ -23,14 +36,7 @@ export function PrismaAdapter(prisma: PrismaClient): Adapter {
           },
         });
 
-        return {
-          id: updatedUser.id,
-          email: updatedUser.email!,
-          emailVerified: null,
-          name: updatedUser.name,
-          image: updatedUser.image,
-          role: updatedUser.role,
-        };
+        return toAdapterUser(updatedUser);
       }
 
       const role = data.role || Role.USER;
@@ -38,7 +44,7 @@ export function PrismaAdapter(prisma: PrismaClient): Adapter {
       const organizationId = await prisma.organization.findFirst();
 
       if (!organizationId) {
-        throw new Error("Organization not found");
+        throw new ResourceNotFoundError("Organization not found");
       }
 
       const newUser = await prisma.user.create({
@@ -51,40 +57,19 @@ export function PrismaAdapter(prisma: PrismaClient): Adapter {
         },
       });
 
-      return {
-        id: newUser.id,
-        email: newUser.email,
-        emailVerified: null,
-        name: newUser.name,
-        image: newUser.image,
-        role: newUser.role,
-      };
+      return toAdapterUser(newUser);
     },
 
     async getUser(id) {
       const user = await prisma.user.findUnique({ where: { id } });
       if (!user) return null;
-      return {
-        id: user.id,
-        email: user.email!,
-        emailVerified: null,
-        name: user.name,
-        image: user.image,
-        role: user.role,
-      };
+      return toAdapterUser(user);
     },
 
     async getUserByEmail(email) {
       const user = await prisma.user.findUnique({ where: { email } });
       if (!user) return null;
-      return {
-        id: user.id,
-        email: user.email!,
-        emailVerified: null,
-        name: user.name,
-        image: user.image,
-        role: user.role,
-      };
+      return toAdapterUser(user);
     },
 
     async getUserByAccount({ provider, providerAccountId }) {
@@ -98,14 +83,7 @@ export function PrismaAdapter(prisma: PrismaClient): Adapter {
       if (!account) return null;
       const { user } = account;
 
-      return {
-        id: user.id,
-        email: user.email!,
-        emailVerified: null,
-        name: user.name,
-        image: user.image,
-        role: user.role,
-      };
+      return toAdapterUser(user);
     },
 
     async updateUser(user) {
@@ -119,14 +97,7 @@ export function PrismaAdapter(prisma: PrismaClient): Adapter {
         },
       });
 
-      return {
-        id: updatedUser.id,
-        email: updatedUser.email!,
-        emailVerified: null,
-        name: updatedUser.name,
-        image: updatedUser.image,
-        role: updatedUser.role,
-      };
+      return toAdapterUser(updatedUser);
     },
 
     async linkAccount(account) {
@@ -176,14 +147,7 @@ export function PrismaAdapter(prisma: PrismaClient): Adapter {
           userId: session.userId,
           expires: session.expires,
         },
-        user: {
-          id: session.user.id,
-          email: session.user.email!,
-          emailVerified: null,
-          name: session.user.name,
-          image: session.user.image,
-          role: session.user.role,
-        },
+        user: toAdapterUser(session.user),
       };
     },
 

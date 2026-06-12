@@ -6,12 +6,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { ThumbsUp, ThumbsDown, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Form } from "@/components/ui/form"; // Importante para o wrapper
+import { Form } from "@/components/ui/form";
 
 import { ProposalDetails } from "@/components/ProposalDetail";
 import { ProposalWithDetails } from "@/repositories/IProposalRepository";
@@ -20,23 +21,24 @@ import { date } from "@/lib/dayjs";
 import { FormSelect } from "@/components/form/FormSelect";
 import { FormTextarea } from "@/components/form/FormTextarea";
 
-// --- Schema de Validação ---
-const rejectionSchema = z.object({
-  reason: z
-    .string({ error: "Selecione o motivo da rejeição" })
-    .min(1, "Selecione um motivo"),
-  notes: z.string().optional(),
-});
+const REJECTION_REASON_VALUES = {
+  PRICE: "PRICE",
+  DEADLINE: "DEADLINE",
+  COMPETITION: "COMPETITION",
+  SCOPE: "SCOPE",
+  OTHER: "OTHER",
+} as const;
 
-type RejectionSchemaType = z.infer<typeof rejectionSchema>;
+const createRejectionSchema = (
+  reasonRequired: string,
+  reasonMin: string,
+) =>
+  z.object({
+    reason: z.string({ error: reasonRequired }).min(1, reasonMin),
+    notes: z.string().optional(),
+  });
 
-const REJECTION_REASONS = [
-  { value: "Preço elevado", label: "Preço acima do orçamento" },
-  { value: "Prazo de entrega", label: "Prazo de entrega inviável" },
-  { value: "Concorrência", label: "Escolheu outro fornecedor" },
-  { value: "Escopo", label: "Escopo não atende às necessidades" },
-  { value: "Outro", label: "Outro motivo" },
-];
+type RejectionSchemaType = z.infer<ReturnType<typeof createRejectionSchema>>;
 
 interface IProposalConfirmation {
   proposal: ProposalWithDetails;
@@ -47,10 +49,39 @@ export function ProposalConfirmation({
   proposal,
   onSuccess,
 }: IProposalConfirmation) {
+  const t = useTranslations("projects.transitions.proposalConfirmation");
+  const tCommon = useTranslations("projects.transitions.common");
   const [isPending, startTransition] = useTransition();
   const [isRejectFormOpen, setIsRejectFormOpen] = useState(false);
 
-  // Inicializa o formulário apenas para a rejeição
+  const rejectionSchema = createRejectionSchema(
+    t("validation.reasonRequired"),
+    t("validation.reasonMin"),
+  );
+
+  const rejectionReasons = [
+    {
+      value: REJECTION_REASON_VALUES.PRICE,
+      label: t("rejectionReasons.PRICE.label"),
+    },
+    {
+      value: REJECTION_REASON_VALUES.DEADLINE,
+      label: t("rejectionReasons.DEADLINE.label"),
+    },
+    {
+      value: REJECTION_REASON_VALUES.COMPETITION,
+      label: t("rejectionReasons.COMPETITION.label"),
+    },
+    {
+      value: REJECTION_REASON_VALUES.SCOPE,
+      label: t("rejectionReasons.SCOPE.label"),
+    },
+    {
+      value: REJECTION_REASON_VALUES.OTHER,
+      label: t("rejectionReasons.OTHER.label"),
+    },
+  ];
+
   const form = useForm<RejectionSchemaType>({
     resolver: zodResolver(rejectionSchema),
     defaultValues: {
@@ -59,7 +90,6 @@ export function ProposalConfirmation({
     },
   });
 
-  // Função genérica para chamar a Server Action
   async function executeAction(
     action: "REJECTED" | "ACCEPTED",
     details?: { reason: string; notes?: string },
@@ -71,8 +101,8 @@ export function ProposalConfirmation({
         const result = await changeProposalStatusAction(
           proposal.id,
           action,
-          undefined, // Canal (opcional)
-          details, // Detalhes da rejeição (se houver)
+          undefined,
+          details,
         );
 
         if (result?.error) {
@@ -81,25 +111,21 @@ export function ProposalConfirmation({
         }
 
         toast.success(
-          action === "ACCEPTED"
-            ? "Proposta aceita com sucesso!"
-            : "Rejeição registrada.",
+          action === "ACCEPTED" ? t("toast.accepted") : t("toast.rejected"),
         );
 
         onSuccess();
       } catch (error: any) {
         if (error.message === "NEXT_REDIRECT") return;
-        toast.error("Erro ao processar a requisição.");
+        toast.error(t("toast.error"));
       }
     });
   }
 
-  // Handler para Aceite (Simples, sem form)
   const handleAccept = () => {
     executeAction("ACCEPTED");
   };
 
-  // Handler para Rejeição (Vem do RHF)
   const onSubmitRejection = (data: RejectionSchemaType) => {
     executeAction("REJECTED", {
       reason: data.reason,
@@ -110,27 +136,23 @@ export function ProposalConfirmation({
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-6">
-        {/* Banner de Status */}
         <Alert className="bg-green-800/10 border-green-300/30 col-span-2">
           <ThumbsUp className="h-4 w-4" />
-          <AlertTitle className="font-semibold">
-            Proposta Pronta para Decisão
-          </AlertTitle>
+          <AlertTitle className="font-semibold">{t("alert.title")}</AlertTitle>
           <AlertDescription className="opacity-90">
             {proposal?.approvedAt ? (
               <span>
-                Gerada em:{" "}
+                {t("alert.generatedAt")}{" "}
                 {date(proposal.approvedAt).format("DD/MM/YYYY HH:mm")}
               </span>
             ) : (
-              <span>Aguardando formalização do cliente.</span>
+              <span>{t("alert.awaitingClient")}</span>
             )}
             <br />
-            Selecione uma das ações abaixo para atualizar o status no sistema.
+            {t("alert.instructions")}
           </AlertDescription>
         </Alert>
 
-        {/* Ações Principais (Botões Iniciais) */}
         {!isRejectFormOpen && (
           <div className="flex flex-col sm:flex-row items-center justify-end gap-3">
             <Button
@@ -140,7 +162,7 @@ export function ProposalConfirmation({
               disabled={isPending}
             >
               <ThumbsDown className="w-4 h-4 mr-2" />
-              Informar Rejeição
+              {t("actions.reportRejection")}
             </Button>
 
             <Button onClick={handleAccept} disabled={isPending}>
@@ -149,25 +171,24 @@ export function ProposalConfirmation({
               ) : (
                 <ThumbsUp className="w-4 h-4 mr-2" />
               )}
-              Confirmar Aceite do Cliente
+              {t("actions.confirmAcceptance")}
             </Button>
           </div>
         )}
 
-        {/* Formulário de Rejeição (Renderizado Condicionalmente) */}
         {isRejectFormOpen && (
           <Card className="border-destructive/30 bg-destructive/5 animate-in fade-in slide-in-from-top-2">
             <CardHeader className="w-full flex flex-row items-center justify-between pb-2">
               <CardTitle className="flex items-center gap-2 text-destructive">
                 <ThumbsDown className="w-4 h-4" />
-                Detalhes da Rejeição
+                {t("rejectionForm.title")}
               </CardTitle>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => {
                   setIsRejectFormOpen(false);
-                  form.reset(); // Limpa form ao fechar
+                  form.reset();
                 }}
               >
                 <X className="w-4 h-4" />
@@ -182,17 +203,17 @@ export function ProposalConfirmation({
                   <FormSelect
                     control={form.control}
                     name="reason"
-                    label="Motivo Principal"
-                    placeholder="Selecione o motivo..."
-                    options={REJECTION_REASONS}
+                    label={t("rejectionForm.reason.label")}
+                    placeholder={t("rejectionForm.reason.placeholder")}
+                    options={rejectionReasons}
                     disabled={isPending}
                   />
 
                   <FormTextarea
                     control={form.control}
                     name="notes"
-                    label="Observações Adicionais (opcional)"
-                    placeholder="Descreva detalhes sobre a decisão do cliente..."
+                    label={t("rejectionForm.notes.label")}
+                    placeholder={t("rejectionForm.notes.placeholder")}
                     rows={3}
                     disabled={isPending}
                   />
@@ -204,7 +225,7 @@ export function ProposalConfirmation({
                       onClick={() => setIsRejectFormOpen(false)}
                       disabled={isPending}
                     >
-                      Cancelar
+                      {tCommon("cancel")}
                     </Button>
                     <Button
                       type="submit"
@@ -214,7 +235,7 @@ export function ProposalConfirmation({
                       {isPending && (
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                       )}
-                      Confirmar Rejeição
+                      {t("rejectionForm.submit")}
                     </Button>
                   </div>
                 </form>
@@ -226,7 +247,6 @@ export function ProposalConfirmation({
 
       <Separator className="bg-white/5" />
 
-      {/* Detalhes da Proposta */}
       <div className="opacity-90">
         {proposal && <ProposalDetails proposal={proposal} />}
       </div>

@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError, BusinessRuleError, ValidationError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { date } from "@/lib/dayjs";
 import {
@@ -26,26 +26,22 @@ export class UpdateProjectNoteUseCase {
     const noteExists =
       await this.projectNotesRepository.findProjectNoteById(id);
 
-    if (!noteExists) throw new AppError("Observação não localizada");
+    if (!noteExists) throw new ResourceNotFoundError("Observação não localizada");
 
     const canEdit = noteExists.updatedAt
       ? date().diff(date(noteExists.updatedAt), "minute") < 30
       : date().diff(date(noteExists.createdAt), "minute") < 30;
 
     if (!canEdit) {
-      throw new AppError(
-        "Observação não pode ser mais editada. Período para edição já se expirou",
-      );
+      throw new BusinessRuleError("Observação não pode ser mais editada. Período para edição já se expirou");
     }
 
     if (noteExists.projectId !== projectId) {
-      throw new AppError(
-        "Ops! Um erro aparentemente ocorreu ao tentar editar a observação. Tente novamente mais tarde",
-      );
+      throw new ValidationError("Ops! Um erro aparentemente ocorreu ao tentar editar a observação. Tente novamente mais tarde");
     }
 
     if (noteExists.userId !== userId) {
-      throw new AppError("Apenas o próprio usuário pode editar a observação");
+      throw new ValidationError("Apenas o próprio usuário pode editar a observação");
     }
 
     await checkUserPermissionForAsset(

@@ -1,8 +1,8 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
-import { handleErrors } from "@/errors/handleErrors";
+import { UnauthorizedError } from "@/errors";
 import { makeConnectServiceToProjectUseCase } from "@/useCases/integration/factories/makeConnectServiceToProjectUseCase";
 import { revalidatePath } from "next/cache";
 
@@ -16,7 +16,7 @@ export async function connectProjectToServiceAction(
 
   // Aqui você verificaria se o usuário é o ADMIN do sistema
   if (!session?.user) {
-    throw new AppError("Não autorizado.");
+    throw new UnauthorizedError("unauthorized");
   }
 
   try {
@@ -30,9 +30,9 @@ export async function connectProjectToServiceAction(
     });
 
     revalidatePath(`/clients/${client}/projects/${projectSlug}/metrics`);
-    return { success: true, message: "Serviço conectado com sucesso" };
+    return { success: true, message: await resolveSuccessMessage("serviceConnected") };
   } catch (error) {
-    const message = handleErrors(error);
+    const message = await resolveActionErrorMessage(error);
     return { success: false, message };
   }
 }

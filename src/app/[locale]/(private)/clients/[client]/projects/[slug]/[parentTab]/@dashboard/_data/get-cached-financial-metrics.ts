@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { cache } from "react";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { getFinancialMetricsAction } from "@/actions/financial/getFinancialMetricsAction";
@@ -17,9 +17,7 @@ export const getCachedFinancialMetrics = cache(async (slug: string) => {
   );
 
   if (error || !success?.success || !success?.data) {
-    throw new AppError(
-      success?.message || "Não foi possível recuperar as métricas financeiras"
-    );
+    throw new ValidationError(success?.message || "Não foi possível recuperar as métricas financeiras");
   }
   return success.data;
 });

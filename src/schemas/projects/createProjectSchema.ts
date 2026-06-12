@@ -1,22 +1,17 @@
-import { error } from "console";
+import { v } from "@/schemas/validationMessages";
 import { z } from "zod";
 
-// Schema de validação
 export const projectFormSchema = z.object({
-  name: z
-    .string()
-    .min(3, "O nome do projeto deve ter pelo menos 3 caracteres."),
-  description: z.string().min(10, "A descrição deve ser mais detalhada."),
-  clientId: z.string({ message: "Selecione um cliente." }),
+  name: z.string().min(3, v.nameMinLength),
+  description: z.string().min(10, v.projectDescriptionMin),
+  clientId: z.string({ message: v.selectClient }),
   priority: z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]),
-  estimatedStartDate: z.coerce.date().optional(), // Ou z.date() dependendo de como você trata datas
+  estimatedStartDate: z.coerce.date().optional(),
   endDate: z.coerce.date().optional(),
   totalBudget: z.number().min(0).optional(),
-  tags: z
-    .array(z.string(), { error: "O campo espera uma lista de Tags" })
-    .optional(),
+  tags: z.array(z.string(), { error: v.tagsListExpected }).optional(),
   documents: z
-    .array(z.custom<File>((val) => val instanceof File, "Arquivo inválido"))
+    .array(z.custom<File>((val) => val instanceof File, v.invalidFile))
     .optional(),
 });
 

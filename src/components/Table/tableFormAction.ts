@@ -1,9 +1,9 @@
 "use server";
 
+import { resolveActionErrorMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { revalidatePath, revalidateTag } from "next/cache";
 
-import { AppError } from "@/errors/AppError";
-import { handleErrors } from "@/errors/handleErrors";
+import { ValidationError } from "@/errors";
 import { httpClient } from "@/lib/httpClient";
 
 interface ITableFormAction {
@@ -28,14 +28,14 @@ export async function tableFormAction({
     });
 
     if (error) {
-      throw new AppError(error.message);
+      throw new ValidationError(error.message);
     }
 
     tagsToRevalidate.forEach((tag) => revalidateTag(tag, "layout"));
     pathsToRevalidate.forEach((path) => revalidatePath(path));
     return "Operação realizada com sucesso";
   } catch (error) {
-    handleErrors(error);
+    await resolveActionErrorMessage(error);
     throw error;
   }
 }

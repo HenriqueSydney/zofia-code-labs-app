@@ -2,6 +2,7 @@
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 import {
   ChartNoAxesCombined,
@@ -24,17 +25,19 @@ export function MetricsTabs({
   currentTab,
   children,
 }: IMetricsTabs) {
+  const t = useTranslations("projects.metrics.tabs");
+
   const tabs = [
-    { tabSlug: "life-cycle", tabName: "Ciclo de Vida", Icon: GitGraph },
+    { tabSlug: "life-cycle", tabName: t("lifeCycle"), Icon: GitGraph },
     {
       tabSlug: "code-quality",
-      tabName: "Qualidade de Código",
+      tabName: t("codeQuality"),
       Icon: SearchCode,
     },
     // { tabSlug: "security", tabName: "Segurança", Icon: ShieldCheck },
     {
       tabSlug: "web-analytics",
-      tabName: "Web Analytics",
+      tabName: t("webAnalytics"),
       Icon: ChartNoAxesCombined,
     },
   ];

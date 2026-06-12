@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { cache } from "react";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { getClientDeliveryEvolutionAction } from "@/actions/clients/getClientDeliveryEvolutionAction";
@@ -16,7 +16,7 @@ export const getClientProjectPipeline = cache(async (slug: string) => {
   );
 
   if (error) {
-    throw new AppError(error.message);
+    throw new ValidationError(error.message);
   }
 
   return success;

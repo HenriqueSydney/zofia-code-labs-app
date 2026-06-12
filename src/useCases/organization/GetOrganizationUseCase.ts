@@ -1,5 +1,6 @@
-import { AppError } from "@/errors/AppError";
+import { ValidationError, ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
+import { toOrganizationAsset } from "@/lib/auth/toOrganizationAsset";
 import {
   IOrganizationsRepository,
   OrganizationWithStats,
@@ -38,19 +39,22 @@ export class GetOrganizationUseCase {
     const searchMethod = lookupStrategies[identifierType];
 
     if (!searchMethod) {
-      throw new AppError("Tipo de identificador inválido.");
+      throw new ValidationError("Tipo de identificador inválido.");
     }
 
     const organization = await searchMethod(identifier);
 
     // 3. Validações padrão
     if (!organization) {
-      throw new AppError("Organização não localizada");
+      throw new ResourceNotFoundError("Organização não localizada");
     }
 
-    // 4. Checagem de permissão
-    // Nota: Certifique-se que você tem uma strategy para "organization" ou "client" no seu AuthMap
-    // await checkUserPermissionForAsset("client", userId, organization, "READ");
+    await checkUserPermissionForAsset(
+      "organization",
+      userId,
+      toOrganizationAsset(organization),
+      "READ",
+    );
 
     return { organization };
   }

@@ -29,7 +29,8 @@ O **Zofia Code Labs App** justifica-se porque:
 
 - **Unifica dados** de cliente, projeto, documentos e finanças sob **tenant** e políticas de acesso.
 - **Automatiza pontos críticos** do fluxo (templates de documentos, assinatura via Documenso, integrações para métricas e segredos).
-- **Escala o modelo** em direção a **SaaS multi-tenant**, reutilizando a mesma base para uso interno e para clientes corporativos futuros, com governança (RBAC) já prevista na modelagem.
+- **Escala o modelo** em direção a **SaaS multi-tenant**, com RBAC implementado (perfis customizados, proxy de rotas, portal do cliente) e billing em evolução.
+- **Oferece portal ao cliente** para transparência de projetos e documentos, sem expor a operação interna completa da software house.
 
 ### Indicadores de sucesso (orientadores)
 

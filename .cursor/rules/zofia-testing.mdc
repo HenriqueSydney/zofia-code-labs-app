@@ -1,0 +1,73 @@
+---
+description: Vitest, repositories In Memory e testes de use cases
+globs: "**/*.spec.ts,**/*.spec.tsx,**/useCases/**,**/repositories/**"
+alwaysApply: false
+---
+
+# Testes unitários
+
+Exemplos completos: `docs/guia-testes.md`. Setup (`vitest.config`, `npm run test`) é responsabilidade de configuração separada do projeto.
+
+## Obrigatório
+
+- Todo `I*Repository` novo → `InMemory*Repository` em `src/repositories/in-memory/`
+- Use case testado com **`sut` no construtor** — sem `make*UseCase()` / Prisma real
+- `beforeEach`: reiniciar In Memory e mocks; `vi.clearAllMocks()` se houver `vi.mock` global
+
+## In Memory (resumo)
+
+- `public items: Entidade[] = []`
+- `randomUUID()` + `date()` de `@/lib/dayjs`
+- Tipos `@/generated/prisma/client`
+- Todos os métodos do contrato; `find*` → objeto ou `null`
+
+## Imports
+
+- Relativos para SUT e In Memory
+- `@/` aceito para erros/tipos compartilhados (padrão existente em `src/errors/*.spec.ts`)
+
+## Use case — estrutura
+
+```typescript
+beforeEach(() => {
+  vi.clearAllMocks();
+  repository = new InMemoryXRepository();
+  sut = new XUseCase(repository, mockedService);
+});
+```
+
+- Feliz: seed via In Memory → `await sut.execute(...)`
+- Erro: `await expect(() => sut.execute(...)).rejects.toBeInstanceOf(ValidationError)`
+
+## Erros esperados
+
+| Situação | Classe |
+|----------|--------|
+| Validação / payload | `ValidationError` |
+| Não encontrado | `ResourceNotFoundError` |
+| Sem permissão | `ForbiddenError`, `UserDoesNotHavePermissionError` |
+| Regra de negócio | `AppError`, `BusinessRuleError` |
+| Duplicidade | `ConflictError` |
+
+## Permissões nos testes
+
+- **Mock** `checkUserPermissionForAsset` quando o foco não é RBAC
+- **Sem mock** quando o spec valida autorização (com seed mínimo nos In Memory)
+
+## Utils
+
+AAA, descrições `deve ...` em português; sem mock salvo ambiente browser.
+
+## Não testar (Vitest unitário)
+
+- Server Action integral, PostgreSQL, middleware — extrair lógica para use case ou E2E
+- **RSC async** (`export async function` em `page.tsx`, `_components/`, `_data/`) — Playwright
+- **DTOs/interfaces** (`repositories/I*.ts`), **factories** (`make*UseCase`, `make*Repository`)
+- Repos Prisma e In Memory (test doubles)
+- Services externos — mock nos specs de use case
+
+## Cobertura
+
+`vitest.config.ts`: inclui `utils`, `useCases` (sem factories), `errors`, `mappers`, helpers sync em `app`. Exclui `app` UI, `actions`, `repositories`, `services`, `schemas`, `components`, `generated`.
+
+Priorizar branches em use cases; máx. 3 tentativas de fix por falha; não forçar assert.

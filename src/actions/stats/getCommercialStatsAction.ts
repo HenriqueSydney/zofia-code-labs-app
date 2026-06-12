@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
 import { makeGetCommercialStatsUseCase } from "@/useCases/stats/factories/makeGetCommercialStatsUseCase";
 export async function getCommercialStatsAction(projectSlug: string) {
@@ -8,7 +9,7 @@ export async function getCommercialStatsAction(projectSlug: string) {
   if (!session?.user?.id) {
     return {
       success: false,
-      message: "Usuário não autenticado.",
+      message: await serverErrorMessage("unauthenticated"),
       data: null,
     };
   }

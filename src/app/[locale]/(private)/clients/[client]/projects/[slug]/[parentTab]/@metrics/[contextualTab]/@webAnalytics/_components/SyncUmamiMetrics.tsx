@@ -1,37 +1,37 @@
 "use client";
 
+import { ValidationError } from "@/errors/ValidationError";
 import { useTransition } from "react";
 import { syncUmamiMetricsAction } from "@/actions/integrations/umami/syncUmamiMetricsAction";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { RefreshCw } from "lucide-react"; // Ícone de sincronização
-import { cn } from "@/lib/utils";
+import { RefreshCw } from "lucide-react";
+import { cn } from "@/utils/twMerge";
+import { useTranslations } from "next-intl";
 
 interface ISyncUmamiMetrics {
   projectSlug: string;
 }
 
 export function SyncUmamiMetrics({ projectSlug }: ISyncUmamiMetrics) {
+  const t = useTranslations("projects.metrics.webAnalytics.sync");
   const [isPending, startTransition] = useTransition();
 
   const handleSyncMetrics = () => {
-    // Criamos um ID para o toast para podermos atualizá-lo (evita spam de toasts)
-    const toastId = toast.loading("Sincronizando métricas com Umami...");
+    const toastId = toast.loading(t("loading"));
 
     startTransition(async () => {
       try {
         const result = await syncUmamiMetricsAction(projectSlug);
 
         if (!result.success) {
-          throw new Error(result.message);
+          throw new ValidationError(result.message ?? t("error"));
         }
 
-        toast.success("Métricas atualizadas com sucesso", { id: toastId });
+        toast.success(t("success"), { id: toastId });
       } catch (error) {
         console.error("Sync Error:", error);
-        toast.error("Falha na sincronização. Verifique os logs.", {
-          id: toastId,
-        });
+        toast.error(t("error"), { id: toastId });
       }
     });
   };
@@ -42,7 +42,7 @@ export function SyncUmamiMetrics({ projectSlug }: ISyncUmamiMetrics) {
       onClick={handleSyncMetrics}
       disabled={isPending}
       className="gap-2"
-      title="Sincronizar base de dados com Umami"
+      title={t("title")}
     >
       <RefreshCw className={cn("h-4 w-4", isPending && "animate-spin")} />
     </Button>

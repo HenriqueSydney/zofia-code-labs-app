@@ -2,6 +2,7 @@ import { Pagination } from "@/@types/Pagination";
 import {
   Account,
   LoginHistory,
+  MemberRole,
   Organization,
   Prisma,
   User,
@@ -12,8 +13,9 @@ export type UserSafe = Omit<User, "passwordHash"> & {
 };
 
 export type UserSafeWithPermissions = UserSafe & {
-  permissions: string[]; // O array final unificado
-  roleName?: string; // Opcional: útil para exibir na UI o nome do cargo
+  permissions: string[];
+  roleName?: string;
+  memberRole?: MemberRole | null;
 };
 // Atualiza o tipo UserWithAllInfo para usar o UserSafe como base
 export type UserWithAllInfo = UserSafe & {

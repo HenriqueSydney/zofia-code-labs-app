@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
+import { UnauthorizedError, ValidationError } from "@/errors";
 import { makeFetchOrganizationCustomRolesUseCase } from "@/useCases/organization/factories/makeFetchOrganizationCustomRolesUseCase";
 
 export async function fetchOrganizationCustomRolesAction(
@@ -10,11 +10,11 @@ export async function fetchOrganizationCustomRolesAction(
   const session = await auth();
 
   if (!session) {
-    throw new AppError("Usuário não logado.", 401);
+    throw new UnauthorizedError("notLoggedIn");
   }
 
   if (!organizationId) {
-    throw new AppError("ID da organização é obrigatório.");
+    throw new ValidationError("ID da organização é obrigatório.");
   }
 
   const useCase = makeFetchOrganizationCustomRolesUseCase();

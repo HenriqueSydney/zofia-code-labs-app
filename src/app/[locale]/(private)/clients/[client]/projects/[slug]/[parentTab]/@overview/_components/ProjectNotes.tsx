@@ -1,6 +1,6 @@
 import { fetchProjectNotes } from "@/actions/projectNotes/fetchProjectNotes";
 import { UserAvatar } from "@/components/UserAvatar";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { date } from "@/lib/dayjs";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { ProjectNotesWithDetails } from "@/repositories/IProjectNotesRepository";
@@ -20,6 +20,8 @@ export async function ProjectNotes({ project, query }: IProjectNotes) {
   const session = await auth();
   const locale = await getLocale();
   const t = await getTranslations("project.notes");
+  const tNotes = await getTranslations("projects.notes");
+  const tErrors = await getTranslations("projects.errors");
   const [fetchProjectNotesError, fetchProjectNotesSuccess] =
     await operationWrapper<{
       totalOfRegisters: number;
@@ -39,7 +41,7 @@ export async function ProjectNotes({ project, query }: IProjectNotes) {
     );
 
   if (fetchProjectNotesError) {
-    throw new AppError("Erro ao tentar localizar os projetos da Organização");
+    throw new ValidationError(tErrors("organizationProjects"));
   }
 
   const notes = fetchProjectNotesSuccess.projectNotes;
@@ -48,8 +50,8 @@ export async function ProjectNotes({ project, query }: IProjectNotes) {
     <div className="space-y-3 max-h-125 overflow-y-auto custom-scrollbar pr-2">
       {notes.length === 0 && (
         <EmptyState
-          title="Nenhuma observação incluída"
-          description="Até o momento, este projeto não possui observações."
+          title={tNotes("emptyTitle")}
+          description={tNotes("emptyDescription")}
           icon={Text}
         />
       )}

@@ -2,6 +2,7 @@ import { formatDate } from "@/utils/dateFormatter";
 import { parseUserAgent } from "@/utils/parseUserAgent";
 import { History, Globe, Clock } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
+import { UserProfileSectionCard } from "./UserProfileSectionCard";
 
 // Tipo simplificado baseado no seu Prisma Model
 type LoginHistoryItem = {
@@ -9,6 +10,9 @@ type LoginHistoryItem = {
   ipAddress: string | null;
   userAgent: string | null;
   createdAt: Date | string;
+  city: string | null;
+  country: string | null;
+  region: string | null;
 };
 
 interface LoginHistorySectionProps {
@@ -34,19 +38,22 @@ export async function LoginHistorySection({
   };
 
   return (
-    <div className="bg-card rounded-2xl shadow-xl p-8 mb-6 border border">
-      {/* Cabeçalho */}
-      <div className="flex items-center space-x-3 mb-6">
-        <History className="w-6 h-6 text-blue-600" />
-        <h3 className="text-2xl font-bold text-primary">
-          {t("title") || "Histórico de Acesso"}
-        </h3>
-      </div>
-
+    <UserProfileSectionCard
+      title={t("title")}
+      icon={<History className="w-6 h-6 text-blue-600" />}
+      collapsible
+    >
       <div className="space-y-3">
         {history.map((item) => {
           const device = parseUserAgent(item.userAgent);
           const DeviceIcon = device.icon;
+          let ipAddress = item.ipAddress || t("ipAddress");
+          if (ipAddress === "::1") {
+            ipAddress = t("localhost");
+          }
+          let city = item.city;
+          let country = item.country;
+          let region = item.region;
 
           return (
             <div
@@ -59,12 +66,19 @@ export async function LoginHistorySection({
                   <DeviceIcon className="w-5 h-5" />
                 </div>
 
-                <div>
+                <div className="w-full">
                   <p className="font-semibold text-foreground">{device.name}</p>
 
                   {/* Detalhes Mobile (IP e Data juntos) */}
-                  <div className="flex sm:hidden items-center gap-2 text-xs text-slate-500 mt-1">
-                    <span>{item.ipAddress || "IP Oculto"}</span>
+                  <div className="w-full flex sm:hidden items-center justify-between gap-2 text-xs text-slate-500 mt-1">
+                    <div className="flex flex-col items-start">
+                      <span>{ipAddress} </span>
+                      <span>
+                        {ipAddress === t("localhost")
+                          ? ""
+                          : `(${region}, ${country})`}
+                      </span>
+                    </div>
                     <span>•</span>
                     <span>
                       {" "}
@@ -75,15 +89,18 @@ export async function LoginHistorySection({
               </div>
 
               {/* Detalhes Desktop (Direita) */}
-              <div className="hidden sm:flex items-center gap-6 text-sm text-slate-600 dark:text-slate-400">
-                <div className="flex items-center gap-2" title="Endereço IP">
+              <div className="hidden sm:flex sm:flex-col items-end text-sm text-slate-600 dark:text-slate-400">
+                <div className="flex items-center gap-2" title={t("ipAddressTitle")}>
                   <Globe className="w-4 h-4 text-muted-foreground" />
                   <span className="font-mono">
-                    {item.ipAddress || "IP Oculto"}
+                    {ipAddress}{" "}
+                    {ipAddress === t("localhost")
+                      ? ""
+                      : `(${city}, ${region}, ${country})`}
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2" title="Data do Acesso">
+                <div className="flex items-center gap-2" title={t("accessDateTitle")}>
                   <Clock className="w-4 h-4 text-muted-foreground" />
                   <span>
                     {" "}
@@ -97,8 +114,8 @@ export async function LoginHistorySection({
       </div>
 
       <p className="text-xs text-muted-foreground mt-4 text-center">
-        {t("footerNote") || "Exibindo os últimos 10 acessos à sua conta."}
+        {t("footerNote")}
       </p>
-    </div>
+    </UserProfileSectionCard>
   );
 }

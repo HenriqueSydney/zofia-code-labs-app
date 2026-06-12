@@ -1,23 +1,23 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/twMerge";
 import { CheckCheck, ChevronDown } from "lucide-react";
-import { useEffect, useState } from "react";
-import { FlowCategoryIndicator } from "./FlowCategoryIndicator";
-import { ProjectStage } from "@/mappers/projectStageMapper";
+import { useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
-interface StageConfig {
-  key: ProjectStage;
-  label: string;
-  icon: React.ElementType;
-  color: string;
-  description: string;
-  nextAction?: string;
-}
+import { FlowCategoryIndicator } from "./FlowCategoryIndicator";
+import {
+  ProjectStage,
+  StageConfig,
+  translateStageConfigs,
+  type TranslatedStageConfig,
+} from "@/mappers/projectStageMapper";
 
 interface IFlowSection {
   category: string;
@@ -42,31 +42,38 @@ export const FlowSection = ({
   compact = false,
   isInThisFlow = false,
 }: IFlowSection) => {
-  const currentIndex = allStages.findIndex((s) => s.key === currentStage);
+  const tStages = useTranslations("projects.stages");
+  const stageT = (key: string) =>
+    tStages(key as Parameters<typeof tStages>[0]);
+
+  const translatedStages = useMemo(
+    () => translateStageConfigs(stages, stageT),
+    [stages, tStages],
+  );
+  const translatedAllStages = useMemo(
+    () => translateStageConfigs(allStages, stageT),
+    [allStages, tStages],
+  );
+
+  const currentIndex = translatedAllStages.findIndex((s) => s.key === currentStage);
   const isActiveFlow = stages.some((s) => s.key === currentStage);
   const [isOpen, setIsOpen] = useState(isActiveFlow);
 
-  // Auto-open if the current stage moves into this flow
   useEffect(() => {
-    if (isActiveFlow) {
-      setIsOpen(true);
-    }
-
-    if (isOpen && !isActiveFlow) {
-      setIsOpen(false);
-    }
+    setIsOpen(isActiveFlow);
   }, [isActiveFlow]);
 
-  const getStageStatus = (stage: StageConfig) => {
-    const stageIndex = allStages.findIndex((s) => s.key === stage.key);
+  const getStageStatus = (stage: TranslatedStageConfig) => {
+    const stageIndex = translatedAllStages.findIndex((s) => s.key === stage.key);
     if (isCancelled) return "pending";
     if (stageIndex < currentIndex) return "completed";
     if (stageIndex === currentIndex) return "current";
     return "pending";
   };
 
-  const firstIndex = allStages.findIndex((s) => s.key === stages[0].key);
-  // Calculate progress relative to this section
+  const firstIndex = translatedAllStages.findIndex(
+    (s) => s.key === stages[0].key,
+  );
   const progressStart = Math.max(0, currentIndex - firstIndex);
 
   const arbitrarySum = isActiveFlow ? 100 / stages.length / 2 : 0;
@@ -95,7 +102,7 @@ export const FlowSection = ({
               <ChevronDown
                 className={cn(
                   "h-4 w-4 transition-transform duration-200",
-                  isOpen ? "rotate-180" : ""
+                  isOpen ? "rotate-180" : "",
                 )}
               />
               <span className="sr-only">Toggle</span>
@@ -106,7 +113,6 @@ export const FlowSection = ({
         <CollapsibleContent>
           <div className="px-4 pb-4 pt-0 ">
             <div className="relative mt-2 ">
-              {/* Progress Line */}
               <div className="absolute top-4 left-4 right-4 h-0.5 bg-muted-foreground/20 rounded-full" />
               <div
                 className="absolute top-4 left-4 h-0.5 bg-primary rounded-full transition-all duration-500"
@@ -115,9 +121,8 @@ export const FlowSection = ({
                 }}
               />
 
-              {/* Stage Points */}
               <div className="flex justify-between w-full items-start">
-                {stages.map((stage, index) => {
+                {translatedStages.map((stage, index) => {
                   const status = getStageStatus(stage);
                   const isLast = index === stages.length - 1;
                   const isFirst = index === 0;
@@ -127,37 +132,32 @@ export const FlowSection = ({
                       key={stage.key}
                       className="relative flex-1 flex flex-col items-center"
                     >
-                      {/* Container da Linha (Background) */}
                       <div className="absolute top-5 w-full flex items-center">
-                        {/* Linha da Esquerda */}
                         <div
                           className={cn(
                             "h-0.5 flex-1",
                             isFirst
                               ? "bg-transparent"
                               : status === "completed" || status === "current"
-                              ? "bg-primary"
-                              : "bg-muted-foreground/20"
+                                ? "bg-primary"
+                                : "bg-muted-foreground/20",
                           )}
                         />
 
-                        {/* Espaço do Ícone (para a linha não atravessar o desenho) */}
                         <div className="w-10" />
 
-                        {/* Linha da Direita */}
                         <div
                           className={cn(
                             "h-0.5 flex-1",
                             isLast
                               ? "bg-transparent"
                               : status === "completed"
-                              ? "bg-primary"
-                              : "bg-muted-foreground/20"
+                                ? "bg-primary"
+                                : "bg-muted-foreground/20",
                           )}
                         />
                       </div>
 
-                      {/* Ícone */}
                       <div
                         className={cn(
                           "relative z-10 w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all",
@@ -166,7 +166,7 @@ export const FlowSection = ({
                           status === "current" &&
                             "bg-background border-primary text-primary ring-4 ring-primary/20",
                           status === "pending" &&
-                            "bg-background border-muted-foreground/30 text-muted-foreground"
+                            "bg-background border-muted-foreground/30 text-muted-foreground",
                         )}
                       >
                         {status === "completed" ? (
@@ -176,7 +176,6 @@ export const FlowSection = ({
                         )}
                       </div>
 
-                      {/* Label */}
                       <span className="mt-2 text-xs text-center font-medium">
                         {stage.label}
                       </span>

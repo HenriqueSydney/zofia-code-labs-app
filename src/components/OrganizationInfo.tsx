@@ -41,7 +41,7 @@ export function OrganizationInfo({ organization }: OrganizationInfoProps) {
       <div className="flex items-center space-x-3 mb-6">
         <Building2 className="w-6 h-6 text-blue-600" />
         <h3 className="text-2xl font-bold text-primary">
-          {t("title") || "Organização"}
+          {t("title")}
         </h3>
       </div>
 
@@ -55,16 +55,15 @@ export function OrganizationInfo({ organization }: OrganizationInfoProps) {
               </div>
               <div>
                 <p className="font-semibold text-foreground">
-                  {t("noOrgTitle") || "Sem vínculo empresarial"}
+                  {t("noOrgTitle")}
                 </p>
                 <p className="text-sm text-slate-600 dark:text-slate-400">
-                  {t("noOrgDesc") ||
-                    "Você ainda não faz parte de uma organização."}
+                  {t("noOrgDesc")}
                 </p>
               </div>
             </div>
             <Button variant="default">
-              {t("createOrg") || "Criar Organização"}
+              {t("createOrg")}
             </Button>
           </div>
         )}
@@ -84,7 +83,7 @@ export function OrganizationInfo({ organization }: OrganizationInfoProps) {
                     <p className="font-semibold text-lg">{organization.name}</p>
                     <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 font-medium flex items-center gap-1">
                       <CheckCircle2 className="w-3 h-3" />
-                      Ativa
+                      {t("statusActive")}
                     </span>
                   </div>
                   <p className="text-sm text-slate-600 dark:text-slate-400">
@@ -96,7 +95,7 @@ export function OrganizationInfo({ organization }: OrganizationInfoProps) {
               <Link href={`/organization/${organization.id}`}>
                 <Button variant="outline" className="gap-2 w-full sm:w-auto">
                   <Settings2 className="w-4 h-4" />
-                  {t("manage") || "Gerenciar"}
+                  {t("manage")}
                 </Button>
               </Link>
             </div>
@@ -124,7 +123,7 @@ export function OrganizationInfo({ organization }: OrganizationInfoProps) {
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground uppercase font-bold">
-                      Setor
+                      {t("industryLabel")}
                     </p>
                     <p className="text-sm font-medium capitalize">
                       {organization.industry.replace("_", " ").toLowerCase()}
@@ -139,7 +138,7 @@ export function OrganizationInfo({ organization }: OrganizationInfoProps) {
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground uppercase font-bold">
-                      Desde
+                      {t("memberSince")}
                     </p>
                     <p className="text-sm font-medium">{formattedDate}</p>
                   </div>

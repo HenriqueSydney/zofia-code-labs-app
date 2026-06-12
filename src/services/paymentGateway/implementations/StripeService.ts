@@ -1,112 +1,208 @@
+import Stripe from "stripe";
 import { IntegrationBase } from "../../IntegrationBase";
 import {
   IPaymentGatewayService,
   PaymentMethods,
   SubscriptionPlan,
-  StripeFees,
+  GatewayFees,
+  PaymentIntentResult,
+  CustomerResult,
 } from "../IPaymentGatewayService";
+
+export class StripeError extends Error {
+  constructor(
+    message: string,
+    public readonly code?: string,
+    public readonly statusCode?: number,
+  ) {
+    super(message);
+    this.name = "StripeError";
+  }
+}
 
 export class StripeService
   extends IntegrationBase
   implements IPaymentGatewayService
 {
-  private baseUrl: string = "https://api.stripe.com/v1";
-  private secretKey: string;
+  private client: Stripe;
 
   constructor(config: { apiKey: string }) {
     super("stripe");
-    this.secretKey = config.apiKey || "";
+    this.client = new Stripe(config.apiKey, {
+      apiVersion: "2026-05-27.dahlia",
+      typescript: true,
+    });
   }
 
   async healthCheck(): Promise<{ status: "up" | "down"; latency: number }> {
     const start = performance.now();
     try {
-      // Consultar o saldo é o teste mais comum de conectividade/auth
-      const response = await fetch(`${this.baseUrl}/balance`, {
-        headers: this.getAuthHeader(),
-      });
-
-      return {
-        status: response.ok ? "up" : "down",
-        latency: Math.round(performance.now() - start),
-      };
+      await this.client.balance.retrieve();
+      return { status: "up", latency: Math.round(performance.now() - start) };
     } catch {
       return { status: "down", latency: Math.round(performance.now() - start) };
     }
   }
 
-  private getAuthHeader() {
+  async createCustomer(email: string, name: string): Promise<CustomerResult> {
+    try {
+      const customer = await this.client.customers.create({ email, name });
+      return {
+        gatewayCustomerId: customer.id,
+        email: customer.email ?? email,
+        name: customer.name ?? name,
+        gateway: "stripe",
+        raw: customer,
+      };
+    } catch (err) {
+      throw this.normalizeError(err);
+    }
+  }
+
+  async createCheckoutSession(
+    data: PaymentMethods,
+  ): Promise<PaymentIntentResult> {
+    try {
+      const session = await this.client.checkout.sessions.create({
+        mode: "payment",
+        customer: data.customerId,
+        line_items: [
+          {
+            price_data: {
+              currency: data.currency.toLowerCase(),
+              unit_amount: data.amount, // já em centavos
+              product_data: { name: data.description ?? "Fatura" },
+            },
+            quantity: 1,
+          },
+        ],
+        payment_method_types: ["card"],
+        customer_email: data.customerId ? undefined : data.customerEmail,
+        success_url: `${process.env.APP_URL}/invoices/${data.invoiceId}?paid=true`,
+        cancel_url: `${process.env.APP_URL}/invoices/${data.invoiceId}`,
+        expires_at: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
+        metadata: {
+          invoiceId: data.invoiceId,
+          organizationId: data.organizationId,
+        },
+      });
+
+      return {
+        id: session.id,
+        clientSecret: session.id, // mantém compatibilidade de tipo
+        checkoutUrl: session.url!, // ← URL real de pagamento
+        status: session.status ?? "open",
+        amount: data.amount,
+        currency: data.currency,
+      };
+    } catch (err) {
+      throw this.normalizeError(err);
+    }
+  }
+
+  /**
+   * Cria um Payment Intent para faturas de projeto (one-off).
+   * O customerId e invoiceId no metadata são obrigatórios para reconciliação via webhook.
+   */
+  async createPaymentIntent(
+    data: PaymentMethods,
+  ): Promise<PaymentIntentResult> {
+    const methodId = data.type === "pix" ? "pix" : "boleto";
+    const payerDocument =
+      process.env.NODE_ENV === "development"
+        ? "00000000000191"
+        : data.payer?.document?.replace(/\D/g, "");
+
+    const intent = await this.client.paymentIntents.create({
+      amount: data.amount,
+      currency: data.currency.toLowerCase(),
+      customer: data.customerId,
+      payment_method_types: [methodId],
+      payment_method_data: {
+        type: methodId as "pix" | "boleto",
+        ...(methodId === "boleto" && {
+          boleto: { tax_id: payerDocument ?? "" },
+          billing_details: {
+            name: data.payer?.name ?? "",
+            email: data.customerEmail,
+            address: {
+              country: "BR",
+              line1: data.payer?.address ?? "N/A",
+              city: data.payer?.city ?? "N/A",
+              state: data.payer?.state ?? "SP",
+              postal_code:
+                data.payer?.zipCode?.replace(/\D/g, "") ?? "00000000",
+            },
+          },
+        }),
+      },
+      confirm: true, // ← necessário para next_action aparecer
+      description: data.description ?? "",
+      receipt_email: data.customerEmail,
+      metadata: {
+        invoiceId: data.invoiceId,
+        organizationId: data.organizationId,
+      },
+    });
+
+    const next = intent.next_action;
+
     return {
-      Authorization: `Bearer ${this.secretKey}`,
-      "Content-Type": "application/x-www-form-urlencoded",
+      id: intent.id,
+      clientSecret: intent.client_secret!,
+      status: intent.status,
+      amount: intent.amount,
+      currency: intent.currency,
+      pixQrCodeBase64: next?.pix_display_qr_code?.image_url_png ?? undefined,
+      pixCopyPaste: next?.pix_display_qr_code?.data ?? undefined,
+      boletoUrl: next?.boleto_display_details?.hosted_voucher_url ?? undefined,
     };
   }
 
-  /**
-   * Cria uma intenção de pagamento para Cartão, PIX ou Boleto
-   */
-  async createPaymentIntent(data: PaymentMethods): Promise<any> {
-    const body = new URLSearchParams({
-      amount: data.amount.toString(),
-      currency: data.currency.toLowerCase(),
-      "payment_method_types[]": data.type,
-      description: data.description || "",
-      receipt_email: data.customerEmail,
-    });
-
-    // Se for boleto, o Stripe exige parâmetros adicionais do cliente
-    if (data.type === "boleto") {
-      body.append("payment_method_data[type]", "boleto");
-      // Nota: Para boleto/pix real no Brasil, é necessário coletar CPF/CNPJ
+  async createSubscription(
+    data: SubscriptionPlan,
+  ): Promise<Stripe.Subscription> {
+    try {
+      return await this.client.subscriptions.create({
+        customer: data.customerId,
+        items: [{ price: data.priceId }],
+        metadata: {
+          organizationId: data.organizationId,
+        },
+      });
+    } catch (err) {
+      throw this.normalizeError(err);
     }
-
-    const response = await fetch(`${this.baseUrl}/payment_intents`, {
-      method: "POST",
-      headers: this.getAuthHeader(),
-      body: body.toString(),
-    });
-
-    return response.json();
   }
 
-  async createCustomer(email: string, name: string): Promise<any> {
-    const body = new URLSearchParams({ email, name });
-    const response = await fetch(`${this.baseUrl}/customers`, {
-      method: "POST",
-      headers: this.getAuthHeader(),
-      body: body.toString(),
-    });
-    return response.json();
-  }
-
-  async createSubscription(data: SubscriptionPlan): Promise<any> {
-    const body = new URLSearchParams({
-      customer: data.customerId,
-      "items[0][price]": data.priceId,
-    });
-
-    const response = await fetch(`${this.baseUrl}/subscriptions`, {
-      method: "POST",
-      headers: this.getAuthHeader(),
-      body: body.toString(),
-    });
-
-    return response.json();
+  async cancelSubscription(
+    subscriptionId: string,
+  ): Promise<Stripe.Subscription> {
+    try {
+      return await this.client.subscriptions.cancel(subscriptionId);
+    } catch (err) {
+      throw this.normalizeError(err);
+    }
   }
 
   /**
-   * O Stripe não possui um endpoint que retorna "taxas dinâmicas" via API,
-   * pois elas são contratuais. No entanto, podemos buscar os detalhes da conta
-   * ou retornar um mapeamento baseado na região (Ex: Brasil).
+   * Taxas contratuais — não existe endpoint na API do Stripe para isso.
+   * Atualizar conforme contrato vigente.
    */
-  async getCurrentFees(): Promise<StripeFees> {
-    // Simulando busca de taxas padrão para Stripe Brasil (configurável via env)
+  async getCurrentFees(): Promise<GatewayFees> {
     return {
-      card_percentage: 3.99, // Exemplo médio
+      card_percentage: 3.99,
       card_fixed: 0.39,
       pix_percentage: 0.9,
       pix_fixed: 0.0,
       boleto_fixed: 3.45,
     };
+  }
+
+  private normalizeError(err: unknown): StripeError {
+    if (err instanceof Stripe.errors.StripeError) {
+      return new StripeError(err.message, err.code, err.statusCode);
+    }
+    return new StripeError("Unexpected error", undefined, 500);
   }
 }

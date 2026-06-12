@@ -15,6 +15,7 @@ import {
 
 import { Edit } from "lucide-react";
 import { ClientForm } from "../../_components/ClientForm";
+import { useTranslations } from "next-intl";
 
 interface IEditClientForm {
   client: {
@@ -24,11 +25,12 @@ interface IEditClientForm {
     cnpj?: string | null;
     email?: string | null;
     phone?: string | null;
-    logoUrl?: string | null; // Adicionado para exibir logo existente na edição
+    logoUrl?: string | null;
   };
 }
 
 export function EditClientForm({ client }: IEditClientForm) {
+  const t = useTranslations("clients.dialog");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
@@ -41,13 +43,13 @@ export function EditClientForm({ client }: IEditClientForm) {
       <DialogTrigger asChild>
         <Button variant="outline">
           <Edit className="h-4 w-4 mr-2" />
-          Editar Cliente
+          {t("editTitle")}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Editar Cliente</DialogTitle>
-          <DialogDescription>Preencha os dados do cliente</DialogDescription>
+          <DialogTitle>{t("editTitle")}</DialogTitle>
+          <DialogDescription>{t("editDescription")}</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4"></div>
         <ClientForm

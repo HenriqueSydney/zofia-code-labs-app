@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { IntegrationError, ValidationError } from "@/errors";
 import { IProjectIntegrationRepository } from "@/repositories/IProjectIntegrationRepository";
 import {
   ISonarQubeRepository,
@@ -36,7 +36,7 @@ export class GetSonarQubeMetricsUseCase {
       );
 
     if (!projectLink) {
-      throw new AppError("Integração não configurada.", 404);
+      throw new IntegrationError("Integração não configurada.", { statusCode: 404 });
     }
 
     // 3. Busca Snapshots: O atual e o de 30 dias atrás
@@ -53,10 +53,7 @@ export class GetSonarQubeMetricsUseCase {
     ]);
 
     if (!currentSnapshot) {
-      throw new AppError(
-        "Nenhum dado encontrado. Sincronize as métricas primeiro.",
-        404
-      );
+      throw new ValidationError("Nenhum dado encontrado. Sincronize as métricas primeiro.", { statusCode: 404 });
     }
     // 4. Mapeamento das métricas com cálculo de tendências e reconstrução de 'severity'
     const metrics: ProjectMetricsWithTrend = {

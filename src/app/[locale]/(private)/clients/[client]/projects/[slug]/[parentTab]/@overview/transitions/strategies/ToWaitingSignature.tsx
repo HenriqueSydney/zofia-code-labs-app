@@ -8,14 +8,13 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ThumbsUp, AlertCircle } from "lucide-react";
 import { ContractWithDetails } from "@/repositories/IContractRepository";
 import { Separator } from "@/components/ui/separator";
-import { ContractEditor } from "./toWaitingSignatureSteps/ContractEditor";
 import { getContractAction } from "@/actions/contract/getContract";
-import { ContractToNextStep } from "./toWaitingSignatureSteps/ContractToNextStep";
 import { toast } from "sonner";
 import { ProposalWithDetails } from "@/repositories/IProposalRepository";
 import { getProposalAction } from "@/actions/proposal/getProposal";
 import { ProposalDetails } from "@/components/ProposalDetail";
 import { ProposalDetailsModalSkeleton } from "@/components/skeletons/ProposalDetailsModalSkeleton";
+import { useTranslations } from "next-intl";
 
 export function ToWaitingSignature({
   project,
@@ -24,6 +23,7 @@ export function ToWaitingSignature({
   onCancel,
   contextData,
 }: TransitionStrategyProps) {
+  const t = useTranslations("projects.transitions.contract");
   const [contract, setContract] = useState<ContractWithDetails | null>(null);
   const [proposal, setProposal] = useState<ProposalWithDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -52,14 +52,14 @@ export function ToWaitingSignature({
         setError("Erro ao carregar contrato");
       }
 
-      toast.error("Não foi possível carregar os detalhes do contrato.");
+      toast.error(t("loadError"));
     }
 
     setIsLoading(false);
-  }, [project.contract?.id]);
+  }, [project.contract?.id, t]);
 
   const loadProposal = useCallback(async () => {
-    if (!project.proposal.id) {
+    if (!project.proposal?.id) {
       setIsProposalLoading(false);
       return;
     }
@@ -72,11 +72,11 @@ export function ToWaitingSignature({
       setProposal(proposalSuccess);
     } catch (error: any) {
       setError(error?.message || "Erro ao carregar proposta");
-      toast.error("Não foi possível carregar os detalhes do contrato.");
+      toast.error(t("loadError"));
     } finally {
       setIsProposalLoading(false);
     }
-  }, [project.proposal?.id]);
+  }, [project.proposal?.id, t]);
 
   useEffect(() => {
     loadContract();
@@ -97,7 +97,7 @@ export function ToWaitingSignature({
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>Erro no Contrato</AlertTitle>
         <AlertDescription>
-          {error || "Detalhes do contrato não localizados."}
+          {error || t("notFound")}
           <button
             onClick={() => loadContract()}
             className="block mt-2 underline text-xs"
@@ -138,16 +138,6 @@ export function ToWaitingSignature({
           contextData={proposal} // Passando contextData para o formulário
         />
       )}
-
-      {contract?.sourceType === "SYSTEM_TEMPLATE" &&
-        contract?.status === "DRAFT" && (
-          <ContractEditor
-            contract={contract}
-            project={project}
-            onApproved={onSuccess}
-            contextData={contextData}
-          />
-        )}
 
       {contract?.status === "REVIEW" && (
         <ContractSendToClient contract={contract} onSuccess={onSuccess} />

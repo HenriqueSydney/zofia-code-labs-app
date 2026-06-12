@@ -1,13 +1,15 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
+import { v } from "@/schemas/validationMessages";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { makeSyncServiceDefaultBacklogUseCase } from "@/useCases/backlog/factories/makeSyncServiceDefaultBacklogUseCase";
 
 // Schema local para validação dos dados de entrada
 const syncBacklogSchema = z.object({
-  serviceTypeId: z.string().min(1, "O tipo de serviço é obrigatório."),
+  serviceTypeId: z.string().min(1, v.serviceIdInvalid),
 });
 
 type SyncBacklogSchema = z.infer<typeof syncBacklogSchema>;
@@ -23,7 +25,7 @@ export async function syncServiceBacklogToProjectAction(
   if (!session?.user?.organizationId) {
     return {
       success: false,
-      message: "Sessão expirada ou usuário sem organização vinculada.",
+      message: await serverErrorMessage("sessionExpiredNoOrg"),
     };
   }
 
@@ -33,7 +35,7 @@ export async function syncServiceBacklogToProjectAction(
   if (!parsed.success) {
     return {
       success: false,
-      message: parsed.error.issues[0].message || "Dados inválidos.",
+      message: parsed.error.issues[0].message || await serverErrorMessage("invalidData"),
     };
   }
 
@@ -54,7 +56,7 @@ export async function syncServiceBacklogToProjectAction(
     if (count === 0) {
       return {
         success: true, // Retorna true mas avisa que não houve mudanças
-        message: "Nenhum item novo para importar deste serviço.",
+        message: await serverErrorMessage("noBacklogItemsToImport"),
       };
     }
 
@@ -64,19 +66,12 @@ export async function syncServiceBacklogToProjectAction(
 
     return {
       success: true,
-      message: `${count} item(s) importado(s) com sucesso.`,
+      message: await resolveSuccessMessage("backlogImported", { count }),
     };
   } catch (error) {
-    if (error instanceof Error) {
-      return {
-        success: false,
-        message: error.message,
-      };
-    }
-
     return {
       success: false,
-      message: "Erro interno ao sincronizar backlog.",
+      message: await resolveActionErrorMessage(error),
     };
   }
 }

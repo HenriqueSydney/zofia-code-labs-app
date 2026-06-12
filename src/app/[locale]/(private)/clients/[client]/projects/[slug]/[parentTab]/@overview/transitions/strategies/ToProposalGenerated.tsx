@@ -2,11 +2,10 @@
 
 import { ProposalCreationForm } from "./toProposalGeneratedSteps/ProposalCreationForm";
 import { TransitionStrategyProps } from "../types";
-import { ProposalEditor } from "./toProposalGeneratedSteps/ProposalEditor";
 import { ProposalReview } from "./toProposalGeneratedSteps/ProposalReview";
 import { ProposalSendToClient } from "./toProposalGeneratedSteps/ProposalSendToClient";
 import { ProposalWithDetails } from "@/repositories/IProposalRepository";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { getProposalAction } from "@/actions/proposal/getProposal";
 import { ProposalDetailsModalSkeleton } from "@/components/skeletons/ProposalDetailsModalSkeleton";
@@ -21,28 +20,28 @@ export function ToProposalGenerated({
   const [isLoading, setIsLoading] = useState(false);
   const [proposal, setProposal] = useState<ProposalWithDetails | null>(null);
 
-  async function getProposalWithDetails() {
-    if (!project.proposal) return null;
+  const proposalId = project.proposal?.id;
+
+  const getProposalWithDetails = useCallback(async () => {
+    if (!proposalId) return;
     setIsLoading(true);
     try {
-      const result = await getProposalAction(project.proposal.id);
-
+      const result = await getProposalAction(proposalId);
       setProposal(result);
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
-        setIsLoading(false);
         return;
       }
       toast.error("Erro ao tentar localizar dados da proposta");
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [proposalId]);
 
   useEffect(() => {
     getProposalWithDetails();
-  }, [project]);
+  }, [getProposalWithDetails]);
 
   if (isLoading) {
     return <ProposalDetailsModalSkeleton />;
@@ -63,25 +62,6 @@ export function ToProposalGenerated({
     );
   }
 
-  // ESTÁGIO 2: Edição (Apenas para Templates)
-  // Se existe, é template e ainda não foi aprovada internamente
-  if (
-    proposal &&
-    proposal.sourceType === "SYSTEM_TEMPLATE" &&
-    proposal.status === "DRAFT"
-  ) {
-    return (
-      <ProposalEditor
-        proposal={proposal}
-        project={project}
-        onApproved={onSuccess}
-        contextData={proposal}
-      />
-    );
-  }
-
-  // // ESTÁGIO 3: Revisão/Aprovação (Para Uploads ou pós-edição)
-  // // Se existe e não foi aprovada (caso de upload direto)
   if (proposal && proposal.status === "REVIEW") {
     return <ProposalReview proposal={proposal} onSuccess={onSuccess} />;
   }

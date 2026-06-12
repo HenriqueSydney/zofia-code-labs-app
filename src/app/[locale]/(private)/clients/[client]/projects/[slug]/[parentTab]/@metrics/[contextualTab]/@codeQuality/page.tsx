@@ -5,12 +5,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getTranslations } from "next-intl/server";
 import { getParams } from "@/utils/getParams";
 import { TabsContent } from "@/components/ui/tabs";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { OrganizationIntegrationWithDetails } from "@/repositories/IOrganizationIntegrationRepository";
 import { findOrganizationIntegrationByIntegrationSlugAction } from "@/actions/integrations/findOrganizationIntegrationByIntegrationSlugAction";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { CTAIntegration } from "../components/CTAIntegration";
 import { IntegrationType } from "@/generated/prisma/client";
 import { findIntegrationTypeBySlugAction } from "@/actions/integrations/findIntegrationTypeBySlugAction";
@@ -37,6 +38,8 @@ interface IParams {
 }
 
 export default async function CodeQualityTab({ params }: IParams) {
+  const t = await getTranslations("projects.metrics");
+  const tCodeQuality = await getTranslations("projects.metrics.codeQuality");
   const { slug, client } = await getParams<{
     slug: string;
     client: string;
@@ -72,21 +75,17 @@ export default async function CodeQualityTab({ params }: IParams) {
   const [error, success] = orgIntegration;
 
   if (error) {
-    throw new AppError("Erro ao tentar localizar os dados para integração");
+    throw new ValidationError(t("common.integrationError"));
   }
 
   const [integrationTypeError, integrationTypeSuccess] = integrationType;
 
   if (integrationTypeError) {
-    throw new AppError(
-      "Tipo de integração não configurada globalmente, entre em contato com o suporte"
-    );
+    throw new ValidationError(t("common.integrationNotConfigured"));
   }
 
   if (!integrationTypeSuccess.data) {
-    throw new AppError(
-      "Tipo de integração não configurada globalmente, entre em contato com o suporte"
-    );
+    throw new ValidationError(t("common.integrationNotConfigured"));
   }
 
   const doesProjectIsAlreadySetup = success.data
@@ -100,7 +99,7 @@ export default async function CodeQualityTab({ params }: IParams) {
       <TabsContent value="code-quality" className="mt-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg">Code Quality</CardTitle>
+            <CardTitle className="text-lg">{tCodeQuality("ctaTitle")}</CardTitle>
           </CardHeader>
           <CardContent>
             {doesProjectIsAlreadySetup === -1 && (
@@ -122,11 +121,8 @@ export default async function CodeQualityTab({ params }: IParams) {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle className="text-lg">Qualidade de código</CardTitle>
-            <CardDescription>
-              Acompanhe a qualidade do código do projeto. Informações coletadas
-              do SonarQube.
-            </CardDescription>
+            <CardTitle className="text-lg">{tCodeQuality("title")}</CardTitle>
+            <CardDescription>{tCodeQuality("description")}</CardDescription>
           </div>
           <div className="flex items-end gap-6">
             <Suspense fallback={null}>

@@ -54,6 +54,8 @@ export class PrismaProposalRepository implements IProposalRepository {
         fileKey: data.fileStorageKey,
         sourceType: data.sourceType,
         status: data.status ?? "DRAFT",
+        paymentGatewayId: data.paymentGatewayId,
+        paymentMethod: data.paymentMethod,
         version: nextVersion,
         isCurrent: true,
         items: {
@@ -91,10 +93,11 @@ export class PrismaProposalRepository implements IProposalRepository {
           },
         },
         proposalTemplate: {
-          include: { template: { select: { title: true } } },
+          select: { id: true, content: true },
         },
         project: {
           select: {
+            name: true,
             organizationId: true,
             slug: true,
             client: { select: { tradeName: true, email: true, slug: true } },
@@ -125,10 +128,10 @@ export class PrismaProposalRepository implements IProposalRepository {
           },
         },
         project: {
-          select: { client: { select: { tradeName: true, email: true } } }, // Otimização: trazer só o necessário
+          select: { name: true, client: { select: { tradeName: true, email: true } } }, // Otimização: trazer só o necessário
         },
         proposalTemplate: {
-          include: { template: { select: { title: true } } },
+          select: { id: true, content: true },
         },
         createdUser: {
           select: { name: true },

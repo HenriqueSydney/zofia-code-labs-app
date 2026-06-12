@@ -6,41 +6,55 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Key } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/Modal";
-import { Form } from "@/components/ui/form"; // Importante: Contexto do Form
+import { Form } from "@/components/ui/form";
 
-// Componentes Customizados
 import { PasswordStrengthBar } from "@/components/PasswordStrengthBar";
 
-import { updatePasswordAction } from "@/actions/users/updatePasswordAction";
+import {
+  updatePasswordAction,
+  type UpdatePasswordState,
+} from "@/actions/users/updatePasswordAction";
+import { setInvitePasswordAction } from "@/actions/users/setInvitePasswordAction";
 import { FormSecretInput } from "@/components/form/FormSecretInput";
 
-const clientSchema = z
-  .object({
-    currentPassword: z.string().min(1, "A senha atual é obrigatória."),
-    newPassword: z
-      .string()
-      .min(6, "A nova senha deve ter no mínimo 6 caracteres."),
-    confirmPassword: z.string().min(1, "Confirme a nova senha."),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "As senhas não coincidem.",
-    path: ["confirmPassword"],
-  });
+interface ChangePasswordFormProps {
+  invitePasswordSetup?: boolean;
+}
 
-type FormSchema = z.infer<typeof clientSchema>;
-
-export function ChangePasswordForm() {
+export function ChangePasswordForm({
+  invitePasswordSetup = false,
+}: ChangePasswordFormProps) {
   const t = useTranslations("userProfile");
+  const tForm = useTranslations("userProfile.changePasswordForm");
+  const tCommon = useTranslations("common");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Hook Form
+  const changePasswordSchema = z
+    .object({
+      currentPassword: invitePasswordSetup
+        ? z.string().optional()
+        : z.string().min(1, tForm("currentPasswordRequired")),
+      newPassword: z.string().min(6, tForm("newPasswordMin")),
+      confirmPassword: z.string().min(1, tForm("confirmPasswordRequired")),
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+      message: tForm("passwordsMismatch"),
+      path: ["confirmPassword"],
+    });
+
+  type FormSchema = z.infer<typeof changePasswordSchema>;
+
   const form = useForm<FormSchema>({
-    resolver: zodResolver(clientSchema),
+    resolver: zodResolver(changePasswordSchema),
     defaultValues: {
       currentPassword: "",
       newPassword: "",
@@ -48,16 +62,29 @@ export function ChangePasswordForm() {
     },
   });
 
-  // Action State (React 19 / Next 14+)
-  const [state, formAction] = useActionState(updatePasswordAction, {
-    success: false,
-    message: "",
-  });
+  const [state, formAction] = useActionState(
+    invitePasswordSetup ? setInvitePasswordAction : updatePasswordAction,
+    {
+      success: false,
+      message: "",
+    },
+  );
 
-  // Watch para a barra de força
   const newPasswordValue = form.watch("newPassword");
 
-  // Efeito para Feedback
+  useEffect(() => {
+    if (searchParams.get("changePassword") === "1") {
+      setIsModalOpen(true);
+
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("changePassword");
+      const queryString = params.toString();
+      router.replace(queryString ? `${pathname}?${queryString}` : pathname, {
+        scroll: false,
+      });
+    }
+  }, [searchParams, pathname, router]);
+
   useEffect(() => {
     if (state.message) {
       if (state.success) {
@@ -67,11 +94,16 @@ export function ChangePasswordForm() {
       } else {
         toast.error(state.message);
 
-        // Se houver erro de campo específico vindo do server (ex: senha atual errada)
-        if (state.errors?.currentPassword) {
-          form.setError("currentPassword", {
-            message: state.errors.currentPassword[0],
-          });
+        if (!invitePasswordSetup) {
+          const updateState = state as UpdatePasswordState;
+          const currentPasswordError =
+            updateState.errors?.currentPassword?.[0];
+
+          if (currentPasswordError) {
+            form.setError("currentPassword", {
+              message: currentPasswordError,
+            });
+          }
         }
       }
     }
@@ -79,7 +111,11 @@ export function ChangePasswordForm() {
 
   const onSubmit = (data: FormSchema) => {
     const formData = new FormData();
-    formData.append("currentPassword", data.currentPassword);
+
+    if (!invitePasswordSetup && data.currentPassword) {
+      formData.append("currentPassword", data.currentPassword);
+    }
+
     formData.append("newPassword", data.newPassword);
     formData.append("confirmPassword", data.confirmPassword);
 
@@ -93,6 +129,14 @@ export function ChangePasswordForm() {
     if (!open) form.reset();
   };
 
+  const modalTitle = invitePasswordSetup
+    ? t("security.setPassword")
+    : t("security.changePassword");
+
+  const buttonLabel = invitePasswordSetup
+    ? t("security.setPassword")
+    : t("security.changePassword");
+
   return (
     <>
       <Button
@@ -101,37 +145,36 @@ export function ChangePasswordForm() {
         className="gap-2 cursor-pointer"
       >
         <Key className="w-4 h-4" />
-        {t("security.changePassword") || "Alterar Senha"}
+        {buttonLabel}
       </Button>
 
       <Modal
         isModalOpen={isModalOpen}
         setIsModalOpen={handleOpenChange}
-        modalTitle={t("security.changePassword") || "Alteração de Senha"}
+        modalTitle={modalTitle}
         className="max-w-lg"
       >
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-            {/* Senha Atual */}
-            <FormSecretInput
-              control={form.control}
-              name="currentPassword"
-              label="Senha Atual"
-              placeholder="Digite sua senha atual"
-              disabled={isPending}
-            />
+            {!invitePasswordSetup && (
+              <FormSecretInput
+                control={form.control}
+                name="currentPassword"
+                label={tForm("currentPasswordLabel")}
+                placeholder={tForm("currentPasswordPlaceholder")}
+                disabled={isPending}
+              />
+            )}
 
-            {/* Nova Senha + Barra de Força */}
             <div className="space-y-2">
               <FormSecretInput
                 control={form.control}
                 name="newPassword"
-                label="Nova Senha"
-                placeholder="Digite a nova senha"
+                label={tForm("newPasswordLabel")}
+                placeholder={tForm("newPasswordPlaceholder")}
                 disabled={isPending}
               />
 
-              {/* Renderização condicional da barra de força */}
               {newPasswordValue && (
                 <div className="animate-in fade-in slide-in-from-top-1">
                   <PasswordStrengthBar password={newPasswordValue} />
@@ -139,12 +182,11 @@ export function ChangePasswordForm() {
               )}
             </div>
 
-            {/* Confirmação */}
             <FormSecretInput
               control={form.control}
               name="confirmPassword"
-              label="Confirmar Nova Senha"
-              placeholder="Repita a nova senha"
+              label={tForm("confirmPasswordLabel")}
+              placeholder={tForm("confirmPasswordPlaceholder")}
               disabled={isPending}
             />
 
@@ -154,7 +196,7 @@ export function ChangePasswordForm() {
                 disabled={isPending}
                 className="w-full sm:w-auto"
               >
-                {isPending ? "Atualizando..." : "Salvar Nova Senha"}
+                {isPending ? tCommon("updating") : tForm("saveButton")}
               </Button>
             </div>
           </form>

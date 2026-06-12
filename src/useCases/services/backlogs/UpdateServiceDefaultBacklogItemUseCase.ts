@@ -1,3 +1,4 @@
+import { ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import {
   IServiceDefaultBacklogItemsRepository,
@@ -24,10 +25,10 @@ export class UpdateServiceDefaultBacklogItemUseCase {
     );
 
     if (!itemExists) {
-      throw new Error("Item do backlog do serviço não encontrado.");
+      throw new ResourceNotFoundError("Item do backlog do serviço não encontrado.");
     }
 
-    await checkUserPermissionForAsset("services", userId, itemExists, "UPDATE");
+    await checkUserPermissionForAsset("servicesBacklog", userId, itemExists, "UPDATE");
 
     const updatedItem =
       await this.serviceDefaultBacklogItemsRepository.update(data);

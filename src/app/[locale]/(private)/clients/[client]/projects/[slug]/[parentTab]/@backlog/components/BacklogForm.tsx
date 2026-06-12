@@ -21,13 +21,14 @@ import { updateBacklogAction } from "@/actions/backlog/updateBacklogItemAction";
 import { createBacklogAction } from "@/actions/backlog/createBacklogItemAction";
 import { listUsersByOrganizationAction } from "@/actions/users/listUsersByOrganizationAction";
 import {
-  backlogPriorityMapper,
-  backlogStatusMapper,
+  getBacklogPriorityOptions,
+  getBacklogStatusOptions,
 } from "@/mappers/BacklogMappers";
 import { FormInput } from "@/components/form/FormInput";
 import { FormSelect } from "@/components/form/FormSelect";
 import { FormNumberInput } from "@/components/form/FormNumberInput";
 import { FormTextarea } from "@/components/form/FormTextarea";
+import { useTranslations } from "next-intl";
 
 export type AssigneeOption = {
   id: string;
@@ -42,21 +43,24 @@ interface IBacklogForm {
 }
 
 // Mapeamento das opções estáticas para o formato { label, value }
-const STATUS_OPTIONS = BacklogStatusEnum.options.map((status) => ({
-  value: status,
-  label: backlogStatusMapper[status] ?? status,
-}));
-
-const PRIORITY_OPTIONS = BacklogPriorityEnum.options.map((prio) => ({
-  value: prio,
-  label: backlogPriorityMapper[prio] ?? prio,
-}));
 
 export function BacklogForm({
   projectId,
   backlog,
   handleCloseModal,
 }: IBacklogForm) {
+  const t = useTranslations("projects.backlog.form");
+  const tStatus = useTranslations("projects.backlog.status");
+  const tPriority = useTranslations("projects.backlog.priorityLabels");
+  const tCommon = useTranslations("common");
+  const tActions = useTranslations("common.actions");
+
+  const STATUS_OPTIONS = getBacklogStatusOptions(
+    (key) => tStatus(key as never),
+  );
+  const PRIORITY_OPTIONS = getBacklogPriorityOptions(
+    (key) => tPriority(key as never),
+  );
   const { data: session } = useSession();
   const params = useParams();
   const [assigneesOptions, setAssigneesOptions] = useState<AssigneeOption[]>(
@@ -113,7 +117,7 @@ export function BacklogForm({
             toast.error(result.message);
             return;
           }
-          toast.success("Item atualizado com sucesso!");
+          toast.success(t("toastUpdated"));
         } else {
           const result = await createBacklogAction(
             { ...payload, projectId },
@@ -123,12 +127,12 @@ export function BacklogForm({
             toast.error(result.message);
             return;
           }
-          toast.success("Item criado com sucesso!");
+          toast.success(t("toastCreated"));
           form.reset();
         }
         handleCloseModal();
       } catch (error) {
-        toast.error("Ocorreu um erro inesperado.");
+        toast.error(t("toastUnexpectedError"));
         console.error(error);
       }
     });
@@ -136,10 +140,10 @@ export function BacklogForm({
 
   // Prepara as opções de usuários para o FormSelect
   const userOptions = [
-    { value: "unassigned", label: "-- Não atribuído --" },
+    { value: "unassigned", label: t("unassigned") },
     ...assigneesOptions.map((u) => ({
       value: u.id,
-      label: u.name ?? "Sem nome",
+      label: u.name ?? t("noName"),
     })),
   ];
 
@@ -150,8 +154,8 @@ export function BacklogForm({
         <FormInput
           control={form.control}
           name="title"
-          label="Título da Tarefa"
-          placeholder="Ex: Implementar Login OAuth"
+          label={t("title")}
+          placeholder={t("titlePlaceholder")}
           disabled={isPending}
         />
 
@@ -161,8 +165,8 @@ export function BacklogForm({
             <FormSelect
               control={form.control}
               name="status"
-              label="Status"
-              placeholder="Selecione"
+              label={t("statusLabel")}
+              placeholder={tCommon("select")}
               options={STATUS_OPTIONS}
               disabled={isPending}
             />
@@ -172,8 +176,8 @@ export function BacklogForm({
             <FormSelect
               control={form.control}
               name="priority"
-              label="Prioridade"
-              placeholder="Selecione"
+              label={t("priorityLabel")}
+              placeholder={tCommon("select")}
               options={PRIORITY_OPTIONS}
               disabled={isPending}
             />
@@ -186,7 +190,7 @@ export function BacklogForm({
             <FormNumberInput
               control={form.control}
               name="points"
-              label="Story Points"
+              label={t("storyPoints")}
               placeholder="0"
               min={0}
               disabled={isPending}
@@ -197,8 +201,8 @@ export function BacklogForm({
             <FormSelect
               control={form.control}
               name="assigneeId"
-              label="Responsável"
-              placeholder="Selecione um responsável"
+              label={t("assignee")}
+              placeholder={t("assigneePlaceholder")}
               options={userOptions}
               disabled={isPending}
             />
@@ -209,8 +213,8 @@ export function BacklogForm({
         <FormTextarea
           control={form.control}
           name="description"
-          label="Descrição Detalhada"
-          placeholder="Critérios de aceitação, detalhes técnicos..."
+          label={t("description")}
+          placeholder={t("descriptionPlaceholder")}
           rows={5}
           disabled={isPending}
         />
@@ -220,8 +224,8 @@ export function BacklogForm({
           control={form.control}
           name="externalLink"
           type="url"
-          label="Link Externo (Opcional)"
-          description="Link para Jira, Trello ou design."
+          label={t("externalLinkLabel")}
+          description={t("externalLinkDescription")}
           placeholder="https://..."
           disabled={isPending}
         />
@@ -234,14 +238,14 @@ export function BacklogForm({
             className="mr-2"
             disabled={isPending}
           >
-            Cancelar
+            {tActions("cancel")}
           </Button>
           <Button type="submit" disabled={isPending}>
             {isPending
-              ? "Salvando..."
+              ? tCommon("saving")
               : backlog?.id
-                ? "Salvar Alterações"
-                : "Criar Tarefa"}
+                ? tActions("saveChanges")
+                : t("createTask")}
           </Button>
         </div>
       </form>

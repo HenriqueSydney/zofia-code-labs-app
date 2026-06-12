@@ -5,10 +5,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getTranslations } from "next-intl/server";
 import { getParams } from "@/utils/getParams";
 import { TabsContent } from "@/components/ui/tabs";
 import { CTAIntegration } from "../components/CTAIntegration";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { findIntegrationTypeBySlugAction } from "@/actions/integrations/findIntegrationTypeBySlugAction";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { IntegrationType } from "@/generated/prisma/client";
@@ -36,6 +37,8 @@ interface IContractTab {
 }
 
 export default async function ContractTab({ params }: IContractTab) {
+  const t = await getTranslations("projects.metrics");
+  const tWebAnalytics = await getTranslations("projects.metrics.webAnalytics");
   const { slug, client } = await getParams<{
     slug: string;
     client: string;
@@ -73,21 +76,17 @@ export default async function ContractTab({ params }: IContractTab) {
   const [error, success] = orgIntegration;
 
   if (error) {
-    throw new AppError("Erro ao tentar localizar os dados para integração");
+    throw new ValidationError(t("common.integrationError"));
   }
 
   const [integrationTypeError, integrationTypeSuccess] = integrationType;
 
   if (integrationTypeError) {
-    throw new AppError(
-      "Tipo de integração não configurada globalmente, entre em contato com o suporte",
-    );
+    throw new ValidationError(t("common.integrationNotConfigured"));
   }
 
   if (!integrationTypeSuccess.data) {
-    throw new AppError(
-      "Tipo de integração não configurada globalmente, entre em contato com o suporte",
-    );
+    throw new ValidationError(t("common.integrationNotConfigured"));
   }
 
   const doesProjectIsAlreadySetup = success.data
@@ -101,7 +100,7 @@ export default async function ContractTab({ params }: IContractTab) {
       <TabsContent value="web-analytics" className="mt-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg">Web Analytics</CardTitle>
+            <CardTitle className="text-lg">{tWebAnalytics("title")}</CardTitle>
           </CardHeader>
           <CardContent>
             {doesProjectIsAlreadySetup === -1 && (
@@ -123,11 +122,8 @@ export default async function ContractTab({ params }: IContractTab) {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle className="text-lg">Web Analytics</CardTitle>
-            <CardDescription>
-              Entenda o comportamento dos usuários. Dados claros para decisões
-              baseadas em evidências.
-            </CardDescription>
+            <CardTitle className="text-lg">{tWebAnalytics("title")}</CardTitle>
+            <CardDescription>{tWebAnalytics("description")}</CardDescription>
           </div>
           <div className="flex items-end gap-6">
             <SyncUmamiMetrics projectSlug={slug} />

@@ -176,7 +176,7 @@ export type ProjectIntegrationGroupByOutputType = {
   _max: ProjectIntegrationMaxAggregateOutputType | null
 }
 
-type GetProjectIntegrationGroupByPayload<T extends ProjectIntegrationGroupByArgs> = Prisma.PrismaPromise<
+export type GetProjectIntegrationGroupByPayload<T extends ProjectIntegrationGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ProjectIntegrationGroupByOutputType, T['by']> &
       {
@@ -1502,6 +1502,11 @@ export type ProjectIntegrationFindManyArgs<ExtArgs extends runtime.Types.Extensi
    * Skip the first `n` ProjectIntegrations.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of ProjectIntegrations.
+   */
   distinct?: Prisma.ProjectIntegrationScalarFieldEnum | Prisma.ProjectIntegrationScalarFieldEnum[]
 }
 

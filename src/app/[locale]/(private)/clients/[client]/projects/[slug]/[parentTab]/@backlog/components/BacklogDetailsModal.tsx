@@ -16,8 +16,13 @@ import { BacklogForm } from "./BacklogForm";
 interface IBacklogDetails {
   item: BacklogItemWithDetails;
   children: ReactNode;
+  canManageBacklog: boolean;
 }
-export function BacklogDetailsModal({ item, children }: IBacklogDetails) {
+export function BacklogDetailsModal({
+  item,
+  children,
+  canManageBacklog,
+}: IBacklogDetails) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
 
@@ -41,10 +46,11 @@ export function BacklogDetailsModal({ item, children }: IBacklogDetails) {
             item={item}
             setIsDialogOpen={setIsDialogOpen}
             setIsEditOpen={setIsEditOpen}
+            canManageBacklog={canManageBacklog}
           />
         )}
 
-        {isEditOpen && (
+        {isEditOpen && canManageBacklog && (
           <BacklogForm
             backlog={item}
             handleCloseModal={handleCloseModal}

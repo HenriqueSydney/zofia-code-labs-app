@@ -1,5 +1,5 @@
 import { PermissionString } from "@/constants/permissions";
-import { Role } from "@/generated/prisma/enums";
+import { MemberRole, Role } from "@/generated/prisma/enums";
 
 // 1. Helper para extrair o que vem depois do ":"
 // Se T for "project:create", isso retorna "create"
@@ -15,6 +15,7 @@ export interface UserContext {
   organizationId: string;
   role: Role;
   permissions: string[];
+  memberRole?: MemberRole | null;
 }
 
 // Interface genérica para qualquer estratégia

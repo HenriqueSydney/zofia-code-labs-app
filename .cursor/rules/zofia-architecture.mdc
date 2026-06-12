@@ -1,0 +1,146 @@
+---
+description: Camadas, Server Actions, use cases, RBAC, operationWrapper e dados
+alwaysApply: true
+---
+
+# Arquitetura — Zofia Code Labs App
+
+Fluxo: **UI → Server Action → Use Case → Repository / Service**.
+
+## Stack
+
+| Aspecto | Tecnologia |
+|---------|------------|
+| Framework | Next.js 16 (App Router), React 19 |
+| DB | PostgreSQL + Prisma 7 (`src/generated/prisma`) |
+| Auth | NextAuth v5 (`src/auth.ts`, `lib/auth/`) |
+| UI | Tailwind 4, Radix/shadcn (`src/components/ui`) |
+| Forms | React Hook Form + Zod (`src/schemas/`) |
+| i18n | next-intl — `pt` (default), `en` — `messages/{locale}.json` |
+
+## Pastas principais
+
+```
+src/
+├── app/[locale]/(public|private)/...
+│   └── clients/.../projects/[slug]/[parentTab]/@overview|@backlog|...
+├── actions/<domínio>/*Action.ts
+├── useCases/<domínio>/*UseCase.ts + factories/make*UseCase.ts
+├── repositories/I*.ts + prisma/Prisma*.ts + in-memory/InMemory*.ts
+├── services/          # GitHub, Sonar, Umami, R2, Documenso, …
+├── lib/               # auth, prisma, operationWrapper, mailer, logger
+├── components/ + schemas/ + mappers/ + errors/ + @types/
+└── generated/prisma/  # não editar
+```
+
+**Controllers = Server Actions** → factories `make*UseCase`.
+
+## Camadas
+
+| Camada | Responsabilidade |
+|--------|------------------|
+| Pages / `_components/` | RSC; `page.tsx` async, sem `'use client'` |
+| `_data/get-cached-*.ts` | `cache()` + `operationWrapper` → action |
+| Server Actions | `auth()`, Zod, use case, revalidate, `{ success, message }` |
+| Use Cases | Regras, `checkUserPermissionForAsset`, services |
+| Repositories | Prisma; contratos e DTOs em `I*.ts` |
+| Services | HTTP/SDKs externos |
+
+## operationWrapper (`src/lib/operationWrapper.ts`)
+
+Usar em **Server Components** para chamar actions/repositories com tracing e tratamento uniforme:
+
+```typescript
+const [error, data] = await operationWrapper(
+  "action",
+  "fetchClientsAction",
+  () => fetchClientsAction(query),
+  { cache: "no-cache" },
+);
+const list = error ? [] : data.clients;
+```
+
+Retorno: tupla `[error, success]`. Opções: `cache`, `tags`, `revalidatePaths`. Tipos em `src/@types/OperationWrapperTypes`.
+
+## Server Action (padrão)
+
+```typescript
+"use server";
+import { auth } from "@/auth";
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
+import { makeCreateXUseCase } from "@/useCases/x/factories/makeCreateXUseCase";
+import { xFormSchema } from "@/schemas/x/xFormSchema";
+import { revalidatePath } from "next/cache";
+
+export async function createXAction(formData: FormData) {
+  const session = await auth();
+  if (!session?.user) return { success: false, message: await serverErrorMessage("unauthorized") };
+  try {
+    const validated = xFormSchema.parse({ /* FormData */ });
+    await makeCreateXUseCase().execute(
+      { ...validated, organizationId: session.user.organizationId },
+      session.user.id,
+    );
+    revalidatePath("/caminho");
+    return { success: true, message: await resolveSuccessMessage("xCreated") };
+  } catch (error) {
+    return { success: false, message: await resolveActionErrorMessage(error) };
+  }
+}
+```
+
+Novas actions: sufixo `Action`. Legado sem sufixo existe — não replicar.
+
+## Erros
+
+- Domínio: `AppError` e subclasses — não `throw new Error()` em regra de negócio
+- Actions: `resolveActionErrorMessage` — sem stack para o cliente
+- i18n de erro: `legacyErrorMap`, `resolveErrorMessage`
+
+## RBAC
+
+- `src/constants/permissions.ts` — `PERMISSIONS`, `PERMISSIONS_MAP`
+- Rotas: `src/proxy.ts` + `routePermissionMap.ts`
+- Recursos: `checkUserPermissionForAsset` → `lib/auth/strategies/`
+- Portal: `TENANT_OBSERVER`, `ClientEmployees`, `clientPortalRouteMap`
+- UI: `hasPermission(session?.user, PERMISSIONS.*)`
+
+Nova feature: permissão + strategy (se recurso novo) + `routePermissionMap` + `messages/pt.json` e `en.json`.
+
+## Tipagem
+
+- Zod: `src/schemas/<domínio>/` → `z.infer`
+- DTOs: `repositories/I*.ts` (`ICreate*DTO`, …)
+- Prisma: `@/generated/prisma`
+- Auxiliares: `src/@types/` (`DocumentInput`, `PrismaToPlain`)
+- Apresentação: `src/mappers/`
+
+## Middleware (`src/proxy.ts`)
+
+Locale, auth, `canAccessRoute`, APIs (Bearer, webhook Documenso).
+
+## Banco
+
+- `prisma.config.ts`, migrations em `prisma/migrations/`
+- Seeds: `prisma/seeds/` (01–09)
+- Após schema: `npx prisma generate`
+
+## Domínios (rotas)
+
+Dashboard, `/clients`, projetos (parallel routes), `/financial`, `/settings/*`, `/organization/*`, portal `/minhas-empresas`, `/purchase/*`.
+
+Schemas PG: `identity`, `catalog`, `crm`, `projects`, `financial`, `integrations`, `audit`.
+
+## Integrações
+
+R2 (`services/s3Client/`), Documenso (responsável legal no `Client`), GitHub/Sonar/Umami, `OrganizationIntegration`.
+
+## Nomenclatura
+
+| Artefato | Convenção |
+|----------|-----------|
+| Pastas | kebab-case |
+| Componentes | PascalCase |
+| Actions / Use cases | `*Action.ts`, `*UseCase.ts` |
+| Factories | `make*UseCase.ts`, `make*Repository.ts` |
+| Testes | `*.spec.ts` co-located |

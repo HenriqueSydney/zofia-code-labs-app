@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Wrench, XCircle, AlertTriangle } from "lucide-react";
@@ -15,7 +15,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/twMerge";
 import { FlowSection } from "./FlowSection";
 import {
   allStages,
@@ -23,6 +23,9 @@ import {
   commercialClosingStages,
   commercialStages,
   operationalStages,
+  translateStageConfig,
+  translateStageConfigs,
+  type TranslatedStageConfig,
 } from "@/mappers/projectStageMapper";
 import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 import { cancelProjectAction } from "@/actions/projects/cancelProject";
@@ -34,15 +37,34 @@ import {
 } from "@/utils/getNextStageLabel";
 import { RegressDialog } from "@/app/[locale]/(private)/clients/[client]/projects/[slug]/[parentTab]/@overview/transitions/RegressDialog";
 import { Badge } from "@/components/ui/badge";
-import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 interface ProjectTimelineProps {
   project: ProjectWithDetails;
-  contextData?: any;
+  contextData?: unknown;
+  canUpdate: boolean;
+  canDelete: boolean;
+  isOwner: boolean;
 }
 
-const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
-  const { data: session } = useSession();
+const ProjectTimeline = ({
+  project,
+  contextData,
+  canUpdate,
+  canDelete,
+  isOwner,
+}: ProjectTimelineProps) => {
+  const t = useTranslations("projects.overview.timeline");
+  const tCommon = useTranslations("common");
+  const tNextSteps = useTranslations("projects.transitions.nextSteps");
+  const tStages = useTranslations("projects.stages");
+  const translateNextStep = (key: string) =>
+    tNextSteps(key as Parameters<typeof tNextSteps>[0]);
+  const stageT = (key: string) => tStages(key as Parameters<typeof tStages>[0]);
+  const translatedAllStages = useMemo(
+    () => translateStageConfigs(allStages, stageT),
+    [tStages],
+  );
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [showAdvanceDialog, setShowAdvanceDialog] = useState(false);
   const [showRegressDialog, setShowRegressDialog] = useState(false);
@@ -50,16 +72,20 @@ const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
   const currentIndex = allStages.findIndex((s) => s.key === currentStage);
   const isCancelled = currentStage === "CANCELLED";
   const isMaintenanceSupport = currentStage === "MAINTENANCE";
-  const currentStageConfig = isCancelled
-    ? cancelledStage
-    : allStages[currentIndex];
+  const currentStageConfig: TranslatedStageConfig | null = isCancelled
+    ? translateStageConfig(cancelledStage, stageT)
+    : currentIndex >= 0
+      ? translatedAllStages[currentIndex]
+      : null;
 
   const nextStage =
     !isCancelled && currentIndex < allStages.length - 1
-      ? allStages[currentIndex + 1]
+      ? translatedAllStages[currentIndex + 1]
       : null;
   const prevStage =
-    !isCancelled && currentIndex > 0 ? allStages[currentIndex - 1] : null;
+    !isCancelled && currentIndex > 0
+      ? translatedAllStages[currentIndex - 1]
+      : null;
 
   // Determine flow context
   const isInCommercial = commercialStages.some((s) => s.key === currentStage);
@@ -85,11 +111,14 @@ const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
     "WAITING_DOWN_PAYMENT",
   ].includes(project.status);
 
-  const isOwner = session?.user.role === "OWNER";
+  const canTransition =
+    canUpdate && (!isAutomaticStep || isOwner);
+  const hasActions = canTransition || canDelete;
+
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg">Fluxo do Projeto</CardTitle>
+        <CardTitle className="text-lg">{t("title")}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Maintenance & Support */}
@@ -121,12 +150,12 @@ const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
                     : "",
                 )}
               >
-                Manutenção & Suporte
+                {t("maintenance.title")}
               </h4>
               <p className="text-sm text-muted-foreground">
                 {isMaintenanceSupport
-                  ? "Projeto em período de manutenção e suporte contínuo"
-                  : "Disponível após conclusão do projeto"}
+                  ? t("maintenance.activeDescription")
+                  : t("maintenance.inactiveDescription")}
               </p>
             </div>
           </div>
@@ -148,59 +177,69 @@ const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
                 </div>
                 {isAutomaticStep && (
                   <Badge variant="secondary" className="text-sm p-2">
-                    Etapa automática
+                    {t("automaticStepBadge")}
                   </Badge>
                 )}
               </div>
 
               {/* Inline Actions */}
-              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-                {(!isAutomaticStep || isOwner) && (
-                  <>
-                    {prevStage && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowRegressDialog(true)}
-                      >
-                        Retornar
-                      </Button>
-                    )}
-                    {nextStage && currentStageConfig?.nextAction && (
-                      <Button
-                        size="sm"
-                        onClick={() => setShowAdvanceDialog(true)}
-                        className="gap-1"
-                      >
-                        Avançar para:{" "}
-                        {!["PROPOSAL", "PROPOSAL_GENERATED"].includes(
-                          currentStageConfig.key,
-                        ) && currentStageConfig.nextAction}
-                        {currentStageConfig.key === "PROPOSAL" &&
-                          getProposalNextStepLabel(project.proposal)}
-                        {currentStageConfig.key === "PROPOSAL_GENERATED" &&
-                          getContractNextStepLabel(project.contract)}
-                        <ChevronRight className="h-4 w-4" />
-                      </Button>
-                    )}
-                  </>
-                )}
+              {hasActions && (
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                  {canTransition && (
+                    <>
+                      {prevStage && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setShowRegressDialog(true)}
+                        >
+                          {t("actions.regress")}
+                        </Button>
+                      )}
+                      {nextStage && currentStageConfig?.nextAction && (
+                        <Button
+                          size="sm"
+                          onClick={() => setShowAdvanceDialog(true)}
+                          className="gap-1"
+                        >
+                          {t("actions.advancePrefix")}{" "}
+                          {!["PROPOSAL", "PROPOSAL_GENERATED"].includes(
+                            currentStageConfig.key,
+                          ) && currentStageConfig.nextAction}
+                          {currentStageConfig.key === "PROPOSAL" &&
+                            getProposalNextStepLabel(
+                              project.proposal,
+                              translateNextStep,
+                            )}
+                          {currentStageConfig.key === "PROPOSAL_GENERATED" &&
+                            getContractNextStepLabel(
+                              project.contract,
+                              translateNextStep,
+                            )}
+                          <ChevronRight className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </>
+                  )}
 
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowCancelDialog(true)}
-                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                >
-                  <XCircle className="h-4 w-4" />
-                </Button>
-              </div>
+                  {canDelete && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowCancelDialog(true)}
+                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                    >
+                      <XCircle className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         )}
 
         {/* Advance Dialog */}
-        {nextStage && (
+        {canUpdate && nextStage && (
           <ProjectTransitionDialog
             currentStatusLabel={project.status}
             isOpen={showAdvanceDialog}
@@ -212,49 +251,55 @@ const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
           />
         )}
         {/* Regress Dialog */}
-        <RegressDialog
-          showRegressDialog={showRegressDialog}
-          currentStageConfig={currentStageConfig}
-          prevStage={prevStage}
-          project={project}
-          setShowRegressDialog={setShowRegressDialog}
-          contextData={contextData}
-        />
+        {canUpdate && currentStageConfig && (
+          <RegressDialog
+            showRegressDialog={showRegressDialog}
+            currentStageConfig={currentStageConfig}
+            prevStage={prevStage}
+            project={project}
+            setShowRegressDialog={setShowRegressDialog}
+            contextData={contextData}
+          />
+        )}
 
         {/* Cancel Dialog */}
-        <AlertDialog open={showCancelDialog} onOpenChange={setShowCancelDialog}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Cancelar Projeto</AlertDialogTitle>
-              <AlertDialogDescription asChild>
-                <div className="flex items-start gap-2">
-                  <AlertTriangle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
-                  <span>
-                    Tem certeza que deseja cancelar este projeto? Esta ação é
-                    irreversível.
-                  </span>
-                </div>
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Voltar</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={handleCancel}
-                className="bg-destructive hover:bg-destructive/90"
-              >
-                Cancelar Projeto
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        {canDelete && (
+          <AlertDialog
+            open={showCancelDialog}
+            onOpenChange={setShowCancelDialog}
+          >
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>{t("cancelDialog.title")}</AlertDialogTitle>
+                <AlertDialogDescription asChild>
+                  <div className="flex items-start gap-2">
+                    <AlertTriangle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
+                    <span>{t("cancelDialog.description")}</span>
+                  </div>
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>{tCommon("back")}</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleCancel}
+                  className="bg-destructive hover:bg-destructive/90"
+                >
+                  {t("cancelDialog.confirm")}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
         {/* Cancelled State */}
         {isCancelled && (
           <div className="p-4 rounded-lg bg-destructive/10 border border-destructive/20 flex items-center gap-3">
             <XCircle className="h-5 w-5 text-destructive" />
             <div>
-              <p className="font-medium text-destructive">Projeto Cancelado</p>
+              <p className="font-medium text-destructive">
+                {t("cancelled.title")}
+              </p>
               <p className="text-sm text-muted-foreground">
-                Este projeto foi cancelado.
+                {t("cancelled.description")}
               </p>
             </div>
           </div>
@@ -262,8 +307,8 @@ const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
 
         {/* Commercial Flow */}
         <FlowSection
-          category="Fluxo Comercial"
-          title="Fluxo Comercial"
+          category={t("flows.commercial.title")}
+          title={t("flows.commercial.title")}
           isInThisFlow={isInCommercial}
           stages={commercialStages}
           currentStage={currentStage}
@@ -274,8 +319,8 @@ const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
 
         {/* Operational Flow */}
         <FlowSection
-          category="Fluxo Operacional"
-          title="Desenvolvimento"
+          category={t("flows.operational.category")}
+          title={t("flows.operational.title")}
           isInThisFlow={isInOperational}
           stages={operationalStages}
           currentStage={currentStage}
@@ -287,9 +332,9 @@ const ProjectTimeline = ({ project, contextData }: ProjectTimelineProps) => {
 
         {/* Commercial Closing Flow */}
         <FlowSection
-          category="Encerramento"
+          category={t("flows.closing.category")}
           isInThisFlow={isInCommercialClosing}
-          title="Fluxo Comercial - Entrega"
+          title={t("flows.closing.title")}
           stages={commercialClosingStages}
           currentStage={currentStage}
           bgColor="bg-muted/30"

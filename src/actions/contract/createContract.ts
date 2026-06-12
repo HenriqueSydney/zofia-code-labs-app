@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
 import { Contract } from "@/generated/prisma/client";
 import { date } from "@/lib/dayjs";
@@ -11,14 +12,13 @@ import { redirect, RedirectType } from "next/navigation";
 
 export async function createContractAction(formData: FormData) {
   const session = await auth();
-  if (!session?.user) return { error: "Não autorizado" };
+  if (!session?.user) return { error: await serverErrorMessage("unauthorized") };
 
   const fileRaw = formData.get("document");
   const file =
     fileRaw instanceof File && fileRaw.size > 0 ? fileRaw : undefined;
 
   const rawData = {
-    documentTemplateId: formData.get("documentTemplateId"),
     projectId: formData.get("projectId"),
     document: file,
     validUntil: date().add(3, "days").toDate(), //formData.get("validUntil"),
@@ -28,7 +28,7 @@ export async function createContractAction(formData: FormData) {
   const validation = createContractSchema.safeParse(rawData);
   if (!validation.success) {
     console.error("Erro de validação:", validation.error.flatten());
-    return { error: "Dados inválidos. Verifique os campos obrigatórios." };
+    return { error: await serverErrorMessage("checkFormFields") };
   }
 
   const useCase = makeCreateContractUseCase();
@@ -36,7 +36,6 @@ export async function createContractAction(formData: FormData) {
   try {
     const contract = await useCase.execute({
       projectId: validation.data.projectId,
-      documentTemplateId: validation.data.documentTemplateId,
       createdBy: session.user.id,
       organizationId: session.user.organizationId,
       file,

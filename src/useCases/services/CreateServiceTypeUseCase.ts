@@ -1,7 +1,10 @@
+import { ConflictError, BusinessRuleError } from "@/errors";
+import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IServiceTypeRepository } from "@/repositories/IServiceTypeRepository";
 
 interface CreateCreateServiceTypeUseCaseRequest {
   organizationId: string;
+  userId: string;
   categoryId: string;
   name: string;
   description?: string | null;
@@ -13,6 +16,7 @@ export class CreateServiceTypeUseCase {
 
   async execute({
     organizationId,
+    userId,
     categoryId,
     name,
     description,
@@ -23,12 +27,19 @@ export class CreateServiceTypeUseCase {
       organizationId
     );
 
+    await checkUserPermissionForAsset(
+      "serviceType",
+      userId,
+      serviceAlreadyExists,
+      "CREATE",
+    );
+
     if (serviceAlreadyExists) {
-      throw new Error("Já existe um serviço cadastrado com este nome.");
+      throw new ConflictError("Já existe um serviço cadastrado com este nome.");
     }
 
     if (basePrice && basePrice < 0) {
-      throw new Error("O preço base não pode ser negativo.");
+      throw new BusinessRuleError("O preço base não pode ser negativo.");
     }
 
     // 3. Criação

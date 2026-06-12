@@ -2,57 +2,107 @@
 
 ## Visão geral
 
-**Zofia Code Labs App** (`zofia-code-labs-app`) é uma aplicação web orientada a **organizações (tenants)** que funciona como um **mini ERP / painel operacional** para empresas de serviços — em especial *software houses* e perfis similares cadastrados no sistema. Centraliza o relacionamento com clientes, o ciclo de vida de projetos, documentos comerciais (propostas e contratos), finanças vinculadas a projetos e **dashboards** financeiros e de métricas técnicas.
+**Zofia Code Labs App** (`zofia-code-labs-app`) é uma aplicação web **multi-organização (tenant)** que funciona como **painel operacional** para empresas de serviços — com foco inicial em *software houses* (`IndustryType.SOFTWARE_HOUSE`). Centraliza CRM, ciclo de vida de projetos, documentos comerciais (propostas e contratos), finanças, backlog, dashboards e integrações técnicas.
 
-O produto foi concebido para reduzir retrabalho manual entre áreas comercial, financeira e de entrega, integrando-se a serviços externos (assinatura eletrônica, repositórios Git, qualidade de código, analytics e gestão de segredos).
+O produto reduz retrabalho entre áreas comercial, financeira e de entrega, conectando-se a serviços externos (assinatura eletrônica, repositórios Git, qualidade de código, analytics, cofre de segredos e armazenamento de objetos).
 
 ## Domínios principais
 
-Com base no modelo de dados e nas rotas da aplicação, os domínios podem ser agrupados assim:
+Com base no modelo Prisma e nas rotas em `src/app/[locale]/`:
 
-| Domínio | Descrição resumida |
+| Domínio | Schema PG | Descrição |
+|---------|-----------|-----------|
+| **Identidade e organização** | `identity` | `Organization`, `User`, `Member`, `CustomRole`, sessões NextAuth, histórico de login |
+| **Catálogo** | `catalog` | Categorias e tipos de serviço, templates de documento (TipTap/JSON), backlog padrão por serviço |
+| **CRM** | `crm` | Clientes PJ, funcionários do cliente (`ClientEmployees`), propostas e contratos versionados |
+| **Projetos** | `projects` | Projetos, status, documentos, backlog, sprints, notas, membros, integrações por projeto |
+| **Financeiro** | `financial` | Despesas, categorias, orçamento (`BudgetEntry`), faturas (`Invoice`) |
+| **Integrações** | `integrations` | Tipos de integração, credenciais por organização, snapshots de métricas (Sonar, Umami) |
+| **Auditoria** | `audit` | `AuditLog` para rastreabilidade |
+
+## Módulos de interface
+
+### Área interna (equipe da organização)
+
+| Área | Rotas principais |
+|------|------------------|
+| Dashboard | `/dashboard` |
+| Clientes | `/clients`, `/clients/[client]` (overview, dashboard, contratos, analytics, métricas, IA) |
+| Projetos | `/projects`, `/clients/[client]/projects/[slug]/...` (overview, comercial, backlog, métricas) |
+| Financeiro | `/financial` |
+| Contratos | `/contracts` |
+| Configurações | `/settings/*` (serviços, templates, despesas, integrações) |
+| Organização | `/organization/[organization]/*` (membros, papéis, billing, settings) |
+| Perfil | `/user/[userId]` |
+
+Projetos usam **parallel routes** (`@overview`, `@commercial`, `@backlog`, `@metrics`, etc.) para abas independentes com carregamento segmentado.
+
+### Portal do cliente
+
+Usuários com papel `MemberRole.TENANT_OBSERVER` e permissões de portal (`ClientEmployees`) acessam:
+
+- `/minhas-empresas` — seleção de clientes vinculados
+- `/clients/[slug]/...` — subconjunto de rotas permitido (`clientPortalRouteMap.ts`)
+
+Requisito de negócio: **responsável legal** (`responsibleName`, `responsibleEmail`, `responsiblePhone` no `Client`) antes do envio de contrato ao Documenso.
+
+### Compras de add-ons (UI)
+
+Rotas em `/purchase/*` (analytics, métricas, relatórios de IA) para evolução de monetização de funcionalidades extras.
+
+## Funcionalidades implementadas (alto nível)
+
+| Capacidade | Estado |
+|------------|--------|
+| CRUD de clientes PJ + responsável legal | Implementado |
+| Projetos com máquina de estados e transições guiadas | Implementado |
+| Propostas e contratos versionados + Documenso | Implementado |
+| Templates TipTap + variáveis | Parcial (`backlog.md`) |
+| Despesas, categorias, faturas, dashboards financeiros | Implementado |
+| Backlog (projeto e defaults por serviço) | Implementado |
+| Integrações GitHub, SonarQube, Umami, Infisical | Implementado |
+| RBAC (CustomRole, Member, strategies, proxy de rotas) | Implementado (UI granular em progresso) |
+| Portal do cliente + convite de colaborador | Implementado (base) |
+| E-mails transacionais (templates React Email) | Templates prontos; **orquestração nos fluxos pendente** |
+| Gateways de pagamento (MP, Inter, Stripe) | Planejado |
+| Billing SaaS real | UI mock; backend planejado |
+
+Detalhamento item a item: `backlog.md` na raiz.
+
+## Arquitetura técnica
+
+| Aspecto | Tecnologia / versão |
 |---------|-------------------|
-| **Identidade e organização** | Usuários, sessões, organizações (`Organization`), membros (`Member`), papéis customizados (`CustomRole`) e permissões granulares |
-| **Catálogo** | Categorias e tipos de serviço, templates de documentos (TipTap/JSON), itens de backlog padrão por serviço |
-| **CRM** | Clientes (PJ), funcionários do cliente, propostas com versionamento e fluxo de status, contratos e vínculo com assinatura externa |
-| **Projetos** | Projetos por cliente, status operacional (máquina de estados), documentos, backlog, membros, notas |
-| **Financeiro** | Despesas, categorias, orçamento/receitas conforme modelagem em `financial`, faturas na organização |
-| **Integrações** | Tipos de integração, configuração por organização (tokens/credenciais), fábrica de integrações e métricas (GitHub, SonarQube, Umami, Documenso, Infisical, entre outros suportados pelo código) |
-| **Auditoria** | Rastreabilidade de ações relevantes (`audit`) |
-
-## Funcionalidades de alto nível (produto)
-
-As capacidades abaixo refletem o escopo desejado do produto e o que está **implementado ou em evolução** no repositório:
-
-- **Cadastro e gestão de projetos** — metadados, vínculo ao cliente, serviços, status e áreas (overview, comercial, backlog, métricas).
-- **CRM básico** — carteira de clientes (dados PJ), propostas com itens de catálogo e fluxo de aprovação/rejeição.
-- **Contratos e assinatura** — geração/upload de documentos, integração com **Documenso** para fluxo de assinatura e webhooks.
-- **Despesas e receitas** — controle financeiro associado ao contexto do projeto e dashboards agregados.
-- **Gateway de pagamento** — previsto no roadmap (Mercado Pago, Banco Inter, Stripe); cobrança alinhada a marcos (ex.: entrada após assinatura).
-- **Dashboards** — painel principal, financeiro, métricas por cliente/projeto (ciclo de vida, qualidade de código, analytics web).
-- **Backlog** — itens priorizados, com possibilidade de origem em templates por tipo de serviço.
-- **Integrações** — GitHub (métricas), SonarQube, Umami (analytics), Infisical (segredos), armazenamento S3 (documentos), notificações por e-mail (React Email / fluxos transacionais em evolução).
-
-## Arquitetura técnica (observada)
-
-| Aspecto | Tecnologia |
-|---------|------------|
-| Framework | Next.js (App Router), React |
-| Linguagem | TypeScript |
-| Persistência | PostgreSQL via Prisma ORM (múltiplos schemas) |
-| Autenticação | NextAuth v5 |
-| UI | Radix UI, Tailwind CSS, componentes próprios |
-| Internacionalização | `next-intl` (rotas com `[locale]`) |
-| Validação | Zod |
+| Framework | **Next.js 16** (App Router), **React 19** |
+| Linguagem | TypeScript 5 |
+| Persistência | **PostgreSQL** via **Prisma 7** (client gerado em `src/generated/prisma`) |
+| Autenticação | **NextAuth v5** (credenciais + OAuth) |
+| UI | Radix UI, Tailwind CSS 4, shadcn-style em `src/components/ui` |
+| Formulários | React Hook Form + Zod (`src/schemas`) |
+| i18n | `next-intl` — locales `pt` (padrão) e `en` |
 | Documentos ricos | TipTap |
-| Armazenamento de arquivos | AWS S3 (SDK) |
-| Observabilidade | `@vercel/otel` (OpenTelemetry) |
+| Armazenamento | **Cloudflare R2** (SDK S3-compatível) |
+| Assinatura | Documenso (`@documenso/embed-react`) |
+| E-mail | React Email + Nodemailer |
+| Observabilidade | `pino`, `@vercel/otel` |
+| Testes | Vitest (ex.: `src/errors/*.spec.ts`) |
+
+Deploy: `output: "standalone"` no `next.config.ts`; script `npm run build` executa `prisma migrate deploy`.
 
 ## Público-alvo
 
-- **Interno Zofia Code Labs**: equipe comercial, gestão de projetos e financeiro.
-- **Evolutivo (SaaS)**: outras organizações como tenants, com RBAC e configurações por organização — conforme direção indicada no roadmap do repositório.
+- **Interno Zofia Code Labs**: comercial, PM, financeiro e engenharia.
+- **Clientes corporativos**: portal com papéis `ADMIN`, `USER`, `VIEWER` em `ClientEmployees`.
+- **Evolutivo SaaS**: múltiplas organizações como tenants com RBAC e billing (roadmap).
 
 ## Limitações e trabalho em curso
 
-O `README.md` na raiz lista explicitamente itens **concluídos**, **parciais** e **pendentes** (ex.: billing real, convites com backend completo, múltiplos gateways de pagamento, provisionamento Git avançado). Esta documentação de requisitos deve ser revisada quando esses itens forem fechados.
+Consulte `backlog.md` para o checklist vivo. Destaques:
+
+- Orquestração de todos os e-mails nos use cases e crons
+- Gates de permissão em botões/formulários (leitura de rota já no proxy)
+- Gateways de pagamento e webhooks de cobrança
+- Múltiplos repositórios Git por projeto; provisionamento automático de repo
+- DefectDojo; relatórios de IA com dados reais (várias telas ainda placeholder)
+- CRUD de criação de organização e convites com token público
+- Multi-organização por usuário (hoje um `User` pertence a uma `Organization`)

@@ -1,3 +1,4 @@
+import { ResourceNotFoundError } from "@/errors";
 import { ClientEmployeeRole } from "@/generated/prisma/enums";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IClientEmployeesRepository } from "@/repositories/IClientEmployeesRepository";
@@ -19,7 +20,7 @@ export class UpdateClientEmployeeUseCase {
   }: UpdateClientEmployeeUseCaseRequest) {
     const employee = await this.clientEmployeesRepository.findById(employeeId);
 
-    if (!employee) throw new Error("Funcionário não encontrado.");
+    if (!employee) throw new ResourceNotFoundError("Funcionário não encontrado.");
 
     await checkUserPermissionForAsset(
       "clientEmployee",

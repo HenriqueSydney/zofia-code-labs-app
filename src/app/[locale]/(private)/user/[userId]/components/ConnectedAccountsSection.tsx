@@ -1,6 +1,7 @@
 import { formatDate } from "@/utils/dateFormatter";
-import { Link2, Trash2, Unplug } from "lucide-react"; // Adicionei Unplug
+import { Link2, Trash2, Unplug } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
+import { UserProfileSectionCard } from "./UserProfileSectionCard";
 
 interface IConnectedAccountsSection {
   accounts: {
@@ -40,14 +41,11 @@ export async function ConnectedAccountsSection({
   };
 
   return (
-    <div className="bg-card rounded-2xl shadow-xl p-8 mb-6 border border">
-      <div className="flex items-center space-x-3 mb-6">
-        <Link2 className="w-6 h-6 text-blue-600" />
-        <h3 className="text-2xl font-bold text-primary">
-          {t("connectedAccounts.title")}
-        </h3>
-      </div>
-
+    <UserProfileSectionCard
+      title={t("connectedAccounts.title")}
+      icon={<Link2 className="w-6 h-6 text-blue-600" />}
+      collapsible
+    >
       <div className="space-y-3">
         {/* Verificação se o array está vazio */}
         {accounts.length === 0 ? (
@@ -56,11 +54,10 @@ export async function ConnectedAccountsSection({
               <Unplug className="w-6 h-6 text-muted-foreground" />
             </div>
             <p className="text-muted-foreground font-medium">
-              {t("connectedAccounts.noAccounts") || "Nenhuma conta vinculada"}
+              {t("connectedAccounts.noAccounts")}
             </p>
             <p className="text-sm text-slate-500 mt-1">
-              {t("connectedAccounts.noAccountsDesc") ||
-                "Conecte suas redes sociais para facilitar o login."}
+              {t("connectedAccounts.noAccountsDesc")}
             </p>
           </div>
         ) : (
@@ -88,6 +85,6 @@ export async function ConnectedAccountsSection({
           ))
         )}
       </div>
-    </div>
+    </UserProfileSectionCard>
   );
 }

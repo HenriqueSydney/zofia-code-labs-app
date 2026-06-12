@@ -8,12 +8,15 @@ import {
   CustomRoleWithUsage,
   IUpdateCustomRoleDTO,
   ICreateCustomRoleDTO,
+  ICreateOrganizationMemberDTO,
+  IReactivateOrganizationMemberDTO,
 } from "../IOrganizationRepository";
 import {
   CustomRole,
   LoginHistory,
   Member,
   MemberRole,
+  MemberStatus,
   Organization,
   Prisma,
   Role,
@@ -179,6 +182,111 @@ export class PrismaOrganizationsRepository implements IOrganizationsRepository {
     return this.flatMemberLoginHistory(member);
   }
 
+  async findMemberByUserIdAndOrganizationId(
+    userId: string,
+    organizationId: string,
+    tx?: Prisma.TransactionClient,
+  ): Promise<Member | null> {
+    const client = tx || prisma;
+
+    return client.member.findUnique({
+      where: {
+        userId_organizationId: {
+          userId,
+          organizationId,
+        },
+      },
+    });
+  }
+
+  async createMember(
+    data: ICreateOrganizationMemberDTO,
+    tx?: Prisma.TransactionClient,
+  ): Promise<Member> {
+    const client = tx || prisma;
+
+    return client.member.create({
+      data: {
+        userId: data.userId,
+        organizationId: data.organizationId,
+        role: data.role,
+        customRoleId: data.customRoleId ?? null,
+        status: data.status ?? MemberStatus.PENDING,
+      },
+    });
+  }
+
+  async reactivateMember(
+    memberId: string,
+    data: IReactivateOrganizationMemberDTO,
+    tx?: Prisma.TransactionClient,
+  ): Promise<Member> {
+    const client = tx || prisma;
+
+    return client.member.update({
+      where: { id: memberId },
+      data: {
+        removedAt: null,
+        role: data.role,
+        customRoleId: data.customRoleId ?? null,
+        status: data.status ?? MemberStatus.PENDING,
+      },
+    });
+  }
+
+  async findPendingMembersByUserId(
+    userId: string,
+    tx?: Prisma.TransactionClient,
+  ): Promise<Member[]> {
+    const client = tx || prisma;
+
+    return client.member.findMany({
+      where: {
+        userId,
+        status: MemberStatus.PENDING,
+        removedAt: null,
+      },
+    });
+  }
+
+  async activateMember(
+    memberId: string,
+    tx?: Prisma.TransactionClient,
+  ): Promise<Member> {
+    const client = tx || prisma;
+
+    return client.member.update({
+      where: { id: memberId },
+      data: {
+        status: MemberStatus.ACTIVE,
+      },
+    });
+  }
+
+  async findOrganizationAdminContacts(organizationId: string) {
+    const admins = await prisma.member.findMany({
+      where: {
+        organizationId,
+        role: MemberRole.TENANT_ADMIN,
+        status: MemberStatus.ACTIVE,
+        removedAt: null,
+      },
+      include: {
+        user: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    return admins.map((admin) => ({
+      name: admin.user.name,
+      email: admin.user.email,
+    }));
+  }
+
   async updateMemberCustomRole(
     memberId: string,
     customRoleId: string,
@@ -243,6 +351,7 @@ export class PrismaOrganizationsRepository implements IOrganizationsRepository {
       },
       data: {
         removedAt: date().toDate(),
+        status: MemberStatus.INACTIVE,
       },
     });
   }

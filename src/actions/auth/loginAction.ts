@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { signIn } from "@/auth";
 import { loginSchema } from "@/schemas/auth/loginSchema";
 import { AuthError } from "next-auth";
@@ -10,7 +11,7 @@ export async function loginAction(data: unknown) {
   if (!parsed.success) {
     return {
       success: false,
-      message: "Dados inválidos",
+      message: await serverErrorMessage("invalidData"),
     };
   }
 
@@ -31,12 +32,12 @@ export async function loginAction(data: unknown) {
         case "CredentialsSignin":
           return {
             success: false,
-            message: "Email ou senha incorretos.",
+            message: await serverErrorMessage("invalidCredentials"),
           };
         default:
           return {
             success: false,
-            message: "Erro na autenticação. Tente novamente.",
+            message: await serverErrorMessage("authFailed"),
           };
       }
     }

@@ -1,25 +1,29 @@
-import { Lock, ShieldAlert, ShieldCheck } from "lucide-react";
+import { Suspense } from "react";
+import { Key, Lock, ShieldAlert, ShieldCheck } from "lucide-react";
 import { ChangePasswordForm } from "./ChangePasswordForm";
 import { getTranslations } from "next-intl/server";
 import { cn } from "@/utils/twMerge";
+import { UserProfileSectionCard } from "./UserProfileSectionCard";
+import { Button } from "@/components/ui/button";
 
 interface ISecuritySection {
   user: {
     hasPassword: boolean;
   };
+  invitePasswordSetup?: boolean;
 }
 
-export async function SecuritySection({ user }: ISecuritySection) {
+export async function SecuritySection({
+  user,
+  invitePasswordSetup = false,
+}: ISecuritySection) {
   const t = await getTranslations("userProfile");
   return (
-    <div className="bg-card rounded-2xl shadow-xl p-8 mb-6 border border">
-      <div className="flex items-center space-x-3 mb-6">
-        <Lock className="w-6 h-6 text-blue-600" />
-        <h3 className="text-2xl font-bold text-primary">
-          {t("security.title") || "Segurança"}
-        </h3>
-      </div>
-
+    <UserProfileSectionCard
+      title={t("security.title")}
+      icon={<Lock className="w-6 h-6 text-blue-600" />}
+      collapsible
+    >
       <div className="space-y-3">
         <div className="bg-background/70 flex items-center justify-between p-4 rounded-xl border hover:shadow-glow transition-colors">
           <div className="flex items-center space-x-4">
@@ -42,24 +46,29 @@ export async function SecuritySection({ user }: ISecuritySection) {
             <div>
               <p className="font-semibold">
                 {user.hasPassword
-                  ? t("security.passwordSet") || "Senha de acesso"
-                  : t("security.noPassword") || "Senha não configurada"}
+                  ? t("security.passwordSet")
+                  : t("security.noPassword")}
               </p>
               <p className="text-sm text-slate-600">
-                {/* t("security.lastChanged", { date: "há 3 meses" })) || */}
-                {user.hasPassword && "Segurança ativa"}
+                {user.hasPassword && t("security.active")}
 
-                {!user.hasPassword &&
-                  (t("security.authViaSocial") ||
-                    "Você utiliza login social. Crie uma senha para acesso direto.")}
+                {!user.hasPassword && t("security.authViaSocial")}
               </p>
             </div>
           </div>
 
-          {/* Botão de Ação */}
-          <ChangePasswordForm />
+          <Suspense
+            fallback={
+              <Button variant="outline" disabled className="gap-2">
+                <Key className="w-4 h-4" />
+                {t("security.changePassword")}
+              </Button>
+            }
+          >
+            <ChangePasswordForm invitePasswordSetup={invitePasswordSetup} />
+          </Suspense>
         </div>
       </div>
-    </div>
+    </UserProfileSectionCard>
   );
 }

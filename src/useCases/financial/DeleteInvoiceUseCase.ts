@@ -1,6 +1,6 @@
 import { IInvoiceRepository } from "@/repositories/IInvoiceRepository";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError } from "@/errors";
 
 interface DeleteInvoiceRequest {
   id: string;
@@ -14,7 +14,7 @@ export class DeleteInvoiceUseCase {
     const invoice = await this.invoiceRepository.findById(id);
 
     if (!invoice) {
-      throw new AppError("Fatura não encontrada.");
+      throw new ResourceNotFoundError("Fatura não encontrada.");
     }
 
     await checkUserPermissionForAsset("invoice", userId, invoice, "DELETE");

@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { ExternalServiceError, ValidationError } from "@/errors";
 import { IProjectIntegrationRepository } from "@/repositories/IProjectIntegrationRepository";
 import {
   IUmamiRepository,
@@ -31,10 +31,7 @@ export class GetUmamiMetricsUseCase {
       );
 
     if (!projectLink) {
-      throw new AppError(
-        "Integração com Umami não configurada para este projeto.",
-        404
-      );
+      throw new ExternalServiceError("Integração com Umami não configurada para este projeto.");
     }
 
     // 2. Define o período de comparação (30 dias)
@@ -49,10 +46,7 @@ export class GetUmamiMetricsUseCase {
     ]);
 
     if (!currentSnapshot) {
-      throw new AppError(
-        "Nenhum dado de analytics encontrado. Aguarde a próxima sincronização.",
-        404
-      );
+      throw new ValidationError("Nenhum dado de analytics encontrado. Aguarde a próxima sincronização.", { statusCode: 404 });
     }
 
     // 4. Mapeamento das métricas com cálculo de tendências

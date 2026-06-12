@@ -5,10 +5,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getTranslations } from "next-intl/server";
 import { getParams } from "@/utils/getParams";
 import { TabsContent } from "@/components/ui/tabs";
 import { CTAIntegration } from "../components/CTAIntegration";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { findIntegrationTypeBySlugAction } from "@/actions/integrations/findIntegrationTypeBySlugAction";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { IntegrationType } from "@/generated/prisma/client";
@@ -43,6 +44,8 @@ interface IParams {
 }
 
 export default async function LifeCycle({ params }: IParams) {
+  const t = await getTranslations("projects.metrics");
+  const tLifecycle = await getTranslations("projects.metrics.lifecycle");
   const { slug, client } = await getParams<{
     slug: string;
     client: string;
@@ -79,21 +82,17 @@ export default async function LifeCycle({ params }: IParams) {
   const [error, success] = orgIntegration;
 
   if (error) {
-    throw new AppError("Erro ao tentar localizar os dados para integração");
+    throw new ValidationError(t("common.integrationError"));
   }
 
   const [integrationTypeError, integrationTypeSuccess] = integrationType;
 
   if (integrationTypeError) {
-    throw new AppError(
-      "Tipo de integração não configurada globalmente, entre em contato com o suporte",
-    );
+    throw new ValidationError(t("common.integrationNotConfigured"));
   }
 
   if (!integrationTypeSuccess.data) {
-    throw new AppError(
-      "Tipo de integração não configurada globalmente, entre em contato com o suporte",
-    );
+    throw new ValidationError(t("common.integrationNotConfigured"));
   }
 
   const integrationTypeWithGitLogo = {
@@ -111,7 +110,7 @@ export default async function LifeCycle({ params }: IParams) {
       <TabsContent value="life-cycle" className="mt-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg">Ciclo de Vida</CardTitle>
+            <CardTitle className="text-lg">{tLifecycle("title")}</CardTitle>
           </CardHeader>
           <CardContent>
             {doesProjectIsAlreadySetup === -1 && (
@@ -142,11 +141,8 @@ export default async function LifeCycle({ params }: IParams) {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle className="text-lg">Ciclo de Vida</CardTitle>
-            <CardDescription>
-              Analise a evolução do projeto e a saúde da equipe com base em seu
-              repositório e backlogs
-            </CardDescription>
+            <CardTitle className="text-lg">{tLifecycle("title")}</CardTitle>
+            <CardDescription>{tLifecycle("description")}</CardDescription>
           </div>
           <div className="flex items-end gap-6">
             <Link href={`https://github.com/${repoFullName}`} target="_blank">
@@ -154,7 +150,7 @@ export default async function LifeCycle({ params }: IParams) {
                 className="flex items-center justify-between"
                 variant="outline"
               >
-                Acessar GitHub
+                {tLifecycle("accessGitHub")}
                 <ExternalLink className="mb-1" />
               </Button>
             </Link>
@@ -179,7 +175,7 @@ export default async function LifeCycle({ params }: IParams) {
               <SprintProgress slug={slug} />
             </div>
           </Suspense>
-          <h3>CI/CD Health</h3>
+          <h3>{tLifecycle("cicdHealth")}</h3>
           <Separator />
           <Suspense
             fallback={
@@ -197,13 +193,13 @@ export default async function LifeCycle({ params }: IParams) {
             </div>
           </Suspense>
 
-          <h3>Atividades</h3>
+          <h3>{tLifecycle("activities")}</h3>
           <Separator />
           <Suspense fallback={<ListSkeleton />}>
             <ActivityTable slug={slug} />
           </Suspense>
 
-          <h3>Estatísticas do repositório</h3>
+          <h3>{tLifecycle("repoStats")}</h3>
           <Separator />
           <Suspense fallback={<SummaryCardsSkeleton colsCount={4} />}>
             <RepositoryStatsGrid slug={slug} />

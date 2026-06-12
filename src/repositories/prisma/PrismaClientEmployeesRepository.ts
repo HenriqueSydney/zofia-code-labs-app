@@ -55,6 +55,19 @@ export class PrismaClientEmployeesRepository
     });
   }
 
+  async findByClientAndEmail(
+    clientId: string,
+    email: string,
+  ): Promise<ClientEmployees | null> {
+    return await prisma.clientEmployees.findFirst({
+      where: {
+        clientId,
+        deletedAt: null,
+        user: { email: { equals: email, mode: "insensitive" } },
+      },
+    });
+  }
+
   async listByClient(clientId: string): Promise<ClientEmployeesWithDetails[]> {
     const employees = await prisma.clientEmployees.findMany({
       where: {

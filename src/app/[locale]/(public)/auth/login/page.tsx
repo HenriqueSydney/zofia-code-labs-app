@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
+import { Link } from "@/i18n/navigation";
 import { LoginForm } from "./components/LoginForm";
 import { LoginWithProviders } from "./components/LoginWithProviders";
 import { Separator } from "@/components/ui/separator";
@@ -33,17 +34,18 @@ export default async function Login() {
         <div className="absolute inset-0 shadow-[inset_0_0_100px_rgba(0,0,0,0.5)]" />
 
         {/* Content on the image side */}
-        <div className="relative z-10 h-full flex flex-col justify-center items-center p-8 lg:p-16">
-          <Image
-            src="/zofia-logo.webp"
-            alt="Zofia Code Labs"
-            width={200}
-            height={200}
-          />
-          <h1 className="text-2xl lg:text-4xl font-bold text-white text-center mb-4 drop-shadow-lg">
-            Zofia Code Labs
-          </h1>
-          <p className="text-white/80 text-center max-w-md text-sm lg:text-base">
+        <div className="relative  z-10 h-full flex flex-col justify-center items-center p-8 lg:p-16">
+          <div className="bg-background/20 backdrop-blur-sm border border-border/50 rounded-lg px-4 mb-4">
+            <Image
+              src="/zofia-logo.webp"
+              alt="Zofia Code Labs"
+              width={677}
+              height={369}
+              className="w-64 h-auto max-w-full"
+            />
+          </div>
+
+          <p className="text-white/80 text-center max-w-lg text-base lg:text-xl font-bold">
             Transformando ideias em soluções digitais inovadoras
           </p>
         </div>
@@ -97,6 +99,14 @@ export default async function Login() {
             </CardHeader>
             <CardContent className="space-y-6">
               <LoginForm />
+              <p className="text-center text-sm">
+                <Link
+                  href="/auth/remember-me"
+                  className="text-muted-foreground hover:underline"
+                >
+                  {t("auth.forgotPassword")}
+                </Link>
+              </p>
               <Separator />
               {/* <LoginWithProviders /> */}
             </CardContent>

@@ -1,13 +1,50 @@
 import { Badge } from "@/components/ui/badge";
 
+export type PaymentBadgeStatus =
+  | "pending"
+  | "invoiced"
+  | "paid"
+  | "overdue";
+
+export const PAYMENT_STATUS_TRANSLATION_KEYS: Record<
+  PaymentBadgeStatus,
+  string
+> = {
+  pending: "pending",
+  invoiced: "invoiced",
+  paid: "paid",
+  overdue: "overdue",
+} as const;
+
+export function getPaymentStatusLabel(
+  status: PaymentBadgeStatus,
+  t: (key: string) => string,
+): string {
+  const key = PAYMENT_STATUS_TRANSLATION_KEYS[status];
+  return t(key);
+}
+
+type PaymentMapperType = {
+  label: string;
+  variant: "secondary" | "outline" | "destructive" | "default";
+};
+
 export const getPaymentStatusBadge = (
-  status: "pending" | "invoiced" | "paid" | "overdue",
+  status: PaymentBadgeStatus,
+  t: (key: string) => string,
 ) => {
-  const config = {
-    pending: { label: "Pendente", variant: "secondary" as const },
-    invoiced: { label: "Faturado", variant: "outline" as const },
-    paid: { label: "Pago", variant: "default" as const },
-    overdue: { label: "Atrasado", variant: "destructive" as const },
-  } as const;
-  return <Badge variant={config[status].variant}>{config[status].label}</Badge>;
+  const label = getPaymentStatusLabel(status, t);
+
+  const config: Record<PaymentBadgeStatus, PaymentMapperType> = {
+    pending: { label, variant: "secondary" },
+    invoiced: { label, variant: "outline" },
+    paid: { label, variant: "default" },
+    overdue: { label, variant: "destructive" },
+  };
+
+  return (
+    <Badge variant={config[status]?.variant ?? "default"}>
+      {config[status]?.label ?? getPaymentStatusLabel("pending", t)}
+    </Badge>
+  );
 };

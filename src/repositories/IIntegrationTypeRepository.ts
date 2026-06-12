@@ -1,6 +1,5 @@
 import { IntegrationType, Prisma } from "@/generated/prisma/client";
 
-
 export interface IIntegrationTypeRepository {
   create(data: Prisma.IntegrationTypeCreateInput): Promise<IntegrationType>;
   findById(id: string): Promise<IntegrationType | null>;
@@ -8,7 +7,7 @@ export interface IIntegrationTypeRepository {
   listAll(query?: string): Promise<IntegrationType[]>;
   update(
     id: string,
-    data: Prisma.IntegrationTypeUpdateInput
+    data: Prisma.IntegrationTypeUpdateInput,
   ): Promise<IntegrationType>;
   delete(id: string): Promise<void>;
 }

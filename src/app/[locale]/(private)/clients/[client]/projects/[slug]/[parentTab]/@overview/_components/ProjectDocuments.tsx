@@ -7,12 +7,15 @@ import { ProjectDocumentsActions } from "./ProjectDocumentsAction";
 import { ProjectDocumentsAddAction } from "./ProjectDocumentsAddAction";
 import { EmptyState } from "@/components/EmptyState";
 import { File } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 interface IProjectDocuments {
   project: ProjectWithDetails;
+  canManage: boolean;
 }
 
-const ProjectDocuments = ({ project }: IProjectDocuments) => {
+const ProjectDocuments = async ({ project, canManage }: IProjectDocuments) => {
+  const t = await getTranslations("projects.documents");
   const documents = project.projectDocuments;
 
   return (
@@ -20,7 +23,7 @@ const ProjectDocuments = ({ project }: IProjectDocuments) => {
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base">Documentos</CardTitle>
-          <ProjectDocumentsAddAction projectId={project.id} />
+          {canManage && <ProjectDocumentsAddAction projectId={project.id} />}
         </div>
       </CardHeader>
       <CardContent className="overflow-y-auto flex-1 min-h-0">
@@ -28,13 +31,15 @@ const ProjectDocuments = ({ project }: IProjectDocuments) => {
           {documents.length === 0 && (
             <EmptyState
               title="Documentos"
-              description="Nenhum documento anexado até o momento"
+              description={t("empty")}
               icon={File}
               action={
-                <ProjectDocumentsAddAction
-                  projectId={project.id}
-                  variant="default"
-                />
+                canManage ? (
+                  <ProjectDocumentsAddAction
+                    projectId={project.id}
+                    variant="default"
+                  />
+                ) : undefined
               }
             />
           )}
@@ -55,7 +60,10 @@ const ProjectDocuments = ({ project }: IProjectDocuments) => {
                     </p>
                   </div>
                 </div>
-                <ProjectDocumentsActions projectDocument={doc} />
+                <ProjectDocumentsActions
+                  projectDocument={doc}
+                  canManage={canManage}
+                />
               </div>
             );
           })}

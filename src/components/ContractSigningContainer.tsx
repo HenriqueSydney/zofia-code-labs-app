@@ -2,7 +2,7 @@
 import { getContractAction } from "@/actions/contract/getContract";
 import { getProposalAction } from "@/actions/proposal/getProposal";
 import { envVariables } from "@/env";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { ContractWithDetails } from "@/repositories/IContractRepository";
 import { ProposalWithDetails } from "@/repositories/IProposalRepository";
@@ -19,8 +19,9 @@ import { DocumensoEmbedding } from "@/components/DocumensoEmbedding";
 import { ProposalDetails } from "@/components/ProposalDetail";
 import { Separator } from "./ui/separator";
 import { ContractSigningDetails } from "./ContractSigningDetails";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/twMerge";
 import { auth } from "@/auth";
+import { getTranslations } from "next-intl/server";
 
 interface IContractSigningContainer {
   contractId: string;
@@ -29,6 +30,8 @@ interface IContractSigningContainer {
 export async function ContractSigningContainer({
   contractId,
 }: IContractSigningContainer) {
+  const t = await getTranslations("contracts.signing");
+
   const [contractResponse, authData] = await Promise.all([
     operationWrapper<ContractWithDetails>(
       "action",
@@ -51,7 +54,7 @@ export async function ContractSigningContainer({
   }
 
   if (!success.externalSignId) {
-    throw new AppError("Identificador de assinatura não localizado");
+    throw new ValidationError(t("signatureIdNotFound"));
   }
 
   const [_, proposalSuccess] = await operationWrapper<ProposalWithDetails>(
@@ -73,10 +76,10 @@ export async function ContractSigningContainer({
 
   const signingToken = document.recipients.find(
     (recipient) =>
-      // recipient.email === authData?.user.email &&
-      recipient.role === "SIGNER" && recipient.signingStatus === "NOT_SIGNED",
+      recipient.email === authData?.user.email &&
+      recipient.role === "SIGNER" &&
+      recipient.signingStatus === "NOT_SIGNED",
   );
-
 
   return (
     <Card
@@ -87,17 +90,14 @@ export async function ContractSigningContainer({
     >
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold tracking-tight">
-          Assinatura de Contrato
+          {t("title")}
         </CardTitle>
         <CardDescription className="text-base">
-          Olá! Para iniciarmos nossa parceria no projeto{" "}
-          <strong>{success.project.client.tradeName}</strong>, por favor revise
-          e assine o contrato abaixo.
+          {t("description", { name: success.project.client.tradeName })}
           {proposalSuccess && (
             <span className="text-muted-foreground">
               <br />
-              Ao final do documento, é apresentado o resumo da proposta que
-              consta no contrato para facilitar a compreensão
+              {t("proposalSummaryHint")}
             </span>
           )}
         </CardDescription>
@@ -123,7 +123,7 @@ export async function ContractSigningContainer({
         {proposalSuccess && (
           <div className="mt-10 border rounded-md p-4 space-y-6">
             <h4 className="text-xl font-bold tracking-tight">
-              Detalhes da proposta
+              {t("proposalDetailsTitle")}
             </h4>
             <ProposalDetails proposal={proposalSuccess} />
           </div>
@@ -131,9 +131,7 @@ export async function ContractSigningContainer({
       </CardContent>
       <CardFooter className="w-full flex flex-col align-center justify-center">
         <Separator />
-        <p className="mt-4 text-sm text-muted-foreground">
-          Ambiente seguro e autenticado por <strong>Zofia Code Labs</strong>
-        </p>
+        <p className="mt-4 text-sm text-muted-foreground">{t("footer")}</p>
       </CardFooter>
     </Card>
   );

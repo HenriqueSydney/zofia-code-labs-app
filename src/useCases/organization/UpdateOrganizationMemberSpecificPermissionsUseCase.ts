@@ -1,5 +1,6 @@
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
+import { toOrganizationAsset } from "@/lib/auth/toOrganizationAsset";
 import { IOrganizationsRepository } from "@/repositories/IOrganizationRepository";
 
 interface UpdateOrganizationMemberSpecificPermissionsUseCaseRequest {
@@ -22,10 +23,14 @@ export class UpdateOrganizationMemberSpecificPermissionsUseCase {
     const organization =
       await this.organizationsRepository.findById(organizationId);
 
-    if (!organization) throw new AppError("Organização não localizada.");
+    if (!organization) throw new ResourceNotFoundError("Organização não localizada.");
 
-    // 4. Validação de Permissão
-    //await checkUserPermissionForAsset("client", userId, organization, "UPDATE");
+    await checkUserPermissionForAsset(
+      "organization",
+      userId,
+      toOrganizationAsset(organization),
+      "UPDATE",
+    );
 
     // 5. Atualização
     const member =

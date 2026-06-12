@@ -1,7 +1,7 @@
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IExpenseRepository } from "@/repositories/IExpenseRepository";
 import { IProjectsRepository } from "@/repositories/IProjectsRepository";
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError } from "@/errors";
 
 interface DeleteExpenseUseCaseRequest {
   userId: string;
@@ -22,13 +22,13 @@ export class DeleteExpenseUseCase {
     const expense = await this.expenseRepository.findById(expenseId);
 
     if (!expense) {
-      throw new AppError("Despesa não encontrada.");
+      throw new ResourceNotFoundError("Despesa não encontrada.");
     }
 
     const project = await this.projectsRepository.findById(expense.projectId);
 
     if (!project) {
-      throw new AppError("Projeto não encontrado.");
+      throw new ResourceNotFoundError("Projeto não encontrado.");
     }
 
     // Verifica permissão para DELETAR no contexto do projeto

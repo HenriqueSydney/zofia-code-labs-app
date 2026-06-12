@@ -1,5 +1,5 @@
 import { Pagination } from "@/@types/Pagination";
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError } from "@/errors";
 import { BacklogStatus, BacklogPriority } from "@/generated/prisma/client";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import {
@@ -46,7 +46,7 @@ export class ListBacklogItemsUseCase {
     const doesProjectExists = await this.projectsRepository.findById(projectId);
 
     if (!doesProjectExists) {
-      throw new AppError("Projeto não localizado");
+      throw new ResourceNotFoundError("Projeto não localizado");
     }
 
     await checkUserPermissionForAsset(

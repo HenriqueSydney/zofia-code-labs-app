@@ -78,7 +78,7 @@ export default function GlobalError({
       <html>
         <body>
           <div className="min-h-screen flex items-center justify-center">
-            <div>Carregando...</div>
+            <div>Loading...</div>
           </div>
         </body>
       </html>
@@ -99,7 +99,7 @@ export default function GlobalError({
                     <div className="relative bg-card/50 backdrop-blur-sm border border-border/50 rounded-3xl p-8 shadow-2xl">
                       <Image
                         src={ERROR_IMAGE}
-                        alt="404 - Página não encontrada"
+                        alt={messages.errors.global.imageAlt}
                         className="w-full h-auto rounded-xl object-cover"
                         priority
                       />
@@ -113,7 +113,7 @@ export default function GlobalError({
                         Opps!!
                       </h1>
                       <h2 className="text-2xl lg:text-3xl font-semibold text-foreground">
-                        Algo não previsto aconteceu
+                        {messages.errors.global.title}
                       </h2>
                       <p className="text-lg text-muted-foreground max-w-md mx-auto lg:mx-0">
                         {error.message ||
@@ -128,7 +128,7 @@ export default function GlobalError({
                         <Button asChild size="lg" className="group">
                           <Link href="/">
                             <Home className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
-                            Voltar ao Início
+                            {messages.notFound.home}
                           </Link>
                         </Button>
                         <Button

@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
 import { projectFormSchema } from "@/schemas/projects/createProjectSchema";
 import { makeCreateProjectUseCase } from "@/useCases/projects/factories/makeCreateProjectUseCase";
@@ -8,7 +9,7 @@ import { redirect, RedirectType } from "next/navigation";
 
 export async function createProjectAction(formData: FormData) {
   const session = await auth();
-  if (!session?.user) return { error: "Não autorizado" };
+  if (!session?.user) return { error: await serverErrorMessage("unauthorized") };
 
   // 1. Parse dos dados simples
   const rawData = {

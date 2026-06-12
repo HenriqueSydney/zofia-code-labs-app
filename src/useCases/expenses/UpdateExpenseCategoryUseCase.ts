@@ -1,3 +1,4 @@
+import { ForbiddenError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IExpenseCategoryRepository } from "@/repositories/IExpenseCategoryRepository";
 
@@ -27,9 +28,7 @@ export class UpdateExpenseCategoryUseCase {
     );
 
     if (!existingCategory) {
-      throw new Error(
-        "Categoria de despesa não encontrada ou você não tem permissão para editá-la."
-      );
+      throw new ForbiddenError("Categoria de despesa não encontrada ou você não tem permissão para editá-la.");
     }
 
     await checkUserPermissionForAsset(

@@ -12,18 +12,19 @@ export class PrismaProposalTemplateRepository
 {
   async create(
     data: CreateProposalTemplateDTO,
-    tx?: Prisma.TransactionClient
+    tx?: Prisma.TransactionClient,
   ): Promise<ProposalTemplate> {
     const client = tx || prisma;
-    const { isDefault, documentTemplateId, proposalId, ...rest } = data;
+    const { isDefault, proposalId, content, ...rest } = data;
 
-    // Criação simples se não for default
     return await client.proposalTemplate.create({
       data: {
         ...rest,
-        isDefault: false,
-        content: data.content as Prisma.InputJsonValue,
-        template: { connect: { id: documentTemplateId } },
+        isDefault: isDefault ?? false,
+        content:
+          content === undefined
+            ? undefined
+            : (content as Prisma.InputJsonValue),
         proposal: {
           connect: { id: proposalId },
         },
@@ -33,13 +34,12 @@ export class PrismaProposalTemplateRepository
 
   async update(
     id: string,
-    data: UpdateProposalTemplateDTO
+    data: UpdateProposalTemplateDTO,
   ): Promise<ProposalTemplate> {
-    const { isDefault, ...rest } = data;
+    const { isDefault, content, ...rest } = data;
 
     if (isDefault === true) {
       return await prisma.$transaction(async (tx) => {
-        // Remove default dos outros (exceto o atual, logicamente)
         await tx.proposalTemplate.updateMany({
           where: { id: { not: id }, isDefault: true },
           data: { isDefault: false },
@@ -50,7 +50,10 @@ export class PrismaProposalTemplateRepository
           data: {
             ...rest,
             isDefault: true,
-            content: data.content as Prisma.InputJsonValue | undefined,
+            content:
+              content === undefined
+                ? undefined
+                : (content as Prisma.InputJsonValue),
           },
         });
       });
@@ -60,8 +63,9 @@ export class PrismaProposalTemplateRepository
       where: { id },
       data: {
         ...rest,
-        isDefault: isDefault, // Pode ser undefined ou false aqui
-        content: data.content as Prisma.InputJsonValue | undefined,
+        isDefault,
+        content:
+          content === undefined ? undefined : (content as Prisma.InputJsonValue),
       },
     });
   }
@@ -69,18 +73,12 @@ export class PrismaProposalTemplateRepository
   async findById(id: string): Promise<ProposalTemplateWithDetails | null> {
     return await prisma.proposalTemplate.findUnique({
       where: { id },
-      include: {
-        template: true,
-      },
     });
   }
 
   async findAllActive(): Promise<ProposalTemplateWithDetails[]> {
     return await prisma.proposalTemplate.findMany({
       where: { isActive: true },
-      include: {
-        template: true, // Importante para mostrar o nome na listagem
-      },
       orderBy: { createdAt: "desc" },
     });
   }
@@ -88,9 +86,6 @@ export class PrismaProposalTemplateRepository
   async findDefault(): Promise<ProposalTemplateWithDetails | null> {
     return await prisma.proposalTemplate.findFirst({
       where: { isDefault: true, isActive: true },
-      include: {
-        template: true,
-      },
     });
   }
 

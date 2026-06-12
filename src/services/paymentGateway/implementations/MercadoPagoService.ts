@@ -1,101 +1,227 @@
+import {
+  MercadoPagoConfig as MPConfig,
+  Payment,
+  PreApproval,
+  Preference,
+} from "mercadopago";
 import { IntegrationBase } from "../../IntegrationBase";
 import {
   IPaymentGatewayService,
+  MercadoPagoConfig,
   PaymentMethods,
   SubscriptionPlan,
+  GatewayFees,
+  PaymentIntentResult,
+  CustomerResult,
 } from "../IPaymentGatewayService";
+
+export class MercadoPagoError extends Error {
+  constructor(
+    message: string,
+    public readonly cause?: unknown,
+  ) {
+    super(message);
+    this.name = "MercadoPagoError";
+  }
+}
 
 export class MercadoPagoService
   extends IntegrationBase
   implements IPaymentGatewayService
 {
-  private baseUrl: string = "https://api.mercadopago.com";
-  private accessToken: string;
+  private payment: Payment;
+  private preApproval: PreApproval;
+  private preference: Preference;
 
-  constructor(config: { accessToken: string }) {
-    super("mercado-pago");
-    this.accessToken = config.accessToken || "";
+  constructor(config: MercadoPagoConfig) {
+    super("mercadopago");
+
+    const mpConfig = new MPConfig({ accessToken: config.accessToken });
+    this.payment = new Payment(mpConfig);
+    this.preApproval = new PreApproval(mpConfig);
+    this.preference = new Preference(mpConfig);
   }
 
   async healthCheck(): Promise<{ status: "up" | "down"; latency: number }> {
     const start = performance.now();
     try {
-      const response = await fetch(`${this.baseUrl}/v1/payment_methods`, {
-        headers: { Authorization: `Bearer ${this.accessToken}` },
-      });
+      // Tenta criar um pagamento inválido só pra testar auth — MP não tem endpoint de health
+      await this.payment.get({ id: 0 });
+      return { status: "up", latency: Math.round(performance.now() - start) };
+    } catch (err: any) {
+      // 404 = auth ok, recurso não existe — conexão está up
+      const isAuthOk = err?.status === 404 || err?.cause?.[0]?.code === 2000;
       return {
-        status: response.ok ? "up" : "down",
+        status: isAuthOk ? "up" : "down",
         latency: Math.round(performance.now() - start),
       };
-    } catch {
-      return { status: "down", latency: Math.round(performance.now() - start) };
     }
   }
 
-  async createPaymentIntent(data: PaymentMethods): Promise<any> {
-    const body: any = {
-      transaction_amount: data.amount / 100, // MP usa decimais (10.50)
-      description: data.description,
-      payer: { email: data.customerEmail },
+  async createCustomer(email: string, name: string): Promise<CustomerResult> {
+    return {
+      gatewayCustomerId: null,
+      email: email,
+      name: name,
+      gateway: "mercadopago",
+      raw: null,
     };
-
-    if (data.type === "pix") body.payment_method_id = "pix";
-    else if (data.type === "boleto") body.payment_method_id = "bolbradesco";
-    // Para cartão, o 'token' deve vir do front-end no objeto data (estendendo a interface se necessário)
-
-    const response = await fetch(`${this.baseUrl}/v1/payments`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${this.accessToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
-
-    return response.json();
   }
 
-  async createCustomer(email: string, name: string): Promise<any> {
-    const response = await fetch(`${this.baseUrl}/v1/customers`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${this.accessToken}`,
-        "Content-Type": "application/json",
+  async createCheckoutSession(
+    data: PaymentMethods,
+  ): Promise<PaymentIntentResult> {
+    try {
+      const payer = data.payer;
+      const nameParts = payer?.name?.split(" ") ?? [];
+
+      const result = await this.preference.create({
+        body: {
+          items: [
+            {
+              id: data.invoiceId,
+              title: data.description ?? "Fatura",
+              quantity: 1,
+              currency_id: "BRL",
+              unit_price: data.amount / 100, // MP usa reais
+            },
+          ],
+          payer: {
+            name: nameParts[0] ?? "",
+            surname: nameParts.slice(1).join(" ") ?? "",
+            email: data.customerEmail,
+            identification: payer?.document
+              ? {
+                  type:
+                    payer.document.replace(/\D/g, "").length > 11
+                      ? "CNPJ"
+                      : "CPF",
+                  number: payer.document.replace(/\D/g, ""),
+                }
+              : undefined,
+            phone:
+              payer?.ddd && payer?.phone
+                ? { area_code: payer.ddd, number: payer.phone }
+                : undefined,
+          },
+          back_urls: {
+            success: `${process.env.APP_URL}/invoices/${data.invoiceId}?paid=true`,
+            failure: `${process.env.APP_URL}/invoices/${data.invoiceId}?error=true`,
+            pending: `${process.env.APP_URL}/invoices/${data.invoiceId}?pending=true`,
+          },
+          auto_return: "approved",
+          notification_url: `${process.env.APP_URL}/webhooks/mercadopago`,
+          external_reference: data.invoiceId, // chave de reconciliação no webhook
+          expiration_date_to: new Date(
+            Date.now() + 7 * 24 * 60 * 60 * 1000,
+          ).toISOString(),
+          metadata: {
+            invoiceId: data.invoiceId,
+            organizationId: data.organizationId,
+          },
+        },
+      });
+
+      return {
+        id: result.id!,
+        clientSecret: result.id!, // mantém compatibilidade de tipo
+        checkoutUrl: result.init_point!, // ← URL real de pagamento
+        status: "pending",
+        amount: data.amount,
+        currency: "brl",
+      };
+    } catch (err) {
+      throw new MercadoPagoError(
+        "Falha ao criar sessão de checkout no Mercado Pago",
+        err,
+      );
+    }
+  }
+
+  /**
+   * Cria uma preferência de pagamento (equivalente ao PaymentIntent do Stripe).
+   * Suporta Pix, boleto e cartão via checkout MP.
+   */
+  async createPaymentIntent(
+    data: PaymentMethods,
+  ): Promise<PaymentIntentResult> {
+    const result = await this.payment.create({
+      body: {
+        transaction_amount: data.amount / 100,
+        description: data.description ?? "",
+        external_reference: data.invoiceId,
+        payer: { email: data.customerEmail },
+        payment_method_id: this.mapPaymentType(data.type),
+        metadata: {
+          invoiceId: data.invoiceId,
+          organizationId: data.organizationId,
+        },
       },
-      body: JSON.stringify({ email, first_name: name }),
     });
-    return response.json();
+
+    const txData = result.point_of_interaction?.transaction_data;
+
+    return {
+      id: String(result.id),
+      clientSecret: txData?.qr_code ?? "",
+      status: result.status ?? "pending",
+      amount: Math.round((result.transaction_amount ?? 0) * 100),
+      currency: "brl",
+      pixQrCodeBase64: txData?.qr_code_base64 ?? undefined,
+      pixCopyPaste: txData?.qr_code ?? undefined,
+      boletoUrl: result.transaction_details?.external_resource_url ?? undefined,
+    };
   }
 
   async createSubscription(data: SubscriptionPlan): Promise<any> {
-    const response = await fetch(`${this.baseUrl}/preapproval`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${this.accessToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        payer_email: data.customerId, // No MP simplificado usa-se o email ou ID
-        reason: "Assinatura SaaS",
-        auto_recurring: {
-          frequency: 1,
-          frequency_type: "months",
-          transaction_amount: 100, // Exemplo
-          currency_id: "BRL",
+    try {
+      return await this.preApproval.create({
+        body: {
+          preapproval_plan_id: data.priceId,
+          payer_email: data.payerEmail,
+          external_reference: data.organizationId,
         },
-        status: "authorized",
-      }),
-    });
-    return response.json();
+      });
+    } catch (err) {
+      throw new MercadoPagoError(
+        "Falha ao criar assinatura no Mercado Pago",
+        err,
+      );
+    }
   }
 
-  async getCurrentFees(): Promise<any> {
+  async cancelSubscription(subscriptionId: string): Promise<any> {
+    try {
+      return await this.preApproval.update({
+        id: subscriptionId,
+        body: { status: "cancelled" },
+      });
+    } catch (err) {
+      throw new MercadoPagoError(
+        "Falha ao cancelar assinatura no Mercado Pago",
+        err,
+      );
+    }
+  }
+
+  async getCurrentFees(): Promise<GatewayFees> {
+    // Taxas contratuais MP Brasil — atualizar conforme contrato
     return {
-      card_percentage: 3.99,
+      card_percentage: 4.99,
       card_fixed: 0.0,
-      pix_percentage: 0.99,
+      pix_percentage: 1.19,
       pix_fixed: 0.0,
-      boleto_fixed: 3.49,
+      boleto_fixed: 3.99,
     };
+  }
+
+  private mapPaymentType(type: string | string[]): string {
+    const t = Array.isArray(type) ? type[0] : type;
+    const map: Record<string, string> = {
+      card: "credit_card",
+      pix: "pix",
+      boleto: "boleto",
+    };
+    return map[t] ?? t;
   }
 }

@@ -1,3 +1,4 @@
+import { ForbiddenError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IExpenseCategoryRepository } from "@/repositories/IExpenseCategoryRepository";
 
@@ -22,9 +23,7 @@ export class DeleteExpenseCategoryUseCase {
     );
 
     if (!existingCategory) {
-      throw new Error(
-        "Categoria de despesa não encontrada ou você não tem permissão para removê-la."
-      );
+      throw new ForbiddenError("Categoria de despesa não encontrada ou você não tem permissão para removê-la.");
     }
 
     await checkUserPermissionForAsset(

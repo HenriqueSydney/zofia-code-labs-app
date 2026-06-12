@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
 import {
   DefaultBacklogItemSchema,
@@ -16,7 +17,7 @@ export async function createServiceDefaultBacklogItemAction(
   if (!session?.user?.organizationId) {
     return {
       success: false,
-      message: "Sessão expirada ou usuário sem organização vinculada.",
+      message: await serverErrorMessage("sessionExpiredNoOrg"),
     };
   }
 
@@ -26,7 +27,7 @@ export async function createServiceDefaultBacklogItemAction(
   if (!parsed.success) {
     return {
       success: false,
-      message: parsed.error.issues[0].message || "Dados inválidos.",
+      message: parsed.error.issues[0].message || await serverErrorMessage("invalidData"),
     };
   }
 
@@ -65,7 +66,7 @@ export async function createServiceDefaultBacklogItemAction(
 
     return {
       success: false,
-      message: "Erro interno ao criar backlog.",
+      message: await serverErrorMessage("backlogCreateFailed"),
     };
   }
 }

@@ -14,6 +14,7 @@ import { createProjectNoteAction } from "@/actions/projectNotes/createProjectNot
 import { ProjectNotesWithDetails } from "@/repositories/IProjectNotesRepository";
 import { updateProjectNoteAction } from "@/actions/projectNotes/updateProjectNoteAction";
 import { FormTextarea } from "@/components/form/FormTextarea";
+import { useTranslations } from "next-intl";
 
 interface ProjectNotesForm {
   projectId: string;
@@ -26,6 +27,8 @@ export function ProjectNotesForm({
   note,
   handleCloseModal,
 }: ProjectNotesForm) {
+  const t = useTranslations("projects.notes");
+  const tCommon = useTranslations("common");
   // Simulação de estado de loading (substitua pela sua lógica real)
   const isPending = false;
 
@@ -50,9 +53,7 @@ export function ProjectNotesForm({
         return;
       }
 
-      toast.success(
-        "Observação atualizada com sucesso! O usuário possui 30 minutos para editá-la se desejar.",
-      );
+      toast.success(t("toastUpdated"));
 
       if (handleCloseModal) {
         handleCloseModal();
@@ -68,9 +69,7 @@ export function ProjectNotesForm({
       return;
     }
 
-    toast.success(
-      "Observação criada com sucesso! O usuário possui 30 minutos para editá-la se desejar.",
-    );
+    toast.success(t("toastCreated"));
 
     form.reset();
   }
@@ -84,7 +83,7 @@ export function ProjectNotesForm({
         <FormTextarea
           control={form.control}
           name="content"
-          placeholder="Adicionar nova observação..."
+          placeholder={t("placeholder")}
           className="resize-y"
           rows={4}
         />
@@ -94,12 +93,12 @@ export function ProjectNotesForm({
             {isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Salvando...
+                {tCommon("saving")}
               </>
             ) : (
               <>
                 <Plus className="mr-2 h-4 w-4" />
-                Adicionar Observação
+                {t("addButton")}
               </>
             )}
           </Button>

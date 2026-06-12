@@ -1,3 +1,4 @@
+import { ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IContractRepository } from "@/repositories/IContractRepository";
 
@@ -13,7 +14,7 @@ export class GetContractByIdUseCase {
     const contract = await this.contractRepository.findById(id);
 
     if (!contract) {
-      throw new Error("Contrato não localizado");
+      throw new ResourceNotFoundError("Contrato não localizado");
     }
 
     await checkUserPermissionForAsset(

@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "./global.css";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
 import { SessionProvider } from "next-auth/react";
 import { NextIntlClientProvider } from "next-intl";
 import { auth } from "@/auth";
 import { SuccessToastComponent } from "@/components/SuccessToastComponent";
+import { PermissionDeniedToastComponent } from "@/components/PermissionDeniedToastComponent";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,6 +43,9 @@ export default async function RootLayout({
               <Toaster />
 
               <SuccessToastComponent />
+              <Suspense fallback={null}>
+                <PermissionDeniedToastComponent />
+              </Suspense>
             </NextIntlClientProvider>
           </ThemeProvider>
         </SessionProvider>

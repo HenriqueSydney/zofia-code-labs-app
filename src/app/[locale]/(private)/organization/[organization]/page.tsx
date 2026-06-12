@@ -1,5 +1,5 @@
 import { operationWrapper } from "@/lib/operationWrapper";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
 import {
@@ -14,16 +14,16 @@ import { mask } from "@/utils/mask";
 import { Badge } from "@/components/ui/badge";
 import { getOrganizationAction } from "@/actions/organization/getOrganizationAction";
 import { date } from "@/lib/dayjs";
+import { getTranslations } from "next-intl/server";
 
 interface IOrganizationPage {
   params: Promise<{ organization: string }>;
 }
 
 export default async function OrganizationPage({ params }: IOrganizationPage) {
+  const t = await getTranslations("organization.overview");
   const { organization } = await params;
 
-  // Reutiliza a action (Next.js faz dedupe automático do request se for fetch,
-  // mas com Prisma direto é bom garantir cache ou aceitar a segunda query leve)
   const [error, success] = await operationWrapper(
     "action",
     "getOrganization",
@@ -31,7 +31,7 @@ export default async function OrganizationPage({ params }: IOrganizationPage) {
   );
 
   if (error) {
-    throw new AppError(error.message);
+    throw new ValidationError(error.message);
   }
 
   const org = success.organization;
@@ -39,26 +39,25 @@ export default async function OrganizationPage({ params }: IOrganizationPage) {
   return (
     <TabsContent value="overview" className="space-y-6 outline-none m-0">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Coluna Principal: Dados Cadastrais */}
         <Card className="lg:col-span-2 shadow-sm">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
               <Building2 className="w-5 h-5 text-primary" />
-              Dados da Organização
+              {t("orgDataTitle")}
             </CardTitle>
           </CardHeader>
           <CardContent className="grid md:grid-cols-2 gap-y-6 gap-x-8">
             <div className="space-y-4">
               <div className="group">
                 <label className="text-xs font-semibold text-muted-foreground uppercase flex items-center gap-1 mb-1">
-                  Nome da Empresa
+                  {t("companyName")}
                 </label>
                 <p className="font-medium text-base">{org.name}</p>
               </div>
 
               <div>
                 <label className="text-xs font-semibold text-muted-foreground uppercase flex items-center gap-1 mb-1">
-                  <Globe className="w-3 h-3" /> Slug (URL)
+                  <Globe className="w-3 h-3" /> {t("slugLabel")}
                 </label>
                 <div className="flex items-center gap-2">
                   <Badge variant="secondary" className="font-mono">
@@ -69,7 +68,7 @@ export default async function OrganizationPage({ params }: IOrganizationPage) {
 
               <div>
                 <label className="text-xs font-semibold text-muted-foreground uppercase flex items-center gap-1 mb-1">
-                  Segmento
+                  {t("segment")}
                 </label>
                 <p className="font-medium">{org.industry.replace(/_/g, " ")}</p>
               </div>
@@ -78,7 +77,7 @@ export default async function OrganizationPage({ params }: IOrganizationPage) {
             <div className="space-y-4">
               <div>
                 <label className="text-xs font-semibold text-muted-foreground uppercase flex items-center gap-1 mb-1">
-                  <Fingerprint className="w-3 h-3" /> CNPJ
+                  <Fingerprint className="w-3 h-3" /> {t("cnpj")}
                 </label>
                 <p className="font-medium">
                   {org.cnpj?.includes("/")
@@ -92,40 +91,37 @@ export default async function OrganizationPage({ params }: IOrganizationPage) {
 
               <div>
                 <label className="text-xs font-semibold text-muted-foreground uppercase flex items-center gap-1 mb-1">
-                  <CalendarDaysIcon className="w-3 h-3" /> Data de Criação
+                  <CalendarDaysIcon className="w-3 h-3" /> {t("createdAt")}
                 </label>
                 <p className="font-medium">
                   {date(org.createdAt).format("DD/MM/YYYY HH:mm")}
                 </p>
               </div>
 
-              {/* Exemplo de campo de Settings (JSON) se houver endereço */}
               <div>
                 <label className="text-xs font-semibold text-muted-foreground uppercase flex items-center gap-1 mb-1">
-                  <MapPin className="w-3 h-3" /> Localização
+                  <MapPin className="w-3 h-3" /> {t("location")}
                 </label>
                 <p className="font-medium text-muted-foreground italic">
-                  Brasília, DF{" "}
-                  {/* Placeholder ou vindo de org.settings.address */}
+                  {t("locationPlaceholder")}
                 </p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Coluna Lateral: Resumo de Uso/Saúde da Conta */}
         <div className="space-y-6">
           <Card className="shadow-sm">
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
                 <Activity className="w-5 h-5 text-green-600" />
-                Status da Assinatura
+                {t("subscriptionStatus")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex justify-between items-end">
                 <span className="text-sm text-muted-foreground">
-                  Consumo de Recursos
+                  {t("resourceUsage")}
                 </span>
                 <span className="text-xl font-bold text-primary">75%</span>
               </div>
@@ -135,15 +131,15 @@ export default async function OrganizationPage({ params }: IOrganizationPage) {
 
               <div className="pt-4 border-t space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Plano</span>
+                  <span className="text-muted-foreground">{t("plan")}</span>
                   <span className="font-medium">Business Pro</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Próxima Fatura</span>
+                  <span className="text-muted-foreground">{t("nextInvoice")}</span>
                   <span>15/03/2026</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Membros</span>
+                  <span className="text-muted-foreground">{t("members")}</span>
                   <span>{org.totalOfMembers} / 20</span>
                 </div>
               </div>
@@ -157,10 +153,9 @@ export default async function OrganizationPage({ params }: IOrganizationPage) {
                   <BarChart3 className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-1">ZofIA Insights</h4>
+                  <h4 className="font-semibold mb-1">{t("insightsTitle")}</h4>
                   <p className="text-sm text-muted-foreground">
-                    Sua organização completou 5 projetos este mês. A
-                    produtividade aumentou 12%.
+                    {t("insightsDescription")}
                   </p>
                 </div>
               </div>

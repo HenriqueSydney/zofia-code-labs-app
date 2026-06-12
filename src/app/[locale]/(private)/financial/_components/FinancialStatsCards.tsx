@@ -1,7 +1,8 @@
 import { getFinancialOverviewAction } from "@/actions/stats/getFinancialOverviewAction";
-import { StatsCardsSkeleton } from "@/components/skeletons/StatsCardsSkeleton";
+import { StatsCardSkeleton } from "@/components/skeletons/StatsCardSkeleton";
 import { StatsCard } from "@/components/StatsCard";
 import { DollarSign, TrendingDown, TrendingUp, Wallet } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 const iconMap = {
   DollarSign: DollarSign,
@@ -11,6 +12,7 @@ const iconMap = {
 };
 
 export async function FinancialStatsCards() {
+  const tCommon = await getTranslations("common");
   const { data } = await getFinancialOverviewAction();
 
   if (!data) return null;
@@ -32,12 +34,13 @@ export async function FinancialStatsCards() {
             Icon={Icon}
             trend={isNaN(trendValue) ? undefined : trendValue}
             description={card.description}
-            reverseColor={card.title.includes("Despesas")} // Despesa subindo é vermelho
+            reverseColor={card.title.includes("Despesas")}
             iconColor={
               card.title.includes("Despesas")
                 ? "bg-destructive/10"
                 : "bg-primary/10"
             }
+            stableTrendLabel={tCommon("stable")}
           />
         );
       })}
@@ -49,7 +52,7 @@ export function FinancialStatsCardsSkeleton() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {[1, 2, 3, 4].map((i) => (
-        <StatsCardsSkeleton key={i} />
+        <StatsCardSkeleton key={i} />
       ))}
     </div>
   );

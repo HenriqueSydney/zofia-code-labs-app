@@ -1,3 +1,4 @@
+import { ExternalServiceError } from "@/errors";
 import { randomBytes } from "node:crypto";
 import { IntegrationBase } from "../IntegrationBase";
 import {
@@ -78,9 +79,7 @@ export class SonarQubeService
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({}));
-      throw new Error(
-        `[SonarQube Error] ${response.status}: ${JSON.stringify(error)}`
-      );
+      throw new ExternalServiceError("SonarQube Error", "${response.status}: ${JSON.stringify(error)}");
     }
 
     // Algumas rotas do Sonar retornam 204 No Content

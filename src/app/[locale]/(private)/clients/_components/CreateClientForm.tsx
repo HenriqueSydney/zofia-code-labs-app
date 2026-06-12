@@ -15,8 +15,10 @@ import {
 
 import { Plus } from "lucide-react";
 import { ClientForm } from "./ClientForm";
+import { useTranslations } from "next-intl";
 
 export function CreateClientForm() {
+  const t = useTranslations("clients.dialog");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
@@ -29,13 +31,13 @@ export function CreateClientForm() {
       <DialogTrigger asChild>
         <Button size="lg">
           <Plus className="h-4 w-4 mr-2" />
-          Novo Cliente
+          {t("createButton")}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Novo cliente</DialogTitle>
-          <DialogDescription>Preencha os dados do cliente</DialogDescription>
+          <DialogTitle>{t("createTitle")}</DialogTitle>
+          <DialogDescription>{t("createDescription")}</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4"></div>
         <ClientForm handleCloseModal={() => setIsDialogOpen(false)} />

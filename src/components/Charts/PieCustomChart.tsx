@@ -20,7 +20,9 @@ import {
   TabletSmartphone,
 } from "lucide-react";
 import { Cell, Pie, ResponsiveContainer, Tooltip, PieChart } from "recharts";
+import { ChartContainer } from "./ChartContainer";
 import { ChartEmptyState } from "./ChartEmptyState";
+import { useTranslations } from "next-intl";
 
 const pieChartIconMapper = (key: string) => {
   const icons: Record<string, LucideIcon> = {
@@ -45,37 +47,42 @@ interface IPieChart {
 }
 
 export function PieCustomChart({ data, title, description }: IPieChart) {
+  const t = useTranslations("charts.empty");
   const total = data.reduce((acc, curr) => acc + curr.value, 0);
   const hasData = total > 0;
 
   return (
-    <Card>
+    <Card className="!h-full !max-h-[500px]">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="h-[250px] w-full min-h-[250px] relative flex items-center justify-center">
+        <div className="relative flex min-h-0 min-w-0 items-center justify-center">
           {hasData ? (
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={data}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={50}
-                  outerRadius={80}
-                  dataKey="value"
-                >
-                  {data.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip content={<CustomTooltip />} />
-              </PieChart>
-            </ResponsiveContainer>
+            <ChartContainer height={250}>
+              {({ width, height: chartHeight }) => (
+                <ResponsiveContainer width={width} height={chartHeight}>
+                  <PieChart>
+                    <Pie
+                      data={data}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={50}
+                      outerRadius={80}
+                      dataKey="value"
+                    >
+                      {data.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip content={<CustomTooltip />} />
+                  </PieChart>
+                </ResponsiveContainer>
+              )}
+            </ChartContainer>
           ) : (
-            <ChartEmptyState subtitle="Nenhum acesso registrado no período" />
+            <ChartEmptyState subtitle={t("noAccessInPeriod")} />
           )}
         </div>
         <div className="mt-4 space-y-2">

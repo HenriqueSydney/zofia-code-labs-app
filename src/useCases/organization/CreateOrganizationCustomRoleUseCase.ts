@@ -1,6 +1,6 @@
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
-import { PERMISSIONS } from "@/constants/permissions";
+import { toOrganizationAsset } from "@/lib/auth/toOrganizationAsset";
 import { IOrganizationsRepository } from "@/repositories/IOrganizationRepository";
 
 interface CreateOrganizationCustomRoleUseCaseRequest {
@@ -26,13 +26,15 @@ export class CreateOrganizationCustomRoleUseCase {
       await this.organizationsRepository.findById(organizationId);
 
     if (!organization) {
-      throw new AppError("Organização não localizada.");
+      throw new ResourceNotFoundError("Organização não localizada.");
     }
 
-    // 2. Validação de Permissão
-    // O usuário precisa poder gerenciar configurações/usuários para criar roles
-    //await checkUserPermissionForAsset("client", userId, organization, "UPDATE");
-    // Ou verifique especificamente PERMISSIONS.SETTINGS.MANAGE_USERS se sua strategy suportar
+    await checkUserPermissionForAsset(
+      "organization",
+      userId,
+      toOrganizationAsset(organization),
+      "UPDATE",
+    );
 
     // 3. Validação de Regra de Negócio (Opcional)
     // Ex: Verificar se já existe um role com esse nome na org

@@ -2,8 +2,9 @@
 
 import { useParams, usePathname } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Link from "next/link"; // Ou seu link customizado de i18n
+import Link from "next/link";
 import { ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import {
   ShieldCheck,
   Users,
@@ -17,6 +18,7 @@ interface IOrganizationTabs {
 }
 
 export function OrganizationTabs({ children }: IOrganizationTabs) {
+  const t = useTranslations("organization.tabs");
   const params = useParams();
   const pathname = usePathname();
 
@@ -25,13 +27,13 @@ export function OrganizationTabs({ children }: IOrganizationTabs) {
   const segments = [
     {
       key: "overview",
-      name: "Visão Geral",
+      name: t("overview"),
       href: `/organization/${organization}`,
       icon: LayoutDashboard,
     },
     {
       key: "members",
-      name: "Membros & Equipe",
+      name: t("members"),
       href: `/organization/${organization}/members`,
       icon: Users,
     },
@@ -42,10 +44,10 @@ export function OrganizationTabs({ children }: IOrganizationTabs) {
       icon: ShieldCheck,
     },
     {
-      key: "settings", // Este valor deve bater com o TabsContent value="settings"
-      name: "Configurações",
+      key: "settings",
+      name: t("settings"),
       href: `/organization/${organization}/settings`,
-      icon: Settings, // Importar do lucide-react
+      icon: Settings,
     },
     {
       key: "billing",

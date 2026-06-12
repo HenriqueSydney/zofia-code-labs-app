@@ -1,8 +1,8 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
 import { AppError } from "@/errors/AppError";
-import { handleErrors } from "@/errors/handleErrors";
 import { makeCreateOrganizationCustomRoleUseCase } from "@/useCases/organization/factories/makeCreateOrganizationCustomRoleUseCase";
 import { makeUpdateOrganizationCustomRoleUseCase } from "@/useCases/organization/factories/makeUpdateOrganizationCustomRoleUseCase";
 import { revalidatePath } from "next/cache";
@@ -23,7 +23,7 @@ export async function saveCustomRoleAction(input: SaveRoleInput) {
   const session = await auth();
 
   if (!session) {
-    return { error: "Usuário não logado." };
+    return { error: await serverErrorMessage("notLoggedIn") };
   }
 
   // 1. Validação dos dados de entrada
@@ -66,7 +66,7 @@ export async function saveCustomRoleAction(input: SaveRoleInput) {
 
     return { success: true };
   } catch (error) {
-    const message = handleErrors(error);
+    const message = await resolveActionErrorMessage(error);
     return { error: message };
   }
 }

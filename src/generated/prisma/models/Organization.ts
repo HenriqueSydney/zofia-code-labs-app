@@ -183,7 +183,7 @@ export type OrganizationGroupByOutputType = {
   _max: OrganizationMaxAggregateOutputType | null
 }
 
-type GetOrganizationGroupByPayload<T extends OrganizationGroupByArgs> = Prisma.PrismaPromise<
+export type GetOrganizationGroupByPayload<T extends OrganizationGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<OrganizationGroupByOutputType, T['by']> &
       {
@@ -215,7 +215,6 @@ export type OrganizationWhereInput = {
   clients?: Prisma.ClientListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
   serviceTypes?: Prisma.ServiceTypeListRelationFilter
-  templates?: Prisma.DocumentTemplateListRelationFilter
   invoices?: Prisma.InvoiceListRelationFilter
   availableIntegrations?: Prisma.OrganizationIntegrationListRelationFilter
   serviceCategories?: Prisma.ServiceCategoryListRelationFilter
@@ -243,7 +242,6 @@ export type OrganizationOrderByWithRelationInput = {
   clients?: Prisma.ClientOrderByRelationAggregateInput
   projects?: Prisma.ProjectOrderByRelationAggregateInput
   serviceTypes?: Prisma.ServiceTypeOrderByRelationAggregateInput
-  templates?: Prisma.DocumentTemplateOrderByRelationAggregateInput
   invoices?: Prisma.InvoiceOrderByRelationAggregateInput
   availableIntegrations?: Prisma.OrganizationIntegrationOrderByRelationAggregateInput
   serviceCategories?: Prisma.ServiceCategoryOrderByRelationAggregateInput
@@ -274,7 +272,6 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   clients?: Prisma.ClientListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
   serviceTypes?: Prisma.ServiceTypeListRelationFilter
-  templates?: Prisma.DocumentTemplateListRelationFilter
   invoices?: Prisma.InvoiceListRelationFilter
   availableIntegrations?: Prisma.OrganizationIntegrationListRelationFilter
   serviceCategories?: Prisma.ServiceCategoryListRelationFilter
@@ -332,7 +329,6 @@ export type OrganizationCreateInput = {
   clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
@@ -360,7 +356,6 @@ export type OrganizationUncheckedCreateInput = {
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
@@ -388,7 +383,6 @@ export type OrganizationUpdateInput = {
   clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
@@ -416,7 +410,6 @@ export type OrganizationUncheckedUpdateInput = {
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -605,20 +598,6 @@ export type OrganizationUpdateOneRequiredWithoutServiceDefaultBacklogItemsNested
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutServiceDefaultBacklogItemsInput, Prisma.OrganizationUpdateWithoutServiceDefaultBacklogItemsInput>, Prisma.OrganizationUncheckedUpdateWithoutServiceDefaultBacklogItemsInput>
 }
 
-export type OrganizationCreateNestedOneWithoutTemplatesInput = {
-  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutTemplatesInput, Prisma.OrganizationUncheckedCreateWithoutTemplatesInput>
-  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutTemplatesInput
-  connect?: Prisma.OrganizationWhereUniqueInput
-}
-
-export type OrganizationUpdateOneRequiredWithoutTemplatesNestedInput = {
-  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutTemplatesInput, Prisma.OrganizationUncheckedCreateWithoutTemplatesInput>
-  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutTemplatesInput
-  upsert?: Prisma.OrganizationUpsertWithoutTemplatesInput
-  connect?: Prisma.OrganizationWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutTemplatesInput, Prisma.OrganizationUpdateWithoutTemplatesInput>, Prisma.OrganizationUncheckedUpdateWithoutTemplatesInput>
-}
-
 export type OrganizationCreateNestedOneWithoutClientsInput = {
   create?: Prisma.XOR<Prisma.OrganizationCreateWithoutClientsInput, Prisma.OrganizationUncheckedCreateWithoutClientsInput>
   connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutClientsInput
@@ -758,7 +737,6 @@ export type OrganizationCreateWithoutUsersInput = {
   clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
@@ -785,7 +763,6 @@ export type OrganizationUncheckedCreateWithoutUsersInput = {
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
@@ -828,7 +805,6 @@ export type OrganizationUpdateWithoutUsersInput = {
   clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
@@ -855,7 +831,6 @@ export type OrganizationUncheckedUpdateWithoutUsersInput = {
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -883,7 +858,6 @@ export type OrganizationCreateWithoutMembersInput = {
   clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
@@ -910,7 +884,6 @@ export type OrganizationUncheckedCreateWithoutMembersInput = {
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
@@ -953,7 +926,6 @@ export type OrganizationUpdateWithoutMembersInput = {
   clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
@@ -980,7 +952,6 @@ export type OrganizationUncheckedUpdateWithoutMembersInput = {
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1007,7 +978,6 @@ export type OrganizationCreateWithoutCustomRolesInput = {
   clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
@@ -1034,7 +1004,6 @@ export type OrganizationUncheckedCreateWithoutCustomRolesInput = {
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1077,7 +1046,6 @@ export type OrganizationUpdateWithoutCustomRolesInput = {
   clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
@@ -1104,7 +1072,6 @@ export type OrganizationUncheckedUpdateWithoutCustomRolesInput = {
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1131,7 +1098,6 @@ export type OrganizationCreateWithoutServiceCategoriesInput = {
   clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutOrganizationInput
@@ -1158,7 +1124,6 @@ export type OrganizationUncheckedCreateWithoutServiceCategoriesInput = {
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1201,7 +1166,6 @@ export type OrganizationUpdateWithoutServiceCategoriesInput = {
   clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   backlogItems?: Prisma.BacklogItemUpdateManyWithoutOrganizationNestedInput
@@ -1228,7 +1192,6 @@ export type OrganizationUncheckedUpdateWithoutServiceCategoriesInput = {
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1254,7 +1217,6 @@ export type OrganizationCreateWithoutServiceTypesInput = {
   users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
   clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
@@ -1281,7 +1243,6 @@ export type OrganizationUncheckedCreateWithoutServiceTypesInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1324,7 +1285,6 @@ export type OrganizationUpdateWithoutServiceTypesInput = {
   users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
   clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
@@ -1351,7 +1311,6 @@ export type OrganizationUncheckedUpdateWithoutServiceTypesInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1379,7 +1338,6 @@ export type OrganizationCreateWithoutServiceDefaultBacklogItemsInput = {
   clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
@@ -1406,7 +1364,6 @@ export type OrganizationUncheckedCreateWithoutServiceDefaultBacklogItemsInput = 
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1449,7 +1406,6 @@ export type OrganizationUpdateWithoutServiceDefaultBacklogItemsInput = {
   clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
@@ -1476,7 +1432,6 @@ export type OrganizationUncheckedUpdateWithoutServiceDefaultBacklogItemsInput = 
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1485,130 +1440,6 @@ export type OrganizationUncheckedUpdateWithoutServiceDefaultBacklogItemsInput = 
   expenseCategories?: Prisma.ExpenseCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
   budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
-  customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
-  members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
-}
-
-export type OrganizationCreateWithoutTemplatesInput = {
-  id?: string
-  name: string
-  slug: string
-  cnpj?: string | null
-  logoUrl?: string | null
-  industry?: $Enums.IndustryType
-  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
-  clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
-  projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
-  serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
-  invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
-  availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
-  serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
-  backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutOrganizationInput
-  clientEmployees?: Prisma.ClientEmployeesCreateNestedManyWithoutOrganizationInput
-  expenseCategories?: Prisma.ExpenseCategoryCreateNestedManyWithoutOrganizationInput
-  expenses?: Prisma.ExpenseCreateNestedManyWithoutOrganizationInput
-  budgetEntries?: Prisma.BudgetEntryCreateNestedManyWithoutOrganizationInput
-  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemCreateNestedManyWithoutOrganizationInput
-  customRoles?: Prisma.CustomRoleCreateNestedManyWithoutOrganizationInput
-  members?: Prisma.MemberCreateNestedManyWithoutOrganizationInput
-}
-
-export type OrganizationUncheckedCreateWithoutTemplatesInput = {
-  id?: string
-  name: string
-  slug: string
-  cnpj?: string | null
-  logoUrl?: string | null
-  industry?: $Enums.IndustryType
-  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
-  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
-  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
-  serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
-  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
-  availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
-  serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
-  backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
-  clientEmployees?: Prisma.ClientEmployeesUncheckedCreateNestedManyWithoutOrganizationInput
-  expenseCategories?: Prisma.ExpenseCategoryUncheckedCreateNestedManyWithoutOrganizationInput
-  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
-  budgetEntries?: Prisma.BudgetEntryUncheckedCreateNestedManyWithoutOrganizationInput
-  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
-  customRoles?: Prisma.CustomRoleUncheckedCreateNestedManyWithoutOrganizationInput
-  members?: Prisma.MemberUncheckedCreateNestedManyWithoutOrganizationInput
-}
-
-export type OrganizationCreateOrConnectWithoutTemplatesInput = {
-  where: Prisma.OrganizationWhereUniqueInput
-  create: Prisma.XOR<Prisma.OrganizationCreateWithoutTemplatesInput, Prisma.OrganizationUncheckedCreateWithoutTemplatesInput>
-}
-
-export type OrganizationUpsertWithoutTemplatesInput = {
-  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutTemplatesInput, Prisma.OrganizationUncheckedUpdateWithoutTemplatesInput>
-  create: Prisma.XOR<Prisma.OrganizationCreateWithoutTemplatesInput, Prisma.OrganizationUncheckedCreateWithoutTemplatesInput>
-  where?: Prisma.OrganizationWhereInput
-}
-
-export type OrganizationUpdateToOneWithWhereWithoutTemplatesInput = {
-  where?: Prisma.OrganizationWhereInput
-  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutTemplatesInput, Prisma.OrganizationUncheckedUpdateWithoutTemplatesInput>
-}
-
-export type OrganizationUpdateWithoutTemplatesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
-  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
-  clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
-  projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
-  serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
-  invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
-  availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
-  serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
-  backlogItems?: Prisma.BacklogItemUpdateManyWithoutOrganizationNestedInput
-  clientEmployees?: Prisma.ClientEmployeesUpdateManyWithoutOrganizationNestedInput
-  expenseCategories?: Prisma.ExpenseCategoryUpdateManyWithoutOrganizationNestedInput
-  expenses?: Prisma.ExpenseUpdateManyWithoutOrganizationNestedInput
-  budgetEntries?: Prisma.BudgetEntryUpdateManyWithoutOrganizationNestedInput
-  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUpdateManyWithoutOrganizationNestedInput
-  customRoles?: Prisma.CustomRoleUpdateManyWithoutOrganizationNestedInput
-  members?: Prisma.MemberUpdateManyWithoutOrganizationNestedInput
-}
-
-export type OrganizationUncheckedUpdateWithoutTemplatesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  cnpj?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  industry?: Prisma.EnumIndustryTypeFieldUpdateOperationsInput | $Enums.IndustryType
-  settings?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
-  clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
-  projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
-  serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
-  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
-  availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
-  serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
-  backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
-  clientEmployees?: Prisma.ClientEmployeesUncheckedUpdateManyWithoutOrganizationNestedInput
-  expenseCategories?: Prisma.ExpenseCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
-  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
-  budgetEntries?: Prisma.BudgetEntryUncheckedUpdateManyWithoutOrganizationNestedInput
-  serviceDefaultBacklogItems?: Prisma.ServiceDefaultBacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
   customRoles?: Prisma.CustomRoleUncheckedUpdateManyWithoutOrganizationNestedInput
   members?: Prisma.MemberUncheckedUpdateManyWithoutOrganizationNestedInput
 }
@@ -1626,7 +1457,6 @@ export type OrganizationCreateWithoutClientsInput = {
   users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
@@ -1653,7 +1483,6 @@ export type OrganizationUncheckedCreateWithoutClientsInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1696,7 +1525,6 @@ export type OrganizationUpdateWithoutClientsInput = {
   users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
@@ -1723,7 +1551,6 @@ export type OrganizationUncheckedUpdateWithoutClientsInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1751,7 +1578,6 @@ export type OrganizationCreateWithoutClientEmployeesInput = {
   clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
@@ -1778,7 +1604,6 @@ export type OrganizationUncheckedCreateWithoutClientEmployeesInput = {
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1821,7 +1646,6 @@ export type OrganizationUpdateWithoutClientEmployeesInput = {
   clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
@@ -1848,7 +1672,6 @@ export type OrganizationUncheckedUpdateWithoutClientEmployeesInput = {
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1874,7 +1697,6 @@ export type OrganizationCreateWithoutProjectsInput = {
   users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
   clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
@@ -1901,7 +1723,6 @@ export type OrganizationUncheckedCreateWithoutProjectsInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1944,7 +1765,6 @@ export type OrganizationUpdateWithoutProjectsInput = {
   users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
   clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
@@ -1971,7 +1791,6 @@ export type OrganizationUncheckedUpdateWithoutProjectsInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1999,7 +1818,6 @@ export type OrganizationCreateWithoutBacklogItemsInput = {
   clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
@@ -2026,7 +1844,6 @@ export type OrganizationUncheckedCreateWithoutBacklogItemsInput = {
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2069,7 +1886,6 @@ export type OrganizationUpdateWithoutBacklogItemsInput = {
   clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
@@ -2096,7 +1912,6 @@ export type OrganizationUncheckedUpdateWithoutBacklogItemsInput = {
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2123,7 +1938,6 @@ export type OrganizationCreateWithoutBudgetEntriesInput = {
   clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
@@ -2150,7 +1964,6 @@ export type OrganizationUncheckedCreateWithoutBudgetEntriesInput = {
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2193,7 +2006,6 @@ export type OrganizationUpdateWithoutBudgetEntriesInput = {
   clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
@@ -2220,7 +2032,6 @@ export type OrganizationUncheckedUpdateWithoutBudgetEntriesInput = {
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2247,7 +2058,6 @@ export type OrganizationCreateWithoutExpenseCategoriesInput = {
   clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
@@ -2274,7 +2084,6 @@ export type OrganizationUncheckedCreateWithoutExpenseCategoriesInput = {
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2317,7 +2126,6 @@ export type OrganizationUpdateWithoutExpenseCategoriesInput = {
   clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
@@ -2344,7 +2152,6 @@ export type OrganizationUncheckedUpdateWithoutExpenseCategoriesInput = {
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2371,7 +2178,6 @@ export type OrganizationCreateWithoutExpensesInput = {
   clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
@@ -2398,7 +2204,6 @@ export type OrganizationUncheckedCreateWithoutExpensesInput = {
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2441,7 +2246,6 @@ export type OrganizationUpdateWithoutExpensesInput = {
   clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
@@ -2468,7 +2272,6 @@ export type OrganizationUncheckedUpdateWithoutExpensesInput = {
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2495,7 +2298,6 @@ export type OrganizationCreateWithoutInvoicesInput = {
   clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
   backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutOrganizationInput
@@ -2522,7 +2324,6 @@ export type OrganizationUncheckedCreateWithoutInvoicesInput = {
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
   backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2565,7 +2366,6 @@ export type OrganizationUpdateWithoutInvoicesInput = {
   clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
   backlogItems?: Prisma.BacklogItemUpdateManyWithoutOrganizationNestedInput
@@ -2592,7 +2392,6 @@ export type OrganizationUncheckedUpdateWithoutInvoicesInput = {
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   availableIntegrations?: Prisma.OrganizationIntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2619,7 +2418,6 @@ export type OrganizationCreateWithoutAvailableIntegrationsInput = {
   clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryCreateNestedManyWithoutOrganizationInput
   backlogItems?: Prisma.BacklogItemCreateNestedManyWithoutOrganizationInput
@@ -2646,7 +2444,6 @@ export type OrganizationUncheckedCreateWithoutAvailableIntegrationsInput = {
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutOrganizationInput
   serviceTypes?: Prisma.ServiceTypeUncheckedCreateNestedManyWithoutOrganizationInput
-  templates?: Prisma.DocumentTemplateUncheckedCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedCreateNestedManyWithoutOrganizationInput
   backlogItems?: Prisma.BacklogItemUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2689,7 +2486,6 @@ export type OrganizationUpdateWithoutAvailableIntegrationsInput = {
   clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUpdateManyWithoutOrganizationNestedInput
   backlogItems?: Prisma.BacklogItemUpdateManyWithoutOrganizationNestedInput
@@ -2716,7 +2512,6 @@ export type OrganizationUncheckedUpdateWithoutAvailableIntegrationsInput = {
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceTypes?: Prisma.ServiceTypeUncheckedUpdateManyWithoutOrganizationNestedInput
-  templates?: Prisma.DocumentTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   serviceCategories?: Prisma.ServiceCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
   backlogItems?: Prisma.BacklogItemUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2739,7 +2534,6 @@ export type OrganizationCountOutputType = {
   clients: number
   projects: number
   serviceTypes: number
-  templates: number
   invoices: number
   availableIntegrations: number
   serviceCategories: number
@@ -2758,7 +2552,6 @@ export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Exte
   clients?: boolean | OrganizationCountOutputTypeCountClientsArgs
   projects?: boolean | OrganizationCountOutputTypeCountProjectsArgs
   serviceTypes?: boolean | OrganizationCountOutputTypeCountServiceTypesArgs
-  templates?: boolean | OrganizationCountOutputTypeCountTemplatesArgs
   invoices?: boolean | OrganizationCountOutputTypeCountInvoicesArgs
   availableIntegrations?: boolean | OrganizationCountOutputTypeCountAvailableIntegrationsArgs
   serviceCategories?: boolean | OrganizationCountOutputTypeCountServiceCategoriesArgs
@@ -2808,13 +2601,6 @@ export type OrganizationCountOutputTypeCountProjectsArgs<ExtArgs extends runtime
  */
 export type OrganizationCountOutputTypeCountServiceTypesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ServiceTypeWhereInput
-}
-
-/**
- * OrganizationCountOutputType without action
- */
-export type OrganizationCountOutputTypeCountTemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.DocumentTemplateWhereInput
 }
 
 /**
@@ -2909,7 +2695,6 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   clients?: boolean | Prisma.Organization$clientsArgs<ExtArgs>
   projects?: boolean | Prisma.Organization$projectsArgs<ExtArgs>
   serviceTypes?: boolean | Prisma.Organization$serviceTypesArgs<ExtArgs>
-  templates?: boolean | Prisma.Organization$templatesArgs<ExtArgs>
   invoices?: boolean | Prisma.Organization$invoicesArgs<ExtArgs>
   availableIntegrations?: boolean | Prisma.Organization$availableIntegrationsArgs<ExtArgs>
   serviceCategories?: boolean | Prisma.Organization$serviceCategoriesArgs<ExtArgs>
@@ -2966,7 +2751,6 @@ export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.Interna
   clients?: boolean | Prisma.Organization$clientsArgs<ExtArgs>
   projects?: boolean | Prisma.Organization$projectsArgs<ExtArgs>
   serviceTypes?: boolean | Prisma.Organization$serviceTypesArgs<ExtArgs>
-  templates?: boolean | Prisma.Organization$templatesArgs<ExtArgs>
   invoices?: boolean | Prisma.Organization$invoicesArgs<ExtArgs>
   availableIntegrations?: boolean | Prisma.Organization$availableIntegrationsArgs<ExtArgs>
   serviceCategories?: boolean | Prisma.Organization$serviceCategoriesArgs<ExtArgs>
@@ -2990,7 +2774,6 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     clients: Prisma.$ClientPayload<ExtArgs>[]
     projects: Prisma.$ProjectPayload<ExtArgs>[]
     serviceTypes: Prisma.$ServiceTypePayload<ExtArgs>[]
-    templates: Prisma.$DocumentTemplatePayload<ExtArgs>[]
     invoices: Prisma.$InvoicePayload<ExtArgs>[]
     availableIntegrations: Prisma.$OrganizationIntegrationPayload<ExtArgs>[]
     serviceCategories: Prisma.$ServiceCategoryPayload<ExtArgs>[]
@@ -3414,7 +3197,6 @@ export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends run
   clients<T extends Prisma.Organization$clientsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$clientsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projects<T extends Prisma.Organization$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   serviceTypes<T extends Prisma.Organization$serviceTypesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$serviceTypesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServiceTypePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  templates<T extends Prisma.Organization$templatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$templatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   invoices<T extends Prisma.Organization$invoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   availableIntegrations<T extends Prisma.Organization$availableIntegrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$availableIntegrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrganizationIntegrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   serviceCategories<T extends Prisma.Organization$serviceCategoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$serviceCategoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServiceCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3660,6 +3442,11 @@ export type OrganizationFindManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Skip the first `n` Organizations.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Organizations.
+   */
   distinct?: Prisma.OrganizationScalarFieldEnum | Prisma.OrganizationScalarFieldEnum[]
 }
 
@@ -3945,30 +3732,6 @@ export type Organization$serviceTypesArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.ServiceTypeScalarFieldEnum | Prisma.ServiceTypeScalarFieldEnum[]
-}
-
-/**
- * Organization.templates
- */
-export type Organization$templatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the DocumentTemplate
-   */
-  select?: Prisma.DocumentTemplateSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the DocumentTemplate
-   */
-  omit?: Prisma.DocumentTemplateOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DocumentTemplateInclude<ExtArgs> | null
-  where?: Prisma.DocumentTemplateWhereInput
-  orderBy?: Prisma.DocumentTemplateOrderByWithRelationInput | Prisma.DocumentTemplateOrderByWithRelationInput[]
-  cursor?: Prisma.DocumentTemplateWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.DocumentTemplateScalarFieldEnum | Prisma.DocumentTemplateScalarFieldEnum[]
 }
 
 /**

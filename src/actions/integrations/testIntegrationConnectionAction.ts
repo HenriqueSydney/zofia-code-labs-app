@@ -1,8 +1,12 @@
 "use server";
 
+import {
+  resolveActionErrorMessage,
+  resolveSuccessMessage,
+  serverErrorMessage,
+} from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
-import { handleErrors } from "@/errors/handleErrors";
+import { UnauthorizedError } from "@/errors";
 import { makeTestIntegrationConnectionUseCase } from "@/useCases/integration/factories/makeTestIntegrationConnectionUseCase";
 import { revalidatePath } from "next/cache";
 
@@ -12,7 +16,9 @@ export async function testIntegrationConnectionAction(integrationId: string) {
   const organizationId = session?.user?.organizationId;
 
   if (!organizationId) {
-    throw new AppError("Sessão expirada ou organização não encontrada.");
+    throw new UnauthorizedError("sessionExpiredNoOrg", {
+      i18nKey: "sessionExpiredNoOrg",
+    });
   }
 
   try {
@@ -26,14 +32,20 @@ export async function testIntegrationConnectionAction(integrationId: string) {
       integrationId,
     });
 
-    
+    if (result.status === "ERROR") {
+      return {
+        success: false,
+        message: result.message,
+      };
+    }
+
     revalidatePath("/settings/integrations/config/");
     return {
       success: true,
       data: result,
     };
   } catch (error) {
-    handleErrors(error);
+    await resolveActionErrorMessage(error);
     throw error;
   }
 }

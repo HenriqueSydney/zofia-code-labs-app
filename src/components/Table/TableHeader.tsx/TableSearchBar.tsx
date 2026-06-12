@@ -4,6 +4,7 @@ import { Search, X } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useCallback } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -18,6 +19,7 @@ export function TableSearchBar({
   handleToggleSearchBar,
   tableId = "",
 }: ITableSearchBar) {
+  const t = useTranslations("common.table");
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -96,8 +98,8 @@ export function TableSearchBar({
           ref={inputRef}
           id={`table-searchbox-${tableId}`}
           type="search"
-          placeholder="Buscar na tabela"
-          aria-label="Buscar na tabela"
+          placeholder={t("searchPlaceholder")}
+          aria-label={t("searchAria")}
           defaultValue={searchParams.get("query")?.toString() ?? ""}
           onChange={handleChange}
           className="pr-10 focus-visible:ring-1 focus-visible:ring-offset-0"
@@ -107,7 +109,7 @@ export function TableSearchBar({
           variant="ghost"
           size="icon"
           className="absolute right-0 top-0 h-full hover:bg-transparent"
-          aria-label="Buscar"
+          aria-label={t("searchAria")}
         >
           <Search size={16} aria-hidden="true" />
         </Button>
@@ -117,7 +119,7 @@ export function TableSearchBar({
         variant="ghost"
         size="icon"
         className="rounded-full shrink-0"
-        aria-label="Fechar busca"
+        aria-label={t("closeSearch")}
         onClick={handleCloseSearchBar}
       >
         <X size={16} />

@@ -1,3 +1,4 @@
+import { ExternalServiceError } from "@/errors";
 import { IntegrationBase } from "../IntegrationBase";
 import { ISecurityService, SecurityMetrics } from "./ISecurityService";
 
@@ -61,7 +62,7 @@ export class DefectDojoService
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`[DefectDojo Error] ${response.status}: ${errorText}`);
+      throw new ExternalServiceError("DefectDojo Error", "${response.status}: ${errorText}");
     }
 
     if (response.status === 204) return {} as T;

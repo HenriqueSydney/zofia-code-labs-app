@@ -49,6 +49,8 @@ export type ProposalMinAggregateOutputType = {
   createdBy: string | null
   sourceType: $Enums.ProposalSource | null
   downPaymentPercentage: number | null
+  paymentGatewayId: string | null
+  paymentMethod: string | null
   fileKey: string | null
   fileUrl: string | null
   projectId: string | null
@@ -71,6 +73,8 @@ export type ProposalMaxAggregateOutputType = {
   createdBy: string | null
   sourceType: $Enums.ProposalSource | null
   downPaymentPercentage: number | null
+  paymentGatewayId: string | null
+  paymentMethod: string | null
   fileKey: string | null
   fileUrl: string | null
   projectId: string | null
@@ -93,6 +97,8 @@ export type ProposalCountAggregateOutputType = {
   createdBy: number
   sourceType: number
   downPaymentPercentage: number
+  paymentGatewayId: number
+  paymentMethod: number
   fileKey: number
   fileUrl: number
   projectId: number
@@ -129,6 +135,8 @@ export type ProposalMinAggregateInputType = {
   createdBy?: true
   sourceType?: true
   downPaymentPercentage?: true
+  paymentGatewayId?: true
+  paymentMethod?: true
   fileKey?: true
   fileUrl?: true
   projectId?: true
@@ -151,6 +159,8 @@ export type ProposalMaxAggregateInputType = {
   createdBy?: true
   sourceType?: true
   downPaymentPercentage?: true
+  paymentGatewayId?: true
+  paymentMethod?: true
   fileKey?: true
   fileUrl?: true
   projectId?: true
@@ -173,6 +183,8 @@ export type ProposalCountAggregateInputType = {
   createdBy?: true
   sourceType?: true
   downPaymentPercentage?: true
+  paymentGatewayId?: true
+  paymentMethod?: true
   fileKey?: true
   fileUrl?: true
   projectId?: true
@@ -282,6 +294,8 @@ export type ProposalGroupByOutputType = {
   createdBy: string
   sourceType: $Enums.ProposalSource
   downPaymentPercentage: number
+  paymentGatewayId: string | null
+  paymentMethod: string | null
   fileKey: string | null
   fileUrl: string | null
   projectId: string
@@ -298,7 +312,7 @@ export type ProposalGroupByOutputType = {
   _max: ProposalMaxAggregateOutputType | null
 }
 
-type GetProposalGroupByPayload<T extends ProposalGroupByArgs> = Prisma.PrismaPromise<
+export type GetProposalGroupByPayload<T extends ProposalGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ProposalGroupByOutputType, T['by']> &
       {
@@ -327,6 +341,8 @@ export type ProposalWhereInput = {
   createdBy?: Prisma.StringFilter<"Proposal"> | string
   sourceType?: Prisma.EnumProposalSourceFilter<"Proposal"> | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFilter<"Proposal"> | number
+  paymentGatewayId?: Prisma.StringNullableFilter<"Proposal"> | string | null
+  paymentMethod?: Prisma.StringNullableFilter<"Proposal"> | string | null
   fileKey?: Prisma.StringNullableFilter<"Proposal"> | string | null
   fileUrl?: Prisma.StringNullableFilter<"Proposal"> | string | null
   projectId?: Prisma.StringFilter<"Proposal"> | string
@@ -356,6 +372,8 @@ export type ProposalOrderByWithRelationInput = {
   createdBy?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
   downPaymentPercentage?: Prisma.SortOrder
+  paymentGatewayId?: Prisma.SortOrderInput | Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrderInput | Prisma.SortOrder
   fileKey?: Prisma.SortOrderInput | Prisma.SortOrder
   fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   projectId?: Prisma.SortOrder
@@ -389,6 +407,8 @@ export type ProposalWhereUniqueInput = Prisma.AtLeast<{
   createdBy?: Prisma.StringFilter<"Proposal"> | string
   sourceType?: Prisma.EnumProposalSourceFilter<"Proposal"> | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFilter<"Proposal"> | number
+  paymentGatewayId?: Prisma.StringNullableFilter<"Proposal"> | string | null
+  paymentMethod?: Prisma.StringNullableFilter<"Proposal"> | string | null
   fileKey?: Prisma.StringNullableFilter<"Proposal"> | string | null
   fileUrl?: Prisma.StringNullableFilter<"Proposal"> | string | null
   projectId?: Prisma.StringFilter<"Proposal"> | string
@@ -418,6 +438,8 @@ export type ProposalOrderByWithAggregationInput = {
   createdBy?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
   downPaymentPercentage?: Prisma.SortOrder
+  paymentGatewayId?: Prisma.SortOrderInput | Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrderInput | Prisma.SortOrder
   fileKey?: Prisma.SortOrderInput | Prisma.SortOrder
   fileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   projectId?: Prisma.SortOrder
@@ -448,6 +470,8 @@ export type ProposalScalarWhereWithAggregatesInput = {
   createdBy?: Prisma.StringWithAggregatesFilter<"Proposal"> | string
   sourceType?: Prisma.EnumProposalSourceWithAggregatesFilter<"Proposal"> | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntWithAggregatesFilter<"Proposal"> | number
+  paymentGatewayId?: Prisma.StringNullableWithAggregatesFilter<"Proposal"> | string | null
+  paymentMethod?: Prisma.StringNullableWithAggregatesFilter<"Proposal"> | string | null
   fileKey?: Prisma.StringNullableWithAggregatesFilter<"Proposal"> | string | null
   fileUrl?: Prisma.StringNullableWithAggregatesFilter<"Proposal"> | string | null
   projectId?: Prisma.StringWithAggregatesFilter<"Proposal"> | string
@@ -469,6 +493,8 @@ export type ProposalCreateInput = {
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
   downPaymentPercentage?: number
+  paymentGatewayId?: string | null
+  paymentMethod?: string | null
   fileKey?: string | null
   fileUrl?: string | null
   reviewedAt?: Date | string | null
@@ -495,6 +521,8 @@ export type ProposalUncheckedCreateInput = {
   createdBy: string
   sourceType?: $Enums.ProposalSource
   downPaymentPercentage?: number
+  paymentGatewayId?: string | null
+  paymentMethod?: string | null
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -519,6 +547,8 @@ export type ProposalUpdateInput = {
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -545,6 +575,8 @@ export type ProposalUncheckedUpdateInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -570,6 +602,8 @@ export type ProposalCreateManyInput = {
   createdBy: string
   sourceType?: $Enums.ProposalSource
   downPaymentPercentage?: number
+  paymentGatewayId?: string | null
+  paymentMethod?: string | null
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -591,6 +625,8 @@ export type ProposalUpdateManyMutationInput = {
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -610,6 +646,8 @@ export type ProposalUncheckedUpdateManyInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -647,6 +685,8 @@ export type ProposalCountOrderByAggregateInput = {
   createdBy?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
   downPaymentPercentage?: Prisma.SortOrder
+  paymentGatewayId?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
   fileKey?: Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
@@ -675,6 +715,8 @@ export type ProposalMaxOrderByAggregateInput = {
   createdBy?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
   downPaymentPercentage?: Prisma.SortOrder
+  paymentGatewayId?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
   fileKey?: Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
@@ -697,6 +739,8 @@ export type ProposalMinOrderByAggregateInput = {
   createdBy?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
   downPaymentPercentage?: Prisma.SortOrder
+  paymentGatewayId?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
   fileKey?: Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
@@ -955,6 +999,8 @@ export type ProposalCreateWithoutCreatedUserInput = {
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
   downPaymentPercentage?: number
+  paymentGatewayId?: string | null
+  paymentMethod?: string | null
   fileKey?: string | null
   fileUrl?: string | null
   reviewedAt?: Date | string | null
@@ -979,6 +1025,8 @@ export type ProposalUncheckedCreateWithoutCreatedUserInput = {
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
   downPaymentPercentage?: number
+  paymentGatewayId?: string | null
+  paymentMethod?: string | null
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -1013,6 +1061,8 @@ export type ProposalCreateWithoutApprovedUserInput = {
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
   downPaymentPercentage?: number
+  paymentGatewayId?: string | null
+  paymentMethod?: string | null
   fileKey?: string | null
   fileUrl?: string | null
   reviewedAt?: Date | string | null
@@ -1038,6 +1088,8 @@ export type ProposalUncheckedCreateWithoutApprovedUserInput = {
   createdBy: string
   sourceType?: $Enums.ProposalSource
   downPaymentPercentage?: number
+  paymentGatewayId?: string | null
+  paymentMethod?: string | null
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -1071,6 +1123,8 @@ export type ProposalCreateWithoutReviewUserInput = {
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
   downPaymentPercentage?: number
+  paymentGatewayId?: string | null
+  paymentMethod?: string | null
   fileKey?: string | null
   fileUrl?: string | null
   reviewedAt?: Date | string | null
@@ -1096,6 +1150,8 @@ export type ProposalUncheckedCreateWithoutReviewUserInput = {
   createdBy: string
   sourceType?: $Enums.ProposalSource
   downPaymentPercentage?: number
+  paymentGatewayId?: string | null
+  paymentMethod?: string | null
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -1149,6 +1205,8 @@ export type ProposalScalarWhereInput = {
   createdBy?: Prisma.StringFilter<"Proposal"> | string
   sourceType?: Prisma.EnumProposalSourceFilter<"Proposal"> | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFilter<"Proposal"> | number
+  paymentGatewayId?: Prisma.StringNullableFilter<"Proposal"> | string | null
+  paymentMethod?: Prisma.StringNullableFilter<"Proposal"> | string | null
   fileKey?: Prisma.StringNullableFilter<"Proposal"> | string | null
   fileUrl?: Prisma.StringNullableFilter<"Proposal"> | string | null
   projectId?: Prisma.StringFilter<"Proposal"> | string
@@ -1202,6 +1260,8 @@ export type ProposalCreateWithoutProposalTemplateInput = {
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
   downPaymentPercentage?: number
+  paymentGatewayId?: string | null
+  paymentMethod?: string | null
   fileKey?: string | null
   fileUrl?: string | null
   reviewedAt?: Date | string | null
@@ -1227,6 +1287,8 @@ export type ProposalUncheckedCreateWithoutProposalTemplateInput = {
   createdBy: string
   sourceType?: $Enums.ProposalSource
   downPaymentPercentage?: number
+  paymentGatewayId?: string | null
+  paymentMethod?: string | null
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -1266,6 +1328,8 @@ export type ProposalUpdateWithoutProposalTemplateInput = {
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1291,6 +1355,8 @@ export type ProposalUncheckedUpdateWithoutProposalTemplateInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1314,6 +1380,8 @@ export type ProposalCreateWithoutItemsInput = {
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
   downPaymentPercentage?: number
+  paymentGatewayId?: string | null
+  paymentMethod?: string | null
   fileKey?: string | null
   fileUrl?: string | null
   reviewedAt?: Date | string | null
@@ -1339,6 +1407,8 @@ export type ProposalUncheckedCreateWithoutItemsInput = {
   createdBy: string
   sourceType?: $Enums.ProposalSource
   downPaymentPercentage?: number
+  paymentGatewayId?: string | null
+  paymentMethod?: string | null
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -1378,6 +1448,8 @@ export type ProposalUpdateWithoutItemsInput = {
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1403,6 +1475,8 @@ export type ProposalUncheckedUpdateWithoutItemsInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1426,6 +1500,8 @@ export type ProposalCreateWithoutContractsInput = {
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
   downPaymentPercentage?: number
+  paymentGatewayId?: string | null
+  paymentMethod?: string | null
   fileKey?: string | null
   fileUrl?: string | null
   reviewedAt?: Date | string | null
@@ -1451,6 +1527,8 @@ export type ProposalUncheckedCreateWithoutContractsInput = {
   createdBy: string
   sourceType?: $Enums.ProposalSource
   downPaymentPercentage?: number
+  paymentGatewayId?: string | null
+  paymentMethod?: string | null
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -1490,6 +1568,8 @@ export type ProposalUpdateWithoutContractsInput = {
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1515,6 +1595,8 @@ export type ProposalUncheckedUpdateWithoutContractsInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1538,6 +1620,8 @@ export type ProposalCreateWithoutProjectInput = {
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
   downPaymentPercentage?: number
+  paymentGatewayId?: string | null
+  paymentMethod?: string | null
   fileKey?: string | null
   fileUrl?: string | null
   reviewedAt?: Date | string | null
@@ -1563,6 +1647,8 @@ export type ProposalUncheckedCreateWithoutProjectInput = {
   createdBy: string
   sourceType?: $Enums.ProposalSource
   downPaymentPercentage?: number
+  paymentGatewayId?: string | null
+  paymentMethod?: string | null
   fileKey?: string | null
   fileUrl?: string | null
   reviewedAt?: Date | string | null
@@ -1612,6 +1698,8 @@ export type ProposalCreateManyCreatedUserInput = {
   validUntil?: Date | string | null
   sourceType?: $Enums.ProposalSource
   downPaymentPercentage?: number
+  paymentGatewayId?: string | null
+  paymentMethod?: string | null
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -1634,6 +1722,8 @@ export type ProposalCreateManyApprovedUserInput = {
   createdBy: string
   sourceType?: $Enums.ProposalSource
   downPaymentPercentage?: number
+  paymentGatewayId?: string | null
+  paymentMethod?: string | null
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -1655,6 +1745,8 @@ export type ProposalCreateManyReviewUserInput = {
   createdBy: string
   sourceType?: $Enums.ProposalSource
   downPaymentPercentage?: number
+  paymentGatewayId?: string | null
+  paymentMethod?: string | null
   fileKey?: string | null
   fileUrl?: string | null
   projectId: string
@@ -1675,6 +1767,8 @@ export type ProposalUpdateWithoutCreatedUserInput = {
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1699,6 +1793,8 @@ export type ProposalUncheckedUpdateWithoutCreatedUserInput = {
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1723,6 +1819,8 @@ export type ProposalUncheckedUpdateManyWithoutCreatedUserInput = {
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1744,6 +1842,8 @@ export type ProposalUpdateWithoutApprovedUserInput = {
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1769,6 +1869,8 @@ export type ProposalUncheckedUpdateWithoutApprovedUserInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1793,6 +1895,8 @@ export type ProposalUncheckedUpdateManyWithoutApprovedUserInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1813,6 +1917,8 @@ export type ProposalUpdateWithoutReviewUserInput = {
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1838,6 +1944,8 @@ export type ProposalUncheckedUpdateWithoutReviewUserInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1862,6 +1970,8 @@ export type ProposalUncheckedUpdateManyWithoutReviewUserInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1883,6 +1993,8 @@ export type ProposalCreateManyProjectInput = {
   createdBy: string
   sourceType?: $Enums.ProposalSource
   downPaymentPercentage?: number
+  paymentGatewayId?: string | null
+  paymentMethod?: string | null
   fileKey?: string | null
   fileUrl?: string | null
   reviewedAt?: Date | string | null
@@ -1903,6 +2015,8 @@ export type ProposalUpdateWithoutProjectInput = {
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1928,6 +2042,8 @@ export type ProposalUncheckedUpdateWithoutProjectInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1952,6 +2068,8 @@ export type ProposalUncheckedUpdateManyWithoutProjectInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumProposalSourceFieldUpdateOperationsInput | $Enums.ProposalSource
   downPaymentPercentage?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentGatewayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2013,6 +2131,8 @@ export type ProposalSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   createdBy?: boolean
   sourceType?: boolean
   downPaymentPercentage?: boolean
+  paymentGatewayId?: boolean
+  paymentMethod?: boolean
   fileKey?: boolean
   fileUrl?: boolean
   projectId?: boolean
@@ -2043,6 +2163,8 @@ export type ProposalSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   createdBy?: boolean
   sourceType?: boolean
   downPaymentPercentage?: boolean
+  paymentGatewayId?: boolean
+  paymentMethod?: boolean
   fileKey?: boolean
   fileUrl?: boolean
   projectId?: boolean
@@ -2069,6 +2191,8 @@ export type ProposalSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   createdBy?: boolean
   sourceType?: boolean
   downPaymentPercentage?: boolean
+  paymentGatewayId?: boolean
+  paymentMethod?: boolean
   fileKey?: boolean
   fileUrl?: boolean
   projectId?: boolean
@@ -2095,6 +2219,8 @@ export type ProposalSelectScalar = {
   createdBy?: boolean
   sourceType?: boolean
   downPaymentPercentage?: boolean
+  paymentGatewayId?: boolean
+  paymentMethod?: boolean
   fileKey?: boolean
   fileUrl?: boolean
   projectId?: boolean
@@ -2106,7 +2232,7 @@ export type ProposalSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ProposalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "version" | "isCurrent" | "isActive" | "status" | "totalValue" | "validUntil" | "createdBy" | "sourceType" | "downPaymentPercentage" | "fileKey" | "fileUrl" | "projectId" | "reviewedAt" | "reviewedBy" | "approvedAt" | "approvedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["proposal"]>
+export type ProposalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "version" | "isCurrent" | "isActive" | "status" | "totalValue" | "validUntil" | "createdBy" | "sourceType" | "downPaymentPercentage" | "paymentGatewayId" | "paymentMethod" | "fileKey" | "fileUrl" | "projectId" | "reviewedAt" | "reviewedBy" | "approvedAt" | "approvedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["proposal"]>
 export type ProposalInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   createdUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   items?: boolean | Prisma.Proposal$itemsArgs<ExtArgs>
@@ -2152,6 +2278,8 @@ export type $ProposalPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     createdBy: string
     sourceType: $Enums.ProposalSource
     downPaymentPercentage: number
+    paymentGatewayId: string | null
+    paymentMethod: string | null
     fileKey: string | null
     fileUrl: string | null
     projectId: string
@@ -2601,6 +2729,8 @@ export interface ProposalFieldRefs {
   readonly createdBy: Prisma.FieldRef<"Proposal", 'String'>
   readonly sourceType: Prisma.FieldRef<"Proposal", 'ProposalSource'>
   readonly downPaymentPercentage: Prisma.FieldRef<"Proposal", 'Int'>
+  readonly paymentGatewayId: Prisma.FieldRef<"Proposal", 'String'>
+  readonly paymentMethod: Prisma.FieldRef<"Proposal", 'String'>
   readonly fileKey: Prisma.FieldRef<"Proposal", 'String'>
   readonly fileUrl: Prisma.FieldRef<"Proposal", 'String'>
   readonly projectId: Prisma.FieldRef<"Proposal", 'String'>
@@ -2806,6 +2936,11 @@ export type ProposalFindManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Skip the first `n` Proposals.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Proposals.
+   */
   distinct?: Prisma.ProposalScalarFieldEnum | Prisma.ProposalScalarFieldEnum[]
 }
 

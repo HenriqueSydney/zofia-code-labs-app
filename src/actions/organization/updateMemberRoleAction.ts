@@ -1,7 +1,7 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { handleErrors } from "@/errors/handleErrors";
 import {
   updateMemberRoleSchema,
   UpdateMemberRoleSchema,
@@ -13,7 +13,7 @@ export async function updateMemberRoleAction(data: UpdateMemberRoleSchema) {
   const session = await auth();
 
   if (!session) {
-    return { success: false, error: "Usuário não logado." };
+    return { success: false, error: await serverErrorMessage("notLoggedIn") };
   }
 
   const validation = updateMemberRoleSchema.safeParse(data);
@@ -34,7 +34,7 @@ export async function updateMemberRoleAction(data: UpdateMemberRoleSchema) {
     revalidatePath(`/organization/${session.user.organizationId}/members`)
     return { success: true, data: role };
   } catch (error) {
-    const message = handleErrors(error);
+    const message = await resolveActionErrorMessage(error);
     return { success: false, error: message };
   }
 }

@@ -1,3 +1,4 @@
+import { ValidationError, ExternalServiceError } from "@/errors";
 import { handleErrors } from "@/errors/handleErrors";
 
 interface FileValidationOptions {
@@ -28,18 +29,18 @@ export async function prepareFileToUpload({
 
   // 1. Validação básica de existência
   if (!file || !(file instanceof File)) {
-    throw new Error("O objeto fornecido não é um arquivo válido.");
+    throw new ValidationError("O objeto fornecido não é um arquivo válido.");
   }
 
   // 2. Validação de Tamanho
   const maxSize = maxSizeInMB * 1024 * 1024;
   if (file.size > maxSize) {
-    throw new Error(`Arquivo muito grande. O limite é de ${maxSizeInMB}MB.`);
+    throw new ValidationError(`Arquivo muito grande. O limite é de ${maxSizeInMB}MB.`);
   }
 
   // 3. Validação de Tipo MIME (Extensão/Header)
   if (!allowedMimeTypes.includes(file.type)) {
-    throw new Error(`Tipo de arquivo não permitido: ${file.type}`);
+    throw new ValidationError(`Tipo de arquivo não permitido: ${file.type}`);
   }
 
   try {
@@ -55,7 +56,7 @@ export async function prepareFileToUpload({
 
     // Validação de integridade: se o arrayBuffer está vazio
     if (arrayBuffer.byteLength === 0) {
-      throw new Error("O conteúdo do arquivo está vazio ou corrompido.");
+      throw new ValidationError("O conteúdo do arquivo está vazio ou corrompido.");
     }
 
     const buffer = Buffer.from(arrayBuffer);
@@ -72,6 +73,6 @@ export async function prepareFileToUpload({
     };
   } catch (error) {
     handleErrors(error);
-    throw new Error("Falha ao processar a estrutura binária do arquivo.");
+    throw new ExternalServiceError("Serviço externo", "Falha ao processar a estrutura binária do arquivo.");
   }
 }

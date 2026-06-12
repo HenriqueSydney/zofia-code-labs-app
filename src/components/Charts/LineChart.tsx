@@ -17,6 +17,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CustomTooltip } from "@/components/Charts/CustomTooltip";
+import { ChartContainer } from "./ChartContainer";
 import { ChartEmptyState } from "./ChartEmptyState";
 
 export interface LineChartCategory {
@@ -56,13 +57,12 @@ export function LineChart({
         )}
       </CardHeader>
       <CardContent>
-        <div
-          style={{ height: `${height}px`, width: "100%" }}
-          className="flex items-center justify-center"
-        >
+        <div className="flex min-h-0 min-w-0 items-center justify-center">
           {hasData ? (
-            <ResponsiveContainer width="100%" height="100%">
-              <RechartsLineChart
+            <ChartContainer height={height}>
+              {({ width, height: chartHeight }) => (
+                <ResponsiveContainer width={width} height={chartHeight}>
+                  <RechartsLineChart
                 data={data}
                 margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
               >
@@ -97,8 +97,10 @@ export function LineChart({
                     activeDot={{ r: 4, strokeWidth: 0 }}
                   />
                 ))}
-              </RechartsLineChart>
-            </ResponsiveContainer>
+                  </RechartsLineChart>
+                </ResponsiveContainer>
+              )}
+            </ChartContainer>
           ) : (
             <ChartEmptyState />
           )}

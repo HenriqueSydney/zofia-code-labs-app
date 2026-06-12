@@ -1,6 +1,7 @@
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError, ForbiddenError } from "@/errors";
 
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
+import { toOrganizationAsset } from "@/lib/auth/toOrganizationAsset";
 import { MemberRole, Role } from "@/generated/prisma/enums";
 import { IOrganizationsRepository } from "@/repositories/IOrganizationRepository";
 
@@ -37,11 +38,15 @@ export class UpdateOrganizationUserRoleUseCase {
     ]);
 
     // 2. Validações Básicas
-    if (!organization) throw new AppError("Organização não localizada.");
-    if (!member) throw new AppError("Membro não localizado.");
+    if (!organization) throw new ResourceNotFoundError("Organização não localizada.");
+    if (!member) throw new ResourceNotFoundError("Membro não localizado.");
 
-    // 3. Validação de Permissão (Quem está fazendo a ação pode fazer isso?)
-    // await checkUserPermissionForAsset("client", userId, organization, "UPDATE");
+    await checkUserPermissionForAsset(
+      "organization",
+      userId,
+      toOrganizationAsset(organization),
+      "UPDATE",
+    );
 
     // 4. Lógica de Decisão: Estático vs Customizado
     const staticRoleEnum = STATIC_ROLES_MAP[roleId];
@@ -64,15 +69,12 @@ export class UpdateOrganizationUserRoleUseCase {
         await this.organizationsRepository.findCustomRoleById(roleId);
 
       if (!customRole) {
-        throw new AppError("Perfil de acesso não encontrado.");
+        throw new ResourceNotFoundError("Perfil de acesso não encontrado.");
       }
 
       // Segurança de Tenant: O Role pertence a esta organização?
       if (customRole.organizationId !== organizationId) {
-        throw new AppError(
-          "Acesso negado: Este perfil pertence a outra organização.",
-          403,
-        );
+        throw new ForbiddenError("Acesso negado: Este perfil pertence a outra organização.");
       }
 
       // Chamamos o método que vincula o ID do cargo customizado

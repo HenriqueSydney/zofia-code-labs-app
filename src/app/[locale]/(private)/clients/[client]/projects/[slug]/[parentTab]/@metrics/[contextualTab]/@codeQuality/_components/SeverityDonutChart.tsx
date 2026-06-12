@@ -1,4 +1,5 @@
 import { DonutChart } from "@/components/Charts/DonutChart";
+import { getTranslations } from "next-intl/server";
 
 const SEVERITY_COLORS: Record<string, string> = {
   Blocker: "hsl(var(--destructive))",
@@ -8,11 +9,13 @@ const SEVERITY_COLORS: Record<string, string> = {
   Info: "#3b82f6",
 };
 
-export function SeverityDonutChart({ data }: { data: any[] }) {
+export async function SeverityDonutChart({ data }: { data: any[] }) {
+  const t = await getTranslations("projects.metrics.codeQuality.charts.severityDonut");
+
   return (
     <DonutChart
-      title="Issues por Severidade"
-      description="Distribuição atual de problemas"
+      title={t("title")}
+      description={t("description")}
       data={data}
       colors={SEVERITY_COLORS}
     />

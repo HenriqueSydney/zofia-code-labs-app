@@ -11,6 +11,7 @@ import {
   Receipt,
 } from "lucide-react";
 import { ReactNode } from "react";
+import { useTranslations } from "next-intl";
 
 interface IProjectTabs {
   slug: string;
@@ -25,6 +26,8 @@ export function CommercialTabs({
   currentTab,
   children,
 }: IProjectTabs) {
+  const t = useTranslations("projects.commercial.tabs");
+
   return (
     <Tabs value={currentTab ?? "proposals"} className="w-full ">
       <TabsList className="w-full h-full flex-col md:flex-row flex mb-2 items-center !justify-evenly glass-effect">
@@ -38,7 +41,7 @@ export function CommercialTabs({
             scroll={false}
           >
             <FileText className="h-4 w-4" />
-            <span className="hidden sm:inline">Propostas</span>
+            <span className="hidden sm:inline">{t("proposals")}</span>
           </Link>
         </TabsTrigger>
 
@@ -52,7 +55,7 @@ export function CommercialTabs({
             scroll={false}
           >
             <FileSignature className="h-4 w-4" />
-            <span className="hidden sm:inline">Contrato</span>
+            <span className="hidden sm:inline">{t("contracts")}</span>
           </Link>
         </TabsTrigger>
 
@@ -66,7 +69,7 @@ export function CommercialTabs({
             scroll={false}
           >
             <CreditCard className="h-4 w-4" />
-            <span className="hidden sm:inline">Pagamentos</span>
+            <span className="hidden sm:inline">{t("payments")}</span>
           </Link>
         </TabsTrigger>
 
@@ -80,7 +83,7 @@ export function CommercialTabs({
             scroll={false}
           >
             <Receipt className="h-4 w-4" />
-            <span className="hidden sm:inline">Despesas</span>
+            <span className="hidden sm:inline">{t("expenses")}</span>
           </Link>
         </TabsTrigger>
 
@@ -94,7 +97,7 @@ export function CommercialTabs({
             scroll={false}
           >
             <Bell className="h-4 w-4" />
-            <span className="hidden sm:inline">Notificações</span>
+            <span className="hidden sm:inline">{t("notifications")}</span>
           </Link>
         </TabsTrigger>
       </TabsList>

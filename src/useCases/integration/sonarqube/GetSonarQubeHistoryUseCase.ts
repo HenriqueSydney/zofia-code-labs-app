@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { IntegrationError } from "@/errors";
 import { date } from "@/lib/dayjs";
 import { IProjectIntegrationRepository } from "@/repositories/IProjectIntegrationRepository";
 import {
@@ -29,7 +29,7 @@ export class GetSonarQubeHistoryUseCase {
         IntegrationType.SONARQUBE
       );
 
-    if (!projectLink) throw new AppError("Integração não encontrada.", 404);
+    if (!projectLink) throw new IntegrationError("Integração não encontrada.", { statusCode: 404 });
 
     // 2. Busca o histórico (limitado aos últimos 12 registros/meses por padrão)
     const history = await this.sonarRepository.getHistory(

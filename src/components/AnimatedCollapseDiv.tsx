@@ -1,21 +1,45 @@
+"use client";
 
-import { motion } from "framer-motion"
-import { ReactNode } from "react"
+import { motion } from "framer-motion";
+import { ReactNode } from "react";
+import { cn } from "@/utils/twMerge";
 
-interface IAnimatedCollapseDiv {
-    children: ReactNode
+interface AnimatedCollapseDivProps {
+  children: ReactNode;
+  isOpen: boolean;
+  className?: string;
+  innerClassName?: string;
 }
 
-export function AnimatedCollapseDiv({ children }: IAnimatedCollapseDiv) {
+export function AnimatedCollapseDiv({
+  children,
+  isOpen,
+  className,
+  innerClassName,
+}: AnimatedCollapseDivProps) {
   return (
     <motion.div
-      initial={{ height: 0, opacity: 0 }}
-      animate={{ height: "auto", opacity: 1 }}
-      exit={{ height: 0, opacity: 0 }}
-      transition={{ duration: 0.4, ease: "easeInOut" }}
-      className="overflow-hidden"
+      initial={false}
+      animate={
+        isOpen
+          ? { height: "auto", opacity: 1 }
+          : { height: 0, opacity: 0 }
+      }
+      transition={{
+        height: { duration: 0.35, ease: [0.4, 0, 0.2, 1] },
+        opacity: { duration: 0.25, ease: "easeInOut" },
+      }}
+      style={{ overflow: "hidden", transformOrigin: "top" }}
+      className={className}
     >
-      {children}
+      <motion.div
+        initial={false}
+        animate={isOpen ? { y: 0 } : { y: -8 }}
+        transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+        className={cn(innerClassName)}
+      >
+        {children}
+      </motion.div>
     </motion.div>
-  )
+  );
 }

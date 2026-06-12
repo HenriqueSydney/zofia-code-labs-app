@@ -1,41 +1,50 @@
 import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 
+type NextStepTranslator = (key: string) => string;
+
+const proposalNextStepKeys: Record<
+  ProjectWithDetails["proposal"]["status"],
+  string
+> = {
+  DRAFT: "reviewDraft",
+  REVIEW: "approveCommercial",
+  APPROVED: "sendToClient",
+  SENT: "confirmAcceptance",
+  ACCEPTED: "advanceToContract",
+  REJECTED: "generateNewProposal",
+  CANCELLED: "generateNewProposal",
+};
+
+const contractNextStepKeys: Record<
+  ProjectWithDetails["contract"]["status"],
+  string
+> = {
+  DRAFT: "reviewContractDraft",
+  REVIEW: "approveAndSendToClient",
+  SENT: "confirmSignature",
+  SIGNED: "advanceToDevelopment",
+  CANCELLED: "proposalCancelled",
+  REJECTED: "contractRejected",
+};
+
 export const getProposalNextStepLabel = (
   proposal: ProjectWithDetails["proposal"] | null,
+  t: NextStepTranslator,
 ) => {
-  const proposalStatusLabel: Record<
-    ProjectWithDetails["proposal"]["status"],
-    string
-  > = {
-    DRAFT: "Revisar minuta de proposta",
-    REVIEW: "Aprovar proposta comercial",
-    APPROVED: "Encaminhar proposta ao cliente",
-    SENT: "Confirmar aceite",
-    ACCEPTED: "Avançar para Etapa de Contrato",
-    REJECTED: "Gerar nova proposta",
-  };
+  if (!proposal) {
+    return t("generateProposalDraft");
+  }
 
-  return !proposal
-    ? "Gerar minuta de proposta"
-    : proposalStatusLabel[proposal.status];
+  return t(proposalNextStepKeys[proposal.status]);
 };
 
 export const getContractNextStepLabel = (
   contract: ProjectWithDetails["contract"] | null,
+  t: NextStepTranslator,
 ) => {
-  const contractStatusLabel: Record<
-    ProjectWithDetails["contract"]["status"],
-    string
-  > = {
-    DRAFT: "Revisar minuta do contrato",
-    REVIEW: "Aprovar contrato e encaminhar para o cliente",
-    SENT: "Confirmar assinatura",
-    SIGNED: "Avançar para etapa de desenvolvimento",
-    CANCELLED: "Proposta cancelada",
-    REJECTED: "Contrato rejeitado",
-  };
+  if (!contract) {
+    return t(contractNextStepKeys.DRAFT);
+  }
 
-  return !contract
-    ? contractStatusLabel["DRAFT"]
-    : contractStatusLabel[contract.status];
+  return t(contractNextStepKeys[contract.status]);
 };

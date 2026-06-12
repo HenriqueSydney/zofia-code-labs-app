@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link } from "@/i18n/navigation"; // Use o seu Link customizado
+import { useTranslations } from "next-intl";
 import { ReactNode } from "react";
 import {
   Handshake,
@@ -19,6 +20,7 @@ interface IProjectTabs {
 
 export function ProjectTabs({ children }: IProjectTabs) {
   const params = useParams();
+  const t = useTranslations("projects.tabs");
 
   // Captura o projectId e o parentTab da URL atual
   const client = params.client as string;
@@ -26,16 +28,16 @@ export function ProjectTabs({ children }: IProjectTabs) {
   const currentTab = params.parentTab as string;
 
   const tabs = [
-    { tabSlug: "overview", tabName: "Visão Geral", Icon: Target },
+    { tabSlug: "overview", tabName: t("overview"), Icon: Target },
     {
       tabSlug: "dashboard",
-      tabName: "Dashboard",
+      tabName: t("dashboard"),
       Icon: LayoutDashboard,
     },
-    { tabSlug: "commercial", tabName: "Comercial", Icon: Handshake },
+    { tabSlug: "commercial", tabName: t("commercial"), Icon: Handshake },
     {
       tabSlug: "backlog",
-      tabName: "Backlogs",
+      tabName: t("backlog"),
       Icon: ListTodo,
     },
     // {
@@ -45,7 +47,7 @@ export function ProjectTabs({ children }: IProjectTabs) {
     // },
     {
       tabSlug: "metrics",
-      tabName: "Métricas",
+      tabName: t("metrics"),
       Icon: TrendingUp,
     },
   ];

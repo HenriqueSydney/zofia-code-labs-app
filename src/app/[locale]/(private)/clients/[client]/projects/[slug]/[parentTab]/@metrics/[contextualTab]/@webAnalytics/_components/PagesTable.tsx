@@ -10,11 +10,12 @@ import {
 } from "@/components/ui/table";
 import { calculateProportion } from "@/utils/calculateProportion";
 import { Progress } from "@/components/ui/progress";
-import { formatDuration } from "@/utils/formatDuration"; // Certifique-se de criar este utilitário
+import { formatDuration } from "@/utils/formatDuration";
+import { useTranslations } from "next-intl";
 
 type PageData = {
-  name: string; // O path (ex: /pt/ferramentas-pdf/)
-  value: number; // Visitantes
+  name: string;
+  value: number;
   pageviews: number;
   avgTime: number;
   bounces: number;
@@ -26,8 +27,9 @@ interface IPagesTable {
 }
 
 export function PagesTable({ pages, totalPageViews }: IPagesTable) {
+  const t = useTranslations("projects.metrics.webAnalytics.tables.pages");
+
   const data = pages.map((page) => {
-    // Cálculo da Taxa de Rejeição local por página
     const bounceRate =
       page.pageviews > 0
         ? calculateProportion(page.pageviews, page.bounces)
@@ -47,12 +49,12 @@ export function PagesTable({ pages, totalPageViews }: IPagesTable) {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[300px]">URL da Página</TableHead>
-          <TableHead className="text-right">Visualizações</TableHead>
-          <TableHead className="w-[200px]">Proporção</TableHead>
-          <TableHead className="text-right">Visitantes</TableHead>
-          <TableHead className="text-right">Tempo Médio</TableHead>
-          <TableHead className="text-right">Rejeição</TableHead>
+          <TableHead className="w-[300px]">{t("url")}</TableHead>
+          <TableHead className="text-right">{t("views")}</TableHead>
+          <TableHead className="w-[200px]">{t("proportion")}</TableHead>
+          <TableHead className="text-right">{t("visitors")}</TableHead>
+          <TableHead className="text-right">{t("avgTime")}</TableHead>
+          <TableHead className="text-right">{t("bounce")}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

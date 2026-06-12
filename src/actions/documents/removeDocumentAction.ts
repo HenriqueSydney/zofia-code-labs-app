@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { revalidatePath } from "next/cache";
 import { makeRemoveProjectDocumentUseCase } from "@/useCases/projects/factories/makeRemoveProjectDocumentUseCase";
 import { auth } from "@/auth";
@@ -11,7 +12,7 @@ export async function removeDocument(documentId: string, projectId: string) {
     if (!session?.user) {
       return {
         success: false,
-        message: "Sessão expirada ou usuário não logado.",
+        message: await serverErrorMessage("sessionExpiredNotLoggedIn"),
       };
     }
     const removeDocumentUseCase = makeRemoveProjectDocumentUseCase();
@@ -28,12 +29,11 @@ export async function removeDocument(documentId: string, projectId: string) {
     revalidatePath(`/clients/${clientSlug}/projects/${slug}`);
     revalidatePath(`/projects`); // Opcional, se houver listagem global
 
-    return { success: true, message: "Documento removido com sucesso." };
+    return { success: true, message: await resolveSuccessMessage("documentRemoved") };
   } catch (error) {
-    console.error("Erro na action removeDocument:", error);
     return {
       success: false,
-      message: "Erro ao remover documento. Tente novamente.",
+      message: await resolveActionErrorMessage(error),
     };
   }
 }

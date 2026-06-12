@@ -5,15 +5,14 @@ type ExistingService = {
 
 export function getServicesDiffMessage(
   currentServices: ExistingService[],
-  newServiceIds: string[]
+  newServiceIds: string[],
 ): string | null {
+  if (!currentServices || !newServiceIds) return null;
   const currentIds = new Set(currentServices.map((s) => s.serviceTypeId));
   const newIdsSet = new Set(newServiceIds);
 
-  if (!currentServices || !newServiceIds) return null;
-
   const removed = currentServices.filter(
-    (s) => !newIdsSet.has(s.serviceTypeId)
+    (s) => !newIdsSet.has(s.serviceTypeId),
   );
 
   const addedIds = newServiceIds.filter((id) => !currentIds.has(id));
@@ -27,7 +26,7 @@ export function getServicesDiffMessage(
 
   if (removed.length > 0) {
     lines.push(
-      `- Removidos: ${removed.map((r) => r.serviceType.name).join(", ")}`
+      `- Removidos: ${removed.map((r) => r.serviceType.name).join(", ")}`,
     );
   }
 

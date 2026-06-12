@@ -1,5 +1,6 @@
 "use client";
 
+import { ValidationError } from "@/errors/ValidationError";
 import {
   CheckCircle2,
   Circle,
@@ -23,8 +24,9 @@ import {
 } from "@/services/documenso/IDocumentSignService";
 import { date } from "@/lib/dayjs";
 import PDFViewer from "./PDFViewer";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/twMerge";
 import { generateDocumentActivity } from "@/utils/generateDocumentActivity";
+import { useTranslations } from "next-intl";
 
 interface IContractSigningDetails {
   signingDocument: Document;
@@ -33,23 +35,25 @@ interface IContractSigningDetails {
 export function ContractSigningDetails({
   signingDocument,
 }: IContractSigningDetails) {
+  const t = useTranslations("contracts.signing");
+  const tCommon = useTranslations("common");
   const activity = generateDocumentActivity(signingDocument);
 
   const basicInformation = [
     {
-      label: "Criado por",
+      label: tCommon("createdBy"),
       value: "Zofia Code Labs",
     },
     {
-      label: "Criado em",
+      label: tCommon("createdAt"),
       value: date(signingDocument.createdAt).format("DD/MM/YYYY HH:mm"),
     },
     {
-      label: "Última modificação em",
+      label: t("lastModified"),
       value: date(signingDocument.createdAt).fromNow(),
     },
     {
-      label: "Identificador do documento",
+      label: tCommon("documentId"),
       value: signingDocument.id,
     },
   ];
@@ -70,43 +74,30 @@ export function ContractSigningDetails({
     ) > -1;
 
   function getDocumentRoleMapper(role: RecipientRole) {
-    const roles: Record<RecipientRole, string> = {
-      APPROVER: "Aprovador",
-      SIGNER: "Assinador",
-      CC: "Cópia",
-      VIEWER: "Visualizador",
-    };
-
-    return roles[role] || "Visualizador";
+    return t(`roles.${role}`);
   }
 
   function getSigningStatusMapper(signingStatus: SigningStatus) {
-    const signingStatuses: Record<SigningStatus, string> = {
-      NOT_SIGNED: "Pendente",
-      SIGNED: "Assinado",
-    };
-
-    return signingStatuses[signingStatus] || "Pendente";
+    return t(`signingStatus.${signingStatus}`);
   }
 
   function getReadingStatusMapper(readStatus: ReadStatus) {
     const readStatuses: Record<ReadStatus, string> = {
-      NOT_OPENED: "Não visualizado",
-      OPENED: "Visualizado",
+      NOT_OPENED: t("notOpened"),
+      OPENED: t("opened"),
     };
 
-    return readStatuses[readStatus] || "Pendente";
+    return readStatuses[readStatus] || t("pendingSignature");
   }
 
   async function handleDownloadDocument() {
-    // 1. Chame a sua rota de API ou Server Action que executa o getSignedDocument
     const [error, success] = await httpClient<Blob>(
       `/api/document-sign/${signingDocument.id}/download`,
       { method: "GET" },
       "blob",
     );
 
-    if (error) throw new Error("Falha ao baixar arquivo");
+    if (error) throw new ValidationError(t("downloadFailed"));
 
     // 2. Converta a resposta para Blob (formato que o navegador entende como arquivo)
     const blob = success;
@@ -127,14 +118,14 @@ export function ContractSigningDetails({
     // 6. Limpe a URL da memória
     window.URL.revokeObjectURL(url);
 
-    toast.success("Download iniciado!");
+    toast.success(t("downloadStarted"));
   }
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Signature className="h-5 w-5 text-muted-foreground" />
-          Informações de Assinatura do Contrato
+          {t("cardTitle")}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -146,14 +137,12 @@ export function ContractSigningDetails({
             <div className="p-4 border rounded-md space-y-4">
               <div className="space-y-4">
                 <h4 className="text-xl font-medium mb-0">
-                  {!hasNotSignRecipient && "Documento assinado por todos"}
-                  {hasNotSignRecipient && "Há pendência de assinatura"}
+                  {!hasNotSignRecipient && t("signedByAll")}
+                  {hasNotSignRecipient && t("pendingSignatureTitle")}
                 </h4>
                 <span className="text-muted-foreground text-sm">
-                  {!hasNotSignRecipient &&
-                    "Este documento foi assinado por todos os assinantes"}
-                  {hasNotSignRecipient &&
-                    "Algum dos assinantes ainda não realizou a assinatura do documento"}
+                  {!hasNotSignRecipient && t("signedByAllDescription")}
+                  {hasNotSignRecipient && t("pendingSignatureDescription")}
                 </span>
               </div>
               <Separator />
@@ -163,14 +152,14 @@ export function ContractSigningDetails({
                 onClick={() => handleDownloadDocument()}
               >
                 <Download className="w-4 h-4" />
-                Download
+                {tCommon("download")}
               </Button>
             </div>
 
             {/* Informações */}
             <div className="border rounded-md">
               <div className="p-4 pb-4 border-b">
-                <h5 className="text-lg font-medium">Informações</h5>
+                <h5 className="text-lg font-medium">{tCommon("information")}</h5>
               </div>
               {basicInformation.map((info, index) => (
                 <div
@@ -188,7 +177,7 @@ export function ContractSigningDetails({
             {/* Assinantes */}
             <div className="border rounded-md">
               <div className="p-4 pb-4 border-b">
-                <h5 className="text-lg font-medium">Interessados</h5>
+                <h5 className="text-lg font-medium">{tCommon("stakeholders")}</h5>
               </div>
               {recipients.map((recipient, index) => {
                 return (
@@ -232,7 +221,7 @@ export function ContractSigningDetails({
             {/* Atividades */}
             <div className="border rounded-md">
               <div className="p-4 pb-4 border-b">
-                <h5 className="text-lg font-medium">Últimas Atividades</h5>
+                <h5 className="text-lg font-medium">{tCommon("recentActivities")}</h5>
               </div>
               <div className="px-4 border-l-2 border-muted ml-6 space-y-2 py-4">
                 {activity.map((item, i) => (

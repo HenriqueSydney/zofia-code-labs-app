@@ -7,7 +7,7 @@ import {
   Document,
 } from "./IDocumentSignService";
 import { handleErrors } from "@/errors/handleErrors";
-import { AppError } from "@/errors/AppError";
+import { ExternalServiceError, ValidationError } from "@/errors";
 
 export class DocumensoDocumentSign implements IDocumentSignService {
   private readonly baseUrl: string;
@@ -44,7 +44,7 @@ export class DocumensoDocumentSign implements IDocumentSignService {
         "DETALHE DO ERRO DOCUMENSO:",
         JSON.stringify(errorBody, null, 2)
       );
-      throw new Error(`Documenso API Error: ${response.statusText}`);
+      throw new ExternalServiceError("Documenso", `Documenso API Error: ${response.statusText}`);
     }
 
     return response.json();
@@ -87,7 +87,7 @@ export class DocumensoDocumentSign implements IDocumentSignService {
       const message = handleErrors(error, null, {
         message: "Erro ao tentar criar o documento",
       });
-      throw new AppError(message);
+      throw new ValidationError(message);
     }
   }
 
@@ -126,7 +126,7 @@ export class DocumensoDocumentSign implements IDocumentSignService {
       const message = handleErrors(error, null, {
         message: "Erro ao tentar adicionar assinaturas ao documento",
       });
-      throw new AppError(message);
+      throw new ValidationError(message);
     }
   }
 
@@ -141,7 +141,23 @@ export class DocumensoDocumentSign implements IDocumentSignService {
         message:
           "Erro ao tentar encaminhar o documento para assinatura das partes interessadas",
       });
-      throw new AppError(message);
+      throw new ValidationError(message);
+    }
+  }
+
+  async cancelDocument(documentId: string): Promise<void> {
+    try {
+      const documentInfo = await this.getDocumentInfo(documentId);
+
+      await this.request(`/envelope/delete`, {
+        method: "POST",
+        body: JSON.stringify({ envelopeId: documentInfo.envelopeId }),
+      });
+    } catch (error) {
+      const message = handleErrors(error, null, {
+        message: "Erro ao tentar cancelar o documento de assinatura",
+      });
+      throw new ValidationError(message);
     }
   }
 
@@ -161,7 +177,7 @@ export class DocumensoDocumentSign implements IDocumentSignService {
       const message = handleErrors(error, null, {
         message: "Erro ao tentar recuperar o status do documento",
       });
-      throw new AppError(message);
+      throw new ValidationError(message);
     }
   }
 
@@ -183,7 +199,7 @@ export class DocumensoDocumentSign implements IDocumentSignService {
       const message = handleErrors(error, null, {
         message: "Erro ao tentar recuperar o documento assinado",
       });
-      throw new AppError(message);
+      throw new ValidationError(message);
     }
   }
 
@@ -198,7 +214,7 @@ export class DocumensoDocumentSign implements IDocumentSignService {
       const message = handleErrors(error, null, {
         message: "Erro ao tentar recuperar os dados do documento",
       });
-      throw new AppError(message);
+      throw new ValidationError(message);
     }
   }
 
@@ -218,7 +234,7 @@ export class DocumensoDocumentSign implements IDocumentSignService {
       const message = handleErrors(error, null, {
         message: "Erro ao tentar recuperar os dados de token do documento",
       });
-      throw new AppError(message);
+      throw new ValidationError(message);
     }
   }
 }

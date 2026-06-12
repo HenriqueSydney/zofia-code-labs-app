@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AlertTriangle, Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,19 +30,21 @@ import {
 interface OrganizationDangerZoneProps {
   orgId: string;
   orgSlug: string;
+  canManage?: boolean;
 }
 
 export function OrganizationDangerZone({
   orgId,
   orgSlug,
+  canManage = true,
 }: OrganizationDangerZoneProps) {
+  const t = useTranslations("organization.settings.dangerZone");
   const [open, setOpen] = useState(false);
   const [confirmSlug, setConfirmSlug] = useState("");
   const [isPending, setIsPending] = useState(false);
   const router = useRouter();
 
   async function handleDelete() {
-    // Validação de segurança extra
     if (confirmSlug !== orgSlug) return;
 
     setIsPending(true);
@@ -49,64 +52,58 @@ export function OrganizationDangerZone({
       // TODO: Chamar Server Action
       // await deleteOrganizationAction(orgId);
 
-      // Simulação
       await new Promise((r) => setTimeout(r, 2000));
 
-      toast.success("Organização encerrada com sucesso.");
+      toast.success(t("toastSuccess"));
 
-      // Redirecionar para fora, pois a org não existe mais
-      router.push("/auth/login"); // Ou para uma tela de seleção de orgs
+      router.push("/auth/login");
     } catch (error) {
-      toast.error("Erro ao encerrar organização.");
-      setIsPending(false); // Só para o loading se der erro, se for sucesso o router muda a página
+      toast.error(t("toastError"));
+      setIsPending(false);
     }
   }
 
-  // Reseta o input quando fecha o modal
   const handleOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
     if (!isOpen) setConfirmSlug("");
   };
+
+  if (!canManage) {
+    return null;
+  }
 
   return (
     <Card className="border-destructive/30 mt-6">
       <CardHeader>
         <CardTitle className="text-destructive flex items-center gap-2">
           <AlertTriangle className="h-5 w-5" />
-          Zona de Perigo
+          {t("title")}
         </CardTitle>
-        <CardDescription>
-          Ações irreversíveis relacionadas à sua conta.
-        </CardDescription>
+        <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 border border-destructive/20 rounded-lg bg-destructive/5 gap-4">
           <div>
             <h4 className="font-medium text-destructive">
-              Encerrar Organização
+              {t("deleteOrgTitle")}
             </h4>
             <p className="text-sm text-muted-foreground max-w-[400px]">
-              Isso excluirá permanentemente todos os projetos, membros,
-              configurações e dados associados a <strong>{orgSlug}</strong>.
-              Esta ação não pode ser desfeita.
+              {t("deleteOrgDescription", { slug: orgSlug })}
             </p>
           </div>
 
           <Dialog open={open} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>
-              <Button variant="destructive">Encerrar Conta</Button>
+              <Button variant="destructive">{t("deleteAccount")}</Button>
             </DialogTrigger>
 
             <DialogContent>
               <DialogHeader>
                 <DialogTitle className="text-destructive flex items-center gap-2">
                   <Trash2 className="h-5 w-5" />
-                  Tem certeza absoluta?
+                  {t("dialogTitle")}
                 </DialogTitle>
-                <DialogDescription>
-                  Esta ação é irreversível. Todos os dados da organização serão
-                  apagados permanentemente dos nossos servidores.
-                </DialogDescription>
+                <DialogDescription>{t("dialogDescription")}</DialogDescription>
               </DialogHeader>
 
               <div className="py-4 space-y-4">
@@ -115,11 +112,7 @@ export function OrganizationDangerZone({
                     htmlFor="slug-confirm"
                     className="text-sm font-semibold"
                   >
-                    Digite{" "}
-                    <span className="font-mono bg-muted px-1 rounded">
-                      {orgSlug}
-                    </span>{" "}
-                    para confirmar:
+                    {t("confirmLabel", { slug: orgSlug })}
                   </Label>
                   <Input
                     id="slug-confirm"
@@ -138,7 +131,7 @@ export function OrganizationDangerZone({
                   onClick={() => setOpen(false)}
                   disabled={isPending}
                 >
-                  Cancelar
+                  {t("cancel")}
                 </Button>
                 <Button
                   variant="destructive"
@@ -149,7 +142,7 @@ export function OrganizationDangerZone({
                   {isPending && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
-                  Sim, excluir {orgSlug}
+                  {t("confirmDelete", { slug: orgSlug })}
                 </Button>
               </DialogFooter>
             </DialogContent>

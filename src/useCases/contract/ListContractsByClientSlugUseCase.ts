@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IClientsRepository } from "@/repositories/IClientsRepository";
 import { IContractRepository } from "@/repositories/IContractRepository";
@@ -27,7 +27,7 @@ export class ListContractsByClientSlugUseCase {
     const client = await this.clientRepository.findBySlug(clientSlug);
 
     if (!client) {
-      throw new AppError("Cliente não localizado");
+      throw new ResourceNotFoundError("Cliente não localizado");
     }
 
     await checkUserPermissionForAsset(

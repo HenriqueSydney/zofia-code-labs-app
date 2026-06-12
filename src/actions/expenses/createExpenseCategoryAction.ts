@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
 import { expenseCategorySchema } from "@/schemas/expenses/expenseCategorySchema";
 import { makeCreateExpenseCategoryUseCase } from "@/useCases/expenses/factories/makeCreateExpenseCategoryUseCase";
@@ -11,7 +12,7 @@ export async function createExpenseCategoryAction(data: unknown) {
   if (!session?.user?.organizationId) {
     return {
       success: false,
-      message: "Sessão expirada ou usuário sem organização.",
+      message: await serverErrorMessage("sessionExpiredNoOrg"),
     };
   }
 
@@ -20,7 +21,7 @@ export async function createExpenseCategoryAction(data: unknown) {
   if (!parsed.success) {
     return {
       success: false,
-      message: parsed.error.issues[0].message || "Dados inválidos.",
+      message: parsed.error.issues[0].message || await serverErrorMessage("invalidData"),
     };
   }
 

@@ -14,9 +14,13 @@ interface IMainProfileCard {
     createdAt: Date | string;
     emailVerified: Date | string | null;
   };
+  canEdit?: boolean;
 }
 
-export async function MainProfileCard({ user }: IMainProfileCard) {
+export async function MainProfileCard({
+  user,
+  canEdit = false,
+}: IMainProfileCard) {
   const [t, locale] = await Promise.all([
     getTranslations("userProfile"),
     getLocale(),
@@ -38,7 +42,7 @@ export async function MainProfileCard({ user }: IMainProfileCard) {
           <div className="flex items-end space-x-4">
             <div className="relative">
               <UserAvatar userName={user.name} image={user.image} />
-              <AvatarForm />
+              {canEdit && <AvatarForm />}
             </div>
 
             <div className="pb-2">

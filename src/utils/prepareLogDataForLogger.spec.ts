@@ -77,4 +77,14 @@ describe("prepareLogDataForLogger", () => {
       componentStack: "Component > Stack",
     });
   });
+
+  it("deve omitir sessionId quando não existir no sessionStorage", () => {
+    vi.spyOn(window.sessionStorage, "getItem").mockReturnValue(null);
+
+    const logData = prepareLogDataForLogger({
+      error: new Error("Sem sessão"),
+    });
+
+    expect(logData.sessionId).toBeUndefined();
+  });
 });

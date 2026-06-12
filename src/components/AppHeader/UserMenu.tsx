@@ -1,7 +1,7 @@
 "use client";
 
 import { Building2, ChevronDown, LogOut, ShieldUser, User } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 
@@ -16,7 +16,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils"; // Assumindo que você tem o cn do shadcn
+import { cn } from "@/utils/twMerge"; // Assumindo que você tem o cn do shadcn
+import { Session } from "next-auth";
+import { Role } from "@/generated/prisma/enums";
+import { canAccessOrganizationArea } from "@/lib/auth/organizationAccess";
 
 // 1. Sub-componente para evitar duplicação da lógica de Avatar e Iniciais
 interface UserAvatarProps {
@@ -40,37 +43,37 @@ function UserAvatar({ name, image, className }: UserAvatarProps) {
   );
 }
 
-export function UserMenu() {
-  const { data: session, status } = useSession();
+interface IUserMenuProps {
+  session: Session;
+}
+
+export function UserMenu({ session }: IUserMenuProps) {
   const t = useTranslations("header");
+  const tUserMenu = useTranslations("navigation.userMenu");
+  const tProfile = useTranslations("userProfile");
 
-  if (status === "loading") {
-    return <UserMenuSkeleton />;
-  }
-
-  if (!session?.user) return null;
-
+  const tCommon = useTranslations("common");
   const user = session.user;
-  const userName = user.name || "Usuário";
+  const userName = user.name || tCommon("user");
 
-  // 2. Configuração dos itens do menu para manter o JSX limpo
   const menuItems = [
     {
-      label: "Meu Perfil",
+      label: tProfile("myProfile"),
       href: `/user/${user.id}`,
       icon: User,
     },
     {
-      label: "Minha Organização",
+      label: tUserMenu("myOrganization"),
       href: `/organization/${user.organizationId}`,
       icon: Building2,
+      visible: canAccessOrganizationArea(user, user.organizationId),
     },
-    {
-      label: "Admin Dashboard",
-      href: "/admin",
-      icon: ShieldUser,
-      visible: user.role === "ADMIN", // Condicional simples
-    },
+    // {
+    //   label: tUserMenu("adminDashboard"),
+    //   href: "/admin",
+    //   icon: ShieldUser,
+    //   visible: user.role === Role.OWNER,
+    // },
   ];
 
   return (

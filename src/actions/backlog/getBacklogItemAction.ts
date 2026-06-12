@@ -1,8 +1,8 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
-import { handleErrors } from "@/errors/handleErrors";
+import { ValidationError } from "@/errors";
 import { getBacklogItemSchema } from "@/schemas/backlog/getBacklogItemSchema"; // Ex: { id: string }
 import { makeGetBacklogItemUseCase } from "@/useCases/backlog/factories/makeGetBacklogItemUseCase";
 
@@ -10,14 +10,14 @@ export async function getBacklogAction(data: unknown) {
   // 1. Autenticação
   const session = await auth();
   if (!session?.user?.organizationId) {
-    throw new AppError("Usuário não atenticado");
+    throw new ValidationError("unauthenticated");
   }
 
   // 2. Validação Zod
   const parsed = getBacklogItemSchema.safeParse(data);
 
   if (!parsed.success) {
-    throw new AppError("Identificador do backlog inválido");
+    throw new ValidationError("invalidBacklogIdentifier");
   }
 
   const { id } = parsed.data;
@@ -37,7 +37,7 @@ export async function getBacklogAction(data: unknown) {
       data: backlog,
     };
   } catch (error) {
-    const message = handleErrors(error);
-    throw new AppError(message);
+    const message = await resolveActionErrorMessage(error);
+    throw new ValidationError(message);
   }
 }

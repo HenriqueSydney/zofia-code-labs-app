@@ -1,3 +1,4 @@
+import { ExternalServiceError, ResourceNotFoundError } from "@/errors";
 import { IntegrationBase } from "@/services/IntegrationBase";
 import {
   GitActivity,
@@ -66,11 +67,9 @@ export class GitHubService
 
     if (!res.ok) {
       const errorBody = await res.json().catch(() => ({}));
-      throw new Error(
-        `GitHub API Error: ${res.status} - ${
+      throw new ExternalServiceError("Serviço externo", `GitHub API Error: ${res.status} - ${
           errorBody.message || res.statusText
-        }`
-      );
+        }`);
     }
 
     return res.json() as Promise<T>;
@@ -78,9 +77,7 @@ export class GitHubService
 
   private ensureContext() {
     if (!this.owner || !this.repo) {
-      throw new Error(
-        "GitHubService: Operação requer contexto de repositório (owner/repo)."
-      );
+      throw new ExternalServiceError("GitHubService: Operação requer contexto de repositório (owner/repo).");
     }
   }
 
@@ -207,7 +204,7 @@ export class GitHubService
     const data = await this.request<any>(
       `/repos/${this.owner}/${this.repo}/contents/${path}`
     );
-    if (!data.content) throw new Error("Content not found");
+    if (!data.content) throw new ResourceNotFoundError("Content not found");
     return Buffer.from(data.content, "base64").toString("utf-8");
   }
 

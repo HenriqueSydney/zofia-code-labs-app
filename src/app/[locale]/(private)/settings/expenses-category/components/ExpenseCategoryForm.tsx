@@ -1,6 +1,9 @@
+"use client";
+
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { Form } from "@/components/ui/form";
@@ -13,12 +16,10 @@ import {
 import { updateExpenseCategoryAction } from "@/actions/expenses/updateExpenseCategoryAction";
 import { createExpenseCategoryAction } from "@/actions/expenses/createExpenseCategoryAction";
 import { ExpenseNature } from "@/generated/prisma/enums";
-import { expenseNatureOptions } from "@/mappers/expenseNatureMapper";
+import { getExpenseNatureOptions } from "@/mappers/expenseNatureMapper";
 import { FormInput } from "@/components/form/FormInput";
 import { FormTextarea } from "@/components/form/FormTextarea";
 import { FormSelect } from "@/components/form/FormSelect";
-
-// Importando o Mapper e as Opções
 
 interface IExpenseCategoryFormProps {
   expenseCategory?: {
@@ -34,6 +35,9 @@ export function ExpenseCategoryForm({
   expenseCategory,
   handleCloseModal,
 }: IExpenseCategoryFormProps) {
+  const t = useTranslations("settings.expenses.category.form");
+  const tNature = useTranslations("settings.expenses.nature");
+  const tCommon = useTranslations("common");
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<ExpenseCategorySchema>({
@@ -57,7 +61,7 @@ export function ExpenseCategoryForm({
       }
 
       toast.success(
-        expenseCategory ? "Categoria atualizada!" : "Categoria criada!",
+        expenseCategory ? t("toastUpdateSuccess") : t("toastCreateSuccess"),
       );
       if (!expenseCategory) form.reset();
       handleCloseModal();
@@ -67,31 +71,28 @@ export function ExpenseCategoryForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        {/* Nome da Categoria */}
         <FormInput
-          label="Nome da Categoria *"
+          label={t("name")}
           name="name"
           control={form.control}
-          placeholder="Ex: Infraestrutura Cloud"
+          placeholder={t("namePlaceholder")}
           disabled={isPending}
         />
 
-        {/* Natureza da Despesa (Select via Mapper) */}
         <FormSelect
           control={form.control}
           name="nature"
-          label="Natureza Financeira"
-          placeholder="Selecione a natureza..."
-          options={expenseNatureOptions}
+          label={t("nature")}
+          placeholder={t("naturePlaceholder")}
+          options={getExpenseNatureOptions((key) => tNature(key))}
           disabled={isPending}
         />
 
-        {/* Descrição */}
         <FormTextarea
-          label="Descrição"
+          label={t("description")}
           control={form.control}
           name="description"
-          placeholder="Descrição opcional para identificar os gastos desta categoria"
+          placeholder={t("descriptionPlaceholder")}
           disabled={isPending}
           rows={3}
           className="resize-none"
@@ -100,10 +101,10 @@ export function ExpenseCategoryForm({
         <div className="pt-4">
           <Button type="submit" className="w-full" disabled={isPending}>
             {isPending
-              ? "Salvando..."
+              ? tCommon("saving")
               : expenseCategory
-                ? "Salvar Alterações"
-                : "Criar Categoria"}
+                ? tCommon("actions.saveChanges")
+                : t("create")}
           </Button>
         </div>
       </form>

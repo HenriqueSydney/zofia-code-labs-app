@@ -3,11 +3,12 @@ import { ContractWithDetails } from "@/repositories/IContractRepository";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { operationWrapper } from "@/lib/operationWrapper";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { QueryFilter } from "@/components/QueryFilter";
 import { fetchAllContracts } from "@/actions/contract/fetchAllContracts";
 import { getParams } from "@/utils/getParams";
 import { ContractList } from "@/components/ContractList";
+import { getTranslations } from "next-intl/server";
 
 interface IParams {
   searchParams: Promise<{
@@ -18,6 +19,7 @@ interface IParams {
 }
 
 export default async function Contracts({ searchParams }: IParams) {
+  const t = await getTranslations("contracts.page");
   const {
     query,
     page = 1,
@@ -38,19 +40,19 @@ export default async function Contracts({ searchParams }: IParams) {
   );
 
   if (error) {
-    throw new AppError("Falha ao tentar localizar o histórico de contratos");
+    throw new ValidationError(t("fetchError"));
   }
 
   return (
     <div className="space-y-6">
       <SectionHeading
-        title="Gestão de contratos"
-        description="Gerencie todos os contratos de sua Empresa"
+        title={t("title")}
+        description={t("description")}
       />
-      <QueryFilter placeholder="Buscar contrato..." />
+      <QueryFilter placeholder={t("search")} />
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-lg">Histórico de Contratos</CardTitle>
+          <CardTitle className="text-lg">{t("historyTitle")}</CardTitle>
         </CardHeader>
         <CardContent>
           <ContractList

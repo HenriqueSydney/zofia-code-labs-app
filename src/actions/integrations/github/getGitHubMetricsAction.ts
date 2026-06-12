@@ -1,8 +1,8 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
-import { handleErrors } from "@/errors/handleErrors";
+import { UnauthorizedError } from "@/errors";
 import { makeGetGitHubMetricsUseCase } from "@/useCases/integration/gitub/factories/makeGetGitHubMetricsUseCase";
 
 export async function getGitHubMetricsAction(projectSlug: string) {
@@ -10,7 +10,7 @@ export async function getGitHubMetricsAction(projectSlug: string) {
 
   // Aqui você verificaria se o usuário é o ADMIN do sistema
   if (!session?.user) {
-    throw new AppError("Não autorizado.");
+    throw new UnauthorizedError("unauthorized");
   }
 
   try {
@@ -23,7 +23,7 @@ export async function getGitHubMetricsAction(projectSlug: string) {
 
     return { success: true, data: metrics.metrics };
   } catch (error) {
-    const message = handleErrors(error);
+    const message = await resolveActionErrorMessage(error);
     return { success: false, message };
   }
 }

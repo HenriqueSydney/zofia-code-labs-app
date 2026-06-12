@@ -144,7 +144,7 @@ export type ProjectRolesGroupByOutputType = {
   _max: ProjectRolesMaxAggregateOutputType | null
 }
 
-type GetProjectRolesGroupByPayload<T extends ProjectRolesGroupByArgs> = Prisma.PrismaPromise<
+export type GetProjectRolesGroupByPayload<T extends ProjectRolesGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ProjectRolesGroupByOutputType, T['by']> &
       {
@@ -1024,6 +1024,11 @@ export type ProjectRolesFindManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Skip the first `n` ProjectRoles.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of ProjectRoles.
+   */
   distinct?: Prisma.ProjectRolesScalarFieldEnum | Prisma.ProjectRolesScalarFieldEnum[]
 }
 

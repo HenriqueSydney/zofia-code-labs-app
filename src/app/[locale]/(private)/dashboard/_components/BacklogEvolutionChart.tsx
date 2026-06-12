@@ -1,7 +1,9 @@
 import { getBacklogEvolutionChartAction } from "@/actions/stats/getBacklogEvolutionChartAction";
-import { AreaLineChart } from "@/components/Charts/AreaLineChart"; // Seu componente
+import { AreaLineChart } from "@/components/Charts/AreaLineChart";
+import { getTranslations } from "next-intl/server";
 
 export async function BacklogEvolutionChart() {
+  const t = await getTranslations("admin.chart.backlogEvolution");
   const { data } = await getBacklogEvolutionChartAction();
 
   if (!data) return null;
@@ -9,21 +11,21 @@ export async function BacklogEvolutionChart() {
   return (
     <div className="col-span-4">
       <AreaLineChart
-        title="Fluxo de Trabalho"
-        description="Comparativo entre novas demandas e entregas realizadas nos últimos 6 meses."
+        title={t("title")}
+        description={t("description")}
         data={data}
         indexKey="month"
         height={350}
         categories={[
           {
             key: "created",
-            label: "Novas Demandas",
-            color: "#f59e0b", // Amber-500 (Demanda)
+            label: t("created"),
+            color: "#f59e0b",
           },
           {
             key: "completed",
-            label: "Entregas",
-            color: "#10b981", // Emerald-500 (Output)
+            label: t("completed"),
+            color: "#10b981",
           },
         ]}
       />
@@ -31,7 +33,6 @@ export async function BacklogEvolutionChart() {
   );
 }
 
-// Skeleton Loading
 export function BacklogEvolutionSkeleton() {
   return (
     <div className="col-span-4 h-[400px] rounded-xl bg-muted/50 animate-pulse" />

@@ -6,59 +6,60 @@ import {
   getNotificationIcon,
   getNotificationStatusBadge,
 } from "@/mappers/notificationMapper";
-import { getPaymentStatusBadge } from "@/mappers/paymentStatusBadge";
-import { formatCurrency } from "@/utils/formatCurrency";
 import { TabsContent } from "@radix-ui/react-tabs";
-import { Calendar, DollarSign, Eye, Plus, Send, User } from "lucide-react";
+import { Calendar, Eye, Send, User } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
-const mockNotifications: any[] = [
-  {
-    id: "1",
-    type: "email",
-    subject: "Proposta Comercial - Sistema de Gestão v2.0",
-    recipient: "joao.pereira@empresa.com",
-    sentAt: "2024-01-17T09:00:00",
-    sentBy: "Ana Silva",
-    status: "read",
-  },
-  {
-    id: "2",
-    type: "email",
-    subject: "Contrato para Assinatura",
-    recipient: "joao.pereira@empresa.com",
-    sentAt: "2024-01-20T10:30:00",
-    sentBy: "Ana Silva",
-    status: "read",
-  },
-  {
-    id: "3",
-    type: "whatsapp",
-    subject: "Lembrete: Pagamento da entrada",
-    recipient: "+55 11 99999-9999",
-    sentAt: "2024-01-23T14:00:00",
-    sentBy: "Sistema",
-    status: "delivered",
-  },
-  {
-    id: "4",
-    type: "email",
-    subject: "Nota Fiscal NF-2024-001",
-    recipient: "joao.pereira@empresa.com",
-    sentAt: "2024-01-24T16:00:00",
-    sentBy: "Sistema",
-    status: "delivered",
-  },
-];
+export default async function NotificationTab() {
+  const t = await getTranslations("projects.commercial.notifications");
 
-export default function NotificationTab() {
+  const mockNotifications = [
+    {
+      id: "1",
+      type: "email" as const,
+      subject: t("mock.proposalSubject"),
+      recipient: "joao.pereira@empresa.com",
+      sentAt: "2024-01-17T09:00:00",
+      sentBy: "Ana Silva",
+      status: "read" as const,
+    },
+    {
+      id: "2",
+      type: "email" as const,
+      subject: t("mock.contractSubject"),
+      recipient: "joao.pereira@empresa.com",
+      sentAt: "2024-01-20T10:30:00",
+      sentBy: "Ana Silva",
+      status: "read" as const,
+    },
+    {
+      id: "3",
+      type: "whatsapp" as const,
+      subject: t("mock.paymentReminder"),
+      recipient: "+55 11 99999-9999",
+      sentAt: "2024-01-23T14:00:00",
+      sentBy: t("mock.systemSender"),
+      status: "delivered" as const,
+    },
+    {
+      id: "4",
+      type: "email" as const,
+      subject: t("mock.invoiceSubject"),
+      recipient: "joao.pereira@empresa.com",
+      sentAt: "2024-01-24T16:00:00",
+      sentBy: t("mock.systemSender"),
+      status: "delivered" as const,
+    },
+  ];
+
   return (
     <TabsContent value="notifications" className="mt-6">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-lg">Histórico de Notificações</CardTitle>
+          <CardTitle className="text-lg">{t("title")}</CardTitle>
           <Button size="sm">
             <Send className="h-4 w-4 mr-2" />
-            Nova Notificação
+            {t("newNotification")}
           </Button>
         </CardHeader>
         <CardContent>
@@ -80,7 +81,9 @@ export default function NotificationTab() {
                       {getNotificationStatusBadge(notification.status)}
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
-                      <span>Para: {notification.recipient}</span>
+                      <span>
+                        {t("to")} {notification.recipient}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
                       <Calendar className="h-3 w-3" />

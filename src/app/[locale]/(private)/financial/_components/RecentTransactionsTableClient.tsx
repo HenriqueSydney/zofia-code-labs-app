@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Search, Filter, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/utils/formatCurrency";
+import { useTranslations } from "next-intl";
 
 interface Transaction {
   id: string;
@@ -38,14 +39,15 @@ export function RecentTransactionsTableClient({
 }: {
   transactions: Transaction[];
 }) {
+  const t = useTranslations("financial");
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("all");
 
-  const filteredTransactions = transactions.filter((t) => {
+  const filteredTransactions = transactions.filter((transaction) => {
     const matchesSearch =
-      t.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      t.projectName.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = filterType === "all" || t.type === filterType;
+      transaction.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      transaction.projectName.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesType = filterType === "all" || transaction.type === filterType;
     return matchesSearch && matchesType;
   });
 
@@ -59,9 +61,9 @@ export function RecentTransactionsTableClient({
       cancelled: "destructive",
     };
     const labels: Record<string, string> = {
-      confirmed: "Confirmado",
-      pending: "Pendente",
-      cancelled: "Cancelado",
+      confirmed: t("transactions.statusConfirmed"),
+      pending: t("transactions.statusPending"),
+      cancelled: t("transactions.statusCancelled"),
     };
     return (
       <Badge variant={variants[status] || "outline"}>
@@ -74,12 +76,12 @@ export function RecentTransactionsTableClient({
     <Card>
       <CardHeader>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <CardTitle>Histórico de Transações</CardTitle>
+          <CardTitle>{t("transactions.title")}</CardTitle>
           <div className="flex gap-2">
             <div className="relative flex-1 sm:w-64">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Buscar transação..."
+                placeholder={t("transactions.search")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-9"
@@ -91,9 +93,9 @@ export function RecentTransactionsTableClient({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="income">Receitas</SelectItem>
-                <SelectItem value="expense">Despesas</SelectItem>
+                <SelectItem value="all">{t("transactions.all")}</SelectItem>
+                <SelectItem value="income">{t("transactions.income")}</SelectItem>
+                <SelectItem value="expense">{t("transactions.expense")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -103,12 +105,12 @@ export function RecentTransactionsTableClient({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Data</TableHead>
-              <TableHead>Descrição</TableHead>
-              <TableHead>Projeto</TableHead>
-              <TableHead>Tipo</TableHead>
-              <TableHead className="text-right">Valor</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>{t("transactions.date")}</TableHead>
+              <TableHead>{t("transactions.description")}</TableHead>
+              <TableHead>{t("transactions.project")}</TableHead>
+              <TableHead>{t("transactions.type")}</TableHead>
+              <TableHead className="text-right">{t("transactions.amount")}</TableHead>
+              <TableHead>{t("transactions.status")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -138,7 +140,9 @@ export function RecentTransactionsTableClient({
                           : "text-destructive"
                       }
                     >
-                      {transaction.type === "income" ? "Receita" : "Despesa"}
+                      {transaction.type === "income"
+                        ? t("charts.income")
+                        : t("charts.expenses")}
                     </span>
                   </div>
                 </TableCell>
@@ -161,7 +165,7 @@ export function RecentTransactionsTableClient({
                   colSpan={6}
                   className="text-center h-24 text-muted-foreground"
                 >
-                  Nenhuma transação encontrada.
+                  {t("transactions.empty")}
                 </TableCell>
               </TableRow>
             )}

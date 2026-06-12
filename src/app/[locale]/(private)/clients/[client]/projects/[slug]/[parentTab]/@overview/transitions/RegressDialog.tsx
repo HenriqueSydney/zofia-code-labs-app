@@ -1,6 +1,12 @@
 "use client";
 
-import { Dispatch, SetStateAction, useEffect, useTransition } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useTransition,
+} from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -24,16 +30,18 @@ import { Form } from "@/components/ui/form";
 import { cancelProposalAction } from "@/actions/proposal/cancelProposal";
 import { changeProjectStatusAction } from "@/actions/projects/changeProjectStatus";
 import { checkIfProposalIsEditable } from "@/utils/checkIfProposalIsEditable";
-import { StageConfig } from "@/mappers/projectStageMapper";
+import { TranslatedStageConfig } from "@/mappers/projectStageMapper";
 import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 
 // Estratégias e Componentes
-import { REGRESS_STRATEGIES } from "./RegressStrategiesForms";
+import { getRegressStrategies } from "./RegressStrategiesForms";
 import { FormTextarea } from "@/components/form/FormTextarea";
+import { useTranslations } from "next-intl";
+import { cancelContractAction } from "@/actions/contract/cancelContract";
 
 interface IRegressDialog {
-  currentStageConfig: StageConfig;
-  prevStage: StageConfig | null;
+  currentStageConfig: TranslatedStageConfig;
+  prevStage: TranslatedStageConfig | null;
   setShowRegressDialog: Dispatch<SetStateAction<boolean>>;
   showRegressDialog: boolean;
   project: ProjectWithDetails;
@@ -48,24 +56,35 @@ export function RegressDialog({
   showRegressDialog,
   contextData,
 }: IRegressDialog) {
+  const t = useTranslations("projects.transitions.regress");
+  const tCommon = useTranslations("projects.transitions.common");
   const [isPending, startTransition] = useTransition();
 
-  // 1. Seleciona a estratégia baseada no status de DESTINO (para onde estamos voltando)
-  const strategy = prevStage
-    ? REGRESS_STRATEGIES[prevStage.key] || REGRESS_STRATEGIES.DEFAULT
-    : REGRESS_STRATEGIES.DEFAULT;
+  const regressStrategies = useMemo(
+    () => getRegressStrategies((key) => t(key as never)),
+    [t],
+  );
+
+  const strategyKey = prevStage?.key ?? "DEFAULT";
+
+  const strategy = useMemo(() => {
+    if (strategyKey === "DEFAULT") {
+      return regressStrategies.DEFAULT;
+    }
+    return regressStrategies[strategyKey] ?? regressStrategies.DEFAULT;
+  }, [regressStrategies, strategyKey]);
 
   const form = useForm({
     resolver: zodResolver(strategy.schema),
     defaultValues: strategy.defaultValues,
   });
 
-  // 2. Reseta o form quando o diálogo abre ou a estratégia muda
   useEffect(() => {
     if (showRegressDialog) {
       form.reset(strategy.defaultValues);
     }
-  }, [showRegressDialog, strategy.defaultValues, form]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- reset apenas ao abrir ou mudar etapa alvo
+  }, [showRegressDialog, strategyKey]);
 
   const onSubmit = (values: any) => {
     if (!prevStage) return;
@@ -73,21 +92,34 @@ export function RegressDialog({
     startTransition(async () => {
       try {
         // Lógica de cancelamento de proposta (se aplicável)
-        if (
-          ["PROPOSAL", "PROPOSAL_GENERATED"].includes(currentStageConfig.key) &&
-          project.proposal
-        ) {
+        if (["PROPOSAL"].includes(currentStageConfig.key) && project.proposal) {
           const cancelResult = await cancelProposalAction(project.proposal.id);
           if (cancelResult.error) {
             toast.error(cancelResult.error);
             return;
           }
           // Se estava apenas na etapa de proposta e foi cancelada
-          if (
-            project.proposal.status !== "DRAFT" &&
-            currentStageConfig.key === "PROPOSAL"
-          ) {
-            toast.info(`Sucesso: Proposta cancelada.`);
+          if (project.proposal.status !== "DRAFT") {
+            toast.info(t("proposalCancelledSuccess"));
+            setShowRegressDialog(false);
+            return;
+          }
+        }
+
+        if (
+          ["PROPOSAL_GENERATED"].includes(currentStageConfig.key) &&
+          project.contract
+        ) {
+          if (["REVIEW", "SENT"].includes(project.contract.status)) {
+            const cancelResult = await cancelContractAction(
+              project.contract.id,
+            );
+            if (cancelResult.error) {
+              toast.error(cancelResult.error);
+              return;
+            }
+
+            toast.info(t("contractCancelledSuccess"));
             setShowRegressDialog(false);
             return;
           }
@@ -109,10 +141,10 @@ export function RegressDialog({
           return;
         }
 
-        toast.success(`Projeto retornado para etapa: ${prevStage.label}`);
+        toast.success(`${t("success")}: ${prevStage.label}`);
         setShowRegressDialog(false);
       } catch (error) {
-        toast.error("Erro inesperado ao processar o retorno de etapa.");
+        toast.error(tCommon("errors.unexpected"));
       }
     });
   };
@@ -120,17 +152,16 @@ export function RegressDialog({
   const { canBeCancelled } = checkIfProposalIsEditable(
     project.proposal?.status,
   );
-
+ 
   return (
     <AlertDialog open={showRegressDialog} onOpenChange={setShowRegressDialog}>
       <AlertDialogContent className="max-w-2xl">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-xl flex items-center gap-2">
-            Retornar Etapa do Projeto
+            {t("dialogTitle")}
           </AlertDialogTitle>
           <AlertDialogDescription>
-            Esta ação moverá o projeto para a fase anterior. Justifique a
-            decisão abaixo.
+            {t("dialogDescription")}
           </AlertDialogDescription>
         </AlertDialogHeader>
 
@@ -146,12 +177,8 @@ export function RegressDialog({
                 className="bg-destructive/10 border-destructive/20 text-destructive"
               >
                 <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Atenção</AlertTitle>
-                <AlertDescription>
-                  A proposta atual será{" "}
-                  <strong>cancelada permanentemente</strong> ao voltar desta
-                  etapa.
-                </AlertDescription>
+                <AlertTitle>{t("attentionTitle")}</AlertTitle>
+                <AlertDescription>{t("proposalWarning")}</AlertDescription>
               </Alert>
             )}
 
@@ -159,8 +186,11 @@ export function RegressDialog({
             <div className="flex items-center gap-3 p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg text-amber-700 dark:text-amber-400">
               <AlertTriangle className="h-5 w-5 flex-shrink-0" />
               <p className="text-sm">
-                Movendo de <strong>{currentStageConfig.label}</strong> para{" "}
-                <strong>{prevStage?.label}</strong>.
+                {t.rich("movingFromTo", {
+                  from: currentStageConfig.label,
+                  to: prevStage?.label ?? "",
+                  strong: (chunks) => <strong>{chunks}</strong>,
+                })}
               </p>
             </div>
 
@@ -175,8 +205,8 @@ export function RegressDialog({
             <FormTextarea
               control={form.control}
               name="observation"
-              label="Justificativa Detalhada"
-              placeholder="Explique detalhadamente o motivo deste retorno para o histórico..."
+              label={t("justificationLabel")}
+              placeholder={t("justificationPlaceholder")}
               rows={4}
               disabled={isPending}
             />
@@ -186,7 +216,7 @@ export function RegressDialog({
                 disabled={isPending}
                 onClick={() => form.reset()}
               >
-                Cancelar
+                {tCommon("cancel")}
               </AlertDialogCancel>
 
               <Button
@@ -198,10 +228,10 @@ export function RegressDialog({
                 {isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Processando...
+                    {tCommon("processing")}
                   </>
                 ) : (
-                  "Confirmar Retorno"
+                  t("confirm")
                 )}
               </Button>
             </AlertDialogFooter>

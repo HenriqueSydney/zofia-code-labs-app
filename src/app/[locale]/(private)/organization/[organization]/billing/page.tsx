@@ -21,7 +21,10 @@ import {
 import { Check, CreditCard, Download, Zap, AlertTriangle } from "lucide-react";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { getOrganizationAction } from "@/actions/organization/getOrganizationAction";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
+import { getOrganizationUiAccess } from "../_data/getOrganizationUiAccess";
+import { getLocale, getTranslations } from "next-intl/server";
+
 interface IBillingPage {
   params: Promise<{ organization: string }>;
 }
@@ -30,8 +33,10 @@ export default async function OrganizationBillingPage({
   params,
 }: IBillingPage) {
   const { organization: org } = await params;
+  const t = await getTranslations("organization.billing");
+  const locale = await getLocale();
+  const { canManageBilling } = await getOrganizationUiAccess(org);
 
-  // 1. Buscamos a organização para ter contagens reais (users, projects)
   const [error, success] = await operationWrapper(
     "action",
     "getOrganization",
@@ -39,18 +44,14 @@ export default async function OrganizationBillingPage({
   );
 
   if (error) {
-    throw new AppError(error.message);
+    throw new ValidationError(error.message);
   }
 
   const { organization } = success;
 
-  // ===========================================================================
-  // MOCK DE DADOS DE ASSINATURA
-  // (Futuramente, isso virá de uma tabela 'Subscription' ou do Stripe/Gateway)
-  // ===========================================================================
   const subscription = {
     planName: "Business Pro",
-    status: "active", // active, past_due, canceled, trial
+    status: "active",
     amount: 299.9,
     currency: "BRL",
     nextBillingDate: new Date("2026-03-15"),
@@ -62,7 +63,7 @@ export default async function OrganizationBillingPage({
     limits: {
       users: { total: 20, used: organization.totalOfMembers },
       projects: { total: 50, used: organization.totalOfProjects },
-      storage: { total: 100, used: 45 }, // Exemplo: 100GB
+      storage: { total: 100, used: 45 },
     },
     invoices: [
       { id: "inv_001", date: "2026-02-15", amount: 299.9, status: "paid" },
@@ -71,14 +72,13 @@ export default async function OrganizationBillingPage({
     ],
   };
 
-  // Helpers de UI
   const formatDate = (date: Date | string) =>
-    new Intl.DateTimeFormat("pt-BR").format(new Date(date));
+    new Intl.DateTimeFormat(locale).format(new Date(date));
 
   const formatCurrency = (val: number) =>
-    new Intl.NumberFormat("pt-BR", {
+    new Intl.NumberFormat(locale, {
       style: "currency",
-      currency: "BRL",
+      currency: subscription.currency,
     }).format(val);
 
   const getUsagePercentage = (used: number, total: number) =>
@@ -87,72 +87,75 @@ export default async function OrganizationBillingPage({
   return (
     <TabsContent value="billing" className="space-y-6 outline-none m-0">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* ==================== COLUNA ESQUERDA: PLANO E PAGAMENTO ==================== */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Card do Plano Atual */}
           <Card className="border-primary/30 bg-gradient-to-br from-background to-primary/15">
             <CardHeader className="flex flex-row items-start justify-between pb-2">
               <div>
                 <CardTitle className="text-xl flex items-center gap-2">
                   {subscription.planName}
                   <Badge className="bg-green-500/10 text-green-600 border-green-200 hover:bg-green-500/20">
-                    Ativo
+                    {t("plan.active")}
                   </Badge>
                 </CardTitle>
                 <CardDescription className="mt-1">
-                  Renova em {formatDate(subscription.nextBillingDate)}
+                  {t("plan.renewsOn", {
+                    date: formatDate(subscription.nextBillingDate),
+                  })}
                 </CardDescription>
               </div>
               <div className="text-right">
                 <span className="text-2xl font-bold">
                   {formatCurrency(subscription.amount)}
                 </span>
-                <span className="text-muted-foreground text-sm">/mês</span>
+                <span className="text-muted-foreground text-sm">
+                  {t("plan.perMonth")}
+                </span>
               </div>
             </CardHeader>
             <CardContent>
               <ul className="grid gap-2 text-sm">
                 <li className="flex items-center gap-2">
                   <Check className="h-4 w-4 text-primary" />
-                  <span>Acesso ilimitado a relatórios</span>
+                  <span>{t("plan.features.unlimitedReports")}</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="h-4 w-4 text-primary" />
-                  <span>Suporte prioritário 24/7</span>
+                  <span>{t("plan.features.prioritySupport")}</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="h-4 w-4 text-primary" />
-                  <span>API e Integrações Avançadas</span>
+                  <span>{t("plan.features.apiIntegrations")}</span>
                 </li>
               </ul>
             </CardContent>
-            <CardFooter className="flex gap-3 border-t bg-background/50 pt-6">
-              <Button>Alterar Plano</Button>
-              <Button
-                variant="outline"
-                className="text-destructive hover:text-destructive"
-              >
-                Cancelar Assinatura
-              </Button>
-            </CardFooter>
+            {canManageBilling && (
+              <CardFooter className="flex gap-3 border-t bg-background/50 pt-6">
+                <Button>{t("plan.changePlan")}</Button>
+                <Button
+                  variant="outline"
+                  className="text-destructive hover:text-destructive"
+                >
+                  {t("plan.cancelSubscription")}
+                </Button>
+              </CardFooter>
+            )}
           </Card>
 
-          {/* Histórico de Faturas */}
           <Card>
             <CardHeader>
-              <CardTitle>Histórico de Cobranças</CardTitle>
-              <CardDescription>
-                Baixe as faturas dos pagamentos anteriores.
-              </CardDescription>
+              <CardTitle>{t("history.title")}</CardTitle>
+              <CardDescription>{t("history.description")}</CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Data</TableHead>
-                    <TableHead>Valor</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Fatura</TableHead>
+                    <TableHead>{t("history.columns.date")}</TableHead>
+                    <TableHead>{t("history.columns.amount")}</TableHead>
+                    <TableHead>{t("history.columns.status")}</TableHead>
+                    <TableHead className="text-right">
+                      {t("history.columns.invoice")}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -162,7 +165,9 @@ export default async function OrganizationBillingPage({
                       <TableCell>{formatCurrency(invoice.amount)}</TableCell>
                       <TableCell>
                         <Badge variant="outline" className="font-normal">
-                          {invoice.status === "paid" ? "Pago" : "Pendente"}
+                          {invoice.status === "paid"
+                            ? t("history.status.paid")
+                            : t("history.status.pending")}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
@@ -182,21 +187,18 @@ export default async function OrganizationBillingPage({
           </Card>
         </div>
 
-        {/* ==================== COLUNA DIREITA: CONSUMO E MÉTODO ==================== */}
         <div className="space-y-6">
-          {/* Consumo de Recursos (Quotas) */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
                 <Zap className="h-5 w-5 text-yellow-500" />
-                Uso da Conta
+                {t("usage.title")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Usuários */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium">Usuários</span>
+                  <span className="font-medium">{t("usage.users")}</span>
                   <span className="text-muted-foreground">
                     {subscription.limits.users.used} /{" "}
                     {subscription.limits.users.total}
@@ -211,10 +213,9 @@ export default async function OrganizationBillingPage({
                 />
               </div>
 
-              {/* Projetos */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium">Projetos Ativos</span>
+                  <span className="font-medium">{t("usage.activeProjects")}</span>
                   <span className="text-muted-foreground">
                     {subscription.limits.projects.used} /{" "}
                     {subscription.limits.projects.total}
@@ -229,10 +230,9 @@ export default async function OrganizationBillingPage({
                 />
               </div>
 
-              {/* Armazenamento (Exemplo) */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium">Armazenamento (GB)</span>
+                  <span className="font-medium">{t("usage.storage")}</span>
                   <span className="text-muted-foreground">
                     {subscription.limits.storage.used} /{" "}
                     {subscription.limits.storage.total}
@@ -247,24 +247,19 @@ export default async function OrganizationBillingPage({
                 />
               </div>
 
-              {/* Alerta de Limite */}
               {subscription.limits.users.used >=
                 subscription.limits.users.total && (
                 <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-md p-3 flex gap-3 items-start text-sm text-yellow-600">
                   <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
-                  <p>
-                    Você atingiu o limite de usuários. Faça upgrade para
-                    adicionar mais membros.
-                  </p>
+                  <p>{t("usage.usersLimitReached")}</p>
                 </div>
               )}
             </CardContent>
           </Card>
 
-          {/* Método de Pagamento */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Método de Pagamento</CardTitle>
+              <CardTitle className="text-lg">{t("paymentMethod.title")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-4 p-3 border rounded-lg bg-card/50">
@@ -273,19 +268,25 @@ export default async function OrganizationBillingPage({
                 </div>
                 <div className="flex-1">
                   <p className="font-medium text-sm">
-                    {subscription.paymentMethod.brand} terminando em{" "}
-                    {subscription.paymentMethod.last4}
+                    {t("paymentMethod.cardEnding", {
+                      brand: subscription.paymentMethod.brand,
+                      last4: subscription.paymentMethod.last4,
+                    })}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Expira em {subscription.paymentMethod.expiry}
+                    {t("paymentMethod.expires", {
+                      expiry: subscription.paymentMethod.expiry,
+                    })}
                   </p>
                 </div>
               </div>
             </CardContent>
             <CardFooter>
-              <Button variant="outline" className="w-full">
-                Atualizar Cartão
-              </Button>
+              {canManageBilling && (
+                <Button variant="outline" className="w-full">
+                  {t("paymentMethod.updateCard")}
+                </Button>
+              )}
             </CardFooter>
           </Card>
         </div>

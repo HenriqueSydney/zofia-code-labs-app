@@ -1,7 +1,7 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { handleErrors } from "@/errors/handleErrors";
 import { makeListExpenseUseCase } from "@/useCases/expenses/factories/makeListExpenseUseCase";
 import { z } from "zod";
 
@@ -20,11 +20,11 @@ export async function listExpensesAction(
   params?: ListExpensesParams
 ) {
   const session = await auth();
-  if (!session?.user?.id) return { success: false, message: "Não autorizado" };
+  if (!session?.user?.id) return { success: false, message: await serverErrorMessage("unauthorized") };
 
   const validation = listExpensesSchema.safeParse(params ?? {});
   if (!validation.success) {
-    return { success: false, message: "Parâmetros de busca inválidos." };
+    return { success: false, message: await serverErrorMessage("invalidSearchParams") };
   }
 
   try {
@@ -44,6 +44,6 @@ export async function listExpensesAction(
       },
     };
   } catch (error) {
-    return { success: false, message: handleErrors(error) };
+    return { success: false, message: await resolveActionErrorMessage(error) };
   }
 }

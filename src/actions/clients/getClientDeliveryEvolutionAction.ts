@@ -1,14 +1,14 @@
 "use server";
 
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
+import { UnauthorizedError } from "@/errors";
 import { makeGetClientDeliveryEvolutionUseCase } from "@/useCases/clients/factories/makeGetClientDeliveryEvolutionUseCase";
 
 export async function getClientDeliveryEvolutionAction(slug: string) {
   const session = await auth();
 
   if (!session) {
-    throw new AppError("Usuário não logado.");
+    throw new UnauthorizedError("notLoggedIn");
   }
 
   const useCase = makeGetClientDeliveryEvolutionUseCase();
@@ -16,6 +16,7 @@ export async function getClientDeliveryEvolutionAction(slug: string) {
   const { deliveryEvolution } = await useCase.execute({
     userId: session.user.id,
     slug,
+    memberRole: session.user.memberRole,
   });
 
   return deliveryEvolution;

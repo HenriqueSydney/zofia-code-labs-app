@@ -1,14 +1,14 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { handleErrors } from "@/errors/handleErrors";
 import { makeGetBacklogMetricsUseCase } from "@/useCases/backlog/factories/makeGetBacklogMetricsUseCase";
 
 export async function getBacklogMetricsAction(projectSlug: string) {
   const session = await auth();
 
   if (!session?.user?.id) {
-    return { success: false, message: "Não autorizado." };
+    return { success: false, message: await serverErrorMessage("unauthorized") };
   }
 
   try {
@@ -20,7 +20,7 @@ export async function getBacklogMetricsAction(projectSlug: string) {
 
     return { success: true, data };
   } catch (error) {
-    const message = handleErrors(error);
+    const message = await resolveActionErrorMessage(error);
     return { success: false, message };
   }
 }

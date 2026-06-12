@@ -12,9 +12,10 @@ import { KanbanCard } from "./KanbanCard";
 interface KanbanColumnProps {
   column: { key: string; label: string; color: string };
   items: BacklogItemWithDetails[];
+  canManageBacklog: boolean;
 }
 
-export function KanbanColumn({ column, items }: KanbanColumnProps) {
+export function KanbanColumn({ column, items, canManageBacklog }: KanbanColumnProps) {
   // 1. Torna a COLUNA inteira um alvo de drop
   const { setNodeRef } = useDroppable({
     id: column.key, // O ID da coluna será usado no 'over.id'
@@ -49,7 +50,7 @@ export function KanbanColumn({ column, items }: KanbanColumnProps) {
         >
           <div className="space-y-2 min-h-[100px]">
             {items.map((item) => (
-              <KanbanCard key={item.id} item={item} />
+              <KanbanCard key={item.id} item={item} canManageBacklog={canManageBacklog} />
             ))}
             {/* Placeholder visual para facilitar o drop em lista vazia */}
             {items.length === 0 && (

@@ -27,10 +27,12 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 
-import { PERMISSIONS_MAP } from "@/constants/permissions";
+import { getPermissionsMap } from "@/constants/permissions";
 import { OrganizationMember } from "@/repositories/IOrganizationRepository";
 import { getCustomRolePermissionsAction } from "@/actions/organization/getCustomRolePermissionsAction";
 import { updateMemberSpecificPermissionsAction } from "@/actions/organization/updateMemberSpecificPermissionsAction";
+import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 // Schema simplificado: apenas o array de permissões extras
 const userPermissionsSchema = z.object({
@@ -52,6 +54,11 @@ export function GivePermissionToUserForm({
   open,
   onOpenChange,
 }: GivePermissionToUserFormProps) {
+  const t = useTranslations("organization.members.permissions");
+  const tPermissions = useTranslations("permissions");
+  const tCommonActions = useTranslations("common.actions");
+  const tErrors = useTranslations("errors.server");
+  const { data: session, update } = useSession();
   const [isPending, setIsPending] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [inheritedPermissions, setInheritedPermissions] = useState<string[]>(
@@ -68,6 +75,10 @@ export function GivePermissionToUserForm({
     },
   });
 
+  const permissionsMap = getPermissionsMap((key) =>
+    tPermissions(key as Parameters<typeof tPermissions>[0]),
+  );
+
   const fetchData = useCallback(async () => {
     if (!member.customRoleId) {
       return;
@@ -81,12 +92,12 @@ export function GivePermissionToUserForm({
       // Atualiza o form com os dados novos
       form.reset({ permissions: member.specificPermissions });
     } catch (error) {
-      toast.error("Erro ao carregar permissões");
-      onOpenChange(false); // Fecha se der erro
+      toast.error(t("loadError"));
+      onOpenChange(false);
     } finally {
       setIsLoadingData(false);
     }
-  }, [member, form, onOpenChange]);
+  }, [member, form, onOpenChange, t]);
 
   // Efeito: Busca dados sempre que o modal abrir
   useEffect(() => {
@@ -110,12 +121,18 @@ export function GivePermissionToUserForm({
     });
 
     if (result.error) {
-      toast.error(result.error);
+      toast.error(
+        typeof result.error === "string" ? result.error : tErrors("invalidData"),
+      );
       setIsPending(false);
       return;
     }
 
-    toast.success("Perfil atualizado com sucesso!");
+    if (member.userId === session?.user?.id) {
+      await update();
+    }
+
+    toast.success(t("toastSuccess"));
     onOpenChange(false);
     setIsPending(false);
   }
@@ -125,13 +142,16 @@ export function GivePermissionToUserForm({
       <DialogContent className="sm:max-w-4xl max-h-[90vh] flex flex-col p-0 gap-0">
         {/* HEADER FIXO */}
         <DialogHeader className="p-6 pb-4 border-b shrink-0">
-          <DialogTitle>Permissões Individuais</DialogTitle>
+          <DialogTitle>{t("title")}</DialogTitle>
           <DialogDescription>
-            Gerenciando acessos de <strong>{userName}</strong>.
-            <br />
-            Permissões marcadas com{" "}
-            <LockKeyhole className="inline w-3 h-3 mx-1" /> são herdadas do
-            Cargo e não podem ser removidas aqui.
+            {t.rich("description", {
+              name: userName,
+              strong: (chunks) => <strong>{chunks}</strong>,
+              br: () => <br />,
+              lockIcon: () => (
+                <LockKeyhole className="inline w-3 h-3 mx-1" />
+              ),
+            })}
           </DialogDescription>
         </DialogHeader>
 
@@ -143,7 +163,7 @@ export function GivePermissionToUserForm({
             {/* ÁREA DE ROLAGEM */}
             <div className="flex-1 overflow-y-auto px-6 py-6 bg-muted/5 custom-scrollbar">
               <div className="space-y-6">
-                {PERMISSIONS_MAP.map((category) => (
+                {permissionsMap.map((category) => (
                   <div
                     key={category.key}
                     className="border rounded-lg p-4 bg-background shadow-sm"
@@ -182,7 +202,7 @@ export function GivePermissionToUserForm({
                                       className="h-5 px-1.5 text-[10px] gap-1 font-normal"
                                     >
                                       <LockKeyhole className="w-3 h-3" />
-                                      Cargo
+                                      {t("inheritedRoleBadge")}
                                     </Badge>
                                   </div>
                                   <FormDescription className="text-xs">
@@ -245,11 +265,11 @@ export function GivePermissionToUserForm({
                 onClick={() => onOpenChange(false)}
                 disabled={isPending}
               >
-                Cancelar
+                {tCommonActions("cancel")}
               </Button>
               <Button type="submit" disabled={isPending}>
                 {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Salvar Permissões
+                {t("savePermissions")}
               </Button>
             </DialogFooter>
           </form>

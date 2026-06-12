@@ -1,3 +1,5 @@
+"use client";
+
 import { ProposalWithDetails } from "@/repositories/IProposalRepository";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -13,48 +15,50 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { CalendarDays, User, CheckCircle2 } from "lucide-react";
 import { date } from "@/lib/dayjs";
 import { formatCurrency } from "@/utils/formatCurrency";
+import { useTranslations } from "next-intl";
 
 interface IProposalDetails {
   proposal: ProposalWithDetails;
 }
 
 export function ProposalDetails({ proposal }: IProposalDetails) {
+  const t = useTranslations("proposals.detail");
+
   return (
     <>
       <ScrollArea className="flex-1 pr-4">
         <div className="min-h-30 flex flex-col justify-between">
           <div className="grid grid-cols-2 gap-6 mb-6">
-            {/* Informações Gerais */}
             <div className="space-y-3">
               <h4 className="text-sm font-medium leading-none text-muted-foreground">
-                Detalhes da Emissão
+                {t("title")}
               </h4>
               <div className="flex items-center gap-2 text-sm">
                 <User className="h-4 w-4 opacity-70" />
-                <span className="font-semibold">Criado por:</span>{" "}
+                <span className="font-semibold">{t("createdBy")}</span>{" "}
                 {proposal.createdUser?.name}
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <CalendarDays className="h-4 w-4 opacity-70" />
-                <span className="font-semibold">Emitida em:</span>{" "}
+                <span className="font-semibold">{t("issuedAt")}</span>{" "}
                 {date(proposal.createdAt).format("DD/MM/YYYY HH:mm")}
               </div>
             </div>
 
             <div className="space-y-3">
               <h4 className="text-sm font-medium leading-none text-muted-foreground">
-                Validade e Aprovação
+                {t("validitySection")}
               </h4>
               <div className="flex items-center gap-2 text-sm">
                 <CalendarDays className="h-4 w-4 text-orange-500" />
-                <span className="font-semibold">Válida até:</span>{" "}
+                <span className="font-semibold">{t("validUntil")}</span>{" "}
                 {date(proposal.validUntil).format("DD/MM/YYYY")}
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <CheckCircle2 className="h-4 w-4 opacity-70" />
-                <span className="font-semibold">Status Atual:</span>
+                <span className="font-semibold">{t("currentStatus")}</span>
                 <span className="text-primary font-medium">
-                  {proposal.isCurrent ? "Versão Ativa" : "Histórico"}
+                  {proposal.isCurrent ? t("activeVersion") : t("history")}
                 </span>
               </div>
             </div>
@@ -63,19 +67,20 @@ export function ProposalDetails({ proposal }: IProposalDetails) {
           <Separator className="my-4" />
         </div>
 
-        {/* Tabela de Itens/Serviços */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold flex items-center gap-2">
-            Serviços Incluídos
+            {t("includedServices")}
           </h3>
           <div className="rounded-md border">
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/50">
-                  <TableHead className="w-[400px]">Serviço</TableHead>
-                  <TableHead className="text-right">Preço Base</TableHead>
-                  <TableHead className="text-right">Desconto</TableHead>
-                  <TableHead className="text-right">Preço Final</TableHead>
+                  <TableHead className="w-[400px]">{t("service")}</TableHead>
+                  <TableHead className="text-right">{t("basePrice")}</TableHead>
+                  <TableHead className="text-right">{t("discount")}</TableHead>
+                  <TableHead className="text-right">
+                    {t("finalPrice")}
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -101,34 +106,50 @@ export function ProposalDetails({ proposal }: IProposalDetails) {
         </div>
       </ScrollArea>
 
-      {/* Rodapé com Totalização */}
       <div className="mt-6 flex justify-end pr-4">
         <div className="bg-muted/30 rounded-xl border p-6 w-full sm:w-[350px] space-y-4">
-          {/* Linha da Entrada */}
           <div className="flex justify-between items-start">
             <div className="space-y-0.5">
               <span className="text-xs uppercase tracking-wider font-bold text-muted-foreground">
-                Entrada
+                {t("downPayment")}
               </span>
               <p className="text-xs text-muted-foreground/80">
-                Percentual de {Number(proposal.downPaymentPercentage)}%
+                {t("downPaymentPercent", {
+                  percent: Number(proposal.downPaymentPercentage),
+                })}
               </p>
             </div>
             <span className="text-lg font-semibold text-foreground">
               {formatCurrency(
                 (Number(proposal.totalValue) *
                   Number(proposal.downPaymentPercentage)) /
-                  100
+                  100,
               )}
+            </span>
+          </div>
+          <Separator className="bg-border/50" />
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-muted-foreground/80 uppercase tracking-wider font-bold">
+              {t("paymentMethod")}
+            </span>
+            <span className="text-sm uppercase font-semibold text-foreground">
+              {proposal.paymentMethod}
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-muted-foreground/80 uppercase tracking-wider font-bold">
+              {t("paymentGateway")}
+            </span>
+            <span className="text-sm uppercase font-semibold text-foreground">
+              {proposal.paymentGatewayId}
             </span>
           </div>
 
           <Separator className="bg-border/50" />
 
-          {/* Linha do Total */}
           <div className="flex justify-between items-center">
             <span className="text-sm font-bold uppercase tracking-tight text-primary">
-              Valor Total
+              {t("totalValue")}
             </span>
             <div className="text-right">
               <span className="text-3xl font-black text-primary tracking-tighter">

@@ -1,3 +1,4 @@
+import { ResourceNotFoundError, BusinessRuleError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { prisma } from "@/lib/prisma";
 import { IAuditLogRepository } from "@/repositories/IAuditLogRepository";
@@ -21,7 +22,7 @@ export class CancelProposalUseCase {
     const proposal = await this.proposalRepository.findById(id);
 
     if (!proposal) {
-      throw new Error("Proposta não localizada");
+      throw new ResourceNotFoundError("Proposta não localizada");
     }
 
     await checkUserPermissionForAsset(
@@ -33,11 +34,11 @@ export class CancelProposalUseCase {
 
     // Regra de negócio: Talvez impedir deletar propostas já ACEITAS?
     // if (proposal.status === "ACCEPTED") {
-    //   throw new Error("Não é possível excluir uma proposta aceita");
+    //   throw new BusinessRuleError("Não é possível excluir uma proposta aceita");
     // }
 
     // if (proposal.status === "REJECTED") {
-    //   throw new Error("Não é possível excluir uma proposta rejeitada");
+    //   throw new BusinessRuleError("Não é possível excluir uma proposta rejeitada");
     // }
 
     await prisma.$transaction(async (tx) => {

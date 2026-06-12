@@ -22,8 +22,9 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area"; // Opcional, para listas longas
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/twMerge";
 import { formatBytes } from "@/utils/formatBytes";
+import { useTranslations } from "next-intl";
 
 interface FormMultiFileUploadProps {
   control: Control<any>;
@@ -51,6 +52,8 @@ export function FormMultiFileUpload({
       [],
   },
 }: FormMultiFileUploadProps) {
+  const t = useTranslations("components.form.multiFileUpload");
+
   return (
     <FormField
       control={control}
@@ -65,7 +68,7 @@ export function FormMultiFileUpload({
             const availableSlots = maxFiles - files.length;
 
             if (availableSlots <= 0) {
-              toast.error(`Você já atingiu o limite de ${maxFiles} arquivos.`);
+              toast.error(t("errors.limitReached", { count: maxFiles }));
               return;
             }
 
@@ -74,14 +77,14 @@ export function FormMultiFileUpload({
 
             if (newFiles.length < acceptedFiles.length) {
               toast.warning(
-                `Apenas ${newFiles.length} arquivos foram adicionados para respeitar o limite.`,
+                t("errors.partialAdd", { count: newFiles.length }),
               );
             }
 
             // Atualiza o form (mantém os antigos + adiciona novos)
             onChange([...files, ...newFiles]);
           },
-          [files, maxFiles, onChange],
+          [files, maxFiles, onChange, t],
         );
 
         const onDropRejected = useCallback(
@@ -90,16 +93,16 @@ export function FormMultiFileUpload({
             if (error) {
               if (error.code === "file-too-large") {
                 toast.error(
-                  `Arquivo muito grande. Máximo de ${formatBytes(maxSize)}.`,
+                  t("errors.tooLarge", { size: formatBytes(maxSize) }),
                 );
               } else if (error.code === "too-many-files") {
-                toast.error(`Muitos arquivos. Máximo de ${maxFiles}.`);
+                toast.error(t("errors.tooMany", { count: maxFiles }));
               } else {
                 toast.error(error.message);
               }
             }
           },
-          [maxSize, maxFiles],
+          [maxSize, maxFiles, t],
         );
 
         const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -135,14 +138,12 @@ export function FormMultiFileUpload({
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted mb-3">
                       <UploadCloud className="h-5 w-5 text-muted-foreground" />
                     </div>
-                    <div className="text-sm">
-                      <span className="font-semibold text-primary">
-                        Clique para enviar
-                      </span>{" "}
-                      ou arraste
-                    </div>
+                    <div className="text-sm">{t("clickOrDrag")}</div>
                     <p className="text-xs text-muted-foreground mt-1">
-                      (Máx {maxFiles} arquivos, até {formatBytes(maxSize)} cada)
+                      {t("hint", {
+                        count: maxFiles,
+                        size: formatBytes(maxSize),
+                      })}
                     </p>
                   </div>
                 )}
@@ -152,7 +153,10 @@ export function FormMultiFileUpload({
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
                       <p className="text-sm font-medium text-muted-foreground">
-                        Arquivos selecionados ({files.length}/{maxFiles}):
+                        {t("selectedFiles", {
+                          current: files.length,
+                          max: maxFiles,
+                        })}
                       </p>
                     </div>
 
@@ -189,7 +193,7 @@ export function FormMultiFileUpload({
                             disabled={disabled}
                           >
                             <X className="w-4 h-4" />
-                            <span className="sr-only">Remover arquivo</span>
+                            <span className="sr-only">{t("removeFile")}</span>
                           </Button>
                         </div>
                       ))}

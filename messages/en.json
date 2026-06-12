@@ -6,18 +6,20 @@
   "header": {
     "theme": "Change the color theme of the website",
     "logoutButton": "Logout",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
     "loginDialog": {
-      "button": "Entrar",
+      "button": "Sign In",
       "title": "Login",
-      "description": "Faça seu login e comece a interagir comigo em meus posts.",
+      "description": "Sign in and start interacting with me on my posts.",
       "providers": {
-        "github": "Entrar com GitHub",
-        "gitlab": "Entrar com GitLab",
-        "google": "Entrar com Google",
-        "loading": "Entrando..."
+        "github": "Sign in with GitHub",
+        "gitlab": "Sign in with GitLab",
+        "google": "Sign in with Google",
+        "loading": "Signing in..."
       },
-      "terms": "Ao entrar, você concorda com os",
-      "termsLink": "termos de uso"
+      "terms": "By signing in, you agree to the",
+      "termsLink": "terms of use"
     }
   },
   "languages": {
@@ -25,82 +27,607 @@
     "en": "English (EN)"
   },
   "userProfile": {
-    "title": "Perfil de Usuário",
-    "myProfile": "Meu Perfil",
-    "description": "Gerencie suas informações pessoais e configurações de conta",
-
+    "title": "User Profile",
+    "myProfile": "My Profile",
+    "description": "Manage your personal information and account settings",
     "roles": {
       "admin": "ADMIN"
     },
-
     "infoCards": {
-      "memberSince": "Membro desde",
-      "emailVerified": "Email Verificado",
-      "notVerified": "Não verificado",
+      "memberSince": "Member since",
+      "emailVerified": "Email Verified",
+      "notVerified": "Not verified",
       "newsletter": "Newsletter",
-      "subscribed": "Inscrito",
-      "notSubscribed": "Não inscrito"
+      "subscribed": "Subscribed",
+      "notSubscribed": "Not subscribed"
     },
-
     "connectedAccounts": {
-      "title": "Contas Conectadas",
-      "connectedOn": "Conectado em",
-      "noAccounts": "Nenhuma conta vinculada",
-      "noAccountsDesc": "Conecte suas redes sociais para facilitar o login."
+      "title": "Connected Accounts",
+      "connectedOn": "Connected on",
+      "noAccounts": "No linked accounts",
+      "noAccountsDesc": "Connect your social accounts to make login easier."
     },
-
     "security": {
       "title": "Security",
       "passwordSet": "Login Password",
       "noPassword": "Password not set",
+      "active": "Security active",
       "lastChanged": "Last changed: {date}",
       "authViaSocial": "You are using social login. Create a password for direct access.",
       "changePassword": "Change Password",
+      "setPassword": "Set Password",
       "createPassword": "Create Password"
     },
-
+    "changePasswordForm": {
+      "currentPasswordRequired": "Current password is required.",
+      "newPasswordMin": "New password must be at least 6 characters.",
+      "confirmPasswordRequired": "Confirm the new password.",
+      "passwordsMismatch": "Passwords do not match.",
+      "currentPasswordLabel": "Current Password",
+      "currentPasswordPlaceholder": "Enter your current password",
+      "newPasswordLabel": "New Password",
+      "newPasswordPlaceholder": "Enter the new password",
+      "confirmPasswordLabel": "Confirm New Password",
+      "confirmPasswordPlaceholder": "Repeat the new password",
+      "saveButton": "Save New Password"
+    },
+    "avatarForm": {
+      "selectImage": "Select an image.",
+      "helperText": "Maximum 5MB (PNG, JPG, WEBP)"
+    },
     "activeSessions": {
-      "title": "Sessões Ativas",
-      "noSessionsTitle": "Nenhuma sessão ativa",
-      "noSessionsDescription": "Usuário não possui nenhuma sessão ativa",
-      "currentSession": "Sessão Atual",
-      "active": "Ativa",
+      "title": "Active Sessions",
+      "noSessionsTitle": "No active sessions",
+      "noSessionsDescription": "User has no active sessions",
+      "currentSession": "Current Session",
+      "active": "Active",
       "token": "Token:",
-      "createdAt": "Criada em:",
-      "expiresAt": "Expira em:",
-      "close": "Encerrar sessão"
+      "createdAt": "Created at:",
+      "expiresAt": "Expires at:",
+      "close": "End session"
     },
-
     "footer": {
-      "userId": "ID do Usuário:",
-      "lastUpdate": "Última atualização:"
+      "userId": "User ID:",
+      "lastUpdate": "Last update:"
     },
-
     "placeholders": {
-      "user": "Usuário",
+      "user": "User",
       "notAvailable": "N/A"
     },
-
     "LoginHistory": {
       "title": "Login History",
+      "ipAddress": "Hidden IP",
+      "ipAddressTitle": "IP Address",
+      "accessDateTitle": "Access Date",
+      "localhost": "Localhost",
       "footerNote": "Showing the last 10 access logs for security purposes."
     },
-
+    "sectionCard": {
+      "toggle": "Expand or collapse section"
+    },
+    "permissions": {
+      "title": "Permissions & Roles",
+      "rolesTitle": "Access profiles",
+      "customRole": "Custom role",
+      "permissionsDesc": "Effective permissions in the organization, grouped by area.",
+      "extra": "extra",
+      "noOrganization": "No linked organization",
+      "noOrganizationDesc": "Team permissions become available after joining an organization.",
+      "noMembership": "No active organization membership",
+      "noMembershipDesc": "This user does not have an access profile defined in the organization yet.",
+      "noPermissions": "No permissions assigned"
+    },
     "errors": {
-      "mustBeLoggedIn": "Usuário tem que estar logado para consultar os próprios dados",
-      "unauthorizedAccess": "Apenas o próprio usuário ou o Administrador pode ter acesso a dados de usuário",
+      "mustBeLoggedIn": "User must be logged in to view their own data",
+      "unauthorizedAccess": "Only the user themselves or an Administrator can access user data",
       "userNotFound": "User not found"
     }
   },
+  "navigation": {
+    "sidebar": {
+      "mainMenu": "Main Menu",
+      "settings": "Settings",
+      "dashboard": "Dashboard",
+      "clients": "Clients",
+      "projects": "Projects",
+      "financial": "Financial",
+      "contracts": "Contracts",
+      "serviceCategories": "Service Categories",
+      "serviceCatalog": "Service Catalog",
+      "expenseTypes": "Expense Types",
+      "integrationsCatalog": "Integrations Catalog",
+      "integrationsConfig": "Configure Integrations"
+    },
+    "userMenu": {
+      "myOrganization": "My Organization",
+      "adminDashboard": "Admin Dashboard"
+    }
+  },
+  "settings": {
+    "services": {
+      "category": {
+        "title": "Service Categories",
+        "description": "Manage the service categories offered by your company",
+        "search": "Search category...",
+        "emptyTitle": "No service category found",
+        "emptyDescription": "Register service categories and link them to services so you can integrate with invoice issuance systems and group them by context",
+        "form": {
+          "toastUpdateSuccess": "Category updated successfully!",
+          "toastCreateSuccess": "Category created successfully!",
+          "toastDeleteSuccess": "Category removed successfully!",
+          "name": "Service Category Name",
+          "namePlaceholder": "e.g. Express Landing Page",
+          "taxCode": "Tax Code (Invoice)",
+          "description": "Description",
+          "descriptionPlaceholder": "Details of what's included...",
+          "edit": "Edit Category",
+          "create": "Create Category",
+          "dialogEditTitle": "Edit Category",
+          "dialogEditDescription": "Fill in the service category details"
+        }
+      },
+      "catalog": {
+        "title": "Service Catalog",
+        "description": "Manage the services offered by your company",
+        "search": "Search services...",
+        "emptyTitle": "No services found",
+        "emptyDescription": "Register the services your company provides so you can create contextualized proposals with added value",
+        "form": {
+          "toastUpdateSuccess": "Service updated successfully!",
+          "toastCreateSuccess": "Service created successfully!",
+          "toastDeleteSuccess": "Service removed successfully!",
+          "name": "Service Name",
+          "namePlaceholder": "e.g. Express Landing Page",
+          "category": "Category (for invoice)",
+          "categoryPlaceholder": "Select a category...",
+          "basePrice": "Base Price",
+          "basePricePlaceholder": "$0.00",
+          "basePriceDescription": "Leave zero or empty if priced on quote.",
+          "description": "Description",
+          "descriptionPlaceholder": "Details of what's included...",
+          "edit": "Edit Service",
+          "create": "Create Service",
+          "dialogEditTitle": "Edit Service",
+          "dialogEditDescription": "Fill in the service details"
+        }
+      },
+      "backlog": {
+        "listTitleService": "Service Default Backlog",
+        "searchPlaceholder": "Search backlog...",
+        "filter": {
+          "priority": {
+            "all": "All priorities",
+            "high": "High",
+            "low": "Low"
+          },
+          "priorityPlaceholder": "Priority"
+        },
+        "noPermissionBacklog": "You do not have permission to view the service backlogs.",
+        "emptyDescription": "No backlog items registered yet. Start managing the backlog by registering at least one item.",
+        "noDescription": "No description provided.",
+        "noEditPermission": "You do not have permission to edit the backlog",
+        "saveStatus": {
+          "saving": "Saving...",
+          "saved": "Saved"
+        },
+        "priority": {
+          "medium": "Medium"
+        },
+        "form": {
+          "toastUpdateSuccess": "Item updated successfully!",
+          "toastCreateSuccess": "Item created successfully!",
+          "toastUnexpectedError": "An unexpected error occurred.",
+          "title": "Task Title",
+          "titlePlaceholder": "e.g. Implement OAuth Login",
+          "priority": "Priority",
+          "storyPoints": "Story Points",
+          "description": "Detailed Description",
+          "descriptionPlaceholder": "Acceptance criteria, technical details...",
+          "cancel": "Cancel",
+          "saveChanges": "Save Changes",
+          "createTask": "Create Task"
+        },
+        "details": {
+          "title": "Title",
+          "priority": "Priority",
+          "points": "Points",
+          "detailedDescription": "Detailed description",
+          "editTask": "Edit Task",
+          "deleteError": "Error trying to remove the task.",
+          "deleteSuccess": "Task removed successfully"
+        }
+      }
+    },
+    "expenses": {
+      "title": "Expense Types",
+      "searchPlaceholder": "Search expense category...",
+      "emptyTitle": "No expense category found",
+      "description": "Categorize financial transactions",
+      "emptyDescription": "Register expense categories to categorize your financial transactions",
+      "fetchError": "Failed to retrieve expense categories",
+      "nature": {
+        "operational": "Operational",
+        "directProject": "Direct (Project)",
+        "investment": "Investment",
+        "personal": "Personal/Partner"
+      },
+      "category": {
+        "form": {
+          "toastUpdateSuccess": "Category updated!",
+          "toastCreateSuccess": "Category created!",
+          "toastDeleteSuccess": "Expense category removed successfully!",
+          "name": "Category Name *",
+          "namePlaceholder": "e.g. Cloud Infrastructure",
+          "nature": "Financial Nature",
+          "naturePlaceholder": "Select the nature...",
+          "description": "Description",
+          "descriptionPlaceholder": "Optional description to identify expenses in this category",
+          "create": "Create Category",
+          "dialogEditTitle": "Edit Expense Category",
+          "dialogEditDescription": "Fill in the expense category details"
+        }
+      }
+    },
+    "integrations": {
+      "catalog": {
+        "errors": {
+          "listFailed": "Error listing integration types"
+        },
+        "page": {
+          "title": "Integration Catalog",
+          "description": "Configure the integrations available on the platform"
+        },
+        "search": "Search integration type...",
+        "card": {
+          "noDescription": "No description defined for this integration.",
+          "viewDocs": "View Docs"
+        },
+        "form": {
+          "fieldRequired": "Fill in the field Name and Key.",
+          "duplicateKey": "This technical key has already been added.",
+          "toastUpdateSuccess": "Updated!",
+          "toastCreateSuccess": "Created!",
+          "toastDeleteSuccess": "Integration type removed successfully!",
+          "name": "Integration Name",
+          "namePlaceholder": "e.g. Stripe",
+          "logo": "Logo",
+          "byol": "Allow BYOL?",
+          "byolDescription": "Allows the client to use their own instance/license.",
+          "description": "Description",
+          "descriptionPlaceholder": "What it does...",
+          "externalDocs": "External Documentation",
+          "fieldsBuilderTitle": "Field Configuration",
+          "fieldsBuilderDescription": "Define the keys that will be stored in Infisical.",
+          "uiNameLabel": "UI Name",
+          "uiNamePlaceholder": "e.g. API Key",
+          "keyType": "Key Type",
+          "keyTypeOptions": {
+            "tag": "TAG",
+            "publicKey": "Public Key",
+            "secret": "Secret"
+          },
+          "inputType": "Field Type",
+          "inputTypeOptions": {
+            "text": "Text",
+            "password": "Password",
+            "email": "Email",
+            "url": "URL"
+          },
+          "addField": "Add Field",
+          "tableKeyType": "Key Type",
+          "tableInputType": "Field Type",
+          "keyPlaceholder": "e.g. API_KEY",
+          "tableByol": "BYOL?",
+          "keyLabel": "Key",
+          "tableLabel": "Label",
+          "tableKey": "Key",
+          "cancel": "Cancel",
+          "save": "Save to Catalog",
+          "dialogEditTitle": "Edit Integration Type",
+          "dialogEditDescription": "Fill in the integration type details"
+        }
+      },
+      "config": {
+        "title": "Integrations",
+        "description": "Configure and manage your organization's integrations",
+        "search": "Search integration...",
+        "errors": {
+          "listTypesFailed": "Error listing available integration types",
+          "identifyFailed": "Error identifying organization integrations"
+        },
+        "card": {
+          "connectFirst": "Connect the integration first.",
+          "activated": "Integration activated",
+          "deactivated": "Integration deactivated",
+          "notConfigured": "Service not configured",
+          "testStarting": "Starting connection test with the service",
+          "testFailed": "Could not access the service",
+          "testSuccess": "Service is healthy and reachable",
+          "lastSync": "Last sync:",
+          "connected": "Connected",
+          "disconnected": "Disconnected",
+          "testConnection": "Test connection",
+          "editConfig": "Edit configuration",
+          "documentation": "Documentation",
+          "configureTitle": "Configure {name}",
+          "configureDescription": "Enter the required credentials. All data is encrypted and stored via Infisical."
+        },
+        "form": {
+          "toastUpdateSuccess": "Settings updated!",
+          "toastConnectSuccess": "Connected!",
+          "byol": "Bring my own instance",
+          "byolDescription": "Enable to use your own infrastructure and license.",
+          "managedInstanceTitle": "Managed Instance Active",
+          "managedInstanceDescription": "No keys need to be configured. We handle infrastructure, security, and updates for you.",
+          "managedModeTitle": "Managed Mode",
+          "managedModeDescription": "We will use Zofia Code Labs default infrastructure for this service (service subject to charges).",
+          "secretPlaceholder": "Enter the value for {label}",
+          "cancel": "Cancel",
+          "processing": "Processing...",
+          "connect": "Connect Service"
+        }
+      }
+    }
+  },
   "organization": {
-    "title": "Organização",
-    "noOrgTitle": "Sem organização",
-    "noOrgDesc": "Você ainda não está vinculado a nenhuma empresa.",
-    "createOrg": "Criar Organização",
-    "statusActive": "Verificada",
-    "manage": "Gerenciar",
-    "industryLabel": "Indústria",
-    "memberSince": "Fundada em"
+    "title": "Organization",
+    "noOrgTitle": "No organization",
+    "noOrgDesc": "You are not linked to any company yet.",
+    "createOrg": "Create Organization",
+    "statusActive": "Verified",
+    "manage": "Manage",
+    "industryLabel": "Industry",
+    "memberSince": "Founded in",
+    "tabs": {
+      "overview": "Overview",
+      "members": "Members & Team",
+      "settings": "Settings"
+    },
+    "overview": {
+      "usersOnPlatform": "Users on the platform",
+      "orgDataTitle": "Organization Data",
+      "companyName": "Company Name",
+      "slugLabel": "Slug (URL)",
+      "segment": "Segment",
+      "cnpj": "Tax ID",
+      "createdAt": "Creation Date",
+      "location": "Location",
+      "locationPlaceholder": "Brasília, DF",
+      "subscriptionStatus": "Subscription Status",
+      "resourceUsage": "Resource Usage",
+      "plan": "Plan",
+      "nextInvoice": "Next Invoice",
+      "members": "Members",
+      "insightsTitle": "ZofIA Insights",
+      "insightsDescription": "Your organization completed 5 projects this month. Productivity increased by 12%."
+    },
+    "billing": {
+      "plan": {
+        "active": "Active",
+        "renewsOn": "Renews on {date}",
+        "perMonth": "/month",
+        "changePlan": "Change Plan",
+        "cancelSubscription": "Cancel Subscription",
+        "features": {
+          "unlimitedReports": "Unlimited access to reports",
+          "prioritySupport": "24/7 priority support",
+          "apiIntegrations": "API and advanced integrations"
+        }
+      },
+      "history": {
+        "title": "Billing History",
+        "description": "Download invoices from previous payments.",
+        "columns": {
+          "date": "Date",
+          "amount": "Amount",
+          "status": "Status",
+          "invoice": "Invoice"
+        },
+        "status": {
+          "paid": "Paid",
+          "pending": "Pending"
+        }
+      },
+      "usage": {
+        "title": "Account Usage",
+        "users": "Users",
+        "activeProjects": "Active Projects",
+        "storage": "Storage (GB)",
+        "usersLimitReached": "You have reached the user limit. Upgrade to add more members."
+      },
+      "paymentMethod": {
+        "title": "Payment Method",
+        "cardEnding": "{brand} ending in {last4}",
+        "expires": "Expires {expiry}",
+        "updateCard": "Update Card"
+      }
+    },
+    "members": {
+      "emptyTitle": "No team members",
+      "emptyDescription": "Invite members to collaborate in the organization",
+      "actions": {
+        "grantPermissions": "Grant Permissions",
+        "removeFromTeam": "Remove from Team",
+        "changeRole": "Change Role/Profile"
+      },
+      "table": {
+        "title": "Team Members",
+        "description": "Manage who has access to your organization and their permission levels.",
+        "member": "Member",
+        "accessProfile": "Access Profile",
+        "status": "Status",
+        "lastAccess": "Last Access",
+        "actions": "Actions",
+        "accountOwner": "Account Owner",
+        "specificPermissions": "Specific permissions:",
+        "extraPermissions": "+ {count} permission(s)",
+        "neverAccessed": "Never accessed",
+        "statusActive": "Active",
+        "statusPending": "Pending",
+        "statusRemoved": "Removed"
+      },
+      "remove": {
+        "title": "Remove Member",
+        "description": "This action will remove {name} from the organization. The user will lose access immediately.",
+        "confirmLabel": "To confirm, type {name} below:",
+        "confirmButton": "Confirm Removal",
+        "toastSuccess": "Member removed successfully.",
+        "toastError": "Error removing member."
+      },
+      "defaultRoles": {
+        "admin": "Administrator",
+        "member": "Member",
+        "viewer": "Viewer"
+      },
+      "editRole": {
+        "title": "Change Profile",
+        "description": "Changing access level for {name}.",
+        "roleLabel": "Role / Profile",
+        "toastSuccess": "Profile updated successfully!"
+      },
+      "permissions": {
+        "loadError": "Error loading permissions",
+        "savePermissions": "Save Permissions",
+        "toastSuccess": "Profile updated successfully!",
+        "title": "Individual Permissions",
+        "description": "Managing access for <strong>{name}</strong>.<br></br>Permissions marked with <lockIcon></lockIcon> are inherited from the Role and cannot be removed here.",
+        "inheritedRoleBadge": "Role"
+      },
+      "invite": {
+        "validation": {
+          "emailInvalid": "Enter a valid email address",
+          "nameInvalid": "Enter a valid name",
+          "nameMin": "Name must be at least 3 characters",
+          "roleRequired": "Select an access profile"
+        },
+        "roles": {
+          "adminDefault": "Administrator (Default)",
+          "memberDefault": "Member (Default)"
+        },
+        "toast": {
+          "success": "Invitation sent to {email}",
+          "error": "Error sending invitation. Please try again."
+        },
+        "trigger": "Invite Member",
+        "title": "Invite Member",
+        "description": "Send an email invitation to a new team member.",
+        "name": "Name",
+        "email": "Corporate Email",
+        "emailPlaceholder": "employee@company.com",
+        "role": "Access Profile",
+        "rolePlaceholder": "Select a profile",
+        "cancel": "Cancel",
+        "submit": "Send Invitation"
+      }
+    },
+    "roles": {
+      "emptyTitle": "No access profile created",
+      "emptyDescription": "Create custom profiles (e.g. Manager, Finance) to control what each member can do.",
+      "validation": {
+        "minPermission": "Select at least one permission."
+      },
+      "dialog": {
+        "editTitle": "Edit Profile",
+        "newTitle": "New Access Profile",
+        "description": "Set the role name and select granular permissions below."
+      },
+      "table": {
+        "title": "Access Profiles",
+        "description": "Define reusable permission sets for your team.",
+        "profileName": "Profile Name",
+        "members": "Members",
+        "enabledPermissions": "Enabled Permissions",
+        "actions": "Actions",
+        "memberCount": "{count} users",
+        "permissionCount": "{count} permissions"
+      },
+      "toast": {
+        "updated": "Profile updated!",
+        "created": "Profile created successfully!"
+      },
+      "form": {
+        "roleName": "Role Name",
+        "roleNamePlaceholder": "e.g. Project Manager",
+        "description": "Description",
+        "descriptionPlaceholder": "Brief description...",
+        "createProfile": "Create Profile",
+        "newProfile": "New Profile",
+        "systemPermissions": "System Permissions"
+      },
+      "delete": {
+        "toastSuccess": "Profile \"{name}\" deleted successfully.",
+        "toastError": "Error deleting profile.",
+        "tooltipInUse": "Cannot delete profiles in use.",
+        "tooltipRemoveUsers": "Remove users from this profile first.",
+        "title": "Delete Access Profile",
+        "description": "Are you sure you want to delete the profile {name}? This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Yes, delete profile"
+      }
+    },
+    "settings": {
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "slugFormat": "Only lowercase letters, numbers, and hyphens",
+        "zipCodeInvalid": "Invalid ZIP code",
+        "streetRequired": "Street is required",
+        "numberRequired": "Number is required",
+        "neighborhoodRequired": "Neighborhood is required",
+        "cityRequired": "City is required",
+        "stateInvalid": "Invalid state code"
+      },
+      "toast": {
+        "zipCodeInvalid": "Invalid ZIP code. Enter all 8 digits.",
+        "zipCodeNotFound": "ZIP code not found. Fill in the address manually.",
+        "updateSuccess": "Settings updated successfully!",
+        "updateError": "Error updating settings.",
+        "uploadInfo": "Upload functionality will be integrated with storage."
+      },
+      "general": {
+        "title": "General Settings",
+        "description": "Manage your organization's visual identity and tax information.",
+        "logoTitle": "Company Logo",
+        "logoHelper": "Recommended: PNG or JPG, min 400x400px. Max 2MB.",
+        "changeLogo": "Change Logo",
+        "orgName": "Organization Name",
+        "orgNameDescription": "Name displayed on documents and reports.",
+        "slug": "Organization URL (Slug)",
+        "slugWarningTitle": "Warning",
+        "slugWarningDescription": "Changing the slug will change the access URL for all members."
+      },
+      "address": {
+        "title": "Address & Billing",
+        "description": "Information used for invoice issuance.",
+        "cnpj": "Tax ID (CNPJ)",
+        "zipCode": "ZIP Code",
+        "searchHint": "Search the ZIP code to fill in the address.",
+        "manualHint": "ZIP code not found. Manual entry enabled.",
+        "city": "City",
+        "state": "State",
+        "neighborhood": "Neighborhood",
+        "street": "Street Address",
+        "number": "Number",
+        "complement": "Complement"
+      },
+      "footer": {
+        "saveReminder": "Make sure to save your changes.",
+        "discard": "Discard"
+      },
+      "dangerZone": {
+        "title": "Danger Zone",
+        "description": "Irreversible actions related to your account.",
+        "deleteOrgTitle": "Close Organization",
+        "deleteOrgDescription": "This will permanently delete all projects, members, settings, and data associated with {slug}. This action cannot be undone.",
+        "deleteAccount": "Close Account",
+        "dialogTitle": "Are you absolutely sure?",
+        "dialogDescription": "This action is irreversible. All organization data will be permanently deleted from our servers.",
+        "confirmLabel": "Type {slug} to confirm:",
+        "cancel": "Cancel",
+        "confirmDelete": "Yes, delete {slug}",
+        "toastSuccess": "Organization closed successfully.",
+        "toastError": "Error closing organization."
+      }
+    }
   },
   "footer": {
     "navTitle": "Quick Links",
@@ -129,10 +656,27 @@
     "email": "Email",
     "password": "Password",
     "loginButton": "Sign In",
+    "forgotPassword": "Forgot your password?",
     "noAccount": "Don't have an account?",
     "signUp": "Sign Up",
     "loginSuccess": "Welcome back!",
     "loginError": "Invalid credentials",
+    "rememberMe": {
+      "title": "Reset password",
+      "description": "Enter your account email and we will send you a link to reset your password.",
+      "hero": "Recover access to your account securely",
+      "emailPlaceholder": "you@email.com",
+      "submitButton": "Send recovery link",
+      "submitting": "Sending...",
+      "backToLogin": "Back to login",
+      "success": "If the email is registered, you will receive instructions shortly."
+    },
+    "inviteAccept": {
+      "errorTitle": "Could not accept the invite",
+      "invalidToken": "Invalid or missing invite link.",
+      "wrongAccount": "You are signed in with another account. Sign out and open the link again.",
+      "backToLogin": "Back to login"
+    },
     "loginWithProviders": {
       "button": "Sign In",
       "title": "Login",
@@ -145,6 +689,9 @@
       },
       "terms": "By signing in, you agree to the",
       "termsLink": "terms of use"
+    },
+    "errors": {
+      "unknown": "Unknown error"
     }
   },
   "admin": {
@@ -166,8 +713,20 @@
       "projectGrowthTrend": {
         "title": "Growth Trend",
         "description": "Project growth over time"
+      },
+      "projectsVolume": {
+        "title": "Project Volume",
+        "description": "New projects created in the last 6 months",
+        "series": "Projects Created"
+      },
+      "backlogEvolution": {
+        "title": "Workflow",
+        "description": "Comparison between new demands and completed deliveries over the last 6 months.",
+        "created": "New Demands",
+        "completed": "Deliveries"
       }
     },
+    "statsTrend": "compared to previous month",
     "projectHistory": "Project History",
     "projectName": "Project Name",
     "status": "Status",
@@ -182,16 +741,2167 @@
   },
   "components": {
     "dropzone": {
-      "dragHere": "Arraste o arquivo aqui",
-      "orClickToSelect": "ou clique para selecionar do seu dispositivo",
-      "allowedExtensions": "Extensões permitidas",
-      "anyType": "qualquer tipo"
+      "dragHere": "Drag the file here",
+      "orClickToSelect": "or click to select from your device",
+      "allowedExtensions": "Allowed extensions",
+      "anyType": "any type"
+    },
+    "copyToClipboard": {
+      "success": "Content copied successfully"
+    },
+    "successToast": {
+      "proposalGenerated": "Proposal generated successfully!"
+    },
+    "emptyState": {
+      "missingIconOrImage": "Provide an Image or Icon for EmptyState"
+    },
+    "table": {
+      "toast": {
+        "successTitle": "Your contact request was sent successfully.",
+        "errorTitle": "Oops. Something went wrong.",
+        "errorDescription": "Don't worry, I've been notified and I'm working on fixing it."
+      },
+      "empty": {
+        "defaultTitle": "No records found",
+        "defaultDescription": "This may have happened because of an applied filter or because there is no data registered yet."
+      }
+    },
+    "form": {
+      "imageUpload": {
+        "errors": {
+          "tooLarge": "File is too large. Maximum 5MB.",
+          "invalidType": "Invalid file type. Use PNG, JPG or WebP."
+        },
+        "dropActive": "Drop here",
+        "selectOrDrag": "Select or drag",
+        "formats": "PNG, JPG, WebP (max 5MB)",
+        "previewAlt": "Preview"
+      },
+      "multiFileUpload": {
+        "errors": {
+          "limitReached": "You have reached the limit of {count} files.",
+          "partialAdd": "Only {count} files were added due to the limit.",
+          "tooLarge": "File too large. Maximum {size}.",
+          "tooMany": "Too many files. Maximum {count}."
+        },
+        "clickOrDrag": "Click to upload or drag",
+        "hint": "(Max {count} files, up to {size} each)",
+        "selectedFiles": "Selected files ({current}/{max}):",
+        "removeFile": "Remove file"
+      }
+    },
+    "editor": {
+      "placeholder": {
+        "heading": "Heading {level}...",
+        "body": "Type \"/\" for commands..."
+      },
+      "header": {
+        "title": "Document Editor",
+        "tip": "Tip: / for commands",
+        "draftSaved": "Draft saved"
+      },
+      "footer": {
+        "endOfDocument": "End of document"
+      }
+    },
+    "tiptap": {
+      "stylePlaceholder": "Style",
+      "normalText": "Normal Text",
+      "heading1": "Heading 1",
+      "heading2": "Heading 2",
+      "textColor": "Text color",
+      "clearColor": "Clear Color",
+      "bold": "Bold",
+      "underline": "Underline",
+      "alignLeft": "Left",
+      "alignCenter": "Center",
+      "alignJustify": "Justify",
+      "table": "Table",
+      "insertTable3x3": "Insert 3x3 Table",
+      "addColumn": "Add Column",
+      "addRow": "Add Row",
+      "deleteTable": "Delete Table",
+      "fields": "Fields",
+      "undo": "Undo",
+      "redo": "Redo",
+      "addBlockBelow": "Add block below",
+      "dragToMove": "Drag to move",
+      "removeColor": "Remove color"
+    },
+    "pricing": {
+      "header": {
+        "defaultBadge": "Transparent pricing"
+      },
+      "billing": {
+        "monthly": "Monthly",
+        "yearly": "Yearly",
+        "defaultDiscount": "-20%"
+      },
+      "card": {
+        "recommended": "Recommended",
+        "perYear": "/year",
+        "perMonth": "/month",
+        "yearlySavings": "Save R$ {amount} per year",
+        "contactUs": "Contact Us",
+        "includedMetrics": "Included Metrics:"
+      }
     }
   },
   "project": {
     "notes": {
-      "posted": "Postado {timeAgo}",
-      "edited": "Post editado {timeAgo}"
+      "posted": "Posted {timeAgo}",
+      "edited": "Post edited {timeAgo}"
     }
+  },
+  "common": {
+    "select": "Select...",
+    "loading": "Loading...",
+    "saving": "Saving...",
+    "stable": "stable",
+    "notInformed": "Not informed",
+    "noDescription": "No description",
+    "back": "Go back",
+    "underConstruction": {
+      "badge": "Coming soon",
+      "title": "Page under construction",
+      "titleWithFeature": "{feature} under construction",
+      "description": "We are carefully building this experience. You will be able to access every feature here soon.",
+      "chip": {
+        "design": "Design",
+        "backend": "Integrations",
+        "launch": "Launch"
+      }
+    },
+    "actions": {
+      "saveChanges": "Save Changes",
+      "save": "Save",
+      "label": "Actions",
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "close": "Close",
+      "selectDate": "Select date",
+      "select": "Select"
+    },
+    "table": {
+      "itemSelected": "item selected",
+      "itemsSelected": "items selected",
+      "moreActionOptions": "View more action options",
+      "moreOptions": "View more options",
+      "densityLabel": "Set table density",
+      "densityHigh": "High density",
+      "densityMedium": "Medium density",
+      "densityLow": "Low density",
+      "noResults": "No results found.",
+      "searchPlaceholder": "Search table",
+      "searchAria": "Search table",
+      "closeSearch": "Close search"
+    },
+    "loadingMore": {
+      "projects": "Loading more projects...",
+      "contracts": "Loading more contracts..."
+    },
+    "faq": {
+      "title": "Frequently asked questions"
+    },
+    "documenso": {
+      "documentSignedSuccess": "Document signed successfully!",
+      "loadContractError": "An error occurred while loading the contract."
+    },
+    "errors": {
+      "connection": "Connection error.",
+      "unauthenticated": "User not authenticated",
+      "statusUpdate": "Error updating status.",
+      "syncOrder": "Error syncing order. Reverting...",
+      "syncBacklog": "Error syncing backlog.",
+      "checkFormFields": "Please check the highlighted fields in the form.",
+      "processRequest": "An error occurred while processing the request."
+    },
+    "user": "User",
+    "processing": "Processing...",
+    "updating": "Updating...",
+    "default": "Default",
+    "download": "Download",
+    "origin": "Origin:",
+    "summary": "Summary",
+    "information": "Information",
+    "stakeholders": "Stakeholders",
+    "recentActivities": "Recent Activities",
+    "createdBy": "Created by",
+    "createdAt": "Created at",
+    "reviewedBy": "Reviewed by",
+    "approvedBy": "Approved by",
+    "documentId": "Document identifier",
+    "viewSignatures": "View signatures",
+    "downloadDocument": "Download document",
+    "documentNotFound": "Could not locate document",
+    "viewPdf": "View PDF",
+    "generatedDocument": "Generated Document",
+    "attention": "Attention",
+    "tags": "Tags"
+  },
+  "clients": {
+    "list": {
+      "title": "Client Portfolio",
+      "description": "Manage registered companies and contacts",
+      "searchPlaceholder": "Search client...",
+      "emptyTitle": "No clients found",
+      "emptyDescription": "Register your first client to start working on projects",
+      "inactive": "Inactive",
+      "companyNameLabel": "Company name:",
+      "noResponsible": "No responsible person",
+      "noEmail": "No email",
+      "noEmailRegistered": "No email registered",
+      "noPhoneRegistered": "No phone registered",
+      "logoAlt": "Company logo {name}"
+    },
+    "form": {
+      "logoLabel": "Company Logo",
+      "logoHelper": "Accepted formats: PNG, JPG or WebP. Max 5MB.",
+      "companyName": "Legal Name",
+      "companyNamePlaceholder": "My Company LLC",
+      "tradeName": "Trade Name",
+      "tradeNamePlaceholder": "Commercial name",
+      "cnpj": "Tax ID",
+      "phone": "Phone",
+      "email": "Institutional email",
+      "emailPlaceholder": "contact@company.com",
+      "responsibleSection": "Legal representative",
+      "responsibleName": "Representative name",
+      "responsibleNamePlaceholder": "Full name",
+      "responsibleEmail": "Representative email",
+      "responsibleEmailPlaceholder": "representative@company.com",
+      "responsiblePhone": "Representative phone",
+      "create": "Register Client"
+    },
+    "dialog": {
+      "createTitle": "New client",
+      "createDescription": "Fill in the client details",
+      "createButton": "New Client",
+      "editTitle": "Edit Client",
+      "editDescription": "Fill in the client details"
+    },
+    "layout": {
+      "contact": "Contact"
+    },
+    "legalResponsible": {
+      "empty": "No representative registered. Required before sending the contract."
+    },
+    "health": {
+      "title": "Client Health",
+      "nps": "Satisfaction (NPS)",
+      "lastContact": "Last contact",
+      "averageTicket": "Average ticket"
+    },
+    "toast": {
+      "removed": "Client removed successfully!"
+    },
+    "aiReports": {
+      "title": "ZofIA Reports",
+      "emptyTitle": "Invite ZofIA to join your team",
+      "emptyDescription": "Enable ZofIA Reports to receive automatic diagnostics about your projects' health and prove your work's value with professional AI-generated reports.",
+      "cta": "Unlock Intelligent Reports"
+    },
+    "institutional": {
+      "title": "Institutional Information",
+      "address": "Address"
+    },
+    "contracts": {
+      "fetchError": "Failed to load contract history",
+      "title": "Client Contract History"
+    },
+    "metrics": {
+      "title": "Project Metrics",
+      "empty": {
+        "title": "Would you like to track your projects' health and quality?",
+        "description": "Enable Metrics to consolidate quality, productivity, and delivery indicators in a single dashboard.",
+        "cta": "Track Metrics"
+      }
+    },
+    "analytics": {
+      "title": "Web Analytics",
+      "empty": {
+        "title": "Make decisions based on real data",
+        "description": "In the dark about how your users interact? Enable Analytics to understand your product's real behavior.",
+        "cta": "Unlock Insights Now"
+      }
+    },
+    "tabs": {
+      "projects": "Projects",
+      "contracts": "Contracts",
+      "metrics": "Metrics"
+    },
+    "dashboard": {
+      "stats": {
+        "activeProjects": "Active Projects",
+        "totalInContracts": "Total in Contracts",
+        "openInvoices": "Open Invoices",
+        "tenure": "Tenure",
+        "maintenance": "Maintenance & Support",
+        "pendingActions": "Pending Actions",
+        "overdueInvoices": "Overdue Invoices",
+        "nextDelivery": "Next Delivery"
+      },
+      "table": {
+        "title": "Your Projects",
+        "projectName": "Project Name",
+        "status": "Status",
+        "expectedDelivery": "Est. Delivery",
+        "lastUpdate": "Last Update",
+        "financial": "Financial",
+        "financialPaid": "Up to date",
+        "financialPending": "Pending"
+      },
+      "charts": {
+        "deliveryEvolution": "Delivery Evolution",
+        "deliveryEvolutionDescription": "What was planned vs. what we actually delivered.",
+        "planned": "Planned",
+        "completed": "Delivered",
+        "pipeline": {
+          "title": "Project Pipeline",
+          "description": "Current portfolio status"
+        }
+      },
+      "blockers": {
+        "title": "Waiting on You",
+        "description": "{count} actions needed to avoid schedule delays.",
+        "emptyTitle": "No pending actions",
+        "emptyDescription": "There are no client pending items that could delay the schedule"
+      }
+    },
+    "users": {
+      "title": "Associated Users",
+      "description": "Manage users linked to this client",
+      "emptyTitle": "No users associated with this company",
+      "emptyDescription": "Invite users to access the client portal",
+      "defaultRole": "User (Default)",
+      "noLoginYet": "User has not accessed the portal yet",
+      "columns": {
+        "user": "User",
+        "role": "Role",
+        "permission": "Permission",
+        "status": "Status",
+        "lastAccess": "Last Access"
+      },
+      "status": {
+        "ACTIVE": "Active",
+        "PENDING": "Pending",
+        "INACTIVE": "Inactive"
+      }
+    },
+    "projects": {
+      "title": "Projects",
+      "description": "Manage all company projects",
+      "newProject": "New Project",
+      "searchPlaceholder": "Search projects by name..."
+    },
+    "employees": {
+      "createTitle": "New user",
+      "createDescription": "Fill in the user details",
+      "createButton": "New User",
+      "permission": "Permission",
+      "selectLevel": "Select a level",
+      "update": "Update Employee",
+      "invite": "Invite Employee",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "John Smith",
+      "corporateEmail": "Corporate Email",
+      "corporateEmailPlaceholder": "john@client.com",
+      "jobTitle": "Job Title",
+      "jobTitlePlaceholder": "E.g.: Finance Manager",
+      "actions": {
+        "edit": "Edit",
+        "resetPassword": "Reset Password",
+        "deactivate": "Deactivate",
+        "editUserTitle": "Edit User",
+        "editUserDescription": "This action will update the user data for {name}.",
+        "removeUserTitle": "Remove User",
+        "removeUserDescription": "This action will deactivate access for {name}.",
+        "removeUserHint": "When removed, the user will be deactivated and remain in the list for audit purposes only.",
+        "confirmDeactivate": "Do you confirm deactivation?",
+        "deactivateUser": "Deactivate user",
+        "resetPasswordTitle": "Reset User Password",
+        "resetPasswordDescription": "This will reset the password for {name}.",
+        "resetPasswordHint": "When reset, the user will receive an email with the new password and instructions to change it.",
+        "confirmResetPassword": "Do you confirm the password reset?",
+        "resetPasswordButton": "Reset password"
+      }
+    },
+    "roles": {
+      "ADMIN": "Administrator",
+      "USER": "Collaborator",
+      "VIEWER": "Viewer"
+    }
+  },
+  "clientPortal": {
+    "sidebar": {
+      "title": "Client Portal",
+      "companies": "My companies",
+      "quickAccess": "Quick access"
+    },
+    "companies": {
+      "title": "My companies",
+      "description": "Companies and accounts you can access to follow projects",
+      "emptyTitle": "No access configured",
+      "emptyDescription": "When your software house sends a contract or invite, your access will appear here.",
+      "accessProjects": "Access projects →",
+      "pendingInvite": "Pending invite",
+      "checkEmail": "Check your email to activate access.",
+      "profileLabel": "Profile: client portal user"
+    }
+  },
+  "projects": {
+    "status": {
+      "notStarted": "Not Started",
+      "inProgress": "In Progress",
+      "completed": "Completed",
+      "negotiation": "Negotiation",
+      "paused": "Paused"
+    },
+    "errors": {
+      "notFoundForEdit": "Project not found for editing",
+      "organizationProjects": "Error locating organization projects",
+      "backlogNotFound": "Backlog list not found",
+      "proposalsHistory": "Failed to locate proposal history",
+      "projectNotFound": "Failed to locate project",
+      "expensesList": "Error listing expenses",
+      "serviceNotFound": "Service not found",
+      "serviceAccessDenied": "You do not have permission to access this service",
+      "noPermissionTitle": "Restricted access",
+      "noPermissionBacklog": "You do not have permission to view this project's backlog.",
+      "noPermissionProposal": "You do not have permission to view this project's proposals.",
+      "noPermissionContract": "You do not have permission to view this project's contracts.",
+      "noPermissionPayment": "You do not have permission to view this project's payments.",
+      "noPermissionExpense": "You do not have permission to view this project's expenses."
+    },
+    "health": {
+      "HEALTHY": "Healthy",
+      "AT_RISK": "At Risk",
+      "DELAYED": "Delayed"
+    },
+    "priority": {
+      "URGENT": "Urgent",
+      "HIGH": "High",
+      "MEDIUM": "Medium",
+      "LOW": "Low"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "dashboard": "Dashboard",
+      "commercial": "Commercial",
+      "backlog": "Backlogs",
+      "metrics": "Metrics"
+    },
+    "list": {
+      "emptyTitle": "No projects found",
+      "emptyDescription": "No projects registered yet. Register your first project and start tracking your deliveries"
+    },
+    "page": {
+      "title": "Projects",
+      "description": "Manage all company projects",
+      "searchPlaceholder": "Search projects by name or client..."
+    },
+    "form": {
+      "createTitle": "Register new project",
+      "createDescription": "Register a new project and start managing it",
+      "editTitle": "Edit project",
+      "name": "Project Name *",
+      "client": "Client *",
+      "selectClient": "Select client",
+      "totalBudget": "Total Budget (R$)",
+      "startDate": "Expected Start Date",
+      "selectDate": "Select date",
+      "description": "Description and Initial Scope *",
+      "documents": "Project Documents",
+      "documentsDescription": "Attach relevant files (briefing, scope, etc.)",
+      "create": "Create Project",
+      "toastUnexpectedError": "Unexpected error while creating project.",
+      "endDate": "Final Deadline",
+      "priority": "Priority",
+      "namePlaceholder": "E.g.: AWS Cloud Migration",
+      "saveNewPassword": "Save New Password",
+      "tagsPlaceholder": "Technology, Squad...",
+      "descriptionPlaceholder": "Describe the main objectives and project requirements..."
+    },
+    "layout": {
+      "clientLabel": "Client: {name}",
+      "deadlineLabel": "Delivery deadline",
+      "scheduledStart": "Scheduled start: {date}",
+      "start": "Start",
+      "estimatedStart": "Estimated Start",
+      "budget": "Budget",
+      "balance": "Balance: {amount}",
+      "team": "Team",
+      "progress": "Progress",
+      "fetchError": "Error trying to locate organization projects"
+    },
+    "notes": {
+      "emptyTitle": "No notes added",
+      "emptyDescription": "This project has no notes yet.",
+      "placeholder": "Add a new note...",
+      "addButton": "Add Note",
+      "toastCreated": "Note added successfully!",
+      "toastUpdated": "Note updated successfully!",
+      "toastDeleted": "Note deleted successfully!",
+      "editTitle": "Edit Note"
+    },
+    "documents": {
+      "empty": "No documents attached yet",
+      "validationMinFiles": "Select at least one file to upload.",
+      "save": "Save Files",
+      "add": "Add",
+      "addDialogTitle": "Add files to project",
+      "uploading": "Uploading...",
+      "removeFile": "Remove File",
+      "downloadFile": "Download file",
+      "openNewTab": "Open in new tab",
+      "removeConfirmTitle": "File removal confirmation",
+      "removeConfirmMessage": "Do you confirm you want to remove the file below?",
+      "nameLabel": "Name:",
+      "removeButton": "Remove file",
+      "removeError": "Failed to remove file. Please try again later",
+      "removeSuccess": "File removed successfully",
+      "filesLabel": "Files",
+      "filesDescription": "Drag your documents here. Accepts PDF, Images, Word and Excel."
+    },
+    "backlog": {
+      "listTitle": "Product Backlog",
+      "emptyDescription": "No backlog items registered yet. Start managing the backlog by registering at least one item.",
+      "searchPlaceholder": "Search backlog...",
+      "noDescription": "No description provided.",
+      "filter": {
+        "status": {
+          "all": "All Statuses",
+          "todo": "To Do",
+          "inProgress": "In Progress",
+          "review": "Review",
+          "done": "Done"
+        },
+        "priority": {
+          "all": "All priorities",
+          "high": "High",
+          "medium": "Medium",
+          "low": "Low"
+        },
+        "statusPlaceholder": "Status",
+        "priorityPlaceholder": "Priority"
+      },
+      "form": {
+        "title": "Task Title",
+        "assignee": "Assignee",
+        "description": "Detailed Description",
+        "titlePlaceholder": "E.g.: Implement OAuth Login",
+        "assigneePlaceholder": "Select an assignee",
+        "unassigned": "-- Unassigned --",
+        "noName": "No name",
+        "descriptionPlaceholder": "Acceptance criteria, technical details...",
+        "statusLabel": "Status",
+        "priorityLabel": "Priority",
+        "storyPoints": "Story Points",
+        "externalLinkLabel": "External Link (Optional)",
+        "externalLinkDescription": "Link to Jira, Trello or design.",
+        "toastUpdated": "Item updated successfully!",
+        "toastCreated": "Item created successfully!",
+        "toastUnexpectedError": "An unexpected error occurred.",
+        "createTask": "Create Task"
+      },
+      "status": {
+        "todo": "To Do",
+        "inProgress": "In Progress",
+        "review": "Review",
+        "done": "Done",
+        "canceled": "Canceled",
+        "waitingClient": "Waiting for Client"
+      },
+      "priorityLabels": {
+        "URGENT": "Urgent",
+        "HIGH": "High",
+        "MEDIUM": "Medium",
+        "LOW": "Low"
+      },
+      "listTitleService": "Service Default Backlog",
+      "details": {
+        "title": "Title",
+        "status": "Status",
+        "priority": "Priority",
+        "points": "Points",
+        "assignee": "Assignee",
+        "unassigned": "Unassigned",
+        "detailedDescription": "Detailed description",
+        "externalReference": "External Reference",
+        "editTask": "Edit Task",
+        "deleteError": "Error trying to remove the task.",
+        "deleteSuccess": "Task removed successfully"
+      },
+      "import": {
+        "title": "Import Default Backlog",
+        "description": "Select a service type to copy its default backlog items to this project.",
+        "serviceTypeLabel": "Service Type",
+        "selectService": "Select a service...",
+        "confirm": "Confirm Import",
+        "importing": "Importing...",
+        "toastSyncError": "Error syncing backlog.",
+        "validationSelectService": "Select a service type."
+      }
+    },
+    "commercial": {
+      "tabs": {
+        "proposals": "Proposals",
+        "contracts": "Contract",
+        "payments": "Payments",
+        "expenses": "Expenses",
+        "notifications": "Notifications"
+      },
+      "stats": {
+        "negotiation": "In Negotiation (Proposals)",
+        "netResult": "Net Result",
+        "totalContracted": "Total Contracted",
+        "contractsActive": "{count} active contracts",
+        "proposalsActive": "{count} active proposals in funnel",
+        "realizedRevenue": "Realized Revenue",
+        "paidInvoices": "Paid invoices (Cash in)",
+        "profitMargin": "Current profit margin: {margin}%"
+      },
+      "proposals": {
+        "historyTitle": "Proposal History",
+        "emptyTitle": "No proposals registered",
+        "emptyDescription": "No proposals registered yet. Advance the project to the proposal phase to register the first proposal."
+      },
+      "payments": {
+        "emptyTitle": "No payments",
+        "emptyDescription": "No payments recognized yet. Register a payment or wait until the project reaches the payment phase.",
+        "status": {
+          "PAID": "Paid",
+          "OVERDUE": "Overdue",
+          "PENDING": "Pending",
+          "CANCELLED": "Cancelled"
+        },
+        "item": {
+          "dueDate": "Due date",
+          "paymentDate": "Payment",
+          "nf": "Invoice"
+        }
+      },
+      "expenses": {
+        "pageTitle": "Accounts Payable & Expenses",
+        "emptyTitle": "No expenses",
+        "emptyDescription": "No expenses registered yet. Register an expense or wait until the project reaches the payment phase.",
+        "form": {
+          "description": "Expense Description",
+          "outboundAccount": "Outbound Account",
+          "update": "Update Expense",
+          "register": "Register Expense",
+          "invoiceNumber": "Invoice Number (NF)",
+          "invoiceNumberPlaceholder": "E.g.: 000.456.789",
+          "receiptLink": "Receipt Link",
+          "receiptLinkPlaceholder": "https://...",
+          "receiptsSection": "Receipts and Tax",
+          "loadCategoriesError": "Could not load categories.",
+          "descriptionPlaceholder": "E.g.: AWS Server, Rent...",
+          "category": "Category",
+          "amount": "Amount (R$)",
+          "dueDate": "Due Date",
+          "bankPlaceholder": "Select bank",
+          "paymentMethod": "Payment Method"
+        },
+        "toastDeleted": "Expense deleted successfully!",
+        "toastStatusUpdated": "Expense status updated!",
+        "status": {
+          "PAID": "Paid",
+          "SCHEDULED": "Scheduled",
+          "PENDING": "Pending",
+          "CANCELED": "Canceled"
+        },
+        "item": {
+          "dueDate": "Due date",
+          "paidAt": "Paid",
+          "invoice": "Invoice",
+          "noSupplier": "No supplier"
+        },
+        "actions": {
+          "editTitle": "Edit Expense",
+          "editDescription": "Change expense or payable bill details.",
+          "confirmPaymentTitle": "Confirm Payment",
+          "confirmPaymentDescription": "Select the date when the amount left the account.",
+          "paymentDateLabel": "Payment Date",
+          "confirmWriteOff": "Confirm Write-off",
+          "cancelExpense": "Cancel Expense",
+          "viewReceipt": "View Receipt",
+          "markAsPaid": "Mark as Paid"
+        }
+      },
+      "invoices": {
+        "form": {
+          "description": "Invoice Description",
+          "descriptionPlaceholder": "E.g.: Web Development - March",
+          "amount": "Amount (R$)",
+          "nfeNumber": "NF-e Number",
+          "update": "Update Invoice",
+          "dueDate": "Due Date",
+          "bank": "Bank",
+          "paymentType": "Payment Type",
+          "fiscalSection": "Tax Data (Optional)",
+          "nfseLink": "Invoice PDF Link",
+          "generate": "Generate Invoice"
+        },
+        "actions": {
+          "toastDeleted": "Payment deleted successfully!",
+          "toastUpdated": "Payment updated!",
+          "editTitle": "Edit Invoice",
+          "editDescription": "Fill in the invoice details",
+          "confirmReceiptTitle": "Confirm Receipt",
+          "confirmReceiptDescription": "Select the date when the amount was received.",
+          "receiptDateLabel": "Receipt Date",
+          "confirmPayment": "Confirm Payment",
+          "cancelInvoice": "Cancel Invoice",
+          "markAsPaid": "Mark as Paid",
+          "viewInvoice": "View Tax Invoice"
+        }
+      },
+      "notifications": {
+        "title": "Notification History",
+        "newNotification": "New Notification",
+        "to": "To:",
+        "mock": {
+          "proposalSubject": "Commercial Proposal - Management System v2.0",
+          "contractSubject": "Contract for Signature",
+          "paymentReminder": "Reminder: Down payment",
+          "invoiceSubject": "Tax Invoice NF-2024-001",
+          "systemSender": "System"
+        }
+      },
+      "contracts": {
+        "historyTitle": "Project Contract History",
+        "fetchProjectError": "Failed to locate the project",
+        "fetchHistoryError": "Failed to locate contract history"
+      }
+    },
+    "dashboard": {
+      "metrics": {
+        "totalTasks": "Total Tasks",
+        "completedTasks": "Completed Tasks",
+        "received": "Amount Received",
+        "expenses": "Expenses",
+        "progress": "Progress"
+      },
+      "charts": {
+        "financial": {
+          "revenue": "Revenue",
+          "expenses": "Expenses",
+          "title": "Financial Flow",
+          "description": "Comparison of expense and revenue evolution"
+        },
+        "backlogStatus": {
+          "title": "Task Status",
+          "description": "Real distribution of tasks by status in the project"
+        },
+        "sprint": {
+          "planned": "Planned",
+          "completed": "Completed",
+          "title": "Sprint Progress",
+          "description": "Track planned vs completed sprints in the project"
+        },
+        "burndown": {
+          "ideal": "Ideal",
+          "real": "Actual",
+          "title": "Burndown Chart - Current Sprint",
+          "description": "Daily progress vs ideal burn line based on the active sprint"
+        }
+      }
+    },
+    "metrics": {
+      "tabs": {
+        "lifeCycle": "Life Cycle",
+        "codeQuality": "Code Quality",
+        "webAnalytics": "Web Analytics"
+      },
+      "common": {
+        "integrationError": "Error loading integration data",
+        "integrationNotConfigured": "Integration type not configured globally, please contact support"
+      },
+      "codeQuality": {
+        "title": "Code Quality",
+        "ctaTitle": "Code Quality",
+        "description": "Track project code quality. Data collected from SonarQube.",
+        "summary": {
+          "bugs": "Bugs",
+          "vulnerabilities": "Vulnerabilities",
+          "codeSmells": "Code Smells",
+          "coverage": "Coverage",
+          "technicalDebt": "Technical Debt"
+        },
+        "status": {
+          "globalRating": "Global Rating",
+          "qualityGate": "Quality Gate",
+          "passed": "Passed",
+          "failed": "Failed"
+        },
+        "charts": {
+          "issueEvolution": {
+            "title": "Issue Evolution",
+            "description": "Trend of bugs, vulnerabilities, and code smells",
+            "vulnerabilities": "Vulnerabilities"
+          },
+          "severityDonut": {
+            "title": "Issues by Severity",
+            "description": "Current problem distribution"
+          },
+          "coverage": {
+            "title": "Code Coverage",
+            "description": "Monthly test coverage evolution",
+            "tooltip": "Coverage"
+          },
+          "technicalDebt": {
+            "title": "Technical Debt",
+            "description": "Estimated hours to fix over time",
+            "tooltip": "Technical Debt",
+            "hoursValue": "{value} hours"
+          }
+        },
+        "qualityGate": {
+          "metric": "Metric",
+          "currentValue": "Current Value",
+          "threshold": "Threshold",
+          "status": "Status"
+        },
+        "projectLive": {
+          "issuesTitle": "Identified Issues",
+          "issuesDescription": "List of the 5 most recent issues from dynamic analysis.",
+          "gateTitle": "Quality Gate Conditions",
+          "gateDescription": "Acceptance criteria defined for the project.",
+          "gateLabel": "Gate",
+          "issuesLabel": "Issues"
+        },
+        "sync": {
+          "loading": "Syncing metrics with SonarQube...",
+          "success": "Metrics updated successfully",
+          "error": "Sync failed. Check the logs.",
+          "title": "Sync database with SonarQube"
+        }
+      },
+      "lifecycle": {
+        "title": "Life Cycle",
+        "description": "Analyze project evolution and team health based on your repository and backlogs",
+        "accessGitHub": "Open GitHub",
+        "cicdHealth": "CI/CD Health",
+        "activities": "Activities",
+        "repoStats": "Repository statistics",
+        "totalCommits": "Total Commits",
+        "last30Days": "last 30 days",
+        "files": "Files",
+        "inRepository": "in repository",
+        "pullRequests": "Pull Requests",
+        "openPrs": "{count} open",
+        "closedPrs": "{count} closed",
+        "contributors": "Contributors",
+        "cicdSuccess": "CI/CD Success",
+        "noActionsRun": "no actions run",
+        "successRate": "success rate",
+        "charts": {
+          "commitActivity": {
+            "title": "Commit Activity",
+            "description": "Last 30 days",
+            "commits": "Commits"
+          },
+          "cicdSuccess": {
+            "title": "CI/CD Success Rate",
+            "description": "Distribution of latest runs",
+            "success": "Success",
+            "failure": "Failure"
+          }
+        },
+        "activity": {
+          "title": "Recent Changes",
+          "description": "Recent commits timeline",
+          "noCommits": "No recent commits"
+        },
+        "cicd": {
+          "title": "Latest Runs",
+          "description": "Detected GitHub Actions workflows",
+          "workflow": "Workflow",
+          "status": "Status",
+          "duration": "Duration",
+          "date": "Date",
+          "byAuthor": "by {author}",
+          "success": "Success",
+          "inProgress": "In progress",
+          "failed": "Failed",
+          "noRuns": "No workflow runs found."
+        },
+        "sprint": {
+          "title": "Delivery Cycle",
+          "description": "Analysis of the last 30 days",
+          "mergeRate": "Merge Rate",
+          "prsCount": "{merged}/{closed} PRs",
+          "deliveryEfficiency": "{percent}% delivery efficiency",
+          "issues": "Issues",
+          "declined": "Declined",
+          "merged": "Merged",
+          "period": "Period: {start} - {end}",
+          "topContributors": "Top Contributors",
+          "contributions": "{count} contributions"
+        },
+        "repoStatsGrid": {
+          "activeBranches": "Active Branches",
+          "pendingReviews": "Pending Reviews",
+          "avgPrTime": "Avg PR Time",
+          "mergedCount": "{count} merged",
+          "workload": "Workload",
+          "workloadDescription": "avg commits / author"
+        }
+      },
+      "webAnalytics": {
+        "title": "Web Analytics",
+        "description": "Understand user behavior. Clear data for evidence-based decisions.",
+        "pageViews": "Page Views",
+        "uniqueVisitors": "Unique Visitors",
+        "bounceRate": "Bounce Rate",
+        "avgDuration": "Avg. Duration",
+        "pagesPerSession": "Pages/Session",
+        "charts": {
+          "pageViews": {
+            "title": "Visitors and Page Views",
+            "description": "Trend over the last 14 days",
+            "views": "Views",
+            "visitors": "Visitors"
+          },
+          "hourlyVisitors": {
+            "title": "Visitors by Hour",
+            "description": "Distribution throughout the day"
+          },
+          "devices": {
+            "title": "Devices",
+            "description": "By device type"
+          },
+          "browsers": {
+            "title": "Browsers",
+            "description": "By browser used"
+          },
+          "os": {
+            "title": "Operating Systems",
+            "description": "By visitor OS"
+          }
+        },
+        "realTime": {
+          "title": "Real Time",
+          "description": "Active visitors now",
+          "noData": "No data available",
+          "noAccess": "No visits recorded in the period"
+        },
+        "sync": {
+          "loading": "Syncing metrics with Umami...",
+          "success": "Metrics updated successfully",
+          "error": "Sync failed. Check the logs.",
+          "title": "Sync database with Umami"
+        },
+        "tables": {
+          "referrer": {
+            "source": "Traffic Source",
+            "views": "Views",
+            "share": "Share",
+            "visitors": "Visitors",
+            "duration": "Duration",
+            "bounce": "Bounce",
+            "direct": "Direct / None"
+          },
+          "pages": {
+            "url": "Page URL",
+            "views": "Views",
+            "proportion": "Proportion",
+            "visitors": "Visitors",
+            "avgTime": "Avg. Time",
+            "bounce": "Bounce"
+          },
+          "countries": {
+            "country": "Country",
+            "code": "Code",
+            "views": "Views",
+            "viewsPercent": "% Views",
+            "visitors": "Visitors",
+            "visitorsPercent": "% Visitors"
+          }
+        }
+      },
+      "analytics": {
+        "tables": {
+          "pages": "Pages",
+          "topPagesTitle": "Most Visited Pages",
+          "topPagesDescription": "Page ranking by views",
+          "referrers": "Referrers",
+          "trafficSourcesTitle": "Traffic Sources",
+          "trafficSourcesDescription": "Where your visitors come from",
+          "countries": "Countries",
+          "countriesTitle": "Visitors by Country",
+          "countriesDescription": "Geographic distribution of visits"
+        }
+      },
+      "integrations": {
+        "hooks": {
+          "sonarqube": "Reduce maintenance costs and eliminate bugs before they reach production. Monitor your technical debt in real time.",
+          "umamiAnalytics": "Understand your users' behavior without compromising privacy. Clear data for evidence-based decisions.",
+          "github": "Automate your workflow, monitor PRs, and accelerate delivery speed with DORA metrics.",
+          "defectdojo": "Centralize vulnerabilities and keep your project secure and compliant with security standards.",
+          "cora": "Automate billing and simplify your project's financial management.",
+          "default": "Enhance your project management with real-time data."
+        },
+        "cta": {
+          "connectGlobalDescription": "{hook} Connect your global {name} account to unlock this feature.",
+          "configureGlobalProvider": "Configure Global Provider",
+          "availableTitle": "{name} available",
+          "activateProjectDescription": "{hook} Activate now to start collecting metrics in this project.",
+          "linkProject": "Link this Project"
+        },
+        "github": {
+          "fetchReposError": "Failed to fetch organization repositories",
+          "dialogTitle": "Link project to GitHub",
+          "dialogDescription": "Integrate this project with GitHub to continue. Specify an existing project or whether you want to create one.",
+          "alertTitle": "Important",
+          "alertDescription": "Automatic creation will create a private repository in your configured account/organization.",
+          "createNewRepo": "Create new repository?",
+          "newRepoName": "New Repository Name",
+          "useTemplate": "Use a template (clone)?",
+          "useTemplateDescription": "Copy files from an existing project",
+          "templateRepo": "Base Repository (Template)",
+          "templatePlaceholder": "Select the boilerplate...",
+          "linkExisting": "Link to a GitHub Repository",
+          "existingPlaceholder": "Choose the project...",
+          "confirm": "Confirm Integration"
+        }
+      }
+    },
+    "overview": {
+      "summary": {
+        "title": "Project Summary",
+        "editSummary": "Edit Summary",
+        "associatedServices": "Services associated with the project:"
+      },
+      "errors": {
+        "loadProject": "Error loading organization projects"
+      },
+      "timeline": {
+        "title": "Project Flow",
+        "maintenance": {
+          "title": "Maintenance & Support",
+          "activeDescription": "Project in ongoing maintenance and support period",
+          "inactiveDescription": "Available after project completion"
+        },
+        "automaticStepBadge": "Automatic step",
+        "actions": {
+          "regress": "Go back",
+          "advancePrefix": "Advance to:"
+        },
+        "cancelDialog": {
+          "title": "Cancel Project",
+          "description": "Are you sure you want to cancel this project? This action is irreversible.",
+          "confirm": "Cancel Project"
+        },
+        "cancelled": {
+          "title": "Project Cancelled",
+          "description": "This project has been cancelled."
+        },
+        "flows": {
+          "commercial": {
+            "title": "Commercial Flow"
+          },
+          "operational": {
+            "category": "Operational Flow",
+            "title": "Development"
+          },
+          "closing": {
+            "category": "Closing",
+            "title": "Commercial Flow - Delivery"
+          }
+        },
+        "statusChangeNote": "Status changed from {from} to {to}"
+      },
+      "activityLog": {
+        "title": "Recent Updates",
+        "time": {
+          "yesterday": "Yesterday",
+          "daysAgo": "{days} days ago"
+        },
+        "mock": {
+          "stageChange": {
+            "message": "Project advanced to \"In Progress\"",
+            "details": "From: Planned"
+          },
+          "email": {
+            "message": "Email sent to client",
+            "details": "Weekly status update"
+          },
+          "document": {
+            "message": "Document added",
+            "details": "Acceptance Term - Phase 1"
+          },
+          "milestone": {
+            "message": "Milestone completed",
+            "details": "Sprint 4 finished"
+          },
+          "integration": {
+            "message": "Webhook executed",
+            "details": "Slack notification sent"
+          },
+          "payment": {
+            "message": "Payment received",
+            "details": "Installment 2 of 4 - R$ 37,500.00"
+          },
+          "team": {
+            "message": "Member added to team",
+            "details": "Ana Costa"
+          }
+        }
+      }
+    },
+    "transitions": {
+      "dialogTitle": "Advance to: {status}",
+      "dialogDescription": "Stage advance form",
+      "confirmAdvance": "Do you really want to advance the project status to the next stage?",
+      "observations": "Observations",
+      "observationsPlaceholder": "Add observations about this transition (optional)",
+      "confirmButton": "Confirm Advance",
+      "statusUpdated": "Status updated successfully!",
+      "newStatusWillBe": "The new status will be:",
+      "nextSteps": {
+        "generateProposalDraft": "Generate proposal draft",
+        "reviewDraft": "Review proposal draft",
+        "approveCommercial": "Approve commercial proposal",
+        "sendToClient": "Send proposal to client",
+        "confirmAcceptance": "Confirm acceptance",
+        "advanceToContract": "Advance to Contract stage",
+        "generateNewProposal": "Generate new proposal",
+        "reviewContractDraft": "Review contract draft",
+        "approveAndSendToClient": "Approve contract and send to client",
+        "confirmSignature": "Confirm signature",
+        "advanceToDevelopment": "Advance to development stage",
+        "proposalCancelled": "Proposal cancelled",
+        "contractRejected": "Contract rejected"
+      },
+      "common": {
+        "cancel": "Cancel",
+        "back": "Back",
+        "processing": "Processing...",
+        "errors": {
+          "unexpected": "Unexpected error while processing the request."
+        },
+        "validation": {
+          "selectAtLeastOneService": "Select at least one service.",
+          "selectPdfFile": "Select a PDF file.",
+          "required": "Required"
+        },
+        "upload": {
+          "clickToSelect": "Click to select",
+          "orDragPdf": "or drag the PDF",
+          "linkedToProjectHint": "The file will be linked directly to the project."
+        }
+      },
+      "toTechAnalysis": {
+        "validation": {
+          "observationMin": "Provide a detailed technical observation."
+        },
+        "toast": {
+          "success": "Project sent to technical analysis!"
+        },
+        "title": "Analysis Request",
+        "description": "Define the preliminary scope and send instructions to the technical team.",
+        "fields": {
+          "services": {
+            "label": "Preliminary service analysis",
+            "description": "Indicate which services should be evaluated by the technical team."
+          },
+          "observation": {
+            "label": "Instructions for the Technical Team",
+            "placeholder": "Describe what should be analyzed, specific questions, or client requirements..."
+          }
+        },
+        "submit": "Forward to Technical"
+      },
+      "toProposal": {
+        "validation": {
+          "observationMin": "Provide a detailed technical observation."
+        },
+        "toast": {
+          "success": "Project forwarded to proposal!"
+        },
+        "title": "Technical Definition",
+        "description": "Review services and add the technical opinion for the commercial team.",
+        "fields": {
+          "services": {
+            "label": "Required Services",
+            "description": "Select the services that will make up the scope of this proposal."
+          },
+          "observation": {
+            "label": "Technical Opinion",
+            "placeholder": "Describe technical details, estimated complexity, and specific requirements..."
+          }
+        },
+        "submit": "Forward to Proposal"
+      },
+      "contractCreation": {
+        "toast": {
+          "generateError": "Error generating contract.",
+          "unexpectedError": "Unexpected error creating contract."
+        },
+        "title": "Contract Setup",
+        "description": "Define how the legal contract for this project will be generated.",
+        "submit": "Generate Contract"
+      },
+      "proposalSend": {
+        "toast": {
+          "success": "Proposal sent via {channel} successfully!",
+          "unexpectedError": "Unexpected error forwarding the proposal."
+        },
+        "alert": {
+          "title": "Proposal Ready to Send",
+          "approvedAtPrefix": "This proposal was internally approved on",
+          "selectChannelSuffix": ". Select the channel below to notify the client."
+        },
+        "content": {
+          "title": "Proposal Content"
+        },
+        "document": {
+          "title": "Generated Document",
+          "originLabel": "Source:",
+          "originTemplate": "Document Template",
+          "originUpload": "File upload",
+          "viewPdf": "View PDF"
+        },
+        "channel": {
+          "title": "Delivery Channel",
+          "notifyVia": "Notify via:",
+          "email": {
+            "label": "Email",
+            "description": "Formal delivery via system"
+          },
+          "none": {
+            "label": "Do not send",
+            "description": "Do not send email notification"
+          },
+          "whatsapp": {
+            "label": "WhatsApp"
+          }
+        },
+        "submit": "Send Proposal",
+        "submitNoSend": "Continue without sending email"
+      },
+      "proposalCreation": {
+        "toast": {
+          "generateError": "Error generating proposal.",
+          "success": "Proposal created successfully!",
+          "unexpectedError": "Unexpected error creating proposal."
+        },
+        "upload": {
+          "clickToSelectPdf": "Click to select PDF",
+          "fileSelected": "Selected file:"
+        },
+        "fields": {
+          "downPayment": {
+            "label": "Down Payment Percentage"
+          },
+          "validUntil": {
+            "label": "Proposal Valid Until"
+          },
+          "items": {
+            "title": "Services and Discounts",
+            "basePriceLabel": "Base:",
+            "discountType": {
+              "label": "Type"
+            },
+            "discountValue": {
+              "label": "Value"
+            }
+          }
+        },
+        "summary": {
+          "totalLabel": "Total Proposal Value",
+          "downPayment": "(Down payment: {amount})"
+        },
+        "submit": "Generate Proposal"
+      },
+      "proposalConfirmation": {
+        "validation": {
+          "reasonRequired": "Select the rejection reason",
+          "reasonMin": "Select a reason"
+        },
+        "rejectionReasons": {
+          "PRICE": {
+            "label": "Price above budget"
+          },
+          "DEADLINE": {
+            "label": "Unfeasible delivery deadline"
+          },
+          "COMPETITION": {
+            "label": "Chose another vendor"
+          },
+          "SCOPE": {
+            "label": "Scope does not meet needs"
+          },
+          "OTHER": {
+            "label": "Other reason"
+          }
+        },
+        "toast": {
+          "accepted": "Proposal accepted successfully!",
+          "rejected": "Rejection recorded.",
+          "error": "Error processing the request."
+        },
+        "alert": {
+          "title": "Proposal Ready for Decision",
+          "generatedAt": "Generated on:",
+          "awaitingClient": "Awaiting client formalization.",
+          "instructions": "Select one of the actions below to update the status in the system."
+        },
+        "actions": {
+          "reportRejection": "Report Rejection",
+          "confirmAcceptance": "Confirm Client Acceptance"
+        },
+        "rejectionForm": {
+          "title": "Rejection Details",
+          "reason": {
+            "label": "Main Reason",
+            "placeholder": "Select reason..."
+          },
+          "notes": {
+            "label": "Additional Notes (optional)",
+            "placeholder": "Describe details about the client's decision..."
+          },
+          "submit": "Confirm Rejection"
+        }
+      },
+      "send": {
+        "selectChannel": "Select a communication channel",
+        "download": "Download document",
+        "unavailable": "Unavailable",
+        "quickNotification": "Quick notification"
+      },
+      "contractSend": {
+        "toast": {
+          "success": "Contract sent via {channel} successfully!",
+          "successNoSend": "Waiting for client acceptance!",
+          "unexpectedError": "Unexpected error forwarding the contract."
+        },
+        "alert": {
+          "title": "Contract Ready to Send",
+          "description": "The document has been generated. Select the channel below to notify the client."
+        },
+        "missingResponsible": {
+          "title": "Representative not registered",
+          "description": "Register the client's legal representative name and email before sending the contract.",
+          "editClient": "Edit client"
+        },
+        "submit": "Send Contract",
+        "notifyVia": "Notify via:",
+        "emailDescription": "Formal delivery with secure link",
+        "openInNewTab": "Open in new tab",
+        "originLabel": "Origin:"
+      },
+      "proposalEditor": {
+        "title": "Generated Proposal Review",
+        "attentionTitle": "Attention",
+        "templateAlertBefore": "This proposal was generated from a standard Proposal Document Template. Review it",
+        "templateAlertAfter": "before confirming and forwarding it for approval",
+        "accessDraft": "Access Draft",
+        "commercialTitle": "Commercial Proposal",
+        "commercialHint": "Review the proposal before forwarding for approval",
+        "generatedDocument": "Generated Commercial Proposal",
+        "confirmAndSend": "Confirm and forward for approval",
+        "toastSuccess": "Proposal forwarded for approval successfully",
+        "toastUnexpectedError": "Unexpected error forwarding the proposal for approval. Please try again later."
+      },
+      "proposalReview": {
+        "toast": {
+          "approved": "Proposal approved successfully",
+          "unexpectedError": "Unexpected error forwarding the proposal to the client. Please try again later."
+        },
+        "alert": {
+          "title": "Pending Approval",
+          "description": "Review the data below. After approval, the proposal will be ready to be sent to the client."
+        },
+        "contentTitle": "Proposal Content",
+        "generatedTitle": "Generated Commercial Proposal",
+        "generatedDocument": "Generated Commercial Proposal",
+        "originTemplate": "Document Template",
+        "originUpload": "File upload",
+        "createdAt": "Created at:",
+        "originLabel": "Origin:",
+        "originSystemTemplate": "System (Template)",
+        "originPdfFile": "PDF File",
+        "templateLabel": "Template:",
+        "totalValue": "Total Proposal Value:",
+        "approveButton": "Approve Proposal",
+        "backAndEdit": "Back and Edit"
+      },
+      "contractEditor": {
+        "title": "Generated Contract Review",
+        "attentionTitle": "Attention",
+        "templateAlertBefore": "This contract was generated from a standard Contract Document Template. Review it",
+        "templateAlertAfter": "before confirming and forwarding it for approval",
+        "accessDraft": "Access Draft",
+        "originTemplate": "Document Template",
+        "originUpload": "File upload",
+        "confirmAndSend": "Confirm and forward for approval",
+        "toastSuccess": "Contract forwarded for approval successfully",
+        "toastUnexpectedError": "Unexpected error forwarding the contract for approval. Please try again later."
+      },
+      "contract": {
+        "loadError": "Could not load contract details.",
+        "notFound": "Contract details not found."
+      },
+      "contractToNextStep": {
+        "toastSuccess": "Contract updated successfully",
+        "toastUnexpectedError": "Unexpected error updating contract.",
+        "reportRejection": "Report contract rejection",
+        "confirmSignature": "Confirm client signature"
+      },
+      "regress": {
+        "success": "Project returned to previous stage",
+        "proposalCancelledSuccess": "Success: Proposal cancelled.",
+        "contractCancelledSuccess": "Success: Contract cancelled.",
+        "dialogTitle": "Return Project Stage",
+        "dialogDescription": "This action will move the project to the previous phase. Justify the decision below.",
+        "movingFromTo": "Moving from <strong>{from}</strong> to <strong>{to}</strong>.",
+        "proposalWarning": "The current proposal will be invalidated and a new one must be generated.",
+        "justificationPlaceholder": "Describe the reason for returning...",
+        "justificationLabel": "Detailed Justification",
+        "attentionTitle": "Attention",
+        "confirm": "Confirm Return",
+        "validation": {
+          "observationMin": "Justification must be at least 10 characters"
+        },
+        "default": {
+          "validation": {
+            "observationMin": "Minimum 10 characters"
+          }
+        },
+        "techAnalysis": {
+          "validation": {
+            "motivationRequired": "Select the technical reason"
+          },
+          "fields": {
+            "motivation": {
+              "label": "Technical Re-analysis Reason",
+              "placeholder": "Select technical reason..."
+            }
+          },
+          "motivations": {
+            "SCOPE_CHANGE": "Scope Change",
+            "TECHNICAL_ERROR": "Identified Inconsistency",
+            "MISSING_DOCS": "Incomplete Documentation",
+            "CLIENT_REQUEST": "Client Revision Request"
+          }
+        },
+        "proposal": {
+          "validation": {
+            "motivationRequired": "Select the commercial reason"
+          },
+          "fields": {
+            "motivation": {
+              "label": "Commercial Review Reason",
+              "placeholder": "Select commercial reason..."
+            }
+          },
+          "motivations": {
+            "PRICE_ADJUSTMENT": "Value/Discount Adjustment",
+            "TYPO_ERROR": "Typing/Data Error",
+            "COMMERCIAL_NEGOTIATION": "New Commercial Negotiation",
+            "PAYMENT_TERM_CHANGE": "Payment Terms Change"
+          }
+        }
+      }
+    },
+    "stages": {
+      "DRAFT": {
+        "label": "Draft",
+        "shortLabel": "Draft",
+        "description": "Project in initial drafting",
+        "nextAction": "Send for Analysis"
+      },
+      "TECH_ANALYSIS": {
+        "label": "Feasibility Analysis",
+        "shortLabel": "Feasibility",
+        "description": "Evaluating technical and commercial feasibility",
+        "nextAction": "Prepare Proposal"
+      },
+      "PROPOSAL": {
+        "label": "Commercial Proposal",
+        "shortLabel": "Proposal",
+        "description": "Reviewing commercial proposal",
+        "nextAction": "Prepare Contract"
+      },
+      "PROPOSAL_GENERATED": {
+        "label": "Contract Preparation",
+        "shortLabel": "Contract",
+        "description": "Client reviewing proposal",
+        "nextAction": "Send Contract for Signature"
+      },
+      "WAITING_SIGNATURE": {
+        "label": "Contract Signature",
+        "shortLabel": "Signature",
+        "description": "Waiting for contract signature",
+        "nextAction": "Await Payment"
+      },
+      "WAITING_DOWN_PAYMENT": {
+        "label": "Awaiting Payment",
+        "shortLabel": "Down Pmt.",
+        "description": "Waiting for down payment",
+        "nextAction": "Start Project"
+      },
+      "PLANNED": {
+        "label": "Planning",
+        "shortLabel": "Planning",
+        "description": "Project being planned before kickoff",
+        "nextAction": "Start Development"
+      },
+      "IN_PROGRESS": {
+        "label": "In Progress",
+        "shortLabel": "In Progress",
+        "description": "Development in progress",
+        "nextAction": "Send for Review"
+      },
+      "REVIEW": {
+        "label": "Under Review",
+        "shortLabel": "Review",
+        "description": "Client reviewing deliverables",
+        "nextAction": "Deliver Product"
+      },
+      "DELIVERED": {
+        "label": "Product Delivered",
+        "shortLabel": "Delivered",
+        "description": "Product delivered to client",
+        "nextAction": "Request Final Payment"
+      },
+      "FINAL_PAYMENT": {
+        "label": "Final Payment",
+        "shortLabel": "Final Payment",
+        "description": "Waiting for final payment",
+        "nextAction": "Complete Project"
+      },
+      "COMPLETED": {
+        "label": "Completed",
+        "shortLabel": "Completed",
+        "description": "Project completed successfully",
+        "nextAction": "Start Maintenance"
+      },
+      "MAINTENANCE": {
+        "label": "Maintenance & Support",
+        "shortLabel": "Support",
+        "description": "In ongoing maintenance and support period"
+      },
+      "CANCELLED": {
+        "label": "Cancelled",
+        "shortLabel": "Cancelled",
+        "description": "Project cancelled"
+      },
+      "ON_HOLD": {
+        "label": "On Hold",
+        "shortLabel": "On Hold",
+        "description": "Project temporarily paused"
+      }
+    }
+  },
+  "contracts": {
+    "page": {
+      "title": "Contract Management",
+      "description": "Manage all contracts for your company",
+      "search": "Search contract...",
+      "fetchError": "Failed to locate contract history",
+      "historyTitle": "Contract History"
+    },
+    "history": {
+      "createdBy": "Created by",
+      "reviewedBy": "Reviewed by",
+      "approvedBy": "Approved by",
+      "sentToClient": "Contract sent to client",
+      "contractAnalysis": "Contract Analysis"
+    },
+    "list": {
+      "emptyTitle": "No contracts found",
+      "emptyDescription": "No contracts registered yet"
+    },
+    "status": {
+      "draft": "Draft",
+      "review": "Under Review",
+      "sent": "Sent",
+      "signed": "Signed",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled"
+    },
+    "signing": {
+      "lastModified": "Last modified",
+      "notOpened": "Not viewed",
+      "opened": "Viewed",
+      "pendingSignature": "Awaiting signature",
+      "pendingClient": "Awaiting client signature",
+      "signatureIdNotFound": "Signature identifier not found",
+      "title": "Contract Signing",
+      "cardTitle": "Contract Signing Information",
+      "description": "Hello! To start our partnership on project {name}, please review and sign the contract below.",
+      "projectDescription": "Review the document and sign the contract to release the project for payment",
+      "previewAlert": {
+        "title": "Attention",
+        "description": "The contract for signing is shown below as the client will see it. The client will not have access to project information until the initial payment is made. Access will be granted automatically upon recognition of the respective payment."
+      },
+      "proposalSummaryHint": "At the end of the document, a summary of the agreed commercial proposal is presented.",
+      "proposalDetailsTitle": "Proposal details",
+      "footer": "Secure environment authenticated by Zofia Code Labs",
+      "signedByAll": "Document signed by everyone",
+      "pendingSignatureTitle": "Signature pending",
+      "signedByAllDescription": "This document was signed by all signers",
+      "pendingSignatureDescription": "One or more signers have not yet signed the document",
+      "downloadStarted": "Download started!",
+      "downloadFailed": "Failed to download file",
+      "roles": {
+        "APPROVER": "Approver",
+        "SIGNER": "Signer",
+        "CC": "Copy",
+        "VIEWER": "Viewer"
+      },
+      "signingStatus": {
+        "NOT_SIGNED": "Pending",
+        "SIGNED": "Signed"
+      }
+    }
+  },
+  "proposals": {
+    "status": {
+      "draft": "Draft",
+      "review": "Under Review",
+      "approved": "Approved",
+      "sent": "Sent",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled"
+    },
+    "modal": {
+      "viewTooltip": "View proposal content",
+      "defaultTitle": "Proposal",
+      "projectLabel": "Project: {name}"
+    },
+    "history": {
+      "version": "Version: {version}",
+      "editTooltip": "Edit proposal",
+      "downloadDocument": "Download document",
+      "documentNotFound": "Error locating document",
+      "proposalAnalysis": "Proposal Analysis",
+      "createdBy": "Created by",
+      "reviewedBy": "Reviewed by",
+      "approvedBy": "Approved by",
+      "sentToClient": "Proposal sent to client"
+    },
+    "detail": {
+      "title": "Issuance Details",
+      "createdBy": "Created by:",
+      "issuedAt": "Issued on:",
+      "validitySection": "Validity and Approval",
+      "validUntil": "Valid until:",
+      "currentStatus": "Current Status:",
+      "activeVersion": "Active Version",
+      "paymentGateway": "Gateway",
+      "paymentMethod": "Payment Method",
+      "history": "History",
+      "includedServices": "Included Services",
+      "service": "Service",
+      "basePrice": "Base Price",
+      "discount": "Discount",
+      "finalPrice": "Final Price",
+      "downPayment": "Down Payment",
+      "downPaymentPercent": "Percentage of {percent}%",
+      "totalValue": "Total Value"
+    }
+  },
+  "purchase": {
+    "billing": {
+      "discountTwoMonthsFree": "2 months free",
+      "discountSave20": "Save 20%"
+    },
+    "aiReports": {
+      "badge": "ZofIA Reports",
+      "title": "Your Software House's virtual consultant",
+      "description": "Stop wasting hours creating manual reports. Our AI cross-references traffic, quality, and security data to generate insights that prove your work's value to the end client."
+    },
+    "analytics": {
+      "badge": "Zofia Analytics",
+      "title": "Boost your Analytics",
+      "description": "Real-time metrics, 100% private and cookie-free."
+    },
+    "metrics": {
+      "badge": "DevSecOps & Quality",
+      "title": "Full control over your code lifecycle",
+      "description": "Consolidate productivity, quality, and security metrics in a single dashboard. The transparency your Software House needs to delight clients and reduce technical debt."
+    }
+  },
+  "financial": {
+    "page": {
+      "title": "Financial",
+      "description": "Overview and cash flow control.",
+      "export": "Export",
+      "newTransaction": "New Transaction",
+      "tabs": {
+        "transactions": "Transactions",
+        "pending": "Pending Payments",
+        "projections": "Projections"
+      }
+    },
+    "projections": {
+      "monthPlus1": "Month +1",
+      "monthPlus2": "Month +2",
+      "title": "Financial Projection",
+      "description": "Revenue and expense estimate for upcoming months",
+      "summaryTitle": "Projection Summary (Next 3 months)",
+      "expectedRevenue": "Expected Revenue",
+      "expectedExpenses": "Expected Expenses",
+      "projectedProfit": "Projected Profit",
+      "noteTitle": "Note",
+      "noteDescription": "These values include issued invoices with future due dates and scheduled expenses.",
+      "revenueLabel": "Revenue"
+    },
+    "charts": {
+      "expensesByCategory": "Paid expenses distribution",
+      "expenses": "Expenses",
+      "income": "Income"
+    },
+    "transactions": {
+      "search": "Search transaction...",
+      "title": "Transaction History",
+      "all": "All",
+      "income": "Income",
+      "expense": "Expenses",
+      "date": "Date",
+      "description": "Description",
+      "project": "Project",
+      "type": "Type",
+      "amount": "Amount",
+      "status": "Status",
+      "empty": "No transactions found.",
+      "statusConfirmed": "Confirmed",
+      "statusPending": "Pending",
+      "statusCancelled": "Cancelled"
+    },
+    "pendingSettlements": {
+      "title": "Pending Payments",
+      "columns": {
+        "client": "Client",
+        "project": "Project",
+        "amount": "Amount",
+        "dueDate": "Due date",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "status": {
+        "overdueDays": "{count} days overdue",
+        "onTime": "On time"
+      },
+      "sendReminder": "Send Reminder",
+      "empty": "No pending payments."
+    },
+    "paymentStatus": {
+      "pending": "Pending",
+      "invoiced": "Invoiced",
+      "paid": "Paid",
+      "overdue": "Overdue"
+    }
+  },
+  "charts": {
+    "empty": {
+      "title": "No data available",
+      "description": "No activity detected",
+      "noAccessInPeriod": "No access recorded in the period"
+    }
+  },
+  "permissions": {
+    "fallback": {
+      "description": "System permission"
+    },
+    "categories": {
+      "projects_ecosystem": "Project Management",
+      "crm_sales": "Sales & CRM",
+      "financial": "Financial",
+      "admin": "Administration & Settings"
+    },
+    "items": {
+      "project_read": {
+        "label": "View Projects",
+        "description": "Allows viewing the project list and basic details."
+      },
+      "project_read_observations": {
+        "label": "View Project Observations",
+        "description": "Allows viewing notes and observations recorded on the project."
+      },
+      "project_read_recent_updates": {
+        "label": "View Recent Updates",
+        "description": "Allows viewing the project's activity log and recent updates."
+      },
+      "project_manage": {
+        "label": "Manage Project Content",
+        "description": "Allows managing documents, notes, and other operational project content."
+      },
+      "project_create": {
+        "label": "Create Projects",
+        "description": "Allows starting new projects in the organization."
+      },
+      "project_update": {
+        "label": "Edit Projects",
+        "description": "Change data, dates, status, and project properties."
+      },
+      "project_archive": {
+        "label": "Archive Projects",
+        "description": "Move completed projects to read-only archive."
+      },
+      "project_delete": {
+        "label": "Delete Projects",
+        "description": "Destructive action: permanently remove projects."
+      },
+      "backlog_read": {
+        "label": "View Backlog/Tasks",
+        "description": "Read access to project tasks and boards."
+      },
+      "backlog_manage": {
+        "label": "Manage Backlog",
+        "description": "Create, edit, move, and delete tasks/stories."
+      },
+      "client_read": {
+        "label": "View Clients",
+        "description": "Access to contacts and company database."
+      },
+      "client_create": {
+        "label": "Register Clients",
+        "description": "Add new clients to the CRM."
+      },
+      "client_update": {
+        "label": "Edit Clients",
+        "description": "Update existing client registration data."
+      },
+      "client_delete": {
+        "label": "Delete Clients",
+        "description": "Remove client records from the database."
+      },
+      "proposal_read": {
+        "label": "View Proposals",
+        "description": "View quote history."
+      },
+      "proposal_create": {
+        "label": "Create/Edit Proposals",
+        "description": "Generate new commercial quotes (drafts)."
+      },
+      "proposal_send": {
+        "label": "Send Proposals",
+        "description": "Authorization to send the final proposal to the client."
+      },
+      "proposal_approve": {
+        "label": "Approve Proposals (Manager)",
+        "description": "Allows approving discounts or special terms and deleting third-party proposals."
+      },
+      "contract_read": {
+        "label": "View Contracts",
+        "description": "Access to drafts and active contracts."
+      },
+      "contract_create": {
+        "label": "Generate Contracts",
+        "description": "Create drafts from templates."
+      },
+      "contract_sign": {
+        "label": "Sign/Finalize",
+        "description": "Mark contracts as signed (locks future edits)."
+      },
+      "financial_view_dashboard": {
+        "label": "Financial Dashboard",
+        "description": "Managerial view of cash flow and totals."
+      },
+      "financial_create": {
+        "label": "Create Financial Transactions",
+        "description": "Allows recording new transactions and entries in the financial module."
+      },
+      "financial_export": {
+        "label": "Export Financial Data",
+        "description": "Allows exporting reports and data from the financial module."
+      },
+      "invoice_read": {
+        "label": "View Invoices",
+        "description": "Access to issued billing history."
+      },
+      "invoice_create": {
+        "label": "Issue Charges",
+        "description": "Generate and send invoices to clients."
+      },
+      "invoice_cancel": {
+        "label": "Cancel Invoices",
+        "description": "Allows voiding an issued invoice or charge."
+      },
+      "expense_read": {
+        "label": "View Expenses",
+        "description": "View costs recorded in the system."
+      },
+      "expense_create": {
+        "label": "Record Expenses",
+        "description": "Register new costs or reimbursement requests."
+      },
+      "expense_approve": {
+        "label": "Approve Expenses",
+        "description": "Authorize effective payment of bills."
+      },
+      "settings_manage_members": {
+        "label": "Manage Team",
+        "description": "Invite members, remove access, and assign roles."
+      },
+      "settings_read_integrations": {
+        "label": "View Integrations",
+        "description": "Allows viewing connected integrations and sync status."
+      },
+      "settings_manage_integrations": {
+        "label": "Manage Integrations",
+        "description": "Connect, edit, and disconnect tools (Slack, Stripe, etc)."
+      },
+      "settings_manage_billing": {
+        "label": "System Subscription",
+        "description": "Manage plan, credit card, and SaaS invoices."
+      },
+      "settings_manage_expense_categories": {
+        "label": "Expense Categories",
+        "description": "Manage expense categories."
+      },
+      "service_catalog_read": {
+        "label": "View Service Catalog",
+        "description": "View the list of standard services offered."
+      },
+      "service_catalog_manage": {
+        "label": "Manage Service Catalog",
+        "description": "Define the default scope of services (backlog templates)."
+      },
+      "service_backlog_read": {
+        "label": "View Service Backlog",
+        "description": "View the list of service backlog items."
+      },
+      "service_backlog_manage": {
+        "label": "Manage Service Backlog",
+        "description": "Create, edit, move, and delete service backlog items."
+      }
+    }
+  },
+  "errors": {
+    "global": {
+      "title": "Something unexpected happened",
+      "imageAlt": "404 - Page not found"
+    },
+    "server": {
+      "unauthorized": "Unauthorized",
+      "unauthenticated": "User not authenticated",
+      "notLoggedIn": "User not logged in.",
+      "userNotFound": "User not found",
+      "sessionExpired": "Session expired.",
+      "sessionExpiredNoOrg": "Session expired or user has no linked organization.",
+      "sessionExpiredNotLoggedIn": "Session expired or user not logged in.",
+      "invalidData": "Invalid data.",
+      "invalidId": "Invalid ID.",
+      "accessDenied": "Access denied",
+      "unexpected": "Unexpected error. Please try again.",
+      "clientNotFound": "Client not found.",
+      "clientEmployeeAlreadyLinked": "This user is already linked to this client.",
+      "clientEmployeeCreateFailed": "Failed to create user for team member",
+      "clientEmployeeNotLinked": "User not associated with the company",
+      "clientDuplicateCnpj": "A company with the same tax ID is already registered",
+      "projectNotFound": "Project not found.",
+      "projectNotFoundForEdit": "Project not found for editing",
+      "invalidProjectId": "Invalid project identifier",
+      "contractNotFound": "Contract not found.",
+      "contractNoFile": "Contract has no file to download",
+      "contractFileMissing": "Contract file does not exist.",
+      "contractClientNotFound": "Contract client not found.",
+      "contractCannotDeleteSigned": "Cannot delete a signed contract",
+      "contractCannotDeleteCancelled": "Cannot delete a cancelled contract",
+      "contractInvalidTransition": "Invalid status transition.",
+      "proposalNotFound": "Proposal not found",
+      "proposalNoFile": "Proposal has no file to download",
+      "organizationNotFound": "Organization not found.",
+      "organizationIdRequired": "No organization identifier provided.",
+      "memberNotFound": "Member not found.",
+      "roleNotFound": "Access profile not found.",
+      "roleHasMembers": "Cannot delete a profile that has linked users.",
+      "roleWrongOrganization": "Access denied: This profile belongs to another organization.",
+      "invalidIdentifierType": "Invalid identifier type.",
+      "serviceNotFound": "Service not found.",
+      "serviceCategoryNotFound": "Service category not found.",
+      "serviceDuplicateName": "A service with this name already exists.",
+      "serviceNegativePrice": "Base price cannot be negative.",
+      "serviceCategoryDuplicateName": "A service category with this name already exists.",
+      "expenseCategoryDuplicateName": "An expense category with this name already exists.",
+      "invoiceNotFound": "Invoice not found.",
+      "backlogItemNotFound": "Backlog item not found.",
+      "serviceBacklogItemNotFound": "Service backlog item not found.",
+      "backlogNotFound": "Backlog list not found",
+      "documentNotFound": "Document not found or already deleted.",
+      "integrationNotFound": "Integration not found.",
+      "integrationTypeNotFound": "Integration type not found.",
+      "sonarIntegrationNotFound": "Project SonarQube integration not found.",
+      "permissionDenied": "You do not have permission to perform this action",
+      "projectCreatePermissionDenied": "You do not have permission to create projects",
+      "projectUpdatePermissionDenied": "You do not have permission to edit projects",
+      "clientAccessDenied": "You do not have access to this client.",
+      "actionDenied": "You do not have permission for this action.",
+      "serviceAccessDenied": "You do not have permission to access this service",
+      "securityStrategyUndefined": "Security strategy not defined for this resource.",
+      "clientResponsibleRequired": "Register the client's legal representative (name and email) before sending the contract.",
+      "emailBelongsToInternalMember": "This email belongs to an internal team member and cannot be linked as a client contact.",
+      "settingsContextUnsupported": "Unsupported settings context.",
+      "wrongCurrentPassword": "Current password is incorrect.",
+      "socialLoginNoPassword": "This user uses social login and has no password set.",
+      "serviceUpdateFailed": "Error updating service.",
+      "serviceDeleteFailed": "Error removing service.",
+      "serviceCreateFailed": "Internal error creating service.",
+      "permissionsLoadFailed": "Error loading permissions",
+      "connectionError": "Connection error.",
+      "invalidStatus": "Invalid status.",
+      "statusUpdateFailed": "Error updating status.",
+      "unexpectedRequestError": "Unexpected error processing the request.",
+      "roleIdRequired": "Access profile ID is required.",
+      "routePermissions": {
+        "serviceCategory": "You do not have permission to access service categories.",
+        "serviceCatalog": "You do not have permission to access the service catalog.",
+        "expenseCategory": "You do not have permission to access expense types.",
+        "integrationsCatalog": "Only the platform owner can access the integrations catalog.",
+        "integrationsConfig": "You do not have permission to configure integrations.",
+        "organizationMembers": "You do not have permission to manage organization members.",
+        "organizationRoles": "You do not have permission to manage access profiles.",
+        "organizationBilling": "You do not have permission to access organization billing.",
+        "organizationSettings": "You do not have permission to change organization settings.",
+        "organizationOverview": "You do not have permission to access this organization.",
+        "organizationObserverDenied": "Client portal users cannot access the organization area.",
+        "organizationAccessDenied": "You are not associated with this organization.",
+        "financial": "You do not have permission to access financial data.",
+        "contracts": "You do not have permission to access contracts.",
+        "projects": "You do not have permission to access projects.",
+        "clients": "You do not have permission to access clients."
+      },
+      "portal": {
+        "areaDenied": "You do not have permission to access this area.",
+        "clientAccessDenied": "You do not have access to this client."
+      },
+      "success": {
+        "clientCreated": "Client registered successfully!",
+        "clientUpdated": "Client updated successfully!",
+        "clientDeleted": "Client removed successfully!",
+        "passwordUpdated": "Password updated successfully!",
+        "avatarUpdated": "Avatar updated successfully!",
+        "passwordReset": "Password reset successfully.",
+        "passwordResetEmailSent": "If the email is registered, you will receive instructions shortly.",
+        "dataUpdated": "Data updated successfully!",
+        "employeeRemoved": "Employee removed (deactivated).",
+        "statusUpdated": "Status updated.",
+        "invoiceUpdated": "Invoice updated successfully!",
+        "invoiceDeleted": "Invoice removed successfully!",
+        "invoiceCreated": "Invoice created successfully!",
+        "expenseCreated": "Expense recorded successfully!",
+        "documentsAdded": "Documents added successfully!",
+        "contractDeleted": "Contract removed successfully.",
+        "dataFetched": "Data returned successfully.",
+        "employeeInvited": "Employee invited successfully!",
+        "organizationMemberInvited": "Invitation sent successfully!",
+        "proposalAdvanced": "Proposal advanced to next stage.",
+        "statusUpdatedSuccess": "Status updated successfully.",
+        "backlogImported": "{count} item(s) imported successfully.",
+        "proposalRemoved": "Proposal removed successfully.",
+        "expenseUpdated": "Expense updated successfully!",
+        "documentRemoved": "Document removed successfully.",
+        "projectCancelled": "Project cancelled successfully.",
+        "expenseRemoved": "Expense removed.",
+        "serviceConnected": "Service connected successfully."
+      },
+      "invalidCredentials": "Incorrect email or password.",
+      "authFailed": "Authentication error. Please try again.",
+      "passwordsMismatch": "Passwords do not match.",
+      "checkFormFields": "Please check the form errors.",
+      "updateFailed": "Update failed.",
+      "employeeRemoveFailed": "Error removing employee.",
+      "categoriesListFailed": "Error listing categories.",
+      "noFileSelected": "No file selected.",
+      "noBacklogItemsToImport": "No new items to import from this service.",
+      "backlogCreateFailed": "Internal error creating backlog.",
+      "backlogUpdateFailed": "Internal error updating backlog.",
+      "backlogDeleteFailed": "Internal error deleting backlog.",
+      "noteCreateFailed": "Internal error creating note.",
+      "noteUpdateFailed": "Internal error updating note.",
+      "noteRemoveFailed": "Internal error removing note.",
+      "avatarSaveFailed": "Internal error saving avatar.",
+      "fileValidationFailed": "File validation error.",
+      "dashboardStatsFailed": "Error loading dashboard statistics.",
+      "employeeCreateFailed": "Error registering employee.",
+      "projectIdNotProvided": "Project ID not provided.",
+      "invalidSearchParams": "Invalid search parameters.",
+      "backlogSyncFailed": "Internal error syncing backlog.",
+      "documentUploadFailed": "Error uploading documents.",
+      "documentRemoveFailed": "Error removing document. Please try again.",
+      "employeeListFailed": "Error listing employees.",
+      "backlogStatusChangeFailed": "Internal error changing status.",
+      "profileLoadFailed": "An unexpected error occurred loading the profile.",
+      "expenseUpdateInvalidData": "Invalid data for update.",
+      "invalidCommunicationChannel": "Invalid communication channel.",
+      "invalidBacklogIdentifier": "Invalid backlog identifier.",
+      "umamiIntegrationNotFound": "Project Umami integration not found.",
+      "umamiWebsiteIdMissing": "Website ID not configured in Umami integration."
+    }
+  },
+  "validation": {
+    "invalidId": "Invalid ID.",
+    "invalidData": "Invalid data.",
+    "required": "Required field.",
+    "invalidEmail": "Invalid email.",
+    "passwordMinLength": "Password must be at least 6 characters.",
+    "nameMinLength": "Name is too short.",
+    "nameMaxLength": "Name exceeds maximum length.",
+    "descriptionMinLength": "Description is too short.",
+    "descriptionMaxLength": "Description exceeds maximum length.",
+    "titleMinLength": "Title must be at least 3 characters.",
+    "titleMaxLength": "Title exceeds maximum length.",
+    "pageMin": "Page must be at least 1.",
+    "pageMax": "Maximum limit per page is 100.",
+    "selectClient": "Select a client.",
+    "selectCategory": "Select a category.",
+    "selectBank": "Select a valid bank.",
+    "selectPaymentMethod": "Select a payment method.",
+    "jobTitleRequired": "Job title is required.",
+    "pointsNonNegative": "Points cannot be negative.",
+    "priceNonNegative": "Price cannot be negative.",
+    "companyNameRequired": "Legal name is required.",
+    "fileMaxSize": "File must be at most 2MB.",
+    "invalidFileFormat": "Invalid format. Use JPG, PNG or WebP.",
+    "imageRequired": "Image is required.",
+    "passwordsMismatch": "Passwords do not match.",
+    "downPaymentMax": "Maximum down payment is 100%.",
+    "validUntilFuture": "Valid until date must be in the future.",
+    "entryPercentageRequired": "Down payment percentage is required.",
+    "responsibleIdInvalid": "Invalid responsible user ID.",
+    "integrationNameRequired": "Name is required.",
+    "integrationKeyRequired": "Technical key is required.",
+    "integrationLabelRequired": "Friendly label is required.",
+    "selectionRequired": "Selection is required.",
+    "minThreeChars": "Minimum 3 characters.",
+    "projectDescriptionMin": "Description must be more detailed.",
+    "noteDescriptionMin": "Project description must be at least 10 characters.",
+    "categoryNameRequired": "Category name is required.",
+    "serviceIdInvalid": "Invalid service ID.",
+    "invalidFile": "Invalid file.",
+    "invalidOrder": "Invalid order.",
+    "entryPercentagePositive": "Down payment percentage must be a positive number.",
+    "tagsListExpected": "This field expects a list of tags.",
+    "amountPositive": "Amount must be greater than zero.",
+    "dueDateRequired": "Due date is required.",
+    "invalidUrl": "Enter a valid URL.",
+    "nfseLinkInvalid": "Invalid invoice link.",
+    "serviceNameRequired": "Service name is required.",
+    "priceInvalid": "Price must be a valid number.",
+    "taxCodeInvalid": "Tax code for invoice must be a valid value.",
+    "titleRequired": "Title is required.",
+    "descriptionRequired": "Description is required.",
+    "pointsMustBeInteger": "Points must be a whole number.",
+    "pointsMustBeNumber": "Points must be a number.",
+    "documentationUrlInvalid": "External documentation link must be a valid URL.",
+    "invalidCategoryId": "Invalid category.",
+    "amountMustBePositive": "Amount must be positive.",
+    "invalidMemberId": "User identifier must be valid.",
+    "invalidRoleId": "Access profile identifier must be valid.",
+    "invalidBacklogId": "Invalid backlog ID.",
+    "invalidBacklogStatus": "Invalid status provided.",
+    "invalidProposalStatus": "Invalid proposal status.",
+    "invalidProjectId": "Invalid project ID.",
+    "invalidSprintId": "Invalid sprint ID.",
+    "jiraUrlInvalid": "Must be a valid URL (e.g. https://jira...)."
   }
 }

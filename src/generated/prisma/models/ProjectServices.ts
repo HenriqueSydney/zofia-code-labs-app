@@ -137,7 +137,7 @@ export type ProjectServicesGroupByOutputType = {
   _max: ProjectServicesMaxAggregateOutputType | null
 }
 
-type GetProjectServicesGroupByPayload<T extends ProjectServicesGroupByArgs> = Prisma.PrismaPromise<
+export type GetProjectServicesGroupByPayload<T extends ProjectServicesGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ProjectServicesGroupByOutputType, T['by']> &
       {
@@ -1126,6 +1126,11 @@ export type ProjectServicesFindManyArgs<ExtArgs extends runtime.Types.Extensions
    * Skip the first `n` ProjectServices.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of ProjectServices.
+   */
   distinct?: Prisma.ProjectServicesScalarFieldEnum | Prisma.ProjectServicesScalarFieldEnum[]
 }
 

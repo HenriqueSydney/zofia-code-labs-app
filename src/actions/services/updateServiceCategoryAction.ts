@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
 import { updateServiceCategorySchema } from "@/schemas/services/updateServiceCategorySchema";
 import { makeUpdateServiceCategoryUseCase } from "@/useCases/services/factories/makeUpdateServiceCategoryUseCase";
@@ -9,13 +10,13 @@ export async function updateServiceCategoryAction(data: unknown) {
   const session = await auth();
 
   if (!session?.user?.organizationId) {
-    return { success: false, message: "Não autorizado." };
+    return { success: false, message: await serverErrorMessage("unauthorized") };
   }
 
   const parsed = updateServiceCategorySchema.safeParse(data);
 
   if (!parsed.success) {
-    return { success: false, message: "Dados inválidos." };
+    return { success: false, message: await serverErrorMessage("invalidData") };
   }
 
   const { id, ...rest } = parsed.data;
@@ -26,6 +27,7 @@ export async function updateServiceCategoryAction(data: unknown) {
     await useCase.execute({
       id,
       organizationId: session.user.organizationId,
+      userId: session.user.id,
       data: {
         ...rest,
       },
@@ -34,8 +36,6 @@ export async function updateServiceCategoryAction(data: unknown) {
     revalidatePath("/dashboard/services");
     return { success: true };
   } catch (error) {
-    if (error instanceof Error)
-      return { success: false, message: error.message };
-    return { success: false, message: "Erro ao atualizar serviço." };
+    return { success: false, message: await resolveActionErrorMessage(error) };
   }
 }

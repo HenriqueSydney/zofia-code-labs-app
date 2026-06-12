@@ -1,9 +1,9 @@
 import { Contract, ContractStatus } from "@/generated/prisma/client";
 import { AuthBasePermissionStrategy } from "./auth-base-strategy";
 import { Operation, UserContext } from "./types";
-import { AppError } from "@/errors/AppError";
+import { BusinessRuleError } from "@/errors";
 import { PERMISSIONS, PermissionString } from "@/constants/permissions";
-import { contratMapper } from "@/mappers/contractStatusBadge";
+import { CONTRACT_STATUS_TRANSLATION_KEYS } from "@/mappers/contractStatusBadge";
 import { UserDoesNotHavePermissionError } from "@/errors/UserDoesNotHavePermissionError";
 
 export class AuthContractStrategy extends AuthBasePermissionStrategy<
@@ -66,19 +66,13 @@ export class AuthContractStrategy extends AuthBasePermissionStrategy<
     // Para corrigir, deve-se criar um aditivo ou um novo contrato.
     if (isLocked) {
       if (operation === "UPDATE") {
-        throw new AppError(
-          `Não é possível editar um contrato com status ${contratMapper[asset.status]}. Crie um termo aditivo.`,
-          400,
-        );
+        throw new BusinessRuleError(`Cannot edit a contract with status ${CONTRACT_STATUS_TRANSLATION_KEYS[asset.status]}. Create an addendum.`, { statusCode: 400 });
       }
 
       if (operation === "DELETE") {
         // Deletar contrato assinado é perigoso para auditoria.
         // Geralmente só permitimos 'Arquivar' (Soft Delete) ou proibimos total.
-        throw new AppError(
-          `Não é possível excluir um contrato assinado/vigente (${contratMapper[asset.status]}) por razões de auditoria.`,
-          403,
-        );
+        throw new BusinessRuleError(`Cannot delete a signed/active contract (${CONTRACT_STATUS_TRANSLATION_KEYS[asset.status]}) for audit reasons.`, { statusCode: 403 });
       }
     }
   }

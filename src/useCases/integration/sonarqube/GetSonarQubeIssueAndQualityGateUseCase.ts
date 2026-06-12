@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { IntegrationError } from "@/errors";
 import { IProjectIntegrationRepository } from "@/repositories/IProjectIntegrationRepository";
 import { SonarQubeService } from "@/services/codeQuality/SonarQubeService";
 import {
@@ -33,10 +33,7 @@ export class GetSonarQubeIssueAndQualityGateUseCase {
       );
 
     if (!projectIntegration) {
-      throw new AppError(
-        "Integração SonarQube não encontrada para este projeto.",
-        404
-      );
+      throw new IntegrationError("Integração SonarQube não encontrada para este projeto.", { statusCode: 404 });
     }
 
     // 2. Obtém a instância do serviço configurada (URL/Token)

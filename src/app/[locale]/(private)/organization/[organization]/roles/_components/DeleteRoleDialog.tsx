@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Trash2, Loader2, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 import {
   AlertDialog,
@@ -28,13 +29,16 @@ interface DeleteRoleDialogProps {
   roleId: string;
   roleName: string;
   disabled?: boolean;
+  canManage?: boolean;
 }
 
 export function DeleteRoleDialog({
   roleId,
   roleName,
   disabled = false,
+  canManage = true,
 }: DeleteRoleDialogProps) {
+  const t = useTranslations("organization.roles.delete");
   const [open, setOpen] = useState(false);
   const [isPending, setIsPending] = useState(false);
 
@@ -42,22 +46,24 @@ export function DeleteRoleDialog({
     setIsPending(true);
     try {
       await deleteCustomRoleAction(roleId);
-      toast.success(`Perfil "${roleName}" excluído com sucesso.`);
+      toast.success(t("toastSuccess", { name: roleName }));
       setOpen(false);
     } catch (error: any) {
-      toast.error(error.message || "Erro ao excluir perfil.");
+      toast.error(error.message || t("toastError"));
     } finally {
       setIsPending(false);
     }
   }
 
-  // Se estiver desabilitado (tem usuários usando), mostra botão bloqueado com Tooltip
+  if (!canManage) {
+    return null;
+  }
+
   if (disabled) {
     return (
       <TooltipProvider>
         <Tooltip delayDuration={300}>
           <TooltipTrigger asChild>
-            {/* Span é necessário para o Tooltip funcionar em elementos disabled */}
             <span tabIndex={0}>
               <Button
                 variant="ghost"
@@ -70,10 +76,8 @@ export function DeleteRoleDialog({
             </span>
           </TooltipTrigger>
           <TooltipContent className="bg-destructive text-destructive-foreground">
-            <p>Não é possível excluir perfis em uso.</p>
-            <p className="text-xs opacity-90">
-              Remova os usuários deste perfil primeiro.
-            </p>
+            <p>{t("tooltipInUse")}</p>
+            <p className="text-xs opacity-90">{t("tooltipRemoveUsers")}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -95,27 +99,24 @@ export function DeleteRoleDialog({
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2 text-destructive">
             <AlertTriangle className="h-5 w-5" />
-            Excluir Perfil de Acesso
+            {t("title")}
           </AlertDialogTitle>
           <AlertDialogDescription>
-            Você tem certeza que deseja excluir o perfil{" "}
-            <strong>{roleName}</strong>?
-            <br />
-            Essa ação não pode ser desfeita.
+            {t("description", { name: roleName })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>Cancelar</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>{t("cancel")}</AlertDialogCancel>
           <AlertDialogAction
             onClick={(e) => {
-              e.preventDefault(); // Impede fechamento automático para tratar o async
+              e.preventDefault();
               handleDelete();
             }}
             disabled={isPending}
             className="bg-destructive hover:bg-destructive/90 text-destructive-foreground focus:ring-destructive"
           >
             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Sim, excluir perfil
+            {t("confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

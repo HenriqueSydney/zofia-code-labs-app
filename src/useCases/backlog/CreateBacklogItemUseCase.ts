@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import {
   IBacklogItemsRepository,
@@ -27,7 +27,7 @@ export class CreateBacklogItemUseCase {
     );
 
     if (!doesProjectExists) {
-      throw new AppError("Projeto não localizado");
+      throw new ResourceNotFoundError("Projeto não localizado");
     }
 
     await checkUserPermissionForAsset(

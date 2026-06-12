@@ -20,6 +20,8 @@ import { ShieldCheck } from "lucide-react";
 import { RoleFormDialog } from "./_components/RoleFormDialog";
 import { DeleteRoleDialog } from "./_components/DeleteRoleDialog"; // Modal de deleção (simples)
 import { fetchOrganizationCustomRolesAction } from "@/actions/organization/fetchOrganizationCustomRolesAction";
+import { getOrganizationUiAccess } from "../_data/getOrganizationUiAccess";
+import { getTranslations } from "next-intl/server";
 
 interface IOrganizationRoles {
   params: Promise<{ organization: string }>;
@@ -28,7 +30,10 @@ interface IOrganizationRoles {
 export default async function OrganizationRoles({
   params,
 }: IOrganizationRoles) {
+  const t = await getTranslations("organization.roles");
+  const tCommon = await getTranslations("common");
   const { organization } = await params;
+  const { canManageMembers } = await getOrganizationUiAccess(organization);
 
   const [error, success] = await operationWrapper("action", "getRoles", () =>
     fetchOrganizationCustomRolesAction(organization),
@@ -40,9 +45,13 @@ export default async function OrganizationRoles({
     return (
       <EmptyState
         icon={ShieldCheck}
-        title="Nenhum perfil de acesso criado"
-        description="Crie perfis personalizados (ex: Gerente, Financeiro) para controlar o que cada membro pode fazer."
-        action={<RoleFormDialog orgId={organization} />}
+        title={t("emptyTitle")}
+        description={t("emptyDescription")}
+        action={
+          canManageMembers ? (
+            <RoleFormDialog orgId={organization} canManage={canManageMembers} />
+          ) : undefined
+        }
       />
     );
   }
@@ -52,22 +61,20 @@ export default async function OrganizationRoles({
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle>Perfis de Acesso</CardTitle>
-            <CardDescription>
-              Defina conjuntos de permissões reutilizáveis para sua equipe.
-            </CardDescription>
+            <CardTitle>{t("table.title")}</CardTitle>
+            <CardDescription>{t("table.description")}</CardDescription>
           </div>
-          <RoleFormDialog orgId={organization} />
+          <RoleFormDialog orgId={organization} canManage={canManageMembers} />
         </div>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Nome do Perfil</TableHead>
-              <TableHead>Membros</TableHead>
-              <TableHead>Permissões Habilitadas</TableHead>
-              <TableHead className="text-right">Ações</TableHead>
+              <TableHead>{t("table.profileName")}</TableHead>
+              <TableHead>{t("table.members")}</TableHead>
+              <TableHead>{t("table.enabledPermissions")}</TableHead>
+              <TableHead className="text-right">{t("table.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -77,21 +84,25 @@ export default async function OrganizationRoles({
                   <div>
                     <p className="font-medium">{role.name}</p>
                     <p className="text-sm text-muted-foreground truncate max-w-[300px]">
-                      {role.description || "Sem descrição"}
+                      {role.description || tCommon("noDescription")}
                     </p>
                   </div>
                 </TableCell>
 
                 <TableCell>
                   <Badge variant="secondary">
-                    {role._count?.members || 0} usuários
+                    {t("table.memberCount", {
+                      count: role._count?.members || 0,
+                    })}
                   </Badge>
                 </TableCell>
 
                 <TableCell>
                   <div className="flex flex-wrap gap-1">
                     <Badge variant="outline" className="text-xs">
-                      {role.permissions.length} permissões
+                      {t("table.permissionCount", {
+                        count: role.permissions.length,
+                      })}
                     </Badge>
 
                     {/* 1. Extraímos apenas os prefixos (grupos) únicos */}
@@ -125,13 +136,18 @@ export default async function OrganizationRoles({
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-1">
                     {/* Botão de Edição */}
-                    <RoleFormDialog orgId={organization} roleToEdit={role} />
+                    <RoleFormDialog
+                      orgId={organization}
+                      roleToEdit={role}
+                      canManage={canManageMembers}
+                    />
 
                     {/* Botão de Exclusão */}
                     <DeleteRoleDialog
                       roleId={role.id}
                       roleName={role.name}
                       disabled={role._count?.members > 0}
+                      canManage={canManageMembers}
                     />
                   </div>
                 </TableCell>

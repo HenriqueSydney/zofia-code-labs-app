@@ -1,4 +1,5 @@
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError } from "@/errors";
+import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import {
   FetchServiceTypeWithCategory,
   IServiceTypeRepository,
@@ -7,6 +8,7 @@ import {
 interface GetServiceTypeUseCaseRequest {
   serviceId: string;
   organizationId: string;
+  userId: string;
 }
 
 export class GetServiceTypeUseCase {
@@ -15,6 +17,7 @@ export class GetServiceTypeUseCase {
   async execute({
     organizationId,
     serviceId,
+    userId,
   }: GetServiceTypeUseCaseRequest): Promise<{
     serviceType: FetchServiceTypeWithCategory;
   }> {
@@ -24,8 +27,15 @@ export class GetServiceTypeUseCase {
     );
 
     if (!serviceType) {
-      throw new AppError("Serviço não localizado");
+      throw new ResourceNotFoundError("Serviço não localizado");
     }
+    
+    await checkUserPermissionForAsset(
+      "serviceType",
+      userId,
+      serviceType,
+      "READ",
+    );
 
     return { serviceType };
   }

@@ -4,7 +4,14 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
-import { Eye, Send, ThumbsUp, EyeClosed, Download } from "lucide-react";
+import {
+  Eye,
+  Send,
+  ThumbsUp,
+  EyeClosed,
+  Download,
+  AlertCircle,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -20,18 +27,21 @@ import { getContractDownloadUrl } from "@/actions/contract/getContractDownloadUr
 import { ContractWithDetails } from "@/repositories/IContractRepository";
 import { date } from "@/lib/dayjs";
 import { Link } from "@/i18n/navigation";
+import { clientHasResponsible } from "@/lib/clients/assertClientHasResponsible";
 
 // Componentes Customizados
 import { AttachmentIcon } from "@/components/AttachmentIcon";
 import { FormRadioCards } from "@/components/form/FormRadioCards";
+import { useTranslations } from "next-intl";
 
-const toClientSchema = z.object({
-  communicationChannel: z.enum(["email", "whatsapp"], {
-    error: "Selecione um canal de comunicação",
-  }),
-});
+const createToClientSchema = (channelError: string) =>
+  z.object({
+    communicationChannel: z.enum(["email", "none", "whatsapp"], {
+      error: channelError,
+    }),
+  });
 
-type FormValues = z.infer<typeof toClientSchema>;
+type FormValues = z.infer<ReturnType<typeof createToClientSchema>>;
 
 interface ContractSendToClientProps {
   contract: ContractWithDetails;
@@ -43,8 +53,15 @@ export function ContractSendToClient({
   contract,
   onSuccess,
 }: ContractSendToClientProps) {
+  const t = useTranslations("projects.transitions.send");
+  const tContract = useTranslations("projects.transitions.contractSend");
+  const tProposalSend = useTranslations("projects.transitions.proposalSend");
+  const tCommon = useTranslations("projects.transitions.common");
   const [loading, setLoading] = useState(false);
-  const isTemplate = contract.sourceType === "SYSTEM_TEMPLATE";
+  const client = contract.project.client;
+  const missingResponsible = !clientHasResponsible(client);
+
+  const toClientSchema = createToClientSchema(t("selectChannel"));
 
   const form = useForm<FormValues>({
     resolver: zodResolver(toClientSchema),
@@ -68,11 +85,13 @@ export function ContractSendToClient({
       }
 
       toast.success(
-        `Contrato enviado via ${data.communicationChannel} com sucesso!`,
+        tContract("toast.success", {
+          channel: data.communicationChannel,
+        }),
       );
       onSuccess();
     } catch (error) {
-      toast.error("Erro inesperado ao encaminhar o contrato.");
+      toast.error(tContract("toast.unexpectedError"));
     } finally {
       setLoading(false);
     }
@@ -92,25 +111,40 @@ export function ContractSendToClient({
       {/* Cabeçalho de Status */}
       <Alert className="bg-green-800/10 border-green-300/30">
         <ThumbsUp className="h-4 w-4" />
-        <AlertTitle>Contrato Pronto para Envio</AlertTitle>
-        <AlertDescription>
-          O documento foi gerado. Selecione o canal abaixo para notificar o
-          cliente.
-        </AlertDescription>
+        <AlertTitle>{tContract("alert.title")}</AlertTitle>
+        <AlertDescription>{tContract("alert.description")}</AlertDescription>
       </Alert>
+
+      {missingResponsible && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>{tContract("missingResponsible.title")}</AlertTitle>
+          <AlertDescription>
+            {tContract("missingResponsible.description")}{" "}
+            <Link
+              href={`/clients/${client.slug}`}
+              className="underline font-medium"
+            >
+              {tContract("missingResponsible.editClient")}
+            </Link>
+          </AlertDescription>
+        </Alert>
+      )}
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           {/* Card do Documento */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Documento Gerado</CardTitle>
+              <CardTitle className="text-base">
+                {tProposalSend("document.title")}
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex gap-2 text-sm text-muted-foreground">
-                <strong>Origem:</strong>
+                <strong>{tContract("originLabel")}</strong>
                 <span>
-                  {isTemplate ? "Modelo de Documento" : "Upload de arquivo"}
+                  {tProposalSend("document.originUpload")}
                 </span>
               </div>
               <Separator />
@@ -120,7 +154,7 @@ export function ContractSendToClient({
                   <AttachmentIcon extension="pdf" />
                   <div className="overflow-hidden">
                     <p className="text-sm font-medium line-clamp-1">
-                      Visualizar PDF
+                      {tProposalSend("document.viewPdf")}
                     </p>
                     <p className="text-xs text-muted-foreground">
                       {date(contract.createdAt).format("DD/MM/YYYY")}
@@ -132,7 +166,7 @@ export function ContractSendToClient({
                   {/* Botão de Visualizar (Link direto se existir, ou via action) */}
                   {contract.fileUrl && (
                     <Link href={contract.fileUrl} target="_blank">
-                      <Tooltip description="Abrir em nova aba">
+                      <Tooltip description={tContract("openInNewTab")}>
                         <Button variant="ghost" size="icon" type="button">
                           <Eye className="w-4 h-4" />
                         </Button>
@@ -143,7 +177,7 @@ export function ContractSendToClient({
                   {/* Botão de Download (Força download via signed URL) */}
                   <Tooltip
                     description={
-                      contract.fileKey ? "Baixar documento" : "Indisponível"
+                      contract.fileKey ? t("download") : t("unavailable")
                     }
                   >
                     <Button
@@ -164,25 +198,31 @@ export function ContractSendToClient({
           {/* Card do Canal de Envio */}
           <Card className="border-primary/20">
             <CardHeader>
-              <CardTitle className="text-base">Canal de Envio</CardTitle>
+              <CardTitle className="text-base">
+                {tProposalSend("channel.title")}
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Refatorado com FormRadioCards */}
               <FormRadioCards
                 control={form.control}
                 name="communicationChannel"
-                label="Notificar via:"
+                label={tContract("notifyVia")}
                 options={[
                   {
                     value: "email",
-                    label: "E-mail",
-                    description: "Envio formal com link seguro",
+                    label: tProposalSend("channel.email.label"),
+                    description: tContract("emailDescription"),
                   },
                   {
-                    value: "whatsapp",
-                    label: "WhatsApp",
-                    description: "Notificação rápida",
+                    value: "none",
+                    label: tProposalSend("channel.none.label"),
+                    description: tProposalSend("channel.none.description"),
                   },
+                  // {
+                  //   value: "whatsapp",
+                  //   label: tProposalSend("channel.whatsapp.label"),
+                  //   description: t("quickNotification"),
+                  // },
                 ]}
               />
 
@@ -191,14 +231,14 @@ export function ContractSendToClient({
               <Button
                 type="submit"
                 className="w-full h-12 gap-2 shadow-sm"
-                disabled={loading}
+                disabled={loading || missingResponsible}
               >
                 {loading ? (
-                  "Processando..."
+                  tCommon("processing")
                 ) : (
                   <>
                     <Send className="w-4 h-4" />
-                    Enviar Contrato
+                    {tContract("submit")}
                   </>
                 )}
               </Button>

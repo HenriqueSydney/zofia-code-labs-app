@@ -1,4 +1,5 @@
 import { LineChart, LineChartCategory } from "@/components/Charts/LineChart";
+import { getTranslations } from "next-intl/server";
 import { getCachedFinancialMetrics } from "../_data/get-cached-financial-metrics";
 
 interface IFinancialHistoryChart {
@@ -6,28 +7,26 @@ interface IFinancialHistoryChart {
 }
 
 export async function FinancialHistoryChart({ slug }: IFinancialHistoryChart) {
-  // Busca as métricas financeiras reais processadas pelo Use Case
+  const t = await getTranslations("projects.dashboard.charts.financial");
   const metrics = await getCachedFinancialMetrics(slug);
 
-  // Mantemos as cores semânticas (Verde para Receitas, Vermelho para Despesas)
   const categories: LineChartCategory[] = [
     {
       key: "revenue",
-      label: "Receitas",
-      color: "#10b981", // Emerald-500
+      label: t("revenue"),
+      color: "#10b981",
     },
     {
       key: "expenses",
-      label: "Despesas",
-      color: "#ef4444", // Red-500
+      label: t("expenses"),
+      color: "#ef4444",
     },
   ];
 
   return (
     <LineChart
-      title="Fluxo Financeiro"
-      description="Comparativo da evolução das Despesas e Receitas"
-      // metrics.chartData contém o array { month, revenue, expenses } agrupado pelo Repository
+      title={t("title")}
+      description={t("description")}
       data={metrics.chartData}
       indexKey="month"
       categories={categories}

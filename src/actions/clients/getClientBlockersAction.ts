@@ -1,14 +1,14 @@
 "use server";
 
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
+import { UnauthorizedError } from "@/errors";
 import { makeGetClientBlockersUseCase } from "@/useCases/clients/factories/makeGetClientBlockersUseCase";
 
 export async function getClientBlockersAction(slug: string) {
   const session = await auth();
 
   if (!session) {
-    throw new AppError("Usuário não logado.");
+    throw new UnauthorizedError("notLoggedIn");
   }
 
   const useCase = makeGetClientBlockersUseCase();
@@ -16,6 +16,7 @@ export async function getClientBlockersAction(slug: string) {
   const { blockerItens } = await useCase.execute({
     userId: session.user.id,
     slug,
+    memberRole: session.user.memberRole,
   });
 
   return blockerItens;

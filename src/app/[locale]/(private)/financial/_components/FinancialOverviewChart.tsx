@@ -7,7 +7,7 @@ export async function FinancialOverviewChart() {
   if (!data) return null;
 
   return (
-    <div className="lg:col-span-2">
+    <div className="lg:col-span-2 h-full! !max-h-[800px]">
       <AreaLineChart
         title="Fluxo de Caixa"
         description="Comparativo de Receitas e Despesas (Regime de Caixa)"

@@ -1,32 +1,30 @@
+import { v } from "@/schemas/validationMessages";
 import { backlogPriorityArray } from "@/mappers/BacklogMappers";
 import { z } from "zod";
 
 export const DefaultBacklogPriorityEnum = z.enum(backlogPriorityArray);
 
-// 2. Schema de Validação
 export const defaultbacklogItemSchema = z.object({
-  // ID é opcional pois na criação não existe, mas na edição é necessário
   id: z.cuid().optional(),
 
   title: z
-    .string({ error: "O título é obrigatório." })
-    .min(3, "O título deve ter pelo menos 3 caracteres.")
-    .max(255, "O título deve ter no máximo 255 caracteres."),
+    .string({ error: v.titleRequired })
+    .min(3, v.titleMinLength)
+    .max(255, v.titleMaxLength),
 
   description: z
-    .string({ error: "A descrição é obrigatória." })
-    .min(1, "A descrição não pode ser vazia."),
+    .string({ error: v.descriptionRequired })
+    .min(1, v.descriptionMinLength),
 
-  serviceTypeId: z.cuid("ID do serviço inválido."),
+  serviceTypeId: z.cuid(v.serviceIdInvalid),
 
   points: z
-    .number({ error: "Os pontos devem ser um número." })
-    .int("Os pontos devem ser um número inteiro.")
-    .min(0, "Os pontos não podem ser negativos.")
+    .number({ error: v.pointsMustBeNumber })
+    .int(v.pointsMustBeInteger)
+    .min(0, v.pointsNonNegative)
     .default(0),
 
   priority: DefaultBacklogPriorityEnum.default("LOW"),
 });
 
-// 3. Exportando o Type inferido
 export type DefaultBacklogItemSchema = z.infer<typeof defaultbacklogItemSchema>;

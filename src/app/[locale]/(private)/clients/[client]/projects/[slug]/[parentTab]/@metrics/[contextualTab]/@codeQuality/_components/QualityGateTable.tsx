@@ -10,12 +10,15 @@ import {
 } from "@/components/ui/table";
 import { CheckCircle, AlertTriangle, XCircle } from "lucide-react";
 import { QualityGateCondition } from "@/services/codeQuality/ICodeQualityService";
+import { useTranslations } from "next-intl";
 
 export function QualityGateTable({
   conditions,
 }: {
   conditions: QualityGateCondition[];
 }) {
+  const t = useTranslations("projects.metrics.codeQuality.qualityGate");
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "OK":
@@ -33,10 +36,10 @@ export function QualityGateTable({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Métrica</TableHead>
-          <TableHead>Valor Atual</TableHead>
-          <TableHead>Limite</TableHead>
-          <TableHead>Status</TableHead>
+          <TableHead>{t("metric")}</TableHead>
+          <TableHead>{t("currentValue")}</TableHead>
+          <TableHead>{t("threshold")}</TableHead>
+          <TableHead>{t("status")}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

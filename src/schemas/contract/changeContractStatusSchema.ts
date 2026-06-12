@@ -1,3 +1,4 @@
+import { v } from "@/schemas/validationMessages";
 import { ContractStatus } from "@/generated/prisma/enums";
 import { z } from "zod";
 
@@ -12,7 +13,7 @@ export const contractStatus: ContractStatus[] = [
 export const changeContractStatusSchema = z.object({
   contractId: z.cuid(),
   contractStatus: z.enum(contractStatus, {
-    error: "Status da proposta inválido",
+    error: v.invalidProposalStatus,
   }),
 });
 

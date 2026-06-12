@@ -1,8 +1,8 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
-import { handleErrors } from "@/errors/handleErrors";
+import { UnauthorizedError } from "@/errors";
 import { makeResetClientEmployeePasswordUseCase } from "@/useCases/clients/factories/makeResetClientEmployeePasswordUseCase";
 
 export async function resetClientEmployeePasswordAction(
@@ -12,7 +12,7 @@ export async function resetClientEmployeePasswordAction(
   const session = await auth();
 
   if (!session) {
-    throw new AppError("Usuário não logado.");
+    throw new UnauthorizedError("notLoggedIn");
   }
 
   try {
@@ -25,9 +25,9 @@ export async function resetClientEmployeePasswordAction(
       employeeId,
     });
 
-    return { success: true, message: "Senha redefinida com sucesso." };
+    return { success: true, message: await resolveSuccessMessage("passwordReset") };
   } catch (error) {
-    const message = handleErrors(error);
+    const message = await resolveActionErrorMessage(error);
     return { success: false, message };
   }
 }

@@ -1,15 +1,16 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { handleErrors } from "@/errors/handleErrors";
 import { makeCreateOrganizationIntegrationUseCase } from "@/useCases/integration/factories/makeCreateOrganizationTypeUseCase";
 import { revalidatePath } from "next/cache";
+import { v } from "@/schemas/validationMessages";
 import { z } from "zod";
 
 // Validamos que recebemos o ID do tipo e um objeto de segredos
 const connectSchema = z.object({
   integrationTypeId: z.cuid(),
-  secretValues: z.record(z.string(), z.string().min(1, "Campo obrigatório")),
+  secretValues: z.record(z.string(), z.string().min(1, v.required)),
   enableByol: z.boolean().default(false),
 });
 
@@ -20,7 +21,7 @@ export async function connectOrganizationIntegrationAction(data: unknown) {
   if (!organizationId || !session?.user?.id) {
     return {
       success: false,
-      message: "Sessão expirada ou organização não encontrada.",
+      message: await serverErrorMessage("sessionExpiredNoOrg"),
     };
   }
 
@@ -42,7 +43,7 @@ export async function connectOrganizationIntegrationAction(data: unknown) {
     revalidatePath("/settings/integration/config");
     return { success: true };
   } catch (error) {
-    const message = handleErrors(error);
+    const message = await resolveActionErrorMessage(error);
     return { success: false, message };
   }
 }

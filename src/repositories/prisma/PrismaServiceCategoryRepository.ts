@@ -3,11 +3,9 @@ import { IServiceCategoryRepository } from "../IServiceCategoryRepository";
 import { Prisma, ServiceCategory } from "@/generated/prisma/client";
 import { date } from "@/lib/dayjs";
 
-export class PrismaServiceCategoryRepository
-  implements IServiceCategoryRepository
-{
+export class PrismaServiceCategoryRepository implements IServiceCategoryRepository {
   async create(
-    data: Prisma.ServiceCategoryUncheckedCreateInput
+    data: Prisma.ServiceCategoryUncheckedCreateInput,
   ): Promise<ServiceCategory> {
     return await prisma.serviceCategory.create({
       data,
@@ -16,7 +14,7 @@ export class PrismaServiceCategoryRepository
 
   async update(
     id: string,
-    data: Partial<Prisma.ServiceCategoryUncheckedCreateInput>
+    data: Partial<Prisma.ServiceCategoryUncheckedCreateInput>,
   ): Promise<ServiceCategory> {
     return await prisma.serviceCategory.update({
       where: { id },
@@ -33,11 +31,17 @@ export class PrismaServiceCategoryRepository
     });
   }
 
-  async list(query?: string | null): Promise<ServiceCategory[]> {
-    let where: Prisma.ServiceCategoryWhereInput = {};
+  async list(
+    organizationId: string,
+    query?: string | null,
+  ): Promise<ServiceCategory[]> {
+    let where: Prisma.ServiceCategoryWhereInput = {
+      organizationId,
+    };
 
     if (query) {
       where = {
+        ...where,
         OR: [
           {
             name: {
@@ -64,7 +68,7 @@ export class PrismaServiceCategoryRepository
 
   async findById(
     id: string,
-    organizationId: string
+    organizationId: string,
   ): Promise<ServiceCategory | null> {
     return await prisma.serviceCategory.findFirst({
       where: {
@@ -76,7 +80,7 @@ export class PrismaServiceCategoryRepository
 
   async findByName(
     name: string,
-    organizationId: string
+    organizationId: string,
   ): Promise<ServiceCategory | null> {
     return await prisma.serviceCategory.findFirst({
       where: {

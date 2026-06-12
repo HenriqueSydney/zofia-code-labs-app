@@ -2,6 +2,7 @@
 
 import { Control } from "react-hook-form";
 import { LucideIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import {
   FormControl,
@@ -41,10 +42,13 @@ export function FormSelect({
   name,
   label,
   options,
-  placeholder = "Selecione...",
+  placeholder,
   description,
   disabled,
 }: FormSelectProps) {
+  const t = useTranslations("common");
+  const resolvedPlaceholder = placeholder ?? t("select");
+
   return (
     <FormField
       control={control}
@@ -59,7 +63,7 @@ export function FormSelect({
           >
             <FormControl>
               <SelectTrigger className="cursor-pointer">
-                <SelectValue placeholder={placeholder} />
+                <SelectValue placeholder={resolvedPlaceholder} />
               </SelectTrigger>
             </FormControl>
             <SelectContent>

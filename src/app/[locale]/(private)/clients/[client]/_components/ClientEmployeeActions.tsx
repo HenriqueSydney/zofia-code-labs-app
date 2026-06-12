@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ClientEmployeesWithDetails } from "@/repositories/IClientEmployeesRepository";
-import { MoreHorizontal, Trash2, Pencil, Key, UserRoundX } from "lucide-react"; // Ícones adicionais
+import { MoreHorizontal, Trash2, Pencil, Key, UserRoundX } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import { resetClientEmployeePasswordAction } from "@/actions/clients/resetClientEmployeePasswordAction";
 import { ClientEmployeeForm } from "./ClientEmployeeForm";
+import { useTranslations } from "next-intl";
 
 interface IClientEmployeeActions {
   employee: ClientEmployeesWithDetails;
@@ -31,6 +32,8 @@ export function ClientEmployeeActions({
   clientSlug,
   employee,
 }: IClientEmployeeActions) {
+  const t = useTranslations("clients.employees.actions");
+  const tCommon = useTranslations("common.actions");
   const [isEditClientEmployeeModalOpen, setIsEditClientEmployeeModalOpen] =
     useState(false);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
@@ -80,7 +83,7 @@ export function ClientEmployeeActions({
               setIsEditClientEmployeeModalOpen(true);
             }}
           >
-            <Pencil className="mr-2 h-4 w-4" /> Editar
+            <Pencil className="mr-2 h-4 w-4" /> {t("edit")}
           </DropdownMenuItem>
           <DropdownMenuItem
             className="cursor-pointer"
@@ -89,7 +92,7 @@ export function ClientEmployeeActions({
               setIsPasswordResetModalOpen(true);
             }}
           >
-            <Key className="mr-2 h-4 w-4" /> Redefinir Senha
+            <Key className="mr-2 h-4 w-4" /> {t("resetPassword")}
           </DropdownMenuItem>
           <DropdownMenuItem
             className="text-destructive cursor-pointer"
@@ -98,7 +101,7 @@ export function ClientEmployeeActions({
               setIsRemoveModalOpen(true);
             }}
           >
-            <UserRoundX className="mr-2 h-4 w-4" /> Desativar
+            <UserRoundX className="mr-2 h-4 w-4" /> {t("deactivate")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -109,10 +112,9 @@ export function ClientEmployeeActions({
       >
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Editar Usuário</DialogTitle>
+            <DialogTitle>{t("editUserTitle")}</DialogTitle>
             <DialogDescription>
-              Esta ação irá atualizar os dados do usuário{" "}
-              <strong>{employee.user.name}</strong>.
+              {t("editUserDescription", { name: employee.user.name ?? "" })}
             </DialogDescription>
           </DialogHeader>
 
@@ -133,19 +135,15 @@ export function ClientEmployeeActions({
       <Dialog open={isRemoveModalOpen} onOpenChange={setIsRemoveModalOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Remover Usuário</DialogTitle>
+            <DialogTitle>{t("removeUserTitle")}</DialogTitle>
             <DialogDescription>
-              Esta ação irá inativar o acesso de{" "}
-              <strong>{employee.user.name}</strong>.
+              {t("removeUserDescription", { name: employee.user.name ?? "" })}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-4">
-            <p className="text-sm text-muted-foreground">
-              Ao remover o usuário, este será inativado, permanecendo na lista
-              apenas para fins de auditoria histórica.
-            </p>
-            <p className="font-medium">Confirma que deseja inativá-lo?</p>
+            <p className="text-sm text-muted-foreground">{t("removeUserHint")}</p>
+            <p className="font-medium">{t("confirmDeactivate")}</p>
 
             <div className="w-full flex justify-end gap-3 mt-4">
               <Button
@@ -153,14 +151,14 @@ export function ClientEmployeeActions({
                 variant="outline"
                 onClick={() => setIsRemoveModalOpen(false)}
               >
-                Cancelar
+                {tCommon("cancel")}
               </Button>
               <Button
                 type="button"
                 variant="destructive"
                 onClick={handleRemoveEmployee}
               >
-                Inativar usuário
+                {t("deactivateUser")}
               </Button>
             </div>
           </div>
@@ -173,21 +171,17 @@ export function ClientEmployeeActions({
       >
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Redefinir Senha de Usuário</DialogTitle>
+            <DialogTitle>{t("resetPasswordTitle")}</DialogTitle>
             <DialogDescription>
-              Esta senha irá redefinir a senha de{" "}
-              <strong>{employee.user.name}</strong>.
+              {t("resetPasswordDescription", { name: employee.user.name ?? "" })}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-4">
             <p className="text-sm text-muted-foreground">
-              Ao redefinir a senha, o usuário irá receber um email com a nova
-              senha e as orientações para alteração da senha gerada.
+              {t("resetPasswordHint")}
             </p>
-            <p className="font-medium">
-              Confirma que deseja redefinir a senha?
-            </p>
+            <p className="font-medium">{t("confirmResetPassword")}</p>
 
             <div className="w-full flex justify-end gap-3 mt-4">
               <Button
@@ -195,14 +189,14 @@ export function ClientEmployeeActions({
                 variant="outline"
                 onClick={() => setIsPasswordResetModalOpen(false)}
               >
-                Cancelar
+                {tCommon("cancel")}
               </Button>
               <Button
                 type="button"
                 variant="default"
                 onClick={handleResetEmployeePassword}
               >
-                Redefinir senha
+                {t("resetPasswordButton")}
               </Button>
             </div>
           </div>

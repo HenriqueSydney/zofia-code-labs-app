@@ -24,6 +24,8 @@ import {
 } from "@/repositories/IOrganizationRepository";
 import { updateMemberRoleSchema } from "@/schemas/organization/updateMemberRoleSchema";
 import { updateMemberRoleAction } from "@/actions/organization/updateMemberRoleAction";
+import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 const editRoleSchema = updateMemberRoleSchema.omit({ memberId: true });
 
@@ -44,6 +46,12 @@ export function EditMemberRoleDialog({
   orgId,
   customRolesList,
 }: EditMemberRoleDialogProps) {
+  const t = useTranslations("organization.members.editRole");
+  const tRoles = useTranslations("organization.members.defaultRoles");
+  const tCommon = useTranslations("common");
+  const tCommonActions = useTranslations("common.actions");
+  const tErrors = useTranslations("errors.server");
+  const { data: session, update } = useSession();
   const [isPending, setIsPending] = useState(false);
 
   const form = useForm<EditRoleFormData>({
@@ -68,12 +76,18 @@ export function EditMemberRoleDialog({
     });
 
     if (result.error) {
-      toast.error(result.error);
+      toast.error(
+        typeof result.error === "string" ? result.error : tErrors("invalidData"),
+      );
       setIsPending(false);
       return;
     }
 
-    toast.success("Perfil atualizado com sucesso!");
+    if (member.userId === session?.user?.id) {
+      await update();
+    }
+
+    toast.success(t("toastSuccess"));
     onOpenChange(false);
     setIsPending(false);
   }
@@ -84,9 +98,9 @@ export function EditMemberRoleDialog({
   }));
 
   const roleOptions = [
-    { label: "Administrador", value: "admin" },
-    { label: "Membro", value: "member" },
-    { label: "Visualizador", value: "viewer" },
+    { label: tRoles("admin"), value: "admin" },
+    { label: tRoles("member"), value: "member" },
+    { label: tRoles("viewer"), value: "viewer" },
     ...customRoles,
   ];
 
@@ -94,21 +108,20 @@ export function EditMemberRoleDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Alterar Perfil</DialogTitle>
+          <DialogTitle>{t("title")}</DialogTitle>
           <DialogDescription>
-            Alterando nível de acesso de{" "}
-            <span className="font-medium text-foreground">{member.name}</span>.
+            {t("description", { name: member.name ?? "" })}
           </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormSelect
-              label="Cargo / Perfil"
+              label={t("roleLabel")}
               control={form.control}
               name="customRoleId"
               options={roleOptions}
-              placeholder="Selecione..."
+              placeholder={tCommon("select")}
             />
 
             <DialogFooter>
@@ -118,11 +131,11 @@ export function EditMemberRoleDialog({
                 onClick={() => onOpenChange(false)}
                 disabled={isPending}
               >
-                Cancelar
+                {tCommonActions("cancel")}
               </Button>
               <Button type="submit" disabled={isPending}>
                 {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Salvar
+                {tCommonActions("save")}
               </Button>
             </DialogFooter>
           </form>

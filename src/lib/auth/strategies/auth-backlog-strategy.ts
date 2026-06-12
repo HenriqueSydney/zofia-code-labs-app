@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { ValidationError, BusinessRuleError } from "@/errors";
 import { AuthBasePermissionStrategy } from "./auth-base-strategy";
 import { Operation, UserContext } from "./types";
 import { BacklogItem } from "@/generated/prisma/client";
@@ -54,10 +54,7 @@ export class AuthBacklogStrategy extends AuthBasePermissionStrategy<BacklogItem>
       );
 
       if (!isCreator && !hasProjectSuperPower) {
-        throw new AppError(
-          "Apenas o criador do item ou um administrador do projeto pode excluí-lo.",
-          403,
-        );
+        throw new ValidationError("Apenas o criador do item ou um administrador do projeto pode excluí-lo.", { statusCode: 403 });
       }
     }
 
@@ -66,7 +63,7 @@ export class AuthBacklogStrategy extends AuthBasePermissionStrategy<BacklogItem>
     // -------------------------------------------------------------------------
     /* Se você quiser impedir edição de itens arquivados, por exemplo:
        if (operation === "UPDATE" && asset.status === "ARCHIVED") {
-         throw new AppError("Não é possível editar itens arquivados.", 400);
+         throw new BusinessRuleError("Não é possível editar itens arquivados.", { statusCode: 400 });
        }
     */
   }

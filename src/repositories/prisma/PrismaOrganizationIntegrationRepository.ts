@@ -3,14 +3,13 @@ import { OrganizationIntegration, Prisma } from "@/generated/prisma/client";
 import {
   IOrganizationIntegrationRepository,
   OrganizationIntegrationWithDetails,
+  OrganizationIntegrationWithSafeInformation,
 } from "../IOrganizationIntegrationRepository";
 import { OrganizationIntegrationWhereInput } from "@/generated/prisma/models";
 
-export class PrismaOrganizationIntegrationRepository
-  implements IOrganizationIntegrationRepository
-{
+export class PrismaOrganizationIntegrationRepository implements IOrganizationIntegrationRepository {
   async create(
-    data: Prisma.OrganizationIntegrationUncheckedCreateInput
+    data: Prisma.OrganizationIntegrationUncheckedCreateInput,
   ): Promise<OrganizationIntegration> {
     return await prisma.organizationIntegration.create({
       data,
@@ -19,7 +18,7 @@ export class PrismaOrganizationIntegrationRepository
   }
 
   async findById(
-    id: string
+    id: string,
   ): Promise<OrganizationIntegrationWithDetails | null> {
     return await prisma.organizationIntegration.findUnique({
       where: { id },
@@ -36,7 +35,7 @@ export class PrismaOrganizationIntegrationRepository
 
   async findByOrgAndType(
     organizationId: string,
-    integrationTypeId: string
+    integrationTypeId: string,
   ): Promise<OrganizationIntegrationWithDetails | null> {
     return await prisma.organizationIntegration.findUnique({
       where: {
@@ -58,7 +57,7 @@ export class PrismaOrganizationIntegrationRepository
 
   async findByOrgAndSlug(
     organizationId: string,
-    slug: string
+    slug: string,
   ): Promise<OrganizationIntegrationWithDetails | null> {
     return await prisma.organizationIntegration.findFirst({
       where: {
@@ -78,7 +77,7 @@ export class PrismaOrganizationIntegrationRepository
 
   async listByOrganization(
     organizationId: string,
-    query?: string
+    query?: string,
   ): Promise<OrganizationIntegration[]> {
     const where: OrganizationIntegrationWhereInput = query
       ? {
@@ -113,7 +112,7 @@ export class PrismaOrganizationIntegrationRepository
 
   async update(
     id: string,
-    data: Prisma.OrganizationIntegrationUpdateInput
+    data: Prisma.OrganizationIntegrationUpdateInput,
   ): Promise<OrganizationIntegration> {
     return await prisma.organizationIntegration.update({
       where: { id },
@@ -125,7 +124,7 @@ export class PrismaOrganizationIntegrationRepository
   async updateHealthStatus(
     id: string,
     status: any,
-    lastError?: string
+    lastError?: string,
   ): Promise<void> {
     await prisma.organizationIntegration.update({
       where: { id },
@@ -143,5 +142,45 @@ export class PrismaOrganizationIntegrationRepository
     await prisma.organizationIntegration.delete({
       where: { id },
     });
+  }
+
+  async findManyByTags(
+    organizationId: string,
+    tags: string[] | string,
+  ): Promise<OrganizationIntegrationWithSafeInformation[]> {
+    const tagList = Array.isArray(tags) ? tags : [tags];
+
+    const orgIntegrations = await prisma.organizationIntegration.findMany({
+      include: {
+        integrationType: true,
+      },
+      where: {
+        organizationId,
+        integrationType: {
+          deletedAt: null,
+        },
+      },
+    });
+
+    return orgIntegrations
+      .filter((orgIntegration) => {
+        const fieldsSchema = JSON.stringify(
+          orgIntegration.integrationType.fieldsSchema,
+        );
+
+        return tagList.some((tag) => fieldsSchema.includes(tag));
+      })
+      .map((orgIntegration) => ({
+        id: orgIntegration.id,
+        organizationId: orgIntegration.organizationId,
+        integrationTypeId: orgIntegration.integrationTypeId,
+        healthStatus: orgIntegration.healthStatus,
+        enabled: orgIntegration.enabled,
+        integrationType: {
+          name: orgIntegration.integrationType.name,
+          slug: orgIntegration.integrationType.slug,
+          logo: orgIntegration.integrationType.logo,
+        },
+      }));
   }
 }

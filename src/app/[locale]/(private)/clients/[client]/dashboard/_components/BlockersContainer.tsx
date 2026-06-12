@@ -8,13 +8,15 @@ import {
 } from "@/components/ui/card";
 import { AlertCircle, CheckCircle, Inbox } from "lucide-react";
 import { getCachedClientBlockers } from "../_data/get-cached-client-blockers";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/twMerge";
+import { getTranslations } from "next-intl/server";
 
 interface IBlockerContainer {
   slug: string;
 }
 
 export async function BlockerContainer({ slug }: IBlockerContainer) {
+  const t = await getTranslations("clients.dashboard.blockers");
   const data = await getCachedClientBlockers(slug);
 
   return (
@@ -34,11 +36,10 @@ export async function BlockerContainer({ slug }: IBlockerContainer) {
           )}
         >
           {data.length === 0 && <CheckCircle className="h-5 w-5" />}
-          {data.length > 0 && <AlertCircle className="h-5 w-5" />} Aguardando
-          Você
+          {data.length > 0 && <AlertCircle className="h-5 w-5" />} {t("title")}
         </CardTitle>
         <CardDescription>
-          {data.length} ações necessárias para não atrasar o cronograma.
+          {t("description", { count: data.length })}
         </CardDescription>
       </CardHeader>
       <CardContent className="overflow-y-auto flex-1 pr-4 custom-scrollbar">
@@ -66,10 +67,8 @@ export async function BlockerContainer({ slug }: IBlockerContainer) {
             <div className="bg-gray-800/50 p-4 rounded-full mb-3">
               <Inbox className="w-8 h-8 opacity-20" />
             </div>
-            <p className="text-sm font-medium">Nenhuma ação pendente</p>
-            <p className="text-xs opacity-50">
-              Não há pendências do cliente passível de atrasar o cronograma
-            </p>
+            <p className="text-sm font-medium">{t("emptyTitle")}</p>
+            <p className="text-xs opacity-50">{t("emptyDescription")}</p>
           </div>
         )}
       </CardContent>

@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.3.0
- * Query Engine version: 9d6ad21cbbceab97458517b147a6a09ff43aa735
+ * Prisma Client JS version: 7.8.0
+ * Query Engine version: 3c6e192761c0362d496ed980de936e2f3cebcd3a
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.3.0",
-  engine: "9d6ad21cbbceab97458517b147a6a09ff43aa735"
+  client: "7.8.0",
+  engine: "3c6e192761c0362d496ed980de936e2f3cebcd3a"
 }
 
 /**
@@ -395,7 +395,6 @@ export const ModelName = {
   ServiceCategory: 'ServiceCategory',
   ServiceType: 'ServiceType',
   ServiceDefaultBacklogItem: 'ServiceDefaultBacklogItem',
-  DocumentTemplate: 'DocumentTemplate',
   Client: 'Client',
   ClientEmployees: 'ClientEmployees',
   Proposal: 'Proposal',
@@ -407,10 +406,12 @@ export const ModelName = {
   ProjectRoles: 'ProjectRoles',
   ProjectMember: 'ProjectMember',
   ProjectDocuments: 'ProjectDocuments',
+  ProjectRating: 'ProjectRating',
   ProjectServices: 'ProjectServices',
   ProjectNote: 'ProjectNote',
   Sprint: 'Sprint',
   BacklogItem: 'BacklogItem',
+  BacklogItemChecklistItem: 'BacklogItemChecklistItem',
   BudgetEntry: 'BudgetEntry',
   ExpenseCategory: 'ExpenseCategory',
   Expense: 'Expense',
@@ -438,7 +439,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "organization" | "user" | "member" | "customRole" | "account" | "loginHistory" | "session" | "verificationToken" | "serviceCategory" | "serviceType" | "serviceDefaultBacklogItem" | "documentTemplate" | "client" | "clientEmployees" | "proposal" | "proposalTemplate" | "proposalItem" | "contract" | "contractTemplate" | "project" | "projectRoles" | "projectMember" | "projectDocuments" | "projectServices" | "projectNote" | "sprint" | "backlogItem" | "budgetEntry" | "expenseCategory" | "expense" | "invoice" | "integrationType" | "organizationIntegration" | "projectIntegration" | "sonarMetricSnapshot" | "sonarQualityGateCondition" | "umamiMetricSnapshot" | "webhookLog" | "auditLog"
+    modelProps: "organization" | "user" | "member" | "customRole" | "account" | "loginHistory" | "session" | "verificationToken" | "serviceCategory" | "serviceType" | "serviceDefaultBacklogItem" | "client" | "clientEmployees" | "proposal" | "proposalTemplate" | "proposalItem" | "contract" | "contractTemplate" | "project" | "projectRoles" | "projectMember" | "projectDocuments" | "projectRating" | "projectServices" | "projectNote" | "sprint" | "backlogItem" | "backlogItemChecklistItem" | "budgetEntry" | "expenseCategory" | "expense" | "invoice" | "integrationType" | "organizationIntegration" | "projectIntegration" | "sonarMetricSnapshot" | "sonarQualityGateCondition" | "umamiMetricSnapshot" | "webhookLog" | "auditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1256,80 +1257,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    DocumentTemplate: {
-      payload: Prisma.$DocumentTemplatePayload<ExtArgs>
-      fields: Prisma.DocumentTemplateFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.DocumentTemplateFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentTemplatePayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.DocumentTemplateFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentTemplatePayload>
-        }
-        findFirst: {
-          args: Prisma.DocumentTemplateFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentTemplatePayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.DocumentTemplateFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentTemplatePayload>
-        }
-        findMany: {
-          args: Prisma.DocumentTemplateFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentTemplatePayload>[]
-        }
-        create: {
-          args: Prisma.DocumentTemplateCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentTemplatePayload>
-        }
-        createMany: {
-          args: Prisma.DocumentTemplateCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.DocumentTemplateCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentTemplatePayload>[]
-        }
-        delete: {
-          args: Prisma.DocumentTemplateDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentTemplatePayload>
-        }
-        update: {
-          args: Prisma.DocumentTemplateUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentTemplatePayload>
-        }
-        deleteMany: {
-          args: Prisma.DocumentTemplateDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.DocumentTemplateUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.DocumentTemplateUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentTemplatePayload>[]
-        }
-        upsert: {
-          args: Prisma.DocumentTemplateUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentTemplatePayload>
-        }
-        aggregate: {
-          args: Prisma.DocumentTemplateAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateDocumentTemplate>
-        }
-        groupBy: {
-          args: Prisma.DocumentTemplateGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.DocumentTemplateGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.DocumentTemplateCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.DocumentTemplateCountAggregateOutputType> | number
-        }
-      }
-    }
     Client: {
       payload: Prisma.$ClientPayload<ExtArgs>
       fields: Prisma.ClientFieldRefs
@@ -2144,6 +2071,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ProjectRating: {
+      payload: Prisma.$ProjectRatingPayload<ExtArgs>
+      fields: Prisma.ProjectRatingFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProjectRatingFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectRatingPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProjectRatingFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectRatingPayload>
+        }
+        findFirst: {
+          args: Prisma.ProjectRatingFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectRatingPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProjectRatingFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectRatingPayload>
+        }
+        findMany: {
+          args: Prisma.ProjectRatingFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectRatingPayload>[]
+        }
+        create: {
+          args: Prisma.ProjectRatingCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectRatingPayload>
+        }
+        createMany: {
+          args: Prisma.ProjectRatingCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProjectRatingCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectRatingPayload>[]
+        }
+        delete: {
+          args: Prisma.ProjectRatingDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectRatingPayload>
+        }
+        update: {
+          args: Prisma.ProjectRatingUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectRatingPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProjectRatingDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProjectRatingUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProjectRatingUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectRatingPayload>[]
+        }
+        upsert: {
+          args: Prisma.ProjectRatingUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectRatingPayload>
+        }
+        aggregate: {
+          args: Prisma.ProjectRatingAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProjectRating>
+        }
+        groupBy: {
+          args: Prisma.ProjectRatingGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProjectRatingGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProjectRatingCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProjectRatingCountAggregateOutputType> | number
+        }
+      }
+    }
     ProjectServices: {
       payload: Prisma.$ProjectServicesPayload<ExtArgs>
       fields: Prisma.ProjectServicesFieldRefs
@@ -2437,6 +2438,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.BacklogItemCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.BacklogItemCountAggregateOutputType> | number
+        }
+      }
+    }
+    BacklogItemChecklistItem: {
+      payload: Prisma.$BacklogItemChecklistItemPayload<ExtArgs>
+      fields: Prisma.BacklogItemChecklistItemFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BacklogItemChecklistItemFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BacklogItemChecklistItemPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BacklogItemChecklistItemFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BacklogItemChecklistItemPayload>
+        }
+        findFirst: {
+          args: Prisma.BacklogItemChecklistItemFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BacklogItemChecklistItemPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BacklogItemChecklistItemFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BacklogItemChecklistItemPayload>
+        }
+        findMany: {
+          args: Prisma.BacklogItemChecklistItemFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BacklogItemChecklistItemPayload>[]
+        }
+        create: {
+          args: Prisma.BacklogItemChecklistItemCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BacklogItemChecklistItemPayload>
+        }
+        createMany: {
+          args: Prisma.BacklogItemChecklistItemCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BacklogItemChecklistItemCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BacklogItemChecklistItemPayload>[]
+        }
+        delete: {
+          args: Prisma.BacklogItemChecklistItemDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BacklogItemChecklistItemPayload>
+        }
+        update: {
+          args: Prisma.BacklogItemChecklistItemUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BacklogItemChecklistItemPayload>
+        }
+        deleteMany: {
+          args: Prisma.BacklogItemChecklistItemDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BacklogItemChecklistItemUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BacklogItemChecklistItemUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BacklogItemChecklistItemPayload>[]
+        }
+        upsert: {
+          args: Prisma.BacklogItemChecklistItemUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BacklogItemChecklistItemPayload>
+        }
+        aggregate: {
+          args: Prisma.BacklogItemChecklistItemAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBacklogItemChecklistItem>
+        }
+        groupBy: {
+          args: Prisma.BacklogItemChecklistItemGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BacklogItemChecklistItemGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BacklogItemChecklistItemCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BacklogItemChecklistItemCountAggregateOutputType> | number
         }
       }
     }
@@ -3405,6 +3480,7 @@ export const MemberScalarFieldEnum = {
   role: 'role',
   customRoleId: 'customRoleId',
   specificPermissions: 'specificPermissions',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   removedAt: 'removedAt'
@@ -3450,6 +3526,8 @@ export const LoginHistoryScalarFieldEnum = {
   userAgent: 'userAgent',
   device: 'device',
   city: 'city',
+  country: 'country',
+  region: 'region',
   createdAt: 'createdAt'
 } as const
 
@@ -3518,20 +3596,6 @@ export const ServiceDefaultBacklogItemScalarFieldEnum = {
 export type ServiceDefaultBacklogItemScalarFieldEnum = (typeof ServiceDefaultBacklogItemScalarFieldEnum)[keyof typeof ServiceDefaultBacklogItemScalarFieldEnum]
 
 
-export const DocumentTemplateScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  title: 'title',
-  content: 'content',
-  type: 'type',
-  isSystem: 'isSystem',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type DocumentTemplateScalarFieldEnum = (typeof DocumentTemplateScalarFieldEnum)[keyof typeof DocumentTemplateScalarFieldEnum]
-
-
 export const ClientScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
@@ -3543,6 +3607,9 @@ export const ClientScalarFieldEnum = {
   phone: 'phone',
   address: 'address',
   logoReference: 'logoReference',
+  responsibleName: 'responsibleName',
+  responsibleEmail: 'responsibleEmail',
+  responsiblePhone: 'responsiblePhone',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -3578,6 +3645,8 @@ export const ProposalScalarFieldEnum = {
   createdBy: 'createdBy',
   sourceType: 'sourceType',
   downPaymentPercentage: 'downPaymentPercentage',
+  paymentGatewayId: 'paymentGatewayId',
+  paymentMethod: 'paymentMethod',
   fileKey: 'fileKey',
   fileUrl: 'fileUrl',
   projectId: 'projectId',
@@ -3594,7 +3663,6 @@ export type ProposalScalarFieldEnum = (typeof ProposalScalarFieldEnum)[keyof typ
 
 export const ProposalTemplateScalarFieldEnum = {
   id: 'id',
-  documentTemplateId: 'documentTemplateId',
   content: 'content',
   isDefault: 'isDefault',
   isActive: 'isActive',
@@ -3645,7 +3713,6 @@ export type ContractScalarFieldEnum = (typeof ContractScalarFieldEnum)[keyof typ
 
 export const ContractTemplateScalarFieldEnum = {
   id: 'id',
-  documentTemplateId: 'documentTemplateId',
   content: 'content',
   isDefault: 'isDefault',
   isActive: 'isActive',
@@ -3707,14 +3774,27 @@ export type ProjectMemberScalarFieldEnum = (typeof ProjectMemberScalarFieldEnum)
 
 export const ProjectDocumentsScalarFieldEnum = {
   id: 'id',
+  projectId: 'projectId',
   name: 'name',
   extension: 'extension',
-  createdAt: 'createdAt',
   documentUrlReference: 'documentUrlReference',
-  projectId: 'projectId'
+  createdAt: 'createdAt'
 } as const
 
 export type ProjectDocumentsScalarFieldEnum = (typeof ProjectDocumentsScalarFieldEnum)[keyof typeof ProjectDocumentsScalarFieldEnum]
+
+
+export const ProjectRatingScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  rating: 'rating',
+  comment: 'comment',
+  techQuality: 'techQuality',
+  communication: 'communication',
+  createdAt: 'createdAt'
+} as const
+
+export type ProjectRatingScalarFieldEnum = (typeof ProjectRatingScalarFieldEnum)[keyof typeof ProjectRatingScalarFieldEnum]
 
 
 export const ProjectServicesScalarFieldEnum = {
@@ -3779,6 +3859,20 @@ export const BacklogItemScalarFieldEnum = {
 export type BacklogItemScalarFieldEnum = (typeof BacklogItemScalarFieldEnum)[keyof typeof BacklogItemScalarFieldEnum]
 
 
+export const BacklogItemChecklistItemScalarFieldEnum = {
+  id: 'id',
+  description: 'description',
+  dueDate: 'dueDate',
+  clientBlocker: 'clientBlocker',
+  order: 'order',
+  backlogItemId: 'backlogItemId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BacklogItemChecklistItemScalarFieldEnum = (typeof BacklogItemChecklistItemScalarFieldEnum)[keyof typeof BacklogItemChecklistItemScalarFieldEnum]
+
+
 export const BudgetEntryScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
@@ -3838,6 +3932,7 @@ export const InvoiceScalarFieldEnum = {
   clientId: 'clientId',
   internetBankingProvider: 'internetBankingProvider',
   paymentType: 'paymentType',
+  chargeType: 'chargeType',
   amount: 'amount',
   dueDate: 'dueDate',
   paidAt: 'paidAt',
@@ -3953,6 +4048,8 @@ export type UmamiMetricSnapshotScalarFieldEnum = (typeof UmamiMetricSnapshotScal
 export const WebhookLogScalarFieldEnum = {
   id: 'id',
   provider: 'provider',
+  eventType: 'eventType',
+  documentId: 'documentId',
   eventId: 'eventId',
   payload: 'payload',
   status: 'status',
@@ -4116,6 +4213,20 @@ export type ListEnumMemberRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 
 
 /**
+ * Reference to a field of type 'MemberStatus'
+ */
+export type EnumMemberStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MemberStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'MemberStatus[]'
+ */
+export type ListEnumMemberStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MemberStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -4175,20 +4286,6 @@ export type EnumBacklogPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$
  * Reference to a field of type 'BacklogPriority[]'
  */
 export type ListEnumBacklogPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BacklogPriority[]'>
-    
-
-
-/**
- * Reference to a field of type 'TemplateType'
- */
-export type EnumTemplateTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TemplateType'>
-    
-
-
-/**
- * Reference to a field of type 'TemplateType[]'
- */
-export type ListEnumTemplateTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TemplateType[]'>
     
 
 
@@ -4417,6 +4514,20 @@ export type ListEnumPaymentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$
 
 
 /**
+ * Reference to a field of type 'InvoiceChargeType'
+ */
+export type EnumInvoiceChargeTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InvoiceChargeType'>
+    
+
+
+/**
+ * Reference to a field of type 'InvoiceChargeType[]'
+ */
+export type ListEnumInvoiceChargeTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InvoiceChargeType[]'>
+    
+
+
+/**
  * Reference to a field of type 'FinancialStatus'
  */
 export type EnumFinancialStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FinancialStatus'>
@@ -4536,6 +4647,21 @@ export type PrismaClientOptions = ({
    * ```
    */
   comments?: runtime.SqlCommenterPlugin[]
+  /**
+   * Optional maximum size for the query plan cache. If not provided, a default size will be used.
+   * A value of `0` can be used to disable the cache entirely. A higher cache size can improve
+   * performance for applications that execute a large number of unique queries, while a smaller
+   * cache size can reduce memory usage.
+   * 
+   * @example
+   * ```
+   * const prisma = new PrismaClient({
+   *   adapter,
+   *   queryPlanCacheMaxSize: 100,
+   * })
+   * ```
+   */
+  queryPlanCacheMaxSize?: number
 }
 export type GlobalOmitConfig = {
   organization?: Prisma.OrganizationOmit
@@ -4549,7 +4675,6 @@ export type GlobalOmitConfig = {
   serviceCategory?: Prisma.ServiceCategoryOmit
   serviceType?: Prisma.ServiceTypeOmit
   serviceDefaultBacklogItem?: Prisma.ServiceDefaultBacklogItemOmit
-  documentTemplate?: Prisma.DocumentTemplateOmit
   client?: Prisma.ClientOmit
   clientEmployees?: Prisma.ClientEmployeesOmit
   proposal?: Prisma.ProposalOmit
@@ -4561,10 +4686,12 @@ export type GlobalOmitConfig = {
   projectRoles?: Prisma.ProjectRolesOmit
   projectMember?: Prisma.ProjectMemberOmit
   projectDocuments?: Prisma.ProjectDocumentsOmit
+  projectRating?: Prisma.ProjectRatingOmit
   projectServices?: Prisma.ProjectServicesOmit
   projectNote?: Prisma.ProjectNoteOmit
   sprint?: Prisma.SprintOmit
   backlogItem?: Prisma.BacklogItemOmit
+  backlogItemChecklistItem?: Prisma.BacklogItemChecklistItemOmit
   budgetEntry?: Prisma.BudgetEntryOmit
   expenseCategory?: Prisma.ExpenseCategoryOmit
   expense?: Prisma.ExpenseOmit

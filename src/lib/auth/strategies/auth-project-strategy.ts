@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { BusinessRuleError } from "@/errors";
 import { AuthBasePermissionStrategy } from "./auth-base-strategy";
 import { Operation, UserContext } from "./types";
 import { Project, ProjectStatus } from "@/generated/prisma/client";
@@ -34,8 +34,20 @@ export class AuthProjectStrategy extends AuthBasePermissionStrategy<Project> {
     // -------------------------------------------------------------------------
     const requiredPermission = this.getRequiredPermission(operation);
 
-    // Assume-se que user.permissions é um array de strings ["project:read", ...]
-    if (!user.permissions.includes(requiredPermission)) {
+    const isExistingProject =
+      asset !== null &&
+      "id" in asset &&
+      typeof (asset as Project).id === "string";
+
+    const canManageProjectContent =
+      user.permissions.includes(PERMISSIONS.PROJECT.MANAGE) &&
+      isExistingProject &&
+      (operation === "UPDATE" || operation === "CREATE");
+
+    if (
+      !user.permissions.includes(requiredPermission) &&
+      !canManageProjectContent
+    ) {
       throw new UserDoesNotHavePermissionError(requiredPermission);
     }
 
@@ -53,10 +65,7 @@ export class AuthProjectStrategy extends AuthBasePermissionStrategy<Project> {
       // Exceção: Talvez um Admin possa reabrir (UPDATE) o projeto mesmo fechado?
       // Se quiser permitir isso, adicione: if (!user.permissions.includes('project:manage_locked')) ...
 
-      throw new AppError(
-        `Não é possível editar um projeto com status ${asset.status}. Reabra o projeto primeiro.`,
-        400,
-      );
+      throw new BusinessRuleError(`Não é possível editar um projeto com status ${asset.status}. Reabra o projeto primeiro.`, { statusCode: 400 });
     }
   }
 }

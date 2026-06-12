@@ -10,10 +10,10 @@ import {
 } from "@/components/ui/card";
 import { date } from "@/lib/dayjs";
 import { UmamiHistoryResponse } from "@/services/webAnalytics/IWebAnalyticsService";
+import { useTranslations } from "next-intl";
 import {
   Bar,
   CartesianGrid,
-  Legend,
   BarChart,
   ResponsiveContainer,
   Tooltip,
@@ -26,20 +26,20 @@ interface IVisitorsBarChart {
 }
 
 export function VisitorsBarChart({ hourlyHistory }: IVisitorsBarChart) {
+  const t = useTranslations("projects.metrics.webAnalytics.charts.hourlyVisitors");
+
   const fullDaySkeleton = Array.from({ length: 24 }, (_, i) => {
     const hour = i.toString().padStart(2, "0") + "h";
     return { hour, visitors: 0 };
   });
 
-  // 2. Mapear os dados reais do Umami para um formato de fácil consulta (Lookup)
   const realDataMap = new Map(
     hourlyHistory.sessions.map((session) => [
-      date(session.x).format("HH[h]"), // Garantimos o match no formato "HH:00"
+      date(session.x).format("HH[h]"),
       session.y,
-    ])
+    ]),
   );
 
-  // 3. Mesclar o esqueleto com os dados reais
   const hourlyData = fullDaySkeleton.map((slot) => ({
     ...slot,
     visitors: realDataMap.get(slot.hour) || 0,
@@ -48,8 +48,8 @@ export function VisitorsBarChart({ hourlyHistory }: IVisitorsBarChart) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Visitantes por Hora</CardTitle>
-        <CardDescription>Distribuição ao longo do dia</CardDescription>
+        <CardTitle>{t("title")}</CardTitle>
+        <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="h-[250px] w-full min-h-[250px]">
@@ -68,7 +68,7 @@ export function VisitorsBarChart({ hourlyHistory }: IVisitorsBarChart) {
                 axisLine={false}
                 tickLine={false}
                 tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }}
-                interval={3} // Mostra as labels de 3 em 3 horas para não poluir
+                interval={3}
               />
               <YAxis
                 axisLine={false}
@@ -81,7 +81,7 @@ export function VisitorsBarChart({ hourlyHistory }: IVisitorsBarChart) {
               />
               <Bar
                 dataKey="visitors"
-                fill="#a855f7" // Cor roxa do seu layout de referência
+                fill="#a855f7"
                 radius={[4, 4, 0, 0]}
                 barSize={20}
               />

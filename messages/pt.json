@@ -6,6 +6,8 @@
   "header": {
     "theme": "Altere o tema da cor do site",
     "logoutButton": "Logout",
+    "openMenu": "Abrir menu",
+    "closeMenu": "Fechar menu",
     "loginDialog": {
       "button": "Entrar",
       "title": "Login",
@@ -28,11 +30,9 @@
     "title": "Perfil de Usuário",
     "myProfile": "Meu Perfil",
     "description": "Gerencie suas informações pessoais e configurações de conta",
-
     "roles": {
       "admin": "ADMIN"
     },
-
     "infoCards": {
       "memberSince": "Membro desde",
       "emailVerified": "Email Verificado",
@@ -41,24 +41,40 @@
       "subscribed": "Inscrito",
       "notSubscribed": "Não inscrito"
     },
-
     "connectedAccounts": {
       "title": "Contas Conectadas",
       "connectedOn": "Conectado em",
       "noAccounts": "Nenhuma conta vinculada",
       "noAccountsDesc": "Conecte com suas redes sociais para facilitar o login."
     },
-
     "security": {
       "title": "Segurança",
       "passwordSet": "Senha de acesso",
       "noPassword": "Senha não configurada",
+      "active": "Segurança ativa",
       "lastChanged": "Última alteração: {date}",
       "authViaSocial": "Você utiliza login social. Crie uma senha para acesso direto.",
       "changePassword": "Alterar Senha",
+      "setPassword": "Definir Senha",
       "createPassword": "Criar Senha"
     },
-
+    "changePasswordForm": {
+      "currentPasswordRequired": "A senha atual é obrigatória.",
+      "newPasswordMin": "A nova senha deve ter no mínimo 6 caracteres.",
+      "confirmPasswordRequired": "Confirme a nova senha.",
+      "passwordsMismatch": "As senhas não coincidem.",
+      "currentPasswordLabel": "Senha Atual",
+      "currentPasswordPlaceholder": "Digite sua senha atual",
+      "newPasswordLabel": "Nova Senha",
+      "newPasswordPlaceholder": "Digite a nova senha",
+      "confirmPasswordLabel": "Confirmar Nova Senha",
+      "confirmPasswordPlaceholder": "Repita a nova senha",
+      "saveButton": "Salvar Nova Senha"
+    },
+    "avatarForm": {
+      "selectImage": "Selecione uma imagem.",
+      "helperText": "Máximo 5MB (PNG, JPG, WEBP)"
+    },
     "activeSessions": {
       "title": "Sessões Ativas",
       "noSessionsTitle": "Nenhuma sessão ativa",
@@ -70,26 +86,287 @@
       "expiresAt": "Expira em:",
       "close": "Encerrar sessão"
     },
-
     "footer": {
       "userId": "ID do Usuário:",
       "lastUpdate": "Última atualização:"
     },
-
     "placeholders": {
       "user": "Usuário",
       "notAvailable": "N/A"
     },
-
     "LoginHistory": {
       "title": "Histórico de Acesso",
+      "ipAddress": "IP Oculto",
+      "ipAddressTitle": "Endereço IP",
+      "accessDateTitle": "Data do Acesso",
+      "localhost": "Localhost",
       "footerNote": "Exibindo os últimos 10 acessos à sua conta para fins de segurança."
     },
-
+    "sectionCard": {
+      "toggle": "Expandir ou recolher seção"
+    },
+    "permissions": {
+      "title": "Permissões e Perfis",
+      "rolesTitle": "Perfis de acesso",
+      "customRole": "Perfil personalizado",
+      "permissionsDesc": "Permissões efetivas na organização, agrupadas por área.",
+      "extra": "extra",
+      "noOrganization": "Sem organização vinculada",
+      "noOrganizationDesc": "Permissões de equipe ficam disponíveis após vincular-se a uma organização.",
+      "noMembership": "Sem vínculo ativo na organização",
+      "noMembershipDesc": "Este usuário ainda não possui um perfil de acesso definido na organização.",
+      "noPermissions": "Nenhuma permissão atribuída"
+    },
     "errors": {
       "mustBeLoggedIn": "Usuário tem que estar logado para consultar os próprios dados",
       "unauthorizedAccess": "Apenas o próprio usuário ou o Administrador pode ter acesso a dados de usuário",
       "userNotFound": "User not found"
+    }
+  },
+  "navigation": {
+    "sidebar": {
+      "mainMenu": "Menu Principal",
+      "settings": "Configurações",
+      "dashboard": "Dashboard",
+      "clients": "Clientes",
+      "projects": "Projetos",
+      "financial": "Financeiro",
+      "contracts": "Contratos",
+      "serviceCategories": "Categorias de Serviço",
+      "serviceCatalog": "Catálogo de Serviços",
+      "expenseTypes": "Tipos de Despesas",
+      "integrationsCatalog": "Catálogo de Integrações",
+      "integrationsConfig": "Configurar Integrações"
+    },
+    "userMenu": {
+      "myOrganization": "Minha Organização",
+      "adminDashboard": "Admin Dashboard"
+    }
+  },
+  "settings": {
+    "services": {
+      "category": {
+        "title": "Categoria de Serviços",
+        "description": "Gerencie as categorias de serviços oferecidos pela empresa",
+        "search": "Buscar categoria...",
+        "emptyTitle": "Nenhuma categoria de serviço localizada",
+        "emptyDescription": "Cadastre categorias de serviços e vincule-as a serviços para que possa integrar com sistemas de emissão de Notas Fiscais, bem como agrupá-los por contexto",
+        "form": {
+          "toastUpdateSuccess": "Categoria atualizada com sucesso!",
+          "toastCreateSuccess": "Categoria criada com sucesso!",
+          "toastDeleteSuccess": "Categoria removida com sucesso!",
+          "name": "Nome da Categoria de Serviço",
+          "namePlaceholder": "Ex: Landing Page Express",
+          "taxCode": "Código do Imposto (NF-E)",
+          "description": "Descrição",
+          "descriptionPlaceholder": "Detalhes do que está incluso...",
+          "edit": "Editar Categoria",
+          "create": "Criar Categoria",
+          "dialogEditTitle": "Editar Categoria",
+          "dialogEditDescription": "Preencha os dados da categoria de serviço"
+        }
+      },
+      "catalog": {
+        "title": "Catálogo de Serviços",
+        "description": "Gerencie os serviços oferecidos pela empresa",
+        "search": "Buscar serviços...",
+        "emptyTitle": "Nenhum serviço localizado",
+        "emptyDescription": "Cadastre os serviços que sua empresa fornece para que você possa montar propostas contextualizadas e com valor agregado",
+        "form": {
+          "toastUpdateSuccess": "Serviço atualizado com sucesso!",
+          "toastCreateSuccess": "Serviço criado com sucesso!",
+          "toastDeleteSuccess": "Serviço removido com sucesso!",
+          "name": "Nome do Serviço",
+          "namePlaceholder": "Ex: Landing Page Express",
+          "category": "Categoria (para NFe)",
+          "categoryPlaceholder": "Selecione uma categoria...",
+          "basePrice": "Preço Base",
+          "basePricePlaceholder": "R$ 0,00",
+          "basePriceDescription": "Deixe zerado ou vazio se for sob orçamento.",
+          "description": "Descrição",
+          "descriptionPlaceholder": "Detalhes do que está incluso...",
+          "edit": "Editar Serviço",
+          "create": "Criar Serviço",
+          "dialogEditTitle": "Editar Serviço",
+          "dialogEditDescription": "Preencha os dados do serviço"
+        }
+      },
+      "backlog": {
+        "listTitleService": "Backlog Padrão do Serviço",
+        "searchPlaceholder": "Buscar no backlog...",
+        "filter": {
+          "priority": {
+            "all": "Todas as prioridades",
+            "high": "Alta",
+            "low": "Baixa"
+          },
+          "priorityPlaceholder": "Prioridade"
+        },
+        "noPermissionBacklog": "Você não tem permissões de acesso à visuação dos backlogs do serviço.",
+        "emptyDescription": "Nenhum item de backlog cadastrado até o momento. Inicie a gestão do backlog com o cadastramento de ao menos 1 item.",
+        "noDescription": "Nenhuma descrição informada.",
+        "noEditPermission": "Você não tem permissão para editar o backlog",
+        "saveStatus": {
+          "saving": "Salvando...",
+          "saved": "Salvo"
+        },
+        "priority": {
+          "medium": "Média"
+        },
+        "form": {
+          "toastUpdateSuccess": "Item atualizado com sucesso!",
+          "toastCreateSuccess": "Item criado com sucesso!",
+          "toastUnexpectedError": "Ocorreu um erro inesperado.",
+          "title": "Título da Tarefa",
+          "titlePlaceholder": "Ex: Implementar Login OAuth",
+          "priority": "Prioridade",
+          "storyPoints": "Story Points",
+          "description": "Descrição Detalhada",
+          "descriptionPlaceholder": "Critérios de aceitação, detalhes técnicos...",
+          "cancel": "Cancelar",
+          "saveChanges": "Salvar Alterações",
+          "createTask": "Criar Tarefa"
+        },
+        "details": {
+          "title": "Título",
+          "priority": "Prioridade",
+          "points": "Pontos",
+          "detailedDescription": "Descrição detalhada",
+          "editTask": "Editar Tarefa",
+          "deleteError": "Erro ao tentar remover a Tarefa.",
+          "deleteSuccess": "Tarefa removida com sucesso"
+        }
+      }
+    },
+    "expenses": {
+      "title": "Tipos de Despesa",
+      "searchPlaceholder": "Buscar categoria de despesa...",
+      "emptyTitle": "Nenhuma categoria de despesa localizada",
+      "description": "Categorize as movimentações financeiras",
+      "emptyDescription": "Cadastre categorias de despesa e para categorizar suas movimentações financeiras",
+      "fetchError": "Falha na recuperação das categorias de despesas",
+      "nature": {
+        "operational": "Operacional",
+        "directProject": "Direto (Projeto)",
+        "investment": "Investimento",
+        "personal": "Pessoal/Sócio"
+      },
+      "category": {
+        "form": {
+          "toastUpdateSuccess": "Categoria atualizada!",
+          "toastCreateSuccess": "Categoria criada!",
+          "toastDeleteSuccess": "Categoria de Despesa removida com sucesso!",
+          "name": "Nome da Categoria *",
+          "namePlaceholder": "Ex: Infraestrutura Cloud",
+          "nature": "Natureza Financeira",
+          "naturePlaceholder": "Selecione a natureza...",
+          "description": "Descrição",
+          "descriptionPlaceholder": "Descrição opcional para identificar os gastos desta categoria",
+          "create": "Criar Categoria",
+          "dialogEditTitle": "Editar Categoria de Despesa",
+          "dialogEditDescription": "Preencha os dados da categoria de despesa"
+        }
+      }
+    },
+    "integrations": {
+      "catalog": {
+        "errors": {
+          "listFailed": "Erro ao listar os tipos de integração"
+        },
+        "page": {
+          "title": "Catálogo de Integrações",
+          "description": "Configure as integrações disponíveis na plataforma"
+        },
+        "search": "Buscar tipo de integração...",
+        "card": {
+          "noDescription": "Sem descrição definida para esta integração.",
+          "viewDocs": "Ver Docs"
+        },
+        "form": {
+          "fieldRequired": "Preencha o Nome e a Chave do campo.",
+          "duplicateKey": "Esta chave técnica já foi adicionada.",
+          "toastUpdateSuccess": "Atualizado!",
+          "toastCreateSuccess": "Criado!",
+          "toastDeleteSuccess": "Tipo de integração removido com sucesso!",
+          "name": "Nome da Integração",
+          "namePlaceholder": "Ex: Stripe",
+          "logo": "Logo",
+          "byol": "Permite BYOL?",
+          "byolDescription": "Habilita o cliente a usar a própria instância/licença.",
+          "description": "Descrição",
+          "descriptionPlaceholder": "O que ela faz...",
+          "externalDocs": "Documentação Externa",
+          "fieldsBuilderTitle": "Configuração de Campos",
+          "fieldsBuilderDescription": "Defina as chaves que serão armazenadas no Infisical.",
+          "uiNameLabel": "Nome UI",
+          "uiNamePlaceholder": "Ex: API Key",
+          "keyType": "Tipo de Chave",
+          "keyTypeOptions": {
+            "tag": "TAG",
+            "publicKey": "Chave Pública",
+            "secret": "Segredo"
+          },
+          "inputType": "Tipo de Campo",
+          "inputTypeOptions": {
+            "text": "Texto",
+            "password": "Senha",
+            "email": "E-mail",
+            "url": "URL"
+          },
+          "addField": "Adicionar Campo",
+          "tableKeyType": "Tipo de Chave",
+          "tableInputType": "Tipo de Campo",
+          "keyPlaceholder": "Ex: API_KEY",
+          "tableByol": "BYOL?",
+          "keyLabel": "Chave",
+          "tableLabel": "Rótulo",
+          "tableKey": "Chave",
+          "cancel": "Cancelar",
+          "save": "Salvar no Catálogo",
+          "dialogEditTitle": "Editar Tipo de Integração",
+          "dialogEditDescription": "Preencha os dados do tipo de integração"
+        }
+      },
+      "config": {
+        "title": "Integrações",
+        "description": "Configure e gerencie as integrações da sua organização",
+        "search": "Buscar integração...",
+        "errors": {
+          "listTypesFailed": "Erro ao listar os tipos de integração possíveis",
+          "identifyFailed": "Erro ao identificar as integrações da organização"
+        },
+        "card": {
+          "connectFirst": "Conecte a integração primeiro.",
+          "activated": "Integração ativada",
+          "deactivated": "Integração desativada",
+          "notConfigured": "Serviço não configurado",
+          "testStarting": "Iniciando teste de conexão com o serviço",
+          "testFailed": "Não foi possível acessar o serviço",
+          "testSuccess": "Serviço está saudável e comunicável",
+          "lastSync": "Última sincronização:",
+          "connected": "Conectado",
+          "disconnected": "Desconectado",
+          "testConnection": "Testar conexão",
+          "editConfig": "Editar configuração",
+          "documentation": "Documentação",
+          "configureTitle": "Configurar {name}",
+          "configureDescription": "Insira as credenciais necessárias. Todos os dados são criptografados e armazenados via Infisical."
+        },
+        "form": {
+          "toastUpdateSuccess": "Configurações atualizadas!",
+          "toastConnectSuccess": "Conectado!",
+          "byol": "Trazer minha própria instância",
+          "byolDescription": "Ative para usar sua própria infraestrutura e licença.",
+          "managedInstanceTitle": "Instância Gerenciada Ativa",
+          "managedInstanceDescription": "Não é necessário configurar chaves. Cuidamos da infraestrutura, segurança e atualizações para você.",
+          "managedModeTitle": "Modo Gerenciado",
+          "managedModeDescription": "Utilizaremos a infraestrutura padrão da Zofia Code Labs para este serviço (serviço sujeito a cobranças).",
+          "secretPlaceholder": "Insira o valor para {label}",
+          "cancel": "Cancelar",
+          "processing": "Processando...",
+          "connect": "Conectar Serviço"
+        }
+      }
     }
   },
   "organization": {
@@ -100,7 +377,257 @@
     "statusActive": "Verificada",
     "manage": "Gerenciar",
     "industryLabel": "Indústria",
-    "memberSince": "Fundada em"
+    "memberSince": "Fundada em",
+    "tabs": {
+      "overview": "Visão Geral",
+      "members": "Membros & Equipe",
+      "settings": "Configurações"
+    },
+    "overview": {
+      "usersOnPlatform": "Usuários na plataforma",
+      "orgDataTitle": "Dados da Organização",
+      "companyName": "Nome da Empresa",
+      "slugLabel": "Slug (URL)",
+      "segment": "Segmento",
+      "cnpj": "CNPJ",
+      "createdAt": "Data de Criação",
+      "location": "Localização",
+      "locationPlaceholder": "Brasília, DF",
+      "subscriptionStatus": "Status da Assinatura",
+      "resourceUsage": "Consumo de Recursos",
+      "plan": "Plano",
+      "nextInvoice": "Próxima Fatura",
+      "members": "Membros",
+      "insightsTitle": "ZofIA Insights",
+      "insightsDescription": "Sua organização completou 5 projetos este mês. A produtividade aumentou 12%."
+    },
+    "billing": {
+      "plan": {
+        "active": "Ativo",
+        "renewsOn": "Renova em {date}",
+        "perMonth": "/mês",
+        "changePlan": "Alterar Plano",
+        "cancelSubscription": "Cancelar Assinatura",
+        "features": {
+          "unlimitedReports": "Acesso ilimitado a relatórios",
+          "prioritySupport": "Suporte prioritário 24/7",
+          "apiIntegrations": "API e Integrações Avançadas"
+        }
+      },
+      "history": {
+        "title": "Histórico de Cobranças",
+        "description": "Baixe as faturas dos pagamentos anteriores.",
+        "columns": {
+          "date": "Data",
+          "amount": "Valor",
+          "status": "Status",
+          "invoice": "Fatura"
+        },
+        "status": {
+          "paid": "Pago",
+          "pending": "Pendente"
+        }
+      },
+      "usage": {
+        "title": "Uso da Conta",
+        "users": "Usuários",
+        "activeProjects": "Projetos Ativos",
+        "storage": "Armazenamento (GB)",
+        "usersLimitReached": "Você atingiu o limite de usuários. Faça upgrade para adicionar mais membros."
+      },
+      "paymentMethod": {
+        "title": "Método de Pagamento",
+        "cardEnding": "{brand} terminando em {last4}",
+        "expires": "Expira em {expiry}",
+        "updateCard": "Atualizar Cartão"
+      }
+    },
+    "members": {
+      "emptyTitle": "Nenhum membro na equipe",
+      "emptyDescription": "Convide membros para colaborar na organização",
+      "actions": {
+        "grantPermissions": "Conceder Permissões",
+        "removeFromTeam": "Remover da Equipe",
+        "changeRole": "Alterar Perfil/Cargo"
+      },
+      "table": {
+        "title": "Membros da Equipe",
+        "description": "Gerencie quem tem acesso à sua organização e seus níveis de permissão.",
+        "member": "Membro",
+        "accessProfile": "Perfil de Acesso",
+        "status": "Status",
+        "lastAccess": "Último Acesso",
+        "actions": "Ações",
+        "accountOwner": "Dono da Conta",
+        "specificPermissions": "Permissões específicas:",
+        "extraPermissions": "+ {count} permissão(ões)",
+        "neverAccessed": "Nunca acessou",
+        "statusActive": "Ativo",
+        "statusPending": "Pendente",
+        "statusRemoved": "Removido"
+      },
+      "remove": {
+        "title": "Remover Membro",
+        "description": "Esta ação removerá {name} da organização. O usuário perderá o acesso imediatamente.",
+        "confirmLabel": "Para confirmar, digite {name} abaixo:",
+        "confirmButton": "Confirmar Remoção",
+        "toastSuccess": "Membro removido com sucesso.",
+        "toastError": "Erro ao remover membro."
+      },
+      "defaultRoles": {
+        "admin": "Administrador",
+        "member": "Membro",
+        "viewer": "Visualizador"
+      },
+      "editRole": {
+        "title": "Alterar Perfil",
+        "description": "Alterando nível de acesso de {name}.",
+        "roleLabel": "Cargo / Perfil",
+        "toastSuccess": "Perfil atualizado com sucesso!"
+      },
+      "permissions": {
+        "loadError": "Erro ao carregar permissões",
+        "savePermissions": "Salvar Permissões",
+        "toastSuccess": "Perfil atualizado com sucesso!",
+        "title": "Permissões Individuais",
+        "description": "Gerenciando acessos de <strong>{name}</strong>.<br></br>Permissões marcadas com <lockIcon></lockIcon> são herdadas do Cargo e não podem ser removidas aqui.",
+        "inheritedRoleBadge": "Cargo"
+      },
+      "invite": {
+        "validation": {
+          "emailInvalid": "Insira um e-mail válido",
+          "nameInvalid": "Insira um nome válido",
+          "nameMin": "O nome deve ter no mínimo 3 caracteres",
+          "roleRequired": "Selecione um perfil de acesso"
+        },
+        "roles": {
+          "adminDefault": "Administrador (Padrão)",
+          "memberDefault": "Membro (Padrão)"
+        },
+        "toast": {
+          "success": "Convite enviado para {email}",
+          "error": "Erro ao enviar convite. Tente novamente."
+        },
+        "trigger": "Convidar Membro",
+        "title": "Convidar Membro",
+        "description": "Envie um convite por e-mail para um novo membro da sua equipe.",
+        "name": "Nome",
+        "email": "E-mail Corporativo",
+        "emailPlaceholder": "colaborador@empresa.com",
+        "role": "Perfil de Acesso",
+        "rolePlaceholder": "Selecione um perfil",
+        "cancel": "Cancelar",
+        "submit": "Enviar Convite"
+      }
+    },
+    "roles": {
+      "emptyTitle": "Nenhum perfil de acesso criado",
+      "emptyDescription": "Crie perfis personalizados (ex: Gerente, Financeiro) para controlar o que cada membro pode fazer.",
+      "validation": {
+        "minPermission": "Selecione pelo menos uma permissão."
+      },
+      "dialog": {
+        "editTitle": "Editar Perfil",
+        "newTitle": "Novo Perfil de Acesso",
+        "description": "Defina o nome do cargo e selecione as permissões granulares abaixo."
+      },
+      "table": {
+        "title": "Perfis de Acesso",
+        "description": "Defina conjuntos de permissões reutilizáveis para sua equipe.",
+        "profileName": "Nome do Perfil",
+        "members": "Membros",
+        "enabledPermissions": "Permissões Habilitadas",
+        "actions": "Ações",
+        "memberCount": "{count} usuários",
+        "permissionCount": "{count} permissões"
+      },
+      "toast": {
+        "updated": "Perfil atualizado!",
+        "created": "Perfil criado com sucesso!"
+      },
+      "form": {
+        "roleName": "Nome do Cargo",
+        "roleNamePlaceholder": "Ex: Gestor de Projetos",
+        "description": "Descrição",
+        "descriptionPlaceholder": "Breve descrição...",
+        "createProfile": "Criar Perfil",
+        "newProfile": "Novo Perfil",
+        "systemPermissions": "Permissões do Sistema"
+      },
+      "delete": {
+        "toastSuccess": "Perfil \"{name}\" excluído com sucesso.",
+        "toastError": "Erro ao excluir perfil.",
+        "tooltipInUse": "Não é possível excluir perfis em uso.",
+        "tooltipRemoveUsers": "Remova os usuários deste perfil primeiro.",
+        "title": "Excluir Perfil de Acesso",
+        "description": "Você tem certeza que deseja excluir o perfil {name}? Essa ação não pode ser desfeita.",
+        "cancel": "Cancelar",
+        "confirm": "Sim, excluir perfil"
+      }
+    },
+    "settings": {
+      "validation": {
+        "nameMin": "O nome deve ter pelo menos 2 caracteres",
+        "slugFormat": "Apenas letras minúsculas, números e hífens",
+        "zipCodeInvalid": "CEP inválido",
+        "streetRequired": "Rua é obrigatória",
+        "numberRequired": "Número é obrigatório",
+        "neighborhoodRequired": "Bairro é obrigatório",
+        "cityRequired": "Cidade é obrigatória",
+        "stateInvalid": "UF inválida"
+      },
+      "toast": {
+        "zipCodeInvalid": "CEP inválido. Digite os 8 números.",
+        "zipCodeNotFound": "CEP não encontrado. Preencha o endereço manualmente.",
+        "updateSuccess": "Configurações atualizadas com sucesso!",
+        "updateError": "Erro ao atualizar configurações.",
+        "uploadInfo": "Funcionalidade de upload será integrada ao storage."
+      },
+      "general": {
+        "title": "Configurações Gerais",
+        "description": "Gerencie a identidade visual e os dados fiscais da sua organização.",
+        "logoTitle": "Logotipo da Empresa",
+        "logoHelper": "Recomendado: PNG ou JPG, min 400x400px. Máx 2MB.",
+        "changeLogo": "Alterar Logo",
+        "orgName": "Nome da Organização",
+        "orgNameDescription": "Nome exibido em documentos e relatórios.",
+        "slug": "URL da Organização (Slug)",
+        "slugWarningTitle": "Atenção",
+        "slugWarningDescription": "Alterar o slug mudará a URL de acesso de todos os membros."
+      },
+      "address": {
+        "title": "Endereço e Faturamento",
+        "description": "Dados utilizados para emissão de notas fiscais.",
+        "cnpj": "CNPJ",
+        "zipCode": "CEP",
+        "searchHint": "Busque o CEP para preencher o endereço.",
+        "manualHint": "CEP não encontrado. Preenchimento manual liberado.",
+        "city": "Cidade",
+        "state": "UF",
+        "neighborhood": "Bairro",
+        "street": "Logradouro (Rua, Av.)",
+        "number": "Número",
+        "complement": "Complemento"
+      },
+      "footer": {
+        "saveReminder": "Certifique-se de salvar as alterações.",
+        "discard": "Descartar"
+      },
+      "dangerZone": {
+        "title": "Zona de Perigo",
+        "description": "Ações irreversíveis relacionadas à sua conta.",
+        "deleteOrgTitle": "Encerrar Organização",
+        "deleteOrgDescription": "Isso excluirá permanentemente todos os projetos, membros, configurações e dados associados a {slug}. Esta ação não pode ser desfeita.",
+        "deleteAccount": "Encerrar Conta",
+        "dialogTitle": "Tem certeza absoluta?",
+        "dialogDescription": "Esta ação é irreversível. Todos os dados da organização serão apagados permanentemente dos nossos servidores.",
+        "confirmLabel": "Digite {slug} para confirmar:",
+        "cancel": "Cancelar",
+        "confirmDelete": "Sim, excluir {slug}",
+        "toastSuccess": "Organização encerrada com sucesso.",
+        "toastError": "Erro ao encerrar organização."
+      }
+    }
   },
   "footer": {
     "navTitle": "Links Rápidos",
@@ -129,10 +656,27 @@
     "email": "E-mail",
     "password": "Senha",
     "loginButton": "Entrar",
+    "forgotPassword": "Esqueci minha senha",
     "noAccount": "Não tem uma conta?",
     "signUp": "Cadastre-se",
     "loginSuccess": "Bem-vindo de volta!",
     "loginError": "Credenciais inválidas",
+    "rememberMe": {
+      "title": "Recuperar senha",
+      "description": "Informe o e-mail da sua conta e enviaremos um link para redefinir a senha.",
+      "hero": "Recupere o acesso à sua conta com segurança",
+      "emailPlaceholder": "seu@email.com",
+      "submitButton": "Enviar link de recuperação",
+      "submitting": "Enviando...",
+      "backToLogin": "Voltar para o login",
+      "success": "Se o e-mail estiver cadastrado, você receberá as instruções em instantes."
+    },
+    "inviteAccept": {
+      "errorTitle": "Não foi possível aceitar o convite",
+      "invalidToken": "Link de convite inválido ou ausente.",
+      "wrongAccount": "Você está logado com outra conta. Saia e abra o link novamente.",
+      "backToLogin": "Voltar para o login"
+    },
     "loginWithProviders": {
       "button": "Entrar",
       "title": "Login",
@@ -145,6 +689,9 @@
       },
       "terms": "Ao entrar, você concorda com os",
       "termsLink": "termos de uso"
+    },
+    "errors": {
+      "unknown": "Erro desconhecido"
     }
   },
   "admin": {
@@ -166,8 +713,20 @@
       "projectGrowthTrend": {
         "title": "Growth Trend",
         "description": "Project growth over time"
+      },
+      "projectsVolume": {
+        "title": "Volume de Projetos",
+        "description": "Novos projetos criados nos últimos 6 meses",
+        "series": "Projetos Criados"
+      },
+      "backlogEvolution": {
+        "title": "Fluxo de Trabalho",
+        "description": "Comparativo entre novas demandas e entregas realizadas nos últimos 6 meses.",
+        "created": "Novas Demandas",
+        "completed": "Entregas"
       }
     },
+    "statsTrend": "em relação ao mês anterior",
     "projectHistory": "Histórico de Projetos",
     "projectName": "Nome do Projeto",
     "status": "Status",
@@ -186,6 +745,106 @@
       "orClickToSelect": "ou clique para selecionar do seu dispositivo",
       "allowedExtensions": "Extensões permitidas",
       "anyType": "qualquer tipo"
+    },
+    "copyToClipboard": {
+      "success": "Conteúdo copiado com sucesso"
+    },
+    "successToast": {
+      "proposalGenerated": "Proposta gerada com sucesso!"
+    },
+    "emptyState": {
+      "missingIconOrImage": "Forneça uma Imagem ou um Icon para o EmptyState"
+    },
+    "table": {
+      "toast": {
+        "successTitle": "Sua solicitação de contato foi enviada com sucesso.",
+        "errorTitle": "Oppsss. Infelizmente algo deu errado.",
+        "errorDescription": "Não se preocupe, pois já fui comunicado e estou trabalhando para resolver."
+      },
+      "empty": {
+        "defaultTitle": "Nenhum registro localizado",
+        "defaultDescription": "Isso pode ter ocorrido por causa de algum filtro aplicado ou porque ainda não há dados cadastrados."
+      }
+    },
+    "form": {
+      "imageUpload": {
+        "errors": {
+          "tooLarge": "O arquivo é muito grande. Máximo de 5MB.",
+          "invalidType": "Tipo de arquivo inválido. Use PNG, JPG ou WebP."
+        },
+        "dropActive": "Solte aqui",
+        "selectOrDrag": "Selecione ou arraste",
+        "formats": "PNG, JPG, WebP (max 5MB)",
+        "previewAlt": "Pré-visualização"
+      },
+      "multiFileUpload": {
+        "errors": {
+          "limitReached": "Você já atingiu o limite de {count} arquivos.",
+          "partialAdd": "Apenas {count} arquivos foram adicionados devido ao limite.",
+          "tooLarge": "Arquivo muito grande. Máximo de {size}.",
+          "tooMany": "Muitos arquivos. Máximo de {count}."
+        },
+        "clickOrDrag": "Clique para enviar ou arraste",
+        "hint": "(Máx {count} arquivos, até {size} cada)",
+        "selectedFiles": "Arquivos selecionados ({current}/{max}):",
+        "removeFile": "Remover arquivo"
+      }
+    },
+    "editor": {
+      "placeholder": {
+        "heading": "Título {level}...",
+        "body": "Digite \"/\" para comandos..."
+      },
+      "header": {
+        "title": "Editor de Documento",
+        "tip": "Dica: / para comandos",
+        "draftSaved": "Rascunho salvo"
+      },
+      "footer": {
+        "endOfDocument": "Fim do documento"
+      }
+    },
+    "tiptap": {
+      "stylePlaceholder": "Estilo",
+      "normalText": "Texto Normal",
+      "heading1": "Título 1",
+      "heading2": "Título 2",
+      "textColor": "Cor do texto",
+      "clearColor": "Limpar Cor",
+      "bold": "Negrito",
+      "underline": "Sublinhado",
+      "alignLeft": "Esquerda",
+      "alignCenter": "Centro",
+      "alignJustify": "Justificar",
+      "table": "Tabela",
+      "insertTable3x3": "Inserir Tabela 3x3",
+      "addColumn": "Adicionar Coluna",
+      "addRow": "Adicionar Linha",
+      "deleteTable": "Excluir Tabela",
+      "fields": "Campos",
+      "undo": "Desfazer",
+      "redo": "Refazer",
+      "addBlockBelow": "Adicionar bloco abaixo",
+      "dragToMove": "Arraste para mover",
+      "removeColor": "Remover cor"
+    },
+    "pricing": {
+      "header": {
+        "defaultBadge": "Preços transparentes"
+      },
+      "billing": {
+        "monthly": "Mensal",
+        "yearly": "Anual",
+        "defaultDiscount": "-20%"
+      },
+      "card": {
+        "recommended": "Indicado",
+        "perYear": "/ano",
+        "perMonth": "/mês",
+        "yearlySavings": "Economia de R$ {amount} no ano",
+        "contactUs": "Sob Consulta",
+        "includedMetrics": "Métricas Inclusas:"
+      }
     }
   },
   "project": {
@@ -193,5 +852,2057 @@
       "posted": "Postado {timeAgo}",
       "edited": "Post editado {timeAgo}"
     }
+  },
+  "common": {
+    "select": "Selecione...",
+    "loading": "Carregando...",
+    "saving": "Salvando...",
+    "stable": "estável",
+    "notInformed": "Não informado",
+    "noDescription": "Sem descrição",
+    "back": "Voltar",
+    "underConstruction": {
+      "badge": "Em breve",
+      "title": "Página em construção",
+      "titleWithFeature": "{feature} em construção",
+      "description": "Estamos preparando esta experiência com cuidado. Em breve você poderá acessar todos os recursos por aqui.",
+      "chip": {
+        "design": "Design",
+        "backend": "Integrações",
+        "launch": "Lançamento"
+      }
+    },
+    "actions": {
+      "saveChanges": "Salvar Alterações",
+      "save": "Salvar",
+      "label": "Ações",
+      "edit": "Editar",
+      "delete": "Excluir",
+      "cancel": "Cancelar",
+      "close": "Fechar",
+      "selectDate": "Selecione a data",
+      "select": "Selecione"
+    },
+    "table": {
+      "itemSelected": "item selecionado",
+      "itemsSelected": "itens selecionados",
+      "moreActionOptions": "Ver mais opções de ação",
+      "moreOptions": "Ver mais opções",
+      "densityLabel": "Definir densidade da tabela",
+      "densityHigh": "Densidade alta",
+      "densityMedium": "Densidade média",
+      "densityLow": "Densidade baixa",
+      "noResults": "Nenhum resultado encontrado.",
+      "searchPlaceholder": "Buscar na tabela",
+      "searchAria": "Buscar na tabela",
+      "closeSearch": "Fechar busca"
+    },
+    "loadingMore": {
+      "projects": "Carregando mais projetos...",
+      "contracts": "Carregando mais contratos..."
+    },
+    "faq": {
+      "title": "Dúvidas frequentes"
+    },
+    "documenso": {
+      "documentSignedSuccess": "Documento assinado com sucesso!",
+      "loadContractError": "Ocorreu um erro ao carregar o contrato."
+    },
+    "errors": {
+      "connection": "Erro de conexão.",
+      "unauthenticated": "Usuário não autenticado",
+      "statusUpdate": "Erro ao atualizar status.",
+      "syncOrder": "Erro ao sincronizar ordem. Revertendo...",
+      "syncBacklog": "Erro ao sincronizar backlog.",
+      "checkFormFields": "Verifique os campos destacados no formulário.",
+      "processRequest": "Ocorreu um erro ao processar a solicitação."
+    },
+    "user": "Usuário",
+    "processing": "Processando...",
+    "updating": "Atualizando...",
+    "default": "Padrão",
+    "download": "Download",
+    "origin": "Origem:",
+    "summary": "Resumo",
+    "information": "Informações",
+    "stakeholders": "Interessados",
+    "recentActivities": "Últimas Atividades",
+    "createdBy": "Criado por",
+    "createdAt": "Criado em",
+    "reviewedBy": "Revisado por",
+    "approvedBy": "Aprovado por",
+    "documentId": "Identificador do documento",
+    "viewSignatures": "Visualizar assinaturas",
+    "downloadDocument": "Baixar documento",
+    "documentNotFound": "Erro ao localizar o documento",
+    "viewPdf": "Visualizar PDF",
+    "generatedDocument": "Documento Gerado",
+    "attention": "Atenção",
+    "tags": "Tags"
+  },
+  "clients": {
+    "list": {
+      "title": "Carteira de Clientes",
+      "description": "Gerencie as empresas e contatos cadastrados",
+      "searchPlaceholder": "Buscar cliente...",
+      "emptyTitle": "Nenhum cliente localizado",
+      "emptyDescription": "Cadastre o primeiro cliente para que possa iniciar a realização de projetos",
+      "inactive": "Inativo",
+      "companyNameLabel": "Nome da empresa:",
+      "noResponsible": "Sem responsável",
+      "noEmail": "Sem e-mail",
+      "noEmailRegistered": "Sem e-mail cadastrado",
+      "noPhoneRegistered": "Sem telefone cadastrado",
+      "logoAlt": "Logo da empresa {name}"
+    },
+    "form": {
+      "logoLabel": "Logo da Empresa",
+      "logoHelper": "Formatos aceitos: PNG, JPG ou WebP. Máx 5MB.",
+      "companyName": "Razão Social",
+      "companyNamePlaceholder": "Minha Empresa LTDA",
+      "tradeName": "Nome Fantasia",
+      "tradeNamePlaceholder": "Nome comercial",
+      "cnpj": "CNPJ/CPF",
+      "phone": "Telefone",
+      "email": "E-mail institucional",
+      "emailPlaceholder": "contato@empresa.com",
+      "responsibleSection": "Responsável legal",
+      "responsibleName": "Nome do responsável",
+      "responsibleNamePlaceholder": "Nome completo",
+      "responsibleEmail": "E-mail do responsável",
+      "responsibleEmailPlaceholder": "responsavel@empresa.com",
+      "responsiblePhone": "Telefone do responsável",
+      "create": "Cadastrar Cliente"
+    },
+    "dialog": {
+      "createTitle": "Novo cliente",
+      "createDescription": "Preencha os dados do cliente",
+      "createButton": "Novo Cliente",
+      "editTitle": "Editar Cliente",
+      "editDescription": "Preencha os dados do cliente"
+    },
+    "layout": {
+      "contact": "Contatar"
+    },
+    "legalResponsible": {
+      "empty": "Nenhum responsável cadastrado. Obrigatório antes do envio do contrato."
+    },
+    "health": {
+      "title": "Saúde do Cliente",
+      "nps": "Satisfação (NPS)",
+      "lastContact": "Último contato",
+      "averageTicket": "Ticket médio"
+    },
+    "toast": {
+      "removed": "Cliente removido com sucesso!"
+    },
+    "aiReports": {
+      "title": "ZofIA Reports",
+      "emptyTitle": "Convide a ZofIA a fazer parte de sua equipe",
+      "emptyDescription": "Ative a ZofIA Reports para receber diagnósticos automáticos sobre a saúde dos seus projetos e prove o valor do seu trabalho com relatórios profissionais gerados por IA.",
+      "cta": "Liberar Relatórios Inteligentes"
+    },
+    "institutional": {
+      "title": "Informações Institucionais",
+      "address": "Endereço"
+    },
+    "contracts": {
+      "fetchError": "Falha ao tentar localizar o histórico de contratos",
+      "title": "Histórico de Contratos do Cliente"
+    },
+    "metrics": {
+      "title": "Métricas dos projetos",
+      "empty": {
+        "title": "Você gostaria de acompanhar a saúde e a qualidade de seus projetos?",
+        "description": "Ative o Metrics para consolidar indicadores de qualidade, produtividade e entrega em um único painel.",
+        "cta": "Acompanhar as Métricas"
+      }
+    },
+    "analytics": {
+      "title": "Web Analytics",
+      "empty": {
+        "title": "Tome decisões baseadas em dados reais",
+        "description": "Você está no escuro sobre como seus usuários interagem? Ative o Analytics para entender o comportamento real do seu produto.",
+        "cta": "Desbloquear Insights Agora"
+      }
+    },
+    "tabs": {
+      "projects": "Projetos",
+      "contracts": "Contratos",
+      "metrics": "Métricas"
+    },
+    "dashboard": {
+      "stats": {
+        "activeProjects": "Projetos Ativos",
+        "totalInContracts": "Total em Contratos",
+        "openInvoices": "Faturas em Aberto",
+        "tenure": "Tempo de Casa",
+        "maintenance": "Manutenção & Suporte",
+        "pendingActions": "Ações Pendentes",
+        "overdueInvoices": "Cobranças em Atraso",
+        "nextDelivery": "Próxima Entrega"
+      },
+      "table": {
+        "title": "Seus Projetos",
+        "projectName": "Nome do Projeto",
+        "status": "Status",
+        "expectedDelivery": "Prev. Entrega",
+        "lastUpdate": "Última Atualização",
+        "financial": "Financeiro",
+        "financialPaid": "Em dia",
+        "financialPending": "Pendente"
+      },
+      "charts": {
+        "deliveryEvolution": "Evolução das Entregas",
+        "deliveryEvolutionDescription": "O que foi planejado vs. o que de fato entregamos.",
+        "planned": "Previsto",
+        "completed": "Entregue",
+        "pipeline": {
+          "title": "Pipeline de Projetos",
+          "description": "Status atual da carteira"
+        }
+      },
+      "blockers": {
+        "title": "Aguardando Você",
+        "description": "{count} ações necessárias para não atrasar o cronograma.",
+        "emptyTitle": "Nenhuma ação pendente",
+        "emptyDescription": "Não há pendências do cliente passível de atrasar o cronograma"
+      }
+    },
+    "users": {
+      "title": "Usuários Associados",
+      "description": "Gerencie os usuários vinculados a este cliente",
+      "emptyTitle": "Nenhum usuário associado à empresa localizado",
+      "emptyDescription": "Convide usuários para acessar o portal do cliente",
+      "defaultRole": "Usuário (Padrão)",
+      "noLoginYet": "Usuário não efetuou nenhum acesso ao portal até o momento",
+      "columns": {
+        "user": "Usuário",
+        "role": "Função",
+        "permission": "Permissão",
+        "status": "Status",
+        "lastAccess": "Último Acesso"
+      },
+      "status": {
+        "ACTIVE": "Ativo",
+        "PENDING": "Pendente",
+        "INACTIVE": "Inativo"
+      }
+    },
+    "projects": {
+      "title": "Projetos",
+      "description": "Gerencie todos os projetos da empresa",
+      "newProject": "Novo Projeto",
+      "searchPlaceholder": "Buscar projetos por nome..."
+    },
+    "employees": {
+      "createTitle": "Novo usuário",
+      "createDescription": "Preencha os dados do usuário",
+      "createButton": "Novo Usuário",
+      "permission": "Permissão",
+      "selectLevel": "Selecione um nível",
+      "update": "Atualizar Funcionário",
+      "invite": "Convidar Funcionário",
+      "fullName": "Nome Completo",
+      "fullNamePlaceholder": "João Silva",
+      "corporateEmail": "E-mail Corporativo",
+      "corporateEmailPlaceholder": "joao@cliente.com",
+      "jobTitle": "Cargo",
+      "jobTitlePlaceholder": "Ex: Gerente Financeiro",
+      "actions": {
+        "edit": "Editar",
+        "resetPassword": "Redefinir Senha",
+        "deactivate": "Desativar",
+        "editUserTitle": "Editar Usuário",
+        "editUserDescription": "Esta ação irá atualizar os dados do usuário {name}.",
+        "removeUserTitle": "Remover Usuário",
+        "removeUserDescription": "Esta ação irá inativar o acesso de {name}.",
+        "removeUserHint": "Ao remover o usuário, este será inativado, permanecendo na lista apenas para fins de auditoria histórica.",
+        "confirmDeactivate": "Confirma que deseja inativá-lo?",
+        "deactivateUser": "Inativar usuário",
+        "resetPasswordTitle": "Redefinir Senha de Usuário",
+        "resetPasswordDescription": "Esta senha irá redefinir a senha de {name}.",
+        "resetPasswordHint": "Ao redefinir a senha, o usuário irá receber um email com a nova senha e as orientações para alteração da senha gerada.",
+        "confirmResetPassword": "Confirma que deseja redefinir a senha?",
+        "resetPasswordButton": "Redefinir senha"
+      }
+    },
+    "roles": {
+      "ADMIN": "Administrador",
+      "USER": "Colaborador",
+      "VIEWER": "Visualizador"
+    }
+  },
+  "clientPortal": {
+    "sidebar": {
+      "title": "Portal do Cliente",
+      "companies": "Minhas empresas",
+      "quickAccess": "Acesso rápido"
+    },
+    "companies": {
+      "title": "Minhas empresas",
+      "description": "Empresas e contas às quais você tem acesso para acompanhar projetos",
+      "emptyTitle": "Nenhum acesso configurado",
+      "emptyDescription": "Quando sua software house enviar um contrato ou convite, seu acesso aparecerá aqui.",
+      "accessProjects": "Acessar projetos →",
+      "pendingInvite": "Convite pendente",
+      "checkEmail": "Verifique seu e-mail para ativar o acesso.",
+      "profileLabel": "Perfil: usuário do portal do cliente"
+    }
+  },
+  "projects": {
+    "status": {
+      "notStarted": "Não Iniciado",
+      "inProgress": "Em Andamento",
+      "completed": "Concluído",
+      "negotiation": "Negociação",
+      "paused": "Pausado"
+    },
+    "errors": {
+      "notFoundForEdit": "Projeto não localizado para edição",
+      "organizationProjects": "Erro ao tentar localizar os projetos da Organização",
+      "backlogNotFound": "Lista de backlog não localizada",
+      "proposalsHistory": "Falha ao tentar localizar o histórico de propostas",
+      "projectNotFound": "Falha ao tentar localizar o projeto",
+      "expensesList": "Erro ao listar as despesas",
+      "serviceNotFound": "Serviço não localizado",
+      "serviceAccessDenied": "Você não tem permissão para acessar este serviço",
+      "noPermissionTitle": "Acesso restrito",
+      "noPermissionBacklog": "Você não tem permissão para visualizar o backlog deste projeto.",
+      "noPermissionProposal": "Você não tem permissão para visualizar as propostas deste projeto.",
+      "noPermissionContract": "Você não tem permissão para visualizar os contratos deste projeto.",
+      "noPermissionPayment": "Você não tem permissão para visualizar os pagamentos deste projeto.",
+      "noPermissionExpense": "Você não tem permissão para visualizar as despesas deste projeto."
+    },
+    "health": {
+      "HEALTHY": "Saudável",
+      "AT_RISK": "Em Risco",
+      "DELAYED": "Atrasado"
+    },
+    "priority": {
+      "URGENT": "Urgente",
+      "HIGH": "Alta",
+      "MEDIUM": "Média",
+      "LOW": "Baixa"
+    },
+    "tabs": {
+      "overview": "Visão Geral",
+      "dashboard": "Dashboard",
+      "commercial": "Comercial",
+      "backlog": "Backlogs",
+      "metrics": "Métricas"
+    },
+    "list": {
+      "emptyTitle": "Nenhum projeto localizado",
+      "emptyDescription": "Nenhum projeto cadastrado até o momento. Cadastre o primeiro projeto e comece a ter controle sobre suas entregas"
+    },
+    "page": {
+      "title": "Projetos",
+      "description": "Gerencie todos os projetos da empresa",
+      "searchPlaceholder": "Buscar projetos por nome ou cliente..."
+    },
+    "form": {
+      "createTitle": "Cadastrar novo projeto",
+      "createDescription": "Cadastre um novo projeto e comece a gerenciá-lo",
+      "editTitle": "Editar projeto",
+      "name": "Nome do Projeto *",
+      "client": "Cliente *",
+      "selectClient": "Selecione o cliente",
+      "totalBudget": "Orçamento Total (R$)",
+      "startDate": "Previsão de Início",
+      "selectDate": "Selecione a data",
+      "description": "Descrição e Escopo Inicial *",
+      "documents": "Documentos do Projeto",
+      "documentsDescription": "Anexe arquivos relevantes (briefing, escopo, etc.)",
+      "create": "Criar Projeto",
+      "toastUnexpectedError": "Erro inesperado ao criar proposta.",
+      "endDate": "Prazo Final (Deadline)",
+      "priority": "Prioridade",
+      "namePlaceholder": "Ex: Migração Cloud AWS",
+      "saveNewPassword": "Salvar Nova Senha",
+      "tagsPlaceholder": "Tecnologia, Squad...",
+      "descriptionPlaceholder": "Descreva os objetivos principais e requisitos do projeto..."
+    },
+    "layout": {
+      "clientLabel": "Cliente: {name}",
+      "deadlineLabel": "Prazo para entrega (deadline)",
+      "scheduledStart": "Inicio programado: {date}",
+      "start": "Início",
+      "estimatedStart": "Previsão de Início",
+      "budget": "Orçamento",
+      "balance": "Saldo: {amount}",
+      "team": "Equipe",
+      "progress": "Progresso",
+      "fetchError": "Erro ao tentar localizar os projetos da Organização"
+    },
+    "notes": {
+      "emptyTitle": "Nenhuma observação incluída",
+      "emptyDescription": "Até o momento, este projeto não possui observações.",
+      "placeholder": "Adicionar nova observação...",
+      "addButton": "Adicionar Observação",
+      "toastCreated": "Observação adicionada com sucesso!",
+      "toastUpdated": "Observação atualizada com sucesso!",
+      "toastDeleted": "Observação excluída com sucesso!",
+      "editTitle": "Editar Observação"
+    },
+    "documents": {
+      "empty": "Nenhum documento anexado até o momento",
+      "validationMinFiles": "Selecione pelo menos um arquivo para enviar.",
+      "save": "Salvar Arquivos",
+      "add": "Adicionar",
+      "addDialogTitle": "Adicionar arquivos ao projeto",
+      "uploading": "Enviando...",
+      "removeFile": "Remover Arquivo",
+      "downloadFile": "Baixar arquivo",
+      "openNewTab": "Abrir em nova aba",
+      "removeConfirmTitle": "Confirmação de remoção de arquivo",
+      "removeConfirmMessage": "Confirma que deseja remover o arquivo abaixo informado?",
+      "nameLabel": "Nome:",
+      "removeButton": "Remover arquivo",
+      "removeError": "Falha ao remover o arquivo. Tente novamente mais tarde",
+      "removeSuccess": "Arquivo removido com sucesso",
+      "filesLabel": "Arquivos",
+      "filesDescription": "Arraste seus documentos aqui. Aceita PDF, Imagens, Word e Excel."
+    },
+    "backlog": {
+      "listTitle": "Backlog do Produto",
+      "emptyDescription": "Nenhum item de backlog cadastrado até o momento. Inicie a gestão do backlog com o cadastramento de ao menos 1 item.",
+      "searchPlaceholder": "Buscar no backlog...",
+      "noDescription": "Nenhuma descrição informada.",
+      "filter": {
+        "status": {
+          "all": "Todos os Status",
+          "todo": "A Fazer",
+          "inProgress": "Em Andamento",
+          "review": "Revisão",
+          "done": "Concluído"
+        },
+        "priority": {
+          "all": "Todas as prioridades",
+          "high": "Alta",
+          "medium": "Média",
+          "low": "Baixa"
+        },
+        "statusPlaceholder": "Status",
+        "priorityPlaceholder": "Prioridade"
+      },
+      "form": {
+        "title": "Título da Tarefa",
+        "assignee": "Responsável",
+        "description": "Descrição Detalhada",
+        "titlePlaceholder": "Ex: Implementar Login OAuth",
+        "assigneePlaceholder": "Selecione um responsável",
+        "unassigned": "-- Não atribuído --",
+        "noName": "Sem nome",
+        "descriptionPlaceholder": "Critérios de aceitação, detalhes técnicos...",
+        "statusLabel": "Status",
+        "priorityLabel": "Prioridade",
+        "storyPoints": "Story Points",
+        "externalLinkLabel": "Link Externo (Opcional)",
+        "externalLinkDescription": "Link para Jira, Trello ou design.",
+        "toastUpdated": "Item atualizado com sucesso!",
+        "toastCreated": "Item criado com sucesso!",
+        "toastUnexpectedError": "Ocorreu um erro inesperado.",
+        "createTask": "Criar Tarefa"
+      },
+      "status": {
+        "todo": "A Fazer",
+        "inProgress": "Em Andamento",
+        "review": "Revisão",
+        "done": "Concluído",
+        "canceled": "Cancelado",
+        "waitingClient": "Aguardando Cliente"
+      },
+      "priorityLabels": {
+        "URGENT": "Urgente",
+        "HIGH": "Alta",
+        "MEDIUM": "Média",
+        "LOW": "Baixa"
+      },
+      "listTitleService": "Backlog Padrão do Serviço",
+      "details": {
+        "title": "Título",
+        "status": "Status",
+        "priority": "Prioridade",
+        "points": "Pontos",
+        "assignee": "Responsável",
+        "unassigned": "Não atribuído",
+        "detailedDescription": "Descrição detalhada",
+        "externalReference": "Referência Externa",
+        "editTask": "Editar Tarefa",
+        "deleteError": "Erro ao tentar remover a Tarefa.",
+        "deleteSuccess": "Tarefa removida com sucesso"
+      },
+      "import": {
+        "title": "Importar Backlog Padrão",
+        "description": "Selecione um tipo de serviço para copiar seus itens de backlog padrão para este projeto.",
+        "serviceTypeLabel": "Tipo de Serviço",
+        "selectService": "Selecione um serviço...",
+        "confirm": "Confirmar Importação",
+        "importing": "Importando...",
+        "toastSyncError": "Erro ao sincronizar backlog.",
+        "validationSelectService": "Selecione um tipo de serviço."
+      }
+    },
+    "commercial": {
+      "tabs": {
+        "proposals": "Propostas",
+        "contracts": "Contrato",
+        "payments": "Pagamentos",
+        "expenses": "Despesas",
+        "notifications": "Notificações"
+      },
+      "stats": {
+        "negotiation": "Em Negociação (Propostas)",
+        "netResult": "Resultado Líquido",
+        "totalContracted": "Total Contratado",
+        "contractsActive": "{count} contratos ativos",
+        "proposalsActive": "{count} propostas ativas no funil",
+        "realizedRevenue": "Receita Realizada",
+        "paidInvoices": "Faturas pagas (Cash in)",
+        "profitMargin": "Margem de lucro atual: {margin}%"
+      },
+      "proposals": {
+        "historyTitle": "Histórico de Propostas",
+        "emptyTitle": "Nenhuma proposta cadastrada",
+        "emptyDescription": "Nenhuma proposta cadastrada até o momento. Avance o projeto até a fase de proposta para cadastrar a primeira proposta."
+      },
+      "payments": {
+        "emptyTitle": "Nenhum pagamento",
+        "emptyDescription": "Nenhum pagamento reconhecido até o momento. Registre um pagamento ou aguarde o projeto chegar na fase de pagamento.",
+        "status": {
+          "PAID": "Pago",
+          "OVERDUE": "Atrasado",
+          "PENDING": "Pendente",
+          "CANCELLED": "Cancelado"
+        },
+        "item": {
+          "dueDate": "Vencimento",
+          "paymentDate": "Pagamento",
+          "nf": "NF"
+        }
+      },
+      "expenses": {
+        "pageTitle": "Contas a Pagar & Despesas",
+        "emptyTitle": "Nenhuma despesa",
+        "emptyDescription": "Nenhuma despesa registrada até o momento. Registre um pagamento ou aguarde o projeto chegar na fase de pagamento.",
+        "form": {
+          "description": "Descrição da Despesa",
+          "outboundAccount": "Conta de Saída",
+          "update": "Atualizar Despesa",
+          "register": "Registrar Despesa",
+          "invoiceNumber": "Número da Nota (NF)",
+          "invoiceNumberPlaceholder": "Ex: 000.456.789",
+          "receiptLink": "Link do Comprovante",
+          "receiptLinkPlaceholder": "https://...",
+          "receiptsSection": "Comprovantes e Fiscal",
+          "loadCategoriesError": "Não foi possível carregar as categorias.",
+          "descriptionPlaceholder": "Ex: Servidor AWS, Aluguel...",
+          "category": "Categoria",
+          "amount": "Valor (R$)",
+          "dueDate": "Vencimento",
+          "bankPlaceholder": "Selecione o banco",
+          "paymentMethod": "Meio de Pagamento"
+        },
+        "toastDeleted": "Despesa excluída com sucesso!",
+        "toastStatusUpdated": "Status da despesa atualizado!",
+        "status": {
+          "PAID": "Pago",
+          "SCHEDULED": "Agendado",
+          "PENDING": "Pendente",
+          "CANCELED": "Cancelado"
+        },
+        "item": {
+          "dueDate": "Vencimento",
+          "paidAt": "Pago",
+          "invoice": "Nota",
+          "noSupplier": "Sem fornecedor"
+        },
+        "actions": {
+          "editTitle": "Editar Despesa",
+          "editDescription": "Altere os dados da despesa ou conta a pagar.",
+          "confirmPaymentTitle": "Confirmar Pagamento",
+          "confirmPaymentDescription": "Selecione a data em que o valor saiu da conta.",
+          "paymentDateLabel": "Data do Pagamento",
+          "confirmWriteOff": "Confirmar Baixa",
+          "cancelExpense": "Cancelar Despesa",
+          "viewReceipt": "Ver Comprovante",
+          "markAsPaid": "Marcar como Pago"
+        }
+      },
+      "invoices": {
+        "form": {
+          "description": "Descrição da Fatura",
+          "descriptionPlaceholder": "Ex: Desenvolvimento Web - Março",
+          "amount": "Valor (R$)",
+          "nfeNumber": "Número da NF-e",
+          "update": "Atualizar Fatura",
+          "dueDate": "Vencimento",
+          "bank": "Banco",
+          "paymentType": "Tipo de Recebimento",
+          "fiscalSection": "Dados Fiscais (Opcional)",
+          "nfseLink": "Link do PDF da Nota",
+          "generate": "Gerar Fatura"
+        },
+        "actions": {
+          "toastDeleted": "Pagamento excluído com sucesso!",
+          "toastUpdated": "Pagamento atualizado!",
+          "editTitle": "Editar Fatura",
+          "editDescription": "Preencha os dados da fatura",
+          "confirmReceiptTitle": "Confirmar Recebimento",
+          "confirmReceiptDescription": "Selecione a data em que o valor caiu na conta.",
+          "receiptDateLabel": "Data do Recebimento",
+          "confirmPayment": "Confirmar Pagamento",
+          "cancelInvoice": "Cancelar Fatura",
+          "markAsPaid": "Marcar como Pago",
+          "viewInvoice": "Ver Nota Fiscal"
+        }
+      },
+      "notifications": {
+        "title": "Histórico de Notificações",
+        "newNotification": "Nova Notificação",
+        "to": "Para:",
+        "mock": {
+          "proposalSubject": "Proposta Comercial - Sistema de Gestão v2.0",
+          "contractSubject": "Contrato para Assinatura",
+          "paymentReminder": "Lembrete: Pagamento da entrada",
+          "invoiceSubject": "Nota Fiscal NF-2024-001",
+          "systemSender": "Sistema"
+        }
+      },
+      "contracts": {
+        "historyTitle": "Histórico de Contratos do Projeto",
+        "fetchProjectError": "Falha ao tentar localizar o projeto",
+        "fetchHistoryError": "Falha ao tentar localizar o histórico de contratos"
+      }
+    },
+    "dashboard": {
+      "metrics": {
+        "totalTasks": "Total de Tarefas",
+        "completedTasks": "Tarefas concluídas",
+        "received": "Valores Recebidos",
+        "expenses": "Despesas",
+        "progress": "Progresso"
+      },
+      "charts": {
+        "financial": {
+          "revenue": "Receitas",
+          "expenses": "Despesas",
+          "title": "Fluxo Financeiro",
+          "description": "Comparativo da evolução das Despesas e Receitas"
+        },
+        "backlogStatus": {
+          "title": "Status das Tarefas",
+          "description": "Distribuição real das tarefas entre status no projeto"
+        },
+        "sprint": {
+          "planned": "Planejado",
+          "completed": "Concluído",
+          "title": "Progresso por Sprint",
+          "description": "Acompanhe o planejado vs concluído das sprints do projeto"
+        },
+        "burndown": {
+          "ideal": "Ideal",
+          "real": "Real",
+          "title": "Burndown Chart - Sprint Atual",
+          "description": "Progresso diário vs linha ideal de queima baseada na sprint ativa"
+        }
+      }
+    },
+    "metrics": {
+      "tabs": {
+        "lifeCycle": "Ciclo de Vida",
+        "codeQuality": "Qualidade de Código",
+        "webAnalytics": "Web Analytics"
+      },
+      "common": {
+        "integrationError": "Erro ao tentar localizar os dados para integração",
+        "integrationNotConfigured": "Tipo de integração não configurada globalmente, entre em contato com o suporte"
+      },
+      "codeQuality": {
+        "title": "Qualidade de código",
+        "ctaTitle": "Code Quality",
+        "description": "Acompanhe a qualidade do código do projeto. Informações coletadas do SonarQube.",
+        "summary": {
+          "bugs": "Bugs",
+          "vulnerabilities": "Vulnerabilidades",
+          "codeSmells": "Code Smells",
+          "coverage": "Cobertura",
+          "technicalDebt": "Débito Técnico"
+        },
+        "status": {
+          "globalRating": "Global Rating",
+          "qualityGate": "Quality Gate",
+          "passed": "Passed",
+          "failed": "Failed"
+        },
+        "charts": {
+          "issueEvolution": {
+            "title": "Evolução de Issues",
+            "description": "Tendência de bugs, vulnerabilidades e code smells",
+            "vulnerabilities": "Vulnerabilidades"
+          },
+          "severityDonut": {
+            "title": "Issues por Severidade",
+            "description": "Distribuição atual de problemas"
+          },
+          "coverage": {
+            "title": "Cobertura de Código",
+            "description": "Evolução mensal da cobertura de testes",
+            "tooltip": "Cobertura"
+          },
+          "technicalDebt": {
+            "title": "Débito Técnico",
+            "description": "Horas estimadas para correção ao longo do tempo",
+            "tooltip": "Dívida Técnica",
+            "hoursValue": "{value} horas"
+          }
+        },
+        "qualityGate": {
+          "metric": "Métrica",
+          "currentValue": "Valor Atual",
+          "threshold": "Limite",
+          "status": "Status"
+        },
+        "projectLive": {
+          "issuesTitle": "Problemas Identificados",
+          "issuesDescription": "Lista das 5 últimas issues detectadas na análise dinâmica.",
+          "gateTitle": "Condições do Quality Gate",
+          "gateDescription": "Critérios de aceitação definidos para o projeto.",
+          "gateLabel": "Gate",
+          "issuesLabel": "Issues"
+        },
+        "sync": {
+          "loading": "Sincronizando métricas com SonarQube...",
+          "success": "Métricas atualizadas com sucesso",
+          "error": "Falha na sincronização. Verifique os logs.",
+          "title": "Sincronizar base de dados com SonarQube"
+        }
+      },
+      "lifecycle": {
+        "title": "Ciclo de Vida",
+        "description": "Analise a evolução do projeto e a saúde da equipe com base em seu repositório e backlogs",
+        "accessGitHub": "Acessar GitHub",
+        "cicdHealth": "CI/CD Health",
+        "activities": "Atividades",
+        "repoStats": "Estatísticas do repositório",
+        "totalCommits": "Commits Totais",
+        "last30Days": "últimos 30 dias",
+        "files": "Arquivos",
+        "inRepository": "no repositório",
+        "pullRequests": "Pull Requests",
+        "openPrs": "{count} abertas",
+        "closedPrs": "{count} fechadas",
+        "contributors": "Contribuidores",
+        "cicdSuccess": "Sucesso CI/CD",
+        "noActionsRun": "nenhuma action executada",
+        "successRate": "taxa de sucesso",
+        "charts": {
+          "commitActivity": {
+            "title": "Atividade de Commits",
+            "description": "Últimos 30 dias",
+            "commits": "Commits"
+          },
+          "cicdSuccess": {
+            "title": "Taxa de Sucesso CI/CD",
+            "description": "Distribuição das últimas execuções",
+            "success": "Sucesso",
+            "failure": "Falha"
+          }
+        },
+        "activity": {
+          "title": "Últimas Alterações",
+          "description": "Timeline de commits recentes",
+          "noCommits": "Nenhum commit recente"
+        },
+        "cicd": {
+          "title": "Últimas Execuções",
+          "description": "GitHub Actions workflows detectados",
+          "workflow": "Workflow",
+          "status": "Status",
+          "duration": "Duração",
+          "date": "Data",
+          "byAuthor": "por {author}",
+          "success": "Sucesso",
+          "inProgress": "Em curso",
+          "failed": "Falhou",
+          "noRuns": "Nenhuma execução de workflow encontrada."
+        },
+        "sprint": {
+          "title": "Ciclo de Entrega",
+          "description": "Análise dos últimos 30 dias",
+          "mergeRate": "Taxa de Merge",
+          "prsCount": "{merged}/{closed} PRs",
+          "deliveryEfficiency": "{percent}% de eficiência de entrega",
+          "issues": "Issues",
+          "declined": "Declinados",
+          "merged": "Mesclados",
+          "period": "Período: {start} - {end}",
+          "topContributors": "Top Contribuidores",
+          "contributions": "{count} contribuições"
+        },
+        "repoStatsGrid": {
+          "activeBranches": "Branches Ativas",
+          "pendingReviews": "Reviews Pendentes",
+          "avgPrTime": "Avg PR Time",
+          "mergedCount": "{count} mesclados",
+          "workload": "Carga de Trabalho",
+          "workloadDescription": "média de commits / autor"
+        }
+      },
+      "webAnalytics": {
+        "title": "Web Analytics",
+        "description": "Entenda o comportamento dos usuários. Dados claros para decisões baseadas em evidências.",
+        "pageViews": "Page Views",
+        "uniqueVisitors": "Visitantes Únicos",
+        "bounceRate": "Taxa de Rejeição",
+        "avgDuration": "Duração Média",
+        "pagesPerSession": "Páginas/Sessão",
+        "charts": {
+          "pageViews": {
+            "title": "Visitantes e Page Views",
+            "description": "Tendência dos últimos 14 dias",
+            "views": "Visualizações",
+            "visitors": "Visitantes"
+          },
+          "hourlyVisitors": {
+            "title": "Visitantes por Hora",
+            "description": "Distribuição ao longo do dia"
+          },
+          "devices": {
+            "title": "Dispositivos",
+            "description": "Por tipo de device"
+          },
+          "browsers": {
+            "title": "Navegadores",
+            "description": "Por browser utilizado"
+          },
+          "os": {
+            "title": "Sistemas Operacionais",
+            "description": "Por OS dos visitantes"
+          }
+        },
+        "realTime": {
+          "title": "Tempo Real",
+          "description": "Visitantes ativos agora",
+          "noData": "Sem dados disponíveis",
+          "noAccess": "Nenhum acesso registrado no período"
+        },
+        "sync": {
+          "loading": "Sincronizando métricas com Umami...",
+          "success": "Métricas atualizadas com sucesso",
+          "error": "Falha na sincronização. Verifique os logs.",
+          "title": "Sincronizar base de dados com Umami"
+        },
+        "tables": {
+          "referrer": {
+            "source": "Fonte de Origem",
+            "views": "Visualizações",
+            "share": "Participação",
+            "visitors": "Visitantes",
+            "duration": "Permanência",
+            "bounce": "Rejeição",
+            "direct": "Direto / Nenhum"
+          },
+          "pages": {
+            "url": "URL da Página",
+            "views": "Visualizações",
+            "proportion": "Proporção",
+            "visitors": "Visitantes",
+            "avgTime": "Tempo Médio",
+            "bounce": "Rejeição"
+          },
+          "countries": {
+            "country": "País",
+            "code": "Código",
+            "views": "Visualizações",
+            "viewsPercent": "% Visualizações",
+            "visitors": "Visitantes",
+            "visitorsPercent": "% Visitantes"
+          }
+        }
+      },
+      "analytics": {
+        "tables": {
+          "pages": "Páginas",
+          "topPagesTitle": "Páginas Mais Visitadas",
+          "topPagesDescription": "Ranking de páginas por visualizações",
+          "referrers": "Referências",
+          "trafficSourcesTitle": "Fontes de Tráfego",
+          "trafficSourcesDescription": "De onde vêm seus visitantes",
+          "countries": "Países",
+          "countriesTitle": "Visitantes por País",
+          "countriesDescription": "Distribuição geográfica dos acessos"
+        }
+      },
+      "integrations": {
+        "hooks": {
+          "sonarqube": "Reduza o custo de manutenção e elimine bugs antes que cheguem em produção. Monitore sua dívida técnica em tempo real.",
+          "umamiAnalytics": "Entenda o comportamento dos seus usuários sem comprometer a privacidade. Dados claros para decisões baseadas em evidências.",
+          "github": "Automatize seu fluxo de trabalho, monitore PRs e acelere sua velocidade de entrega com métricas DORA.",
+          "defectdojo": "Centralize suas vulnerabilidades e mantenha seu projeto seguro e em conformidade com os padrões de segurança.",
+          "cora": "Automatize suas cobranças e simplifique a gestão financeira do seu projeto.",
+          "default": "Potencialize a gestão do seu projeto com dados em tempo real."
+        },
+        "cta": {
+          "connectGlobalDescription": "{hook} Conecte sua conta global da {name} para liberar este recurso.",
+          "configureGlobalProvider": "Configurar Provedor Global",
+          "availableTitle": "{name} disponível",
+          "activateProjectDescription": "{hook} Ative agora para começar a coletar métricas neste projeto.",
+          "linkProject": "Vincular este Projeto"
+        },
+        "github": {
+          "fetchReposError": "Falha ao recuperar os repositórios da organização",
+          "dialogTitle": "Vinculação de projeto ao GitHub",
+          "dialogDescription": "Integre este projeto ao GitHub para continuar. Informe o projeto existente ou se deseja criá-lo",
+          "alertTitle": "Importante",
+          "alertDescription": "A criação automática criará um repositório privado na sua conta/organização configurada.",
+          "createNewRepo": "Criar novo repositório?",
+          "newRepoName": "Nome do Novo Repositório",
+          "useTemplate": "Usar um template (clone)?",
+          "useTemplateDescription": "Copiar arquivos de um projeto existente",
+          "templateRepo": "Repositório Base (Template)",
+          "templatePlaceholder": "Selecione o boilerplate...",
+          "linkExisting": "Vincular a um Repositório do GitHub",
+          "existingPlaceholder": "Escolha o projeto...",
+          "confirm": "Confirmar Integração"
+        }
+      }
+    },
+    "overview": {
+      "summary": {
+        "title": "Sumário do Projeto",
+        "editSummary": "Editar Sumário",
+        "associatedServices": "Serviços associados ao projeto:"
+      },
+      "errors": {
+        "loadProject": "Erro ao tentar localizar os projetos da Organização"
+      },
+      "timeline": {
+        "title": "Fluxo do Projeto",
+        "maintenance": {
+          "title": "Manutenção & Suporte",
+          "activeDescription": "Projeto em período de manutenção e suporte contínuo",
+          "inactiveDescription": "Disponível após conclusão do projeto"
+        },
+        "automaticStepBadge": "Etapa automática",
+        "actions": {
+          "regress": "Retornar",
+          "advancePrefix": "Avançar para:"
+        },
+        "cancelDialog": {
+          "title": "Cancelar Projeto",
+          "description": "Tem certeza que deseja cancelar este projeto? Esta ação é irreversível.",
+          "confirm": "Cancelar Projeto"
+        },
+        "cancelled": {
+          "title": "Projeto Cancelado",
+          "description": "Este projeto foi cancelado."
+        },
+        "flows": {
+          "commercial": {
+            "title": "Fluxo Comercial"
+          },
+          "operational": {
+            "category": "Fluxo Operacional",
+            "title": "Desenvolvimento"
+          },
+          "closing": {
+            "category": "Encerramento",
+            "title": "Fluxo Comercial - Entrega"
+          }
+        },
+        "statusChangeNote": "Mudança de status de {from} para {to}"
+      },
+      "activityLog": {
+        "title": "Últimas Atualizações",
+        "time": {
+          "yesterday": "Ontem",
+          "daysAgo": "{days} dias atrás"
+        },
+        "mock": {
+          "stageChange": {
+            "message": "Projeto avançou para \"Em Andamento\"",
+            "details": "De: Planejado"
+          },
+          "email": {
+            "message": "Email enviado ao cliente",
+            "details": "Atualização de status semanal"
+          },
+          "document": {
+            "message": "Documento adicionado",
+            "details": "Termo de Aceite - Fase 1"
+          },
+          "milestone": {
+            "message": "Marco concluído",
+            "details": "Sprint 4 finalizada"
+          },
+          "integration": {
+            "message": "Webhook executado",
+            "details": "Notificação Slack enviada"
+          },
+          "payment": {
+            "message": "Pagamento recebido",
+            "details": "Parcela 2 de 4 - R$ 37.500,00"
+          },
+          "team": {
+            "message": "Membro adicionado à equipe",
+            "details": "Ana Costa"
+          }
+        }
+      }
+    },
+    "transitions": {
+      "dialogTitle": "Avançar para: {status}",
+      "dialogDescription": "Formulário de avanço de etapa",
+      "confirmAdvance": "Deseja realmente avançar o status do projeto para a próxima etapa?",
+      "observations": "Observações",
+      "observationsPlaceholder": "Adicione observações sobre esta transição (opcional)",
+      "confirmButton": "Confirmar Avanço",
+      "statusUpdated": "Status atualizado com sucesso!",
+      "newStatusWillBe": "O novo status será:",
+      "nextSteps": {
+        "generateProposalDraft": "Gerar minuta de proposta",
+        "reviewDraft": "Revisar minuta de proposta",
+        "approveCommercial": "Aprovar proposta comercial",
+        "sendToClient": "Encaminhar proposta ao cliente",
+        "confirmAcceptance": "Confirmar aceite",
+        "advanceToContract": "Avançar para Etapa de Contrato",
+        "generateNewProposal": "Gerar nova proposta",
+        "reviewContractDraft": "Revisar minuta do contrato",
+        "approveAndSendToClient": "Aprovar contrato e encaminhar para o cliente",
+        "confirmSignature": "Confirmar assinatura",
+        "advanceToDevelopment": "Avançar para etapa de desenvolvimento",
+        "proposalCancelled": "Proposta cancelada",
+        "contractRejected": "Contrato rejeitado"
+      },
+      "common": {
+        "cancel": "Cancelar",
+        "back": "Voltar",
+        "processing": "Processando...",
+        "errors": {
+          "unexpected": "Erro inesperado ao processar a solicitação."
+        },
+        "validation": {
+          "selectAtLeastOneService": "Selecione pelo menos um serviço.",
+          "selectPdfFile": "Selecione um arquivo PDF.",
+          "required": "Obrigatório"
+        },
+        "upload": {
+          "clickToSelect": "Clique para selecionar",
+          "orDragPdf": "ou arraste o PDF",
+          "linkedToProjectHint": "O arquivo será vinculado diretamente ao projeto."
+        }
+      },
+      "toTechAnalysis": {
+        "validation": {
+          "observationMin": "Informe uma observação técnica detalhada."
+        },
+        "toast": {
+          "success": "Projeto enviado para análise técnica!"
+        },
+        "title": "Solicitação de Análise",
+        "description": "Defina o escopo preliminar e envie as instruções para o time técnico.",
+        "fields": {
+          "services": {
+            "label": "Análise preliminar de serviços",
+            "description": "Indique quais serviços devem ser avaliados pelo time técnico."
+          },
+          "observation": {
+            "label": "Instruções para a Equipe Técnica",
+            "placeholder": "Descreva o que deve ser analisado, dúvidas específicas ou requisitos do cliente..."
+          }
+        },
+        "submit": "Encaminhar para Técnica"
+      },
+      "toProposal": {
+        "validation": {
+          "observationMin": "Informe uma observação técnica detalhada."
+        },
+        "toast": {
+          "success": "Projeto encaminhado para proposta!"
+        },
+        "title": "Definição Técnica",
+        "description": "Revise os serviços e adicione o parecer técnico para a equipe comercial.",
+        "fields": {
+          "services": {
+            "label": "Serviços Necessários",
+            "description": "Selecione os serviços que comporão o escopo desta proposta."
+          },
+          "observation": {
+            "label": "Parecer Técnico",
+            "placeholder": "Descreva detalhes técnicos, complexidade estimada e requisitos específicos..."
+          }
+        },
+        "submit": "Encaminhar para Proposta"
+      },
+      "contractCreation": {
+        "toast": {
+          "generateError": "Erro ao gerar contrato.",
+          "unexpectedError": "Erro inesperado ao criar contrato."
+        },
+        "title": "Configuração do Contrato",
+        "description": "Defina como o contrato jurídico deste projeto será gerado.",
+        "submit": "Gerar Contrato"
+      },
+      "proposalSend": {
+        "toast": {
+          "success": "Proposta enviada via {channel} com sucesso!",
+          "successNoSend": "Aguardando aceitação do cliente!",
+          "unexpectedError": "Erro inesperado ao encaminhar a proposta."
+        },
+        "alert": {
+          "title": "Proposta Pronta para Envio",
+          "approvedAtPrefix": "Esta proposta foi aprovada internamente em",
+          "selectChannelSuffix": ". Selecione o canal abaixo para notificar o cliente."
+        },
+        "content": {
+          "title": "Conteúdo da Proposta"
+        },
+        "document": {
+          "title": "Documento Gerado",
+          "originLabel": "Origem:",
+          "originTemplate": "Modelo de Documento",
+          "originUpload": "Upload de arquivo",
+          "viewPdf": "Visualizar PDF"
+        },
+        "channel": {
+          "title": "Canal de Envio",
+          "notifyVia": "Notificar via:",
+          "email": {
+            "label": "E-mail",
+            "description": "Envio formal via sistema"
+          },
+          "none": {
+            "label": "Não enviar",
+            "description": "Não enviar e-mail de notificação"
+          },
+          "whatsapp": {
+            "label": "WhatsApp"
+          }
+        },
+        "submit": "Enviar Proposta",
+        "submitNoSend": "Continuar sem enviar e-mail"
+      },
+      "proposalCreation": {
+        "toast": {
+          "generateError": "Erro ao gerar proposta.",
+          "success": "Proposta criada com sucesso!",
+          "unexpectedError": "Erro inesperado ao criar proposta."
+        },
+        "upload": {
+          "clickToSelectPdf": "Clique para selecionar o PDF",
+          "fileSelected": "Arquivo selecionado:"
+        },
+        "fields": {
+          "downPayment": {
+            "label": "Percentual de Entrada"
+          },
+          "validUntil": {
+            "label": "Proposta Válida até"
+          },
+          "items": {
+            "title": "Serviços e Descontos",
+            "basePriceLabel": "Base:",
+            "discountType": {
+              "label": "Tipo"
+            },
+            "discountValue": {
+              "label": "Valor"
+            }
+          }
+        },
+        "summary": {
+          "totalLabel": "Valor Total da Proposta",
+          "downPayment": "(Entrada: {amount})"
+        },
+        "submit": "Gerar Proposta"
+      },
+      "proposalConfirmation": {
+        "validation": {
+          "reasonRequired": "Selecione o motivo da rejeição",
+          "reasonMin": "Selecione um motivo"
+        },
+        "rejectionReasons": {
+          "PRICE": {
+            "label": "Preço acima do orçamento"
+          },
+          "DEADLINE": {
+            "label": "Prazo de entrega inviável"
+          },
+          "COMPETITION": {
+            "label": "Escolheu outro fornecedor"
+          },
+          "SCOPE": {
+            "label": "Escopo não atende às necessidades"
+          },
+          "OTHER": {
+            "label": "Outro motivo"
+          }
+        },
+        "toast": {
+          "accepted": "Proposta aceita com sucesso!",
+          "rejected": "Rejeição registrada.",
+          "error": "Erro ao processar a requisição."
+        },
+        "alert": {
+          "title": "Proposta Pronta para Decisão",
+          "generatedAt": "Gerada em:",
+          "awaitingClient": "Aguardando formalização do cliente.",
+          "instructions": "Selecione uma das ações abaixo para atualizar o status no sistema."
+        },
+        "actions": {
+          "reportRejection": "Informar Rejeição",
+          "confirmAcceptance": "Confirmar Aceite do Cliente"
+        },
+        "rejectionForm": {
+          "title": "Detalhes da Rejeição",
+          "reason": {
+            "label": "Motivo Principal",
+            "placeholder": "Selecione o motivo..."
+          },
+          "notes": {
+            "label": "Observações Adicionais (opcional)",
+            "placeholder": "Descreva detalhes sobre a decisão do cliente..."
+          },
+          "submit": "Confirmar Rejeição"
+        }
+      },
+      "send": {
+        "selectChannel": "Selecione um canal de comunicação",
+        "download": "Baixar documento",
+        "unavailable": "Indisponível",
+        "quickNotification": "Notificação rápida"
+      },
+      "contractSend": {
+        "toast": {
+          "success": "Contrato enviado via {channel} com sucesso!",
+          "successNoSend": "Aguardando aceitação do cliente!",
+          "unexpectedError": "Erro inesperado ao encaminhar o contrato."
+        },
+        "alert": {
+          "title": "Contrato Pronto para Envio",
+          "description": "O documento foi gerado. Selecione o canal abaixo para notificar o cliente."
+        },
+        "missingResponsible": {
+          "title": "Responsável não cadastrado",
+          "description": "Cadastre o nome e e-mail do responsável legal do cliente antes de enviar o contrato.",
+          "editClient": "Editar cliente"
+        },
+        "submit": "Enviar Contrato",
+        "notifyVia": "Notificar via:",
+        "emailDescription": "Envio formal com link seguro",
+        "openInNewTab": "Abrir em nova aba",
+        "originLabel": "Origem:"
+      },
+      "proposalEditor": {
+        "title": "Revisão da Proposta Gerada",
+        "attentionTitle": "Atenção",
+        "templateAlertBefore": "Esta proposta foi gerada a partir de um Modelo de Documento de Proposta padrão. Revise-o",
+        "templateAlertAfter": "antes de confirma e encaminhá-lo para aprovação",
+        "accessDraft": "Acessar o Rascunho",
+        "commercialTitle": "Proposta Comercial",
+        "commercialHint": "Verifique a proposta antes de encaminhar para aprovação",
+        "generatedDocument": "Proposta Comercial Gerada",
+        "confirmAndSend": "Confirmar e encaminhar para aprovação",
+        "toastSuccess": "Proposta encaminhada para aprovação com sucesso",
+        "toastUnexpectedError": "Erro inesperado ao encaminhar a proposta para aprovação. Tente novamente mais tarde."
+      },
+      "proposalReview": {
+        "toast": {
+          "approved": "Proposta aprovada com sucesso",
+          "unexpectedError": "Erro inesperado ao encaminhar a proposta ao cliente. Tente novamente mais tarde."
+        },
+        "alert": {
+          "title": "Aprovação Pendente",
+          "description": "Revise os dados abaixo. Após a aprovação, a proposta estará pronta para ser enviada ao cliente."
+        },
+        "contentTitle": "Conteúdo da Proposta",
+        "generatedTitle": "Proposta comercial Gerada",
+        "generatedDocument": "Proposta Comercial Gerada",
+        "originTemplate": "Modelo de Documento",
+        "originUpload": "Upload de arquivo",
+        "createdAt": "Criado em:",
+        "originLabel": "Origem:",
+        "originSystemTemplate": "Sistema (Modelo)",
+        "originPdfFile": "Arquivo PDF",
+        "templateLabel": "Modelo:",
+        "totalValue": "Valor Total da Proposta:",
+        "approveButton": "Aprovar Proposta",
+        "backAndEdit": "Voltar e Editar"
+      },
+      "contractEditor": {
+        "title": "Revisão da Contrato Gerada",
+        "attentionTitle": "Atenção",
+        "templateAlertBefore": "Esta contrato foi gerada a partir de um Modelo de Documento de Contrato padrão. Revise-o",
+        "templateAlertAfter": "antes de confirma e encaminhá-lo para aprovação",
+        "accessDraft": "Acessar o Rascunho",
+        "originTemplate": "Modelo de Documento",
+        "originUpload": "Upload de arquivo",
+        "confirmAndSend": "Confirmar e encaminhar para aprovação",
+        "toastSuccess": "Contrato encaminhado para aprovação com sucesso",
+        "toastUnexpectedError": "Erro inesperado ao encaminhar a contrato para aprovação. Tente novamente mais tarde."
+      },
+      "contract": {
+        "loadError": "Não foi possível carregar os detalhes do contrato.",
+        "notFound": "Detalhes do contrato não localizados."
+      },
+      "contractToNextStep": {
+        "toastSuccess": "Contrato atualizado com sucesso",
+        "toastUnexpectedError": "Erro inesperado ao atualizar o contrato.",
+        "reportRejection": "Informar rejeição do contrato",
+        "confirmSignature": "Confirmar assinatura do cliente"
+      },
+      "regress": {
+        "success": "Projeto retornado para etapa anterior",
+        "proposalCancelledSuccess": "Sucesso: Proposta cancelada.",
+        "contractCancelledSuccess": "Sucesso: Contrato cancelado.",
+        "dialogTitle": "Retornar Etapa do Projeto",
+        "dialogDescription": "Esta ação moverá o projeto para a fase anterior. Justifique a decisão abaixo.",
+        "movingFromTo": "Movendo de <strong>{from}</strong> para <strong>{to}</strong>.",
+        "proposalWarning": "A proposta atual será invalidada e será necessário gerar uma nova.",
+        "justificationPlaceholder": "Descreva o motivo do retorno...",
+        "justificationLabel": "Justificativa Detalhada",
+        "attentionTitle": "Atenção",
+        "confirm": "Confirmar Retorno",
+        "validation": {
+          "observationMin": "A justificativa deve ter no mínimo 10 caracteres"
+        },
+        "default": {
+          "validation": {
+            "observationMin": "Mínimo 10 caracteres"
+          }
+        },
+        "techAnalysis": {
+          "validation": {
+            "motivationRequired": "Selecione o motivo técnico"
+          },
+          "fields": {
+            "motivation": {
+              "label": "Motivo da Reanálise Técnica",
+              "placeholder": "Selecione o motivo técnico..."
+            }
+          },
+          "motivations": {
+            "SCOPE_CHANGE": "Mudança de Escopo",
+            "TECHNICAL_ERROR": "Inconsistência Identificada",
+            "MISSING_DOCS": "Documentação Incompleta",
+            "CLIENT_REQUEST": "Solicitação de Revisão pelo Cliente"
+          }
+        },
+        "proposal": {
+          "validation": {
+            "motivationRequired": "Selecione o motivo comercial"
+          },
+          "fields": {
+            "motivation": {
+              "label": "Motivo da Revisão Comercial",
+              "placeholder": "Selecione o motivo comercial..."
+            }
+          },
+          "motivations": {
+            "PRICE_ADJUSTMENT": "Ajuste de Valores/Descontos",
+            "TYPO_ERROR": "Erro de Digitação/Dados",
+            "COMMERCIAL_NEGOTIATION": "Nova Negociação Comercial",
+            "PAYMENT_TERM_CHANGE": "Alteração de Condição de Pgto"
+          }
+        }
+      }
+    },
+    "stages": {
+      "DRAFT": {
+        "label": "Rascunho",
+        "shortLabel": "Rascunho",
+        "description": "Projeto em elaboração inicial",
+        "nextAction": "Enviar para Análise"
+      },
+      "TECH_ANALYSIS": {
+        "label": "Análise de Viabilidade",
+        "shortLabel": "Viabilidade",
+        "description": "Avaliando viabilidade técnica e comercial",
+        "nextAction": "Elaborar Proposta"
+      },
+      "PROPOSAL": {
+        "label": "Proposta Comercial",
+        "shortLabel": "Proposta",
+        "description": "Analisando proposta comercial",
+        "nextAction": "Preparar Contrato"
+      },
+      "PROPOSAL_GENERATED": {
+        "label": "Preparação do Contrato",
+        "shortLabel": "Contrato",
+        "description": "Cliente analisando proposta",
+        "nextAction": "Encaminhar Contrato para Assinatura"
+      },
+      "WAITING_SIGNATURE": {
+        "label": "Assinatura do Contrato",
+        "shortLabel": "Assinatura",
+        "description": "Aguardando assinatura do contrato",
+        "nextAction": "Aguardar Pagamento"
+      },
+      "WAITING_DOWN_PAYMENT": {
+        "label": "Aguardando Pagamento",
+        "shortLabel": "Pag. Entrada",
+        "description": "Aguardando pagamento da entrada",
+        "nextAction": "Iniciar Projeto"
+      },
+      "PLANNED": {
+        "label": "Planejamento",
+        "shortLabel": "Planejamento",
+        "description": "Projeto em planejamento em preparação para início",
+        "nextAction": "Iniciar Desenvolvimento"
+      },
+      "IN_PROGRESS": {
+        "label": "Em Andamento",
+        "shortLabel": "Em Andamento",
+        "description": "Desenvolvimento em progresso",
+        "nextAction": "Enviar para Avaliação"
+      },
+      "REVIEW": {
+        "label": "Em Avaliação",
+        "shortLabel": "Em Avaliação",
+        "description": "Cliente avaliando entregas",
+        "nextAction": "Entregar Produto"
+      },
+      "DELIVERED": {
+        "label": "Produto Entregue",
+        "shortLabel": "Entregue",
+        "description": "Produto entregue ao cliente",
+        "nextAction": "Solicitar Pagamento Final"
+      },
+      "FINAL_PAYMENT": {
+        "label": "Pagamento Final",
+        "shortLabel": "Pagamento Final",
+        "description": "Aguardando pagamento final",
+        "nextAction": "Concluir Projeto"
+      },
+      "COMPLETED": {
+        "label": "Concluído",
+        "shortLabel": "Concluído",
+        "description": "Projeto concluído com sucesso",
+        "nextAction": "Iniciar Manutenção"
+      },
+      "MAINTENANCE": {
+        "label": "Manutenção & Suporte",
+        "shortLabel": "Suporte",
+        "description": "Em período de manutenção e suporte contínuo"
+      },
+      "CANCELLED": {
+        "label": "Cancelado",
+        "shortLabel": "Cancelado",
+        "description": "Projeto cancelado"
+      },
+      "ON_HOLD": {
+        "label": "Em Pausa",
+        "shortLabel": "Pausa",
+        "description": "Projeto temporariamente pausado"
+      }
+    }
+  },
+  "contracts": {
+    "page": {
+      "title": "Gestão de contratos",
+      "description": "Gerencie todos os contratos de sua Empresa",
+      "search": "Buscar contrato...",
+      "fetchError": "Falha ao tentar localizar o histórico de contratos",
+      "historyTitle": "Histórico de Contratos"
+    },
+    "history": {
+      "createdBy": "Criado por",
+      "reviewedBy": "Revisado por",
+      "approvedBy": "Aprovado por",
+      "sentToClient": "Contrato enviado para o cliente",
+      "contractAnalysis": "Análise de Contrato"
+    },
+    "list": {
+      "emptyTitle": "Nenhum contrato localizado",
+      "emptyDescription": "Nenhum contrato cadastrado até o momento"
+    },
+    "status": {
+      "draft": "Rascunho",
+      "review": "Em Revisão",
+      "sent": "Enviada",
+      "signed": "Assinado",
+      "rejected": "Rejeitada",
+      "cancelled": "Cancelada"
+    },
+    "signing": {
+      "lastModified": "Última modificação em",
+      "notOpened": "Não visualizado",
+      "opened": "Visualizado",
+      "pendingSignature": "Aguardando assinatura",
+      "pendingClient": "Aguardando assinatura do cliente",
+      "signatureIdNotFound": "Identificador de assinatura não localizado",
+      "title": "Assinatura de Contrato",
+      "cardTitle": "Informações de Assinatura do Contrato",
+      "description": "Olá! Para iniciarmos nossa parceria no projeto {name}, precisamos da sua assinatura no contrato abaixo.",
+      "projectDescription": "Verifique o documento e assine o contrato para liberação do projeto para pagamento",
+      "previewAlert": {
+        "title": "Atenção",
+        "description": "Abaixo é apresentado o contrato para assinatura, na forma que o cliente verá ao acessar. O cliente não terá acesso às informações do projeto enquanto não realizar o pagamento inicial. O acesso será concedido automáticamente, no momento do reconhecimento da respectiva quitação."
+      },
+      "proposalSummaryHint": "Ao final do documento, é apresentado o resumo da proposta comercial acordada.",
+      "proposalDetailsTitle": "Detalhes da proposta",
+      "footer": "Ambiente seguro e autenticado por Zofia Code Labs",
+      "signedByAll": "Documento assinado por todos",
+      "pendingSignatureTitle": "Há pendência de assinatura",
+      "signedByAllDescription": "Este documento foi assinado por todos os assinantes",
+      "pendingSignatureDescription": "Algum dos assinantes ainda não realizou a assinatura do documento",
+      "downloadStarted": "Download iniciado!",
+      "downloadFailed": "Falha ao baixar arquivo",
+      "roles": {
+        "APPROVER": "Aprovador",
+        "SIGNER": "Assinador",
+        "CC": "Cópia",
+        "VIEWER": "Visualizador"
+      },
+      "signingStatus": {
+        "NOT_SIGNED": "Pendente",
+        "SIGNED": "Assinado"
+      }
+    }
+  },
+  "proposals": {
+    "status": {
+      "draft": "Rascunho",
+      "review": "Em Revisão",
+      "approved": "Aprovada",
+      "sent": "Enviada",
+      "accepted": "Aceita",
+      "rejected": "Rejeitada",
+      "cancelled": "Cancelada"
+    },
+    "modal": {
+      "viewTooltip": "Verificar conteúdo da proposta",
+      "defaultTitle": "Proposta",
+      "projectLabel": "Projeto: {name}"
+    },
+    "history": {
+      "version": "Versão: {version}",
+      "editTooltip": "Editar proposta",
+      "downloadDocument": "Baixar documento",
+      "documentNotFound": "Erro ao localizar o documento",
+      "proposalAnalysis": "Análise de Proposta",
+      "createdBy": "Criado por",
+      "reviewedBy": "Revisado por",
+      "approvedBy": "Aprovado por",
+      "sentToClient": "Proposta enviada para o cliente"
+    },
+    "detail": {
+      "title": "Detalhes da Emissão",
+      "createdBy": "Criado por:",
+      "issuedAt": "Emitida em:",
+      "validitySection": "Validade e Aprovação",
+      "validUntil": "Válida até:",
+      "currentStatus": "Status Atual:",
+      "activeVersion": "Versão Ativa",
+      "paymentGateway": "Gateway",
+      "paymentMethod": "Método de Pagamento",
+      "history": "Histórico",
+      "includedServices": "Serviços Incluídos",
+      "service": "Serviço",
+      "basePrice": "Preço Base",
+      "discount": "Desconto",
+      "finalPrice": "Preço Final",
+      "downPayment": "Entrada",
+      "downPaymentPercent": "Percentual de {percent}%",
+      "totalValue": "Valor Total"
+    }
+  },
+  "purchase": {
+    "billing": {
+      "discountTwoMonthsFree": "2 meses grátis",
+      "discountSave20": "Economize 20%"
+    },
+    "aiReports": {
+      "badge": "ZofIA Reports",
+      "title": "A consultora virtual da sua Software House",
+      "description": "Pare de perder horas criando relatórios manuais. Nossa IA cruza dados de tráfego, qualidade e segurança para gerar insights que provam o valor do seu trabalho para o cliente final."
+    },
+    "analytics": {
+      "badge": "Zofia Analytics",
+      "title": "Impulsione seu Analytics",
+      "description": "Métricas em tempo real, 100% privadas e sem cookies."
+    },
+    "metrics": {
+      "badge": "DevSecOps & Qualidade",
+      "title": "Controle total sobre o ciclo de vida do seu código",
+      "description": "Consolide métricas de produtividade, qualidade e segurança em um único dashboard. A transparência que sua Software House precisa para encantar clientes e reduzir dívida técnica."
+    }
+  },
+  "financial": {
+    "page": {
+      "title": "Financeiro",
+      "description": "Visão geral e controle de caixa.",
+      "export": "Exportar",
+      "newTransaction": "Nova Transação",
+      "tabs": {
+        "transactions": "Transações",
+        "pending": "Pagamentos Pendentes",
+        "projections": "Projeções"
+      }
+    },
+    "projections": {
+      "monthPlus1": "Mês +1",
+      "monthPlus2": "Mês +2",
+      "title": "Projeção Financeira",
+      "description": "Estimativa de receitas e despesas para os próximos meses",
+      "summaryTitle": "Resumo de Projeções (Próx. 3 meses)",
+      "expectedRevenue": "Receita Prevista",
+      "expectedExpenses": "Despesas Previstas",
+      "projectedProfit": "Lucro Projetado",
+      "noteTitle": "Nota",
+      "noteDescription": "Estes valores consideram faturas emitidas com vencimento futuro e despesas agendadas.",
+      "revenueLabel": "Receita"
+    },
+    "charts": {
+      "expensesByCategory": "Distribuição dos gastos pagos",
+      "expenses": "Despesas",
+      "income": "Receita"
+    },
+    "transactions": {
+      "search": "Buscar transação...",
+      "title": "Histórico de Transações",
+      "all": "Todos",
+      "income": "Receitas",
+      "expense": "Despesas",
+      "date": "Data",
+      "description": "Descrição",
+      "project": "Projeto",
+      "type": "Tipo",
+      "amount": "Valor",
+      "status": "Status",
+      "empty": "Nenhuma transação encontrada.",
+      "statusConfirmed": "Confirmado",
+      "statusPending": "Pendente",
+      "statusCancelled": "Cancelado"
+    },
+    "pendingSettlements": {
+      "title": "Pagamentos Pendentes",
+      "columns": {
+        "client": "Cliente",
+        "project": "Projeto",
+        "amount": "Valor",
+        "dueDate": "Vencimento",
+        "status": "Status",
+        "actions": "Ações"
+      },
+      "status": {
+        "overdueDays": "{count} dias atrasado",
+        "onTime": "No prazo"
+      },
+      "sendReminder": "Enviar Lembrete",
+      "empty": "Nenhum pagamento pendente."
+    },
+    "paymentStatus": {
+      "pending": "Pendente",
+      "invoiced": "Faturado",
+      "paid": "Pago",
+      "overdue": "Atrasado"
+    }
+  },
+  "charts": {
+    "empty": {
+      "title": "Sem dados disponíveis",
+      "description": "Nenhuma atividade detectada",
+      "noAccessInPeriod": "Nenhum acesso registrado no período"
+    }
+  },
+  "permissions": {
+    "fallback": {
+      "description": "Permissão do sistema"
+    },
+    "categories": {
+      "projects_ecosystem": "Gestão de Projetos",
+      "crm_sales": "Vendas & CRM",
+      "financial": "Financeiro",
+      "admin": "Administração & Configurações"
+    },
+    "items": {
+      "project_read": {
+        "label": "Visualizar Projetos",
+        "description": "Permite ver a lista de projetos e seus detalhes básicos."
+      },
+      "project_read_observations": {
+        "label": "Ver Observações do Projeto",
+        "description": "Permite visualizar notas e observações registradas no projeto."
+      },
+      "project_read_recent_updates": {
+        "label": "Ver Atualizações Recentes",
+        "description": "Permite visualizar o histórico de atividades e atualizações do projeto."
+      },
+      "project_manage": {
+        "label": "Gerenciar Conteúdo do Projeto",
+        "description": "Permite gerenciar documentos, notas e outros conteúdos operacionais do projeto."
+      },
+      "project_create": {
+        "label": "Criar Projetos",
+        "description": "Permite iniciar novos projetos na organização."
+      },
+      "project_update": {
+        "label": "Editar Projetos",
+        "description": "Alterar dados, datas, status e propriedades do projeto."
+      },
+      "project_archive": {
+        "label": "Arquivar Projetos",
+        "description": "Mover projetos concluídos para o arquivo morto (somente leitura)."
+      },
+      "project_delete": {
+        "label": "Excluir Projetos",
+        "description": "Ação destrutiva: remover projetos permanentemente."
+      },
+      "backlog_read": {
+        "label": "Ver Backlog/Tarefas",
+        "description": "Acesso de leitura às tarefas e quadros do projeto."
+      },
+      "backlog_manage": {
+        "label": "Gerenciar Backlog",
+        "description": "Criar, editar, mover e deletar tarefas/stories."
+      },
+      "client_read": {
+        "label": "Ver Clientes",
+        "description": "Acesso à base de contatos e empresas."
+      },
+      "client_create": {
+        "label": "Cadastrar Clientes",
+        "description": "Adicionar novos clientes ao CRM."
+      },
+      "client_update": {
+        "label": "Editar Clientes",
+        "description": "Atualizar dados cadastrais de clientes existentes."
+      },
+      "client_delete": {
+        "label": "Excluir Clientes",
+        "description": "Remover registros de clientes da base."
+      },
+      "proposal_read": {
+        "label": "Ver Propostas",
+        "description": "Visualizar histórico de orçamentos."
+      },
+      "proposal_create": {
+        "label": "Criar/Editar Propostas",
+        "description": "Gerar novos orçamentos comerciais (Rascunhos)."
+      },
+      "proposal_send": {
+        "label": "Enviar Propostas",
+        "description": "Autorização para disparar a proposta final ao cliente."
+      },
+      "proposal_approve": {
+        "label": "Aprovar Propostas (Gestor)",
+        "description": "Permite aprovar descontos ou condições especiais e deletar propostas de terceiros."
+      },
+      "contract_read": {
+        "label": "Ver Contratos",
+        "description": "Acesso às minutas e contratos vigentes."
+      },
+      "contract_create": {
+        "label": "Gerar Contratos",
+        "description": "Criar minutas a partir de templates."
+      },
+      "contract_sign": {
+        "label": "Assinar/Finalizar",
+        "description": "Marcar contratos como assinados (bloqueia edições futuras)."
+      },
+      "financial_view_dashboard": {
+        "label": "Dashboard Financeiro",
+        "description": "Visão gerencial de fluxo de caixa e totais."
+      },
+      "financial_create": {
+        "label": "Criar Lançamentos Financeiros",
+        "description": "Permite registrar novas transações e movimentações no módulo financeiro."
+      },
+      "financial_export": {
+        "label": "Exportar Dados Financeiros",
+        "description": "Permite exportar relatórios e dados do módulo financeiro."
+      },
+      "invoice_read": {
+        "label": "Ver Faturas",
+        "description": "Acesso ao histórico de cobranças emitidas."
+      },
+      "invoice_create": {
+        "label": "Emitir Cobranças",
+        "description": "Gerar e enviar faturas/boletos para clientes."
+      },
+      "invoice_cancel": {
+        "label": "Cancelar Faturas",
+        "description": "Permite anular uma nota fiscal ou cobrança emitida."
+      },
+      "expense_read": {
+        "label": "Ver Despesas",
+        "description": "Visualizar custos lançados no sistema."
+      },
+      "expense_create": {
+        "label": "Lançar Despesas",
+        "description": "Registrar novos custos ou solicitações de reembolso."
+      },
+      "expense_approve": {
+        "label": "Aprovar Despesas",
+        "description": "Autorizar o pagamento efetivo de contas."
+      },
+      "settings_manage_members": {
+        "label": "Gerir Equipe",
+        "description": "Convidar membros, remover acessos e definir cargos."
+      },
+      "settings_read_integrations": {
+        "label": "Ver Integrações",
+        "description": "Permite visualizar integrações conectadas e status de sincronização."
+      },
+      "settings_manage_integrations": {
+        "label": "Gerenciar Integrações",
+        "description": "Conectar, editar e desconectar ferramentas (Slack, Stripe, etc)."
+      },
+      "settings_manage_billing": {
+        "label": "Assinatura do Sistema",
+        "description": "Gerenciar plano, cartão de crédito e faturas do SaaS."
+      },
+      "settings_manage_expense_categories": {
+        "label": "Categorias de Despesa",
+        "description": "Gerenciar categorias de despesas."
+      },
+      "service_catalog_read": {
+        "label": "Ver Catálogo de Serviços",
+        "description": "Visualizar a lista de serviços padrão oferecidos."
+      },
+      "service_catalog_manage": {
+        "label": "Gerir Catálogo de Serviços",
+        "description": "Definir o escopo padrão dos serviços (templates de backlog)."
+      },
+      "service_backlog_read": {
+        "label": "Ver Backlog de Serviços",
+        "description": "Visualizar a lista de itens de backlog de serviços."
+      },
+      "service_backlog_manage": {
+        "label": "Gerir Backlog de Serviços",
+        "description": "Criar, editar, mover e deletar itens de backlog de serviços."
+      }
+    }
+  },
+  "errors": {
+    "global": {
+      "title": "Algo não previsto aconteceu",
+      "imageAlt": "404 - Página não encontrada"
+    },
+    "server": {
+      "unauthorized": "Não autorizado",
+      "unauthenticated": "Usuário não autenticado",
+      "notLoggedIn": "Usuário não logado.",
+      "userNotFound": "Usuário não localizado",
+      "sessionExpired": "Sessão expirada.",
+      "sessionExpiredNoOrg": "Sessão expirada ou usuário sem organização vinculada.",
+      "sessionExpiredNotLoggedIn": "Sessão expirada ou usuário não logado.",
+      "invalidData": "Dados inválidos.",
+      "invalidId": "ID inválido.",
+      "accessDenied": "Acesso negado",
+      "unexpected": "Erro inesperado. Tente novamente.",
+      "clientNotFound": "Cliente não encontrado.",
+      "clientEmployeeAlreadyLinked": "Este usuário já está vinculado a este cliente.",
+      "clientEmployeeCreateFailed": "Falha ao criar o usuário para o membro da equipe",
+      "clientEmployeeNotLinked": "Usuário não associado à empresa",
+      "clientDuplicateCnpj": "Empresa com mesmo CNPJ já cadastrada",
+      "projectNotFound": "Projeto não encontrado.",
+      "projectNotFoundForEdit": "Projeto não localizado para edição",
+      "invalidProjectId": "Identificador do projecto inválido",
+      "contractNotFound": "Contrato não encontrado.",
+      "contractNoFile": "Contrato não possui arquivo a ser baixado",
+      "contractFileMissing": "Arquivo do contrato não existe.",
+      "contractClientNotFound": "Cliente do contrato não encontrado.",
+      "contractCannotDeleteSigned": "Não é possível excluir um contrato assinado",
+      "contractCannotDeleteCancelled": "Não é possível excluir uma contrato cancelado",
+      "contractInvalidTransition": "Transição de status inválida.",
+      "proposalNotFound": "Proposta não localizada",
+      "proposalNoFile": "Proposta não possui arquivo a ser baixado",
+      "organizationNotFound": "Organização não localizada.",
+      "organizationIdRequired": "Nenhum identificador da organização informado.",
+      "memberNotFound": "Membro não localizado.",
+      "roleNotFound": "Perfil de acesso não encontrado.",
+      "roleHasMembers": "Não é possível excluir um perfil que possui usuários vinculados.",
+      "roleWrongOrganization": "Acesso negado: Este perfil pertence a outra organização.",
+      "invalidIdentifierType": "Tipo de identificador inválido.",
+      "serviceNotFound": "Serviço não encontrado.",
+      "serviceCategoryNotFound": "Categoria de Serviço não encontrada.",
+      "serviceDuplicateName": "Já existe um serviço cadastrado com este nome.",
+      "serviceNegativePrice": "O preço base não pode ser negativo.",
+      "serviceCategoryDuplicateName": "Já existe uma categoria de serviço cadastrada com este nome.",
+      "expenseCategoryDuplicateName": "Já existe uma categoria de despesa cadastrada com este nome.",
+      "invoiceNotFound": "Fatura não encontrada.",
+      "backlogItemNotFound": "Item do backlog não encontrado.",
+      "serviceBacklogItemNotFound": "Item do backlog do serviço não encontrado.",
+      "backlogNotFound": "Lista de backlog não localizada",
+      "documentNotFound": "Documento não encontrado ou já excluído.",
+      "integrationNotFound": "Integração não encontrada.",
+      "integrationTypeNotFound": "Tipo de integração não encontrado.",
+      "sonarIntegrationNotFound": "Integração do Projeto com o SonarQube não encontrada.",
+      "permissionDenied": "Você não tem permissão para realizar esta ação",
+      "projectCreatePermissionDenied": "Usuário não tem permissão para criar projetos",
+      "projectUpdatePermissionDenied": "Usuário não tem permissão para editar projetos",
+      "clientAccessDenied": "Você não tem acesso a este cliente.",
+      "actionDenied": "Você não tem permissão para esta ação.",
+      "serviceAccessDenied": "Você não tem permissão para acessar este serviço",
+      "securityStrategyUndefined": "Estratégia de segurança não definida para este recurso.",
+      "clientResponsibleRequired": "Cadastre o responsável legal (nome e e-mail) do cliente antes de enviar o contrato.",
+      "emailBelongsToInternalMember": "Este e-mail pertence a um membro da equipe interna e não pode ser vinculado como contato do cliente.",
+      "settingsContextUnsupported": "Contexto de configuração não suportado.",
+      "wrongCurrentPassword": "Senha atual incorreta.",
+      "socialLoginNoPassword": "Este usuário utiliza login social e não possui senha definida.",
+      "serviceUpdateFailed": "Erro ao atualizar serviço.",
+      "serviceDeleteFailed": "Erro ao remover serviço.",
+      "serviceCreateFailed": "Erro interno ao criar serviço.",
+      "permissionsLoadFailed": "Erro ao carregar permissões",
+      "connectionError": "Erro de conexão.",
+      "invalidStatus": "Status inválido.",
+      "statusUpdateFailed": "Erro ao atualizar status.",
+      "unexpectedRequestError": "Erro inesperado ao processar a solicitação.",
+      "roleIdRequired": "ID do Perfil de Acesso é obrigatório.",
+      "routePermissions": {
+        "serviceCategory": "Você não tem permissão para acessar as categorias de serviço.",
+        "serviceCatalog": "Você não tem permissão para acessar o catálogo de serviços.",
+        "expenseCategory": "Você não tem permissão para acessar os tipos de despesa.",
+        "integrationsCatalog": "Apenas o proprietário da plataforma pode acessar o catálogo de integrações.",
+        "integrationsConfig": "Você não tem permissão para configurar integrações.",
+        "organizationMembers": "Você não tem permissão para gerenciar membros da organização.",
+        "organizationRoles": "Você não tem permissão para gerenciar perfis de acesso.",
+        "organizationBilling": "Você não tem permissão para acessar a assinatura da organização.",
+        "organizationSettings": "Você não tem permissão para alterar as configurações da organização.",
+        "organizationOverview": "Você não tem permissão para acessar esta organização.",
+        "organizationObserverDenied": "Usuários do portal do cliente não podem acessar a área da organização.",
+        "organizationAccessDenied": "Você não está associado a esta organização.",
+        "financial": "Você não tem permissão para acessar o financeiro.",
+        "contracts": "Você não tem permissão para acessar contratos.",
+        "projects": "Você não tem permissão para acessar projetos.",
+        "clients": "Você não tem permissão para acessar clientes."
+      },
+      "portal": {
+        "areaDenied": "Você não tem permissão para acessar esta área.",
+        "clientAccessDenied": "Você não tem acesso a este cliente."
+      },
+      "success": {
+        "clientCreated": "Cliente cadastrado com sucesso!",
+        "clientUpdated": "Cliente atualizado com sucesso!",
+        "clientDeleted": "Cliente removido com sucesso!",
+        "passwordUpdated": "Senha atualizada com sucesso!",
+        "avatarUpdated": "Avatar atualizado com sucesso!",
+        "passwordReset": "Senha redefinida com sucesso.",
+        "passwordResetEmailSent": "Se o e-mail estiver cadastrado, você receberá as instruções em instantes.",
+        "dataUpdated": "Dados atualizados com sucesso!",
+        "employeeRemoved": "Funcionário removido (inativado).",
+        "statusUpdated": "Status atualizado.",
+        "invoiceUpdated": "Fatura atualizada com sucesso!",
+        "invoiceDeleted": "Fatura removida com sucesso!",
+        "invoiceCreated": "Fatura gerada com sucesso!",
+        "expenseCreated": "Despesa registrada com sucesso!",
+        "documentsAdded": "Documentos adicionados com sucesso!",
+        "contractDeleted": "Contrato removido com sucesso.",
+        "dataFetched": "Dados retornados com sucesso.",
+        "employeeInvited": "Funcionário convidado com sucesso!",
+        "organizationMemberInvited": "Convite enviado com sucesso!",
+        "proposalAdvanced": "Proposta encaminhada para próxima fase.",
+        "statusUpdatedSuccess": "Status atualizado com sucesso.",
+        "backlogImported": "{count} item(s) importado(s) com sucesso.",
+        "proposalRemoved": "Proposta removida com sucesso.",
+        "expenseUpdated": "Despesa atualizada com sucesso!",
+        "documentRemoved": "Documento removido com sucesso.",
+        "projectCancelled": "Projeto cancelado com sucesso.",
+        "expenseRemoved": "Despesa removida.",
+        "serviceConnected": "Serviço conectado com sucesso."
+      },
+      "invalidCredentials": "Email ou senha incorretos.",
+      "authFailed": "Erro na autenticação. Tente novamente.",
+      "passwordsMismatch": "As senhas não coincidem.",
+      "checkFormFields": "Verifique os erros no formulário.",
+      "updateFailed": "Falha na atualização.",
+      "employeeRemoveFailed": "Erro ao remover funcionário.",
+      "categoriesListFailed": "Erro ao listar categorias.",
+      "noFileSelected": "Nenhum arquivo selecionado.",
+      "noBacklogItemsToImport": "Nenhum item novo para importar deste serviço.",
+      "backlogCreateFailed": "Erro interno ao criar backlog.",
+      "backlogUpdateFailed": "Erro interno ao atualizar backlog.",
+      "backlogDeleteFailed": "Erro interno ao excluir backlog.",
+      "noteCreateFailed": "Erro interno ao criar observação.",
+      "noteUpdateFailed": "Erro interno ao editar observação.",
+      "noteRemoveFailed": "Erro interno ao remover observação.",
+      "avatarSaveFailed": "Erro interno ao salvar avatar.",
+      "fileValidationFailed": "Erro na validação do arquivo.",
+      "dashboardStatsFailed": "Erro ao carregar estatísticas do dashboard.",
+      "employeeCreateFailed": "Erro ao cadastrar funcionário.",
+      "projectIdNotProvided": "ID do projeto não fornecido.",
+      "invalidSearchParams": "Parâmetros de busca inválidos.",
+      "backlogSyncFailed": "Erro interno ao sincronizar backlog.",
+      "documentUploadFailed": "Erro ao fazer upload dos documentos.",
+      "documentRemoveFailed": "Erro ao remover documento. Tente novamente.",
+      "employeeListFailed": "Erro ao listar.",
+      "backlogStatusChangeFailed": "Erro interno ao alterar status.",
+      "profileLoadFailed": "Ocorreu um erro inesperado ao carregar o perfil.",
+      "expenseUpdateInvalidData": "Dados inválidos para atualização.",
+      "invalidCommunicationChannel": "Canal de comunicação inválido.",
+      "invalidBacklogIdentifier": "Identificador do backlog inválido.",
+      "umamiIntegrationNotFound": "Integração do Projeto com o Umami não encontrada.",
+      "umamiWebsiteIdMissing": "ID do website não configurado na integração do Umami."
+    }
+  },
+  "validation": {
+    "invalidId": "ID inválido.",
+    "invalidData": "Dados inválidos.",
+    "required": "Campo obrigatório.",
+    "invalidEmail": "E-mail inválido.",
+    "passwordMinLength": "A senha deve conter no mínimo 6 caracteres.",
+    "nameMinLength": "Nome muito curto.",
+    "nameMaxLength": "Nome excede o tamanho máximo permitido.",
+    "descriptionMinLength": "A descrição é muito curta.",
+    "descriptionMaxLength": "A descrição excede o tamanho máximo permitido.",
+    "titleMinLength": "O título deve ter pelo menos 3 caracteres.",
+    "titleMaxLength": "O título excede o tamanho máximo permitido.",
+    "pageMin": "A página deve ser no mínimo 1.",
+    "pageMax": "O limite máximo por página é 100.",
+    "selectClient": "Selecione um cliente.",
+    "selectCategory": "Selecione uma categoria.",
+    "selectBank": "Selecione um banco válido.",
+    "selectPaymentMethod": "Selecione um método de pagamento.",
+    "jobTitleRequired": "Cargo é obrigatório.",
+    "pointsNonNegative": "Os pontos não podem ser negativos.",
+    "priceNonNegative": "O preço não pode ser negativo.",
+    "companyNameRequired": "Razão Social é obrigatória.",
+    "fileMaxSize": "O arquivo deve ter no máximo 2MB.",
+    "invalidFileFormat": "Formato inválido. Use JPG, PNG ou WebP.",
+    "imageRequired": "A imagem é obrigatória.",
+    "passwordsMismatch": "As senhas não coincidem.",
+    "downPaymentMax": "O valor máximo da entrada é 100%.",
+    "validUntilFuture": "A data de validade deve ser futura.",
+    "entryPercentageRequired": "Percentual de entrada para início do projeto é obrigatório.",
+    "responsibleIdInvalid": "ID do responsável inválido.",
+    "integrationNameRequired": "Nome é obrigatório.",
+    "integrationKeyRequired": "Chave técnica é obrigatória.",
+    "integrationLabelRequired": "Rótulo amigável é obrigatório.",
+    "selectionRequired": "Seleção obrigatória.",
+    "minThreeChars": "Mínimo 3 caracteres.",
+    "projectDescriptionMin": "A descrição deve ser mais detalhada.",
+    "noteDescriptionMin": "A descrição do projeto deve ter ao menos 10 caracteres.",
+    "categoryNameRequired": "O nome da categoria é obrigatório.",
+    "serviceIdInvalid": "ID do serviço inválido.",
+    "invalidFile": "Arquivo inválido.",
+    "invalidOrder": "Nova ordem inválida.",
+    "entryPercentagePositive": "O percentual de entrada deve ser um número positivo.",
+    "tagsListExpected": "O campo espera uma lista de tags.",
+    "amountPositive": "O valor deve ser maior que zero.",
+    "dueDateRequired": "A data de vencimento é obrigatória.",
+    "invalidUrl": "Insira uma URL válida.",
+    "nfseLinkInvalid": "Link da NF-e inválido.",
+    "serviceNameRequired": "O nome do serviço é obrigatório.",
+    "priceInvalid": "O preço deve ser um número válido.",
+    "taxCodeInvalid": "O código do imposto para nota fiscal deve ser um valor válido.",
+    "titleRequired": "O título é obrigatório.",
+    "descriptionRequired": "A descrição é obrigatória.",
+    "pointsMustBeInteger": "Os pontos devem ser um número inteiro.",
+    "pointsMustBeNumber": "Os pontos devem ser um número.",
+    "documentationUrlInvalid": "O link para documentação externa deve ser uma URL válida.",
+    "invalidCategoryId": "Categoria inválida.",
+    "amountMustBePositive": "O valor deve ser positivo.",
+    "invalidMemberId": "O identificador do usuário deve ser válido.",
+    "invalidRoleId": "O identificador do perfil de acesso deve ser válido.",
+    "invalidBacklogId": "ID do backlog inválido.",
+    "invalidBacklogStatus": "Status fornecido é inválido.",
+    "invalidProposalStatus": "Status da proposta inválido.",
+    "invalidProjectId": "ID do projeto inválido.",
+    "invalidSprintId": "ID da sprint inválido.",
+    "jiraUrlInvalid": "Deve ser uma URL válida (ex: https://jira...)."
   }
 }

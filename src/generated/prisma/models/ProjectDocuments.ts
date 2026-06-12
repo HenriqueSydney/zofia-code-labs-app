@@ -26,58 +26,58 @@ export type AggregateProjectDocuments = {
 
 export type ProjectDocumentsMinAggregateOutputType = {
   id: string | null
+  projectId: string | null
   name: string | null
   extension: string | null
-  createdAt: Date | null
   documentUrlReference: string | null
-  projectId: string | null
+  createdAt: Date | null
 }
 
 export type ProjectDocumentsMaxAggregateOutputType = {
   id: string | null
+  projectId: string | null
   name: string | null
   extension: string | null
-  createdAt: Date | null
   documentUrlReference: string | null
-  projectId: string | null
+  createdAt: Date | null
 }
 
 export type ProjectDocumentsCountAggregateOutputType = {
   id: number
+  projectId: number
   name: number
   extension: number
-  createdAt: number
   documentUrlReference: number
-  projectId: number
+  createdAt: number
   _all: number
 }
 
 
 export type ProjectDocumentsMinAggregateInputType = {
   id?: true
+  projectId?: true
   name?: true
   extension?: true
-  createdAt?: true
   documentUrlReference?: true
-  projectId?: true
+  createdAt?: true
 }
 
 export type ProjectDocumentsMaxAggregateInputType = {
   id?: true
+  projectId?: true
   name?: true
   extension?: true
-  createdAt?: true
   documentUrlReference?: true
-  projectId?: true
+  createdAt?: true
 }
 
 export type ProjectDocumentsCountAggregateInputType = {
   id?: true
+  projectId?: true
   name?: true
   extension?: true
-  createdAt?: true
   documentUrlReference?: true
-  projectId?: true
+  createdAt?: true
   _all?: true
 }
 
@@ -155,17 +155,17 @@ export type ProjectDocumentsGroupByArgs<ExtArgs extends runtime.Types.Extensions
 
 export type ProjectDocumentsGroupByOutputType = {
   id: string
+  projectId: string
   name: string
   extension: string
-  createdAt: Date
   documentUrlReference: string
-  projectId: string
+  createdAt: Date
   _count: ProjectDocumentsCountAggregateOutputType | null
   _min: ProjectDocumentsMinAggregateOutputType | null
   _max: ProjectDocumentsMaxAggregateOutputType | null
 }
 
-type GetProjectDocumentsGroupByPayload<T extends ProjectDocumentsGroupByArgs> = Prisma.PrismaPromise<
+export type GetProjectDocumentsGroupByPayload<T extends ProjectDocumentsGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ProjectDocumentsGroupByOutputType, T['by']> &
       {
@@ -185,21 +185,21 @@ export type ProjectDocumentsWhereInput = {
   OR?: Prisma.ProjectDocumentsWhereInput[]
   NOT?: Prisma.ProjectDocumentsWhereInput | Prisma.ProjectDocumentsWhereInput[]
   id?: Prisma.StringFilter<"ProjectDocuments"> | string
+  projectId?: Prisma.StringFilter<"ProjectDocuments"> | string
   name?: Prisma.StringFilter<"ProjectDocuments"> | string
   extension?: Prisma.StringFilter<"ProjectDocuments"> | string
-  createdAt?: Prisma.DateTimeFilter<"ProjectDocuments"> | Date | string
   documentUrlReference?: Prisma.StringFilter<"ProjectDocuments"> | string
-  projectId?: Prisma.StringFilter<"ProjectDocuments"> | string
+  createdAt?: Prisma.DateTimeFilter<"ProjectDocuments"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
 }
 
 export type ProjectDocumentsOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   extension?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
   documentUrlReference?: Prisma.SortOrder
-  projectId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
 }
 
@@ -208,21 +208,21 @@ export type ProjectDocumentsWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ProjectDocumentsWhereInput | Prisma.ProjectDocumentsWhereInput[]
   OR?: Prisma.ProjectDocumentsWhereInput[]
   NOT?: Prisma.ProjectDocumentsWhereInput | Prisma.ProjectDocumentsWhereInput[]
+  projectId?: Prisma.StringFilter<"ProjectDocuments"> | string
   name?: Prisma.StringFilter<"ProjectDocuments"> | string
   extension?: Prisma.StringFilter<"ProjectDocuments"> | string
-  createdAt?: Prisma.DateTimeFilter<"ProjectDocuments"> | Date | string
   documentUrlReference?: Prisma.StringFilter<"ProjectDocuments"> | string
-  projectId?: Prisma.StringFilter<"ProjectDocuments"> | string
+  createdAt?: Prisma.DateTimeFilter<"ProjectDocuments"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
 }, "id">
 
 export type ProjectDocumentsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   extension?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
   documentUrlReference?: Prisma.SortOrder
-  projectId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   _count?: Prisma.ProjectDocumentsCountOrderByAggregateInput
   _max?: Prisma.ProjectDocumentsMaxOrderByAggregateInput
   _min?: Prisma.ProjectDocumentsMinOrderByAggregateInput
@@ -233,73 +233,73 @@ export type ProjectDocumentsScalarWhereWithAggregatesInput = {
   OR?: Prisma.ProjectDocumentsScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ProjectDocumentsScalarWhereWithAggregatesInput | Prisma.ProjectDocumentsScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"ProjectDocuments"> | string
+  projectId?: Prisma.StringWithAggregatesFilter<"ProjectDocuments"> | string
   name?: Prisma.StringWithAggregatesFilter<"ProjectDocuments"> | string
   extension?: Prisma.StringWithAggregatesFilter<"ProjectDocuments"> | string
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"ProjectDocuments"> | Date | string
   documentUrlReference?: Prisma.StringWithAggregatesFilter<"ProjectDocuments"> | string
-  projectId?: Prisma.StringWithAggregatesFilter<"ProjectDocuments"> | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"ProjectDocuments"> | Date | string
 }
 
 export type ProjectDocumentsCreateInput = {
   id?: string
   name?: string
   extension?: string
-  createdAt?: Date | string
   documentUrlReference: string
+  createdAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutProjectDocumentsInput
 }
 
 export type ProjectDocumentsUncheckedCreateInput = {
   id?: string
+  projectId: string
   name?: string
   extension?: string
-  createdAt?: Date | string
   documentUrlReference: string
-  projectId: string
+  createdAt?: Date | string
 }
 
 export type ProjectDocumentsUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   extension?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   documentUrlReference?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutProjectDocumentsNestedInput
 }
 
 export type ProjectDocumentsUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   extension?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   documentUrlReference?: Prisma.StringFieldUpdateOperationsInput | string
-  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ProjectDocumentsCreateManyInput = {
   id?: string
+  projectId: string
   name?: string
   extension?: string
-  createdAt?: Date | string
   documentUrlReference: string
-  projectId: string
+  createdAt?: Date | string
 }
 
 export type ProjectDocumentsUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   extension?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   documentUrlReference?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ProjectDocumentsUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   extension?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   documentUrlReference?: Prisma.StringFieldUpdateOperationsInput | string
-  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ProjectDocumentsListRelationFilter = {
@@ -314,29 +314,29 @@ export type ProjectDocumentsOrderByRelationAggregateInput = {
 
 export type ProjectDocumentsCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   extension?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
   documentUrlReference?: Prisma.SortOrder
-  projectId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
 }
 
 export type ProjectDocumentsMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   extension?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
   documentUrlReference?: Prisma.SortOrder
-  projectId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
 }
 
 export type ProjectDocumentsMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   extension?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
   documentUrlReference?: Prisma.SortOrder
-  projectId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
 }
 
 export type ProjectDocumentsCreateNestedManyWithoutProjectInput = {
@@ -385,16 +385,16 @@ export type ProjectDocumentsCreateWithoutProjectInput = {
   id?: string
   name?: string
   extension?: string
-  createdAt?: Date | string
   documentUrlReference: string
+  createdAt?: Date | string
 }
 
 export type ProjectDocumentsUncheckedCreateWithoutProjectInput = {
   id?: string
   name?: string
   extension?: string
-  createdAt?: Date | string
   documentUrlReference: string
+  createdAt?: Date | string
 }
 
 export type ProjectDocumentsCreateOrConnectWithoutProjectInput = {
@@ -428,87 +428,87 @@ export type ProjectDocumentsScalarWhereInput = {
   OR?: Prisma.ProjectDocumentsScalarWhereInput[]
   NOT?: Prisma.ProjectDocumentsScalarWhereInput | Prisma.ProjectDocumentsScalarWhereInput[]
   id?: Prisma.StringFilter<"ProjectDocuments"> | string
+  projectId?: Prisma.StringFilter<"ProjectDocuments"> | string
   name?: Prisma.StringFilter<"ProjectDocuments"> | string
   extension?: Prisma.StringFilter<"ProjectDocuments"> | string
-  createdAt?: Prisma.DateTimeFilter<"ProjectDocuments"> | Date | string
   documentUrlReference?: Prisma.StringFilter<"ProjectDocuments"> | string
-  projectId?: Prisma.StringFilter<"ProjectDocuments"> | string
+  createdAt?: Prisma.DateTimeFilter<"ProjectDocuments"> | Date | string
 }
 
 export type ProjectDocumentsCreateManyProjectInput = {
   id?: string
   name?: string
   extension?: string
-  createdAt?: Date | string
   documentUrlReference: string
+  createdAt?: Date | string
 }
 
 export type ProjectDocumentsUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   extension?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   documentUrlReference?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ProjectDocumentsUncheckedUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   extension?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   documentUrlReference?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ProjectDocumentsUncheckedUpdateManyWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   extension?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   documentUrlReference?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
 
 export type ProjectDocumentsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  projectId?: boolean
   name?: boolean
   extension?: boolean
-  createdAt?: boolean
   documentUrlReference?: boolean
-  projectId?: boolean
+  createdAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["projectDocuments"]>
 
 export type ProjectDocumentsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  projectId?: boolean
   name?: boolean
   extension?: boolean
-  createdAt?: boolean
   documentUrlReference?: boolean
-  projectId?: boolean
+  createdAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["projectDocuments"]>
 
 export type ProjectDocumentsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  projectId?: boolean
   name?: boolean
   extension?: boolean
-  createdAt?: boolean
   documentUrlReference?: boolean
-  projectId?: boolean
+  createdAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["projectDocuments"]>
 
 export type ProjectDocumentsSelectScalar = {
   id?: boolean
+  projectId?: boolean
   name?: boolean
   extension?: boolean
-  createdAt?: boolean
   documentUrlReference?: boolean
-  projectId?: boolean
+  createdAt?: boolean
 }
 
-export type ProjectDocumentsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "extension" | "createdAt" | "documentUrlReference" | "projectId", ExtArgs["result"]["projectDocuments"]>
+export type ProjectDocumentsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "name" | "extension" | "documentUrlReference" | "createdAt", ExtArgs["result"]["projectDocuments"]>
 export type ProjectDocumentsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
 }
@@ -526,11 +526,11 @@ export type $ProjectDocumentsPayload<ExtArgs extends runtime.Types.Extensions.In
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    projectId: string
     name: string
     extension: string
-    createdAt: Date
     documentUrlReference: string
-    projectId: string
+    createdAt: Date
   }, ExtArgs["result"]["projectDocuments"]>
   composites: {}
 }
@@ -956,11 +956,11 @@ export interface Prisma__ProjectDocumentsClient<T, Null = never, ExtArgs extends
  */
 export interface ProjectDocumentsFieldRefs {
   readonly id: Prisma.FieldRef<"ProjectDocuments", 'String'>
+  readonly projectId: Prisma.FieldRef<"ProjectDocuments", 'String'>
   readonly name: Prisma.FieldRef<"ProjectDocuments", 'String'>
   readonly extension: Prisma.FieldRef<"ProjectDocuments", 'String'>
-  readonly createdAt: Prisma.FieldRef<"ProjectDocuments", 'DateTime'>
   readonly documentUrlReference: Prisma.FieldRef<"ProjectDocuments", 'String'>
-  readonly projectId: Prisma.FieldRef<"ProjectDocuments", 'String'>
+  readonly createdAt: Prisma.FieldRef<"ProjectDocuments", 'DateTime'>
 }
     
 
@@ -1157,6 +1157,11 @@ export type ProjectDocumentsFindManyArgs<ExtArgs extends runtime.Types.Extension
    * Skip the first `n` ProjectDocuments.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of ProjectDocuments.
+   */
   distinct?: Prisma.ProjectDocumentsScalarFieldEnum | Prisma.ProjectDocumentsScalarFieldEnum[]
 }
 

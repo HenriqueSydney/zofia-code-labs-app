@@ -1,3 +1,4 @@
+import { ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IProjectsRepository } from "@/repositories/IProjectsRepository";
 import { IS3StorageService } from "@/services/s3Client/IS3StorageService";
@@ -21,7 +22,7 @@ export class RemoveProjectDocumentUseCase {
   }: RemoveDocumentRequest): Promise<{ slug: string; clientSlug: string }> {
     const projectExists = await this.projectsRepository.findById(projectId);
     if (!projectExists) {
-      throw new Error("Projeto não encontrado.");
+      throw new ResourceNotFoundError("Projeto não encontrado.");
     }
 
     await checkUserPermissionForAsset(
@@ -35,7 +36,7 @@ export class RemoveProjectDocumentUseCase {
       await this.projectsRepository.deleteDocument(documentId);
 
     if (!deletedDocument) {
-      throw new Error("Documento não encontrado ou já excluído.");
+      throw new ResourceNotFoundError("Documento não encontrado ou já excluído.");
     }
 
     const fileKey = this.extractKeyFromUrl(

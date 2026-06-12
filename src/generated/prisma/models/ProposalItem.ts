@@ -214,7 +214,7 @@ export type ProposalItemGroupByOutputType = {
   _max: ProposalItemMaxAggregateOutputType | null
 }
 
-type GetProposalItemGroupByPayload<T extends ProposalItemGroupByArgs> = Prisma.PrismaPromise<
+export type GetProposalItemGroupByPayload<T extends ProposalItemGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ProposalItemGroupByOutputType, T['by']> &
       {
@@ -1384,6 +1384,11 @@ export type ProposalItemFindManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Skip the first `n` ProposalItems.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of ProposalItems.
+   */
   distinct?: Prisma.ProposalItemScalarFieldEnum | Prisma.ProposalItemScalarFieldEnum[]
 }
 

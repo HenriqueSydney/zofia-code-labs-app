@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError, ConflictError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IOrganizationIntegrationRepository } from "@/repositories/IOrganizationIntegrationRepository";
 import { IProjectIntegrationRepository } from "@/repositories/IProjectIntegrationRepository";
@@ -8,6 +8,7 @@ import {
   IntegrationType,
 } from "@/services/IntegrationFactory";
 import { IProjectLinkable } from "@/services/IProjectLinkable";
+import { fetchInfisicalSecretValues } from "@/lib/integration/fetchInfisicalSecretValues";
 import { ISecretManagementService } from "@/services/secretManagement/ISecretManagementService";
 
 interface ConnectProjectRequest {
@@ -38,11 +39,11 @@ export class ConnectServiceToProjectUseCase {
     ]);
 
     if (!project) {
-      throw new AppError("Projeto não localizado");
+      throw new ResourceNotFoundError("Projeto não localizado");
     }
 
     if (!integration) {
-      throw new AppError("Configuração com o serviço não localizada");
+      throw new ResourceNotFoundError("Configuração com o serviço não localizada");
     }
 
     const doesProjectIntegrationAlreadyExists =
@@ -51,7 +52,7 @@ export class ConnectServiceToProjectUseCase {
       );
 
     if (doesProjectIntegrationAlreadyExists > -1) {
-      throw new AppError("Integração com o serviço já existe");
+      throw new ConflictError("Integração com o serviço já existe");
     }
 
     await Promise.all([
@@ -70,19 +71,14 @@ export class ConnectServiceToProjectUseCase {
     ]);
 
     const config = integration.config as any;
-    const path = config.infisical?.path;
-    const keys = config.infisical?.keys || [];
-
-    const secretValues: Record<string, string> = {};
-
-    if (path && keys.length > 0) {
-      for (const key of keys) {
-        const value = await this.secretManagementService.getSecret(key, {
-          path,
-        });
-        if (value) secretValues[key] = value;
-      }
-    }
+    const secretValues = await fetchInfisicalSecretValues({
+      secretManagementService: this.secretManagementService,
+      path: config.infisical?.path,
+      keys: config.infisical?.keys || [],
+      fieldsSchema:
+        (integration.integrationType.fieldsSchema as Record<string, unknown>[]) ||
+        [],
+    });
 
     const instance =
       await this.integrationFactory.getIntegration<IProjectLinkable>({

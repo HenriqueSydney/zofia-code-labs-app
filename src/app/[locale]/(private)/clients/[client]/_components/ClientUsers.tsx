@@ -23,7 +23,8 @@ import { MoreHorizontal, Users } from "lucide-react";
 import { ClientEmployeeCreateForm } from "./ClientEmployeeCreateForm";
 import { date } from "@/lib/dayjs";
 import { Tooltip } from "@/components/Tooltip";
-import { ClientEmployeeRoleMapper } from "@/mappers/clientEmployeeMappers";
+import { getClientEmployeeRoleLabel } from "@/mappers/clientEmployeeRoleMapper";
+import { getTranslations } from "next-intl/server";
 import { UserAvatar } from "@/components/UserAvatar";
 import { ClientEmployeeActions } from "./ClientEmployeeActions";
 
@@ -32,6 +33,9 @@ interface IClientUsers {
 }
 
 export async function ClientUsers({ clientSlug }: IClientUsers) {
+  const t = await getTranslations("clients.users");
+  const tRoles = await getTranslations("clients.roles");
+  const tCommon = await getTranslations("common");
   const [error, success] = await operationWrapper("action", "getClient", () =>
     fetchClientEmployeesAction(clientSlug)
   );
@@ -40,8 +44,8 @@ export async function ClientUsers({ clientSlug }: IClientUsers) {
     return (
       <EmptyState
         icon={Users}
-        title="Nenhum usuário associado à empresa localizado"
-        description="Não foi possível localizar nenhum usuário vinculado a empresa. Cadastre o primeiro para continuar."
+        title={t("emptyTitle")}
+        description={t("emptyDescription")}
         action={<ClientEmployeeCreateForm clientSlug={clientSlug} />}
       />
     );
@@ -51,8 +55,8 @@ export async function ClientUsers({ clientSlug }: IClientUsers) {
     return (
       <EmptyState
         icon={Users}
-        title="Nenhum usuário associado à empresa localizado"
-        description="Não foi possível localizar nenhum usuário vinculado a empresa. Cadastre o primeiro para continuar."
+        title={t("emptyTitle")}
+        description={t("emptyDescription")}
         action={<ClientEmployeeCreateForm clientSlug={clientSlug} />}
       />
     );
@@ -81,10 +85,8 @@ export async function ClientUsers({ clientSlug }: IClientUsers) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle>Usuários Associados</CardTitle>
-            <CardDescription>
-              Gerencie os usuários vinculados a este cliente
-            </CardDescription>
+            <CardTitle>{t("title")}</CardTitle>
+            <CardDescription>{t("description")}</CardDescription>
           </div>
           <ClientEmployeeCreateForm clientSlug={clientSlug} />
         </div>
@@ -93,12 +95,14 @@ export async function ClientUsers({ clientSlug }: IClientUsers) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Usuário</TableHead>
-              <TableHead>Função</TableHead>
-              <TableHead>Permissão</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Último Acesso</TableHead>
-              <TableHead className="text-right">Ações</TableHead>
+              <TableHead>{t("columns.user")}</TableHead>
+              <TableHead>{t("columns.role")}</TableHead>
+              <TableHead>{t("columns.permission")}</TableHead>
+              <TableHead>{t("columns.status")}</TableHead>
+              <TableHead>{t("columns.lastAccess")}</TableHead>
+              <TableHead className="text-right">
+                {tCommon("actions.label")}
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -127,23 +131,27 @@ export async function ClientUsers({ clientSlug }: IClientUsers) {
                   </TableCell>
                   <TableCell>
                     <Badge variant="outline">
-                      {ClientEmployeeRoleMapper[employee.permissionRole] ??
-                        "Usuário (Padrão)"}
+                      {employee.permissionRole
+                        ? getClientEmployeeRoleLabel(
+                            employee.permissionRole,
+                            tRoles,
+                          )
+                        : t("defaultRole")}
                     </Badge>
                   </TableCell>
                   <TableCell>
                     <Badge className={getStatusColor(employee.status)}>
                       {employee.status === "ACTIVE"
-                        ? "Ativo"
+                        ? t("status.ACTIVE")
                         : employee.status === "PENDING"
-                        ? "Pendente"
-                        : "Inativo"}
+                          ? t("status.PENDING")
+                          : t("status.INACTIVE")}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-muted-foreground">
                     {lastLogin && date(lastLogin).format("DD/MM/YYYY HH:mm")}
                     {!lastLogin && (
-                      <Tooltip description="Usuário não efetuou nenhum acesso até o momento">
+                      <Tooltip description={t("noLoginYet")}>
                         <span>-----</span>
                       </Tooltip>
                     )}

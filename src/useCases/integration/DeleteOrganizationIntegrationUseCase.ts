@@ -1,3 +1,4 @@
+import { IntegrationError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IOrganizationIntegrationRepository } from "@/repositories/IOrganizationIntegrationRepository";
 
@@ -6,7 +7,7 @@ export class DeleteOrganizationIntegrationUseCase {
 
   async execute(id: string, userId: string): Promise<void> {
     const integration = await this.repository.findById(id);
-    if (!integration) throw new Error("Integração não encontrada.");
+    if (!integration) throw new IntegrationError("Integração não encontrada.");
     await checkUserPermissionForAsset(
       "organizationIntegration",
       userId,

@@ -12,7 +12,6 @@ import { fetchGitHubRepositoriesAction } from "@/actions/integrations/github/fet
 import { MinimalRepositoryListDTO } from "@/dto/github/RepositoriesDTO";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import * as z from "zod";
 import {
   Form,
   FormControl,
@@ -37,6 +36,7 @@ import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { GitHubSetupSchema } from "@/schemas/integration/GitHubSetupSchema";
+import { useTranslations } from "next-intl";
 
 interface IGitHubIntegrationForm {
   isModalOpen: boolean;
@@ -51,8 +51,9 @@ export function GitHubIntegrationForm({
   handleConnectServiceToProject,
   projectSlug = "",
 }: IGitHubIntegrationForm) {
+  const t = useTranslations("projects.metrics.integrations.github");
   const [repositories, setRepositories] = useState<MinimalRepositoryListDTO>(
-    []
+    [],
   );
   const form = useForm({
     resolver: zodResolver(GitHubSetupSchema),
@@ -69,7 +70,7 @@ export function GitHubIntegrationForm({
   const handleFetchGitHubRepositories = async () => {
     const result = await fetchGitHubRepositoriesAction();
     if (!result.success || !result.data) {
-      toast.error("Falha ao recuperar os repositórios da organização");
+      toast.error(t("fetchReposError"));
       return;
     }
 
@@ -84,19 +85,13 @@ export function GitHubIntegrationForm({
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>Vinculação de projeto ao GitHub</DialogTitle>
-          <DialogDescription>
-            Integre este projeto ao GitHub para continuar. Informe o projeto
-            existente ou se deseja criá-lo
-          </DialogDescription>
+          <DialogTitle>{t("dialogTitle")}</DialogTitle>
+          <DialogDescription>{t("dialogDescription")}</DialogDescription>
         </DialogHeader>
         <Alert variant="default" className="bg-accent/5 border-accent/50">
           <InfoIcon className="h-4 w-4 text-accent!" />
-          <AlertTitle className="text-accent">Importante</AlertTitle>
-          <AlertDescription>
-            A criação automática criará um repositório <strong>privado</strong>{" "}
-            na sua conta/organização configurada.
-          </AlertDescription>
+          <AlertTitle className="text-accent">{t("alertTitle")}</AlertTitle>
+          <AlertDescription>{t("alertDescription")}</AlertDescription>
         </Alert>
 
         <Form {...form}>
@@ -104,13 +99,12 @@ export function GitHubIntegrationForm({
             onSubmit={form.handleSubmit(handleConnectServiceToProject)}
             className="space-y-6"
           >
-            {/* 1. Switch Principal: Criar ou Vincular */}
             <FormField
               control={form.control}
               name="isNewRepo"
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between rounded-md border p-3">
-                  <FormLabel>Criar novo repositório?</FormLabel>
+                  <FormLabel>{t("createNewRepo")}</FormLabel>
                   <FormControl>
                     <Switch
                       checked={field.value}
@@ -121,7 +115,6 @@ export function GitHubIntegrationForm({
               )}
             />
 
-            {/* 2. Opções para NOVO Repositório */}
             {isNewRepo && (
               <div className="space-y-4 p-4 bg-muted/30 rounded-lg border">
                 <FormField
@@ -129,7 +122,7 @@ export function GitHubIntegrationForm({
                   name="repoName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Nome do Novo Repositório</FormLabel>
+                      <FormLabel>{t("newRepoName")}</FormLabel>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
@@ -138,16 +131,15 @@ export function GitHubIntegrationForm({
                   )}
                 />
 
-                {/* Sub-switch: Clonar de Template */}
                 <FormField
                   control={form.control}
                   name="shouldClone"
                   render={({ field }) => (
                     <FormItem className="flex items-center justify-between">
                       <div className="space-y-0.5">
-                        <FormLabel>Usar um template (clone)?</FormLabel>
+                        <FormLabel>{t("useTemplate")}</FormLabel>
                         <FormDescription>
-                          Copiar arquivos de um projeto existente
+                          {t("useTemplateDescription")}
                         </FormDescription>
                       </div>
                       <FormControl>
@@ -166,11 +158,11 @@ export function GitHubIntegrationForm({
                     name="templateRepoId"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Repositório Base (Template)</FormLabel>
+                        <FormLabel>{t("templateRepo")}</FormLabel>
                         <Select onValueChange={field.onChange}>
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Selecione o boilerplate..." />
+                              <SelectValue placeholder={t("templatePlaceholder")} />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -189,18 +181,17 @@ export function GitHubIntegrationForm({
               </div>
             )}
 
-            {/* 3. Opção para VINCULAR Existente */}
             {!isNewRepo && (
               <FormField
                 control={form.control}
                 name="repositoryId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Vincular a um Repositório do GitHub</FormLabel>
+                    <FormLabel>{t("linkExisting")}</FormLabel>
                     <Select onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Escolha o projeto..." />
+                          <SelectValue placeholder={t("existingPlaceholder")} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -221,7 +212,7 @@ export function GitHubIntegrationForm({
                 {form.formState.isSubmitting && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                Confirmar Integração
+                {t("confirm")}
               </Button>
             </DialogFooter>
           </form>

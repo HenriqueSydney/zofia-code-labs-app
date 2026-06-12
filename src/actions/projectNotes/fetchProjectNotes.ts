@@ -1,7 +1,8 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
+import { UnauthorizedError } from "@/errors";
 import { makeFetchProjectNotesUseCase } from "@/useCases/projectNotes/factories/makeFetchProjectNotesUseCase";
 
 export async function fetchProjectNotes(
@@ -10,7 +11,7 @@ export async function fetchProjectNotes(
   pagination?: { page?: number; numberPerPage?: number }
 ) {
   const session = await auth();
-  if (!session?.user) throw new AppError("Usuário não autenticado");
+  if (!session?.user) throw new UnauthorizedError(await serverErrorMessage("unauthenticated"));
 
   const useCase = makeFetchProjectNotesUseCase();
 

@@ -3,7 +3,7 @@
 import React, { forwardRef, ForwardRefRenderFunction } from "react";
 import { FieldError } from "react-hook-form";
 import { IMaskInput } from "react-imask";
-import { cn } from "@/lib/utils"; // Utilitário padrão do shadcn
+import { cn } from "@/utils/twMerge"; // Utilitário padrão do shadcn
 import { Label } from "@/components/ui/label"; // Se não tiver, troque por <label> nativo com classes
 import { convertPatternToIMask } from "@/utils/mask";
 

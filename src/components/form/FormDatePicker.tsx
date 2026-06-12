@@ -2,9 +2,10 @@
 
 import { CalendarIcon } from "lucide-react";
 import { Control } from "react-hook-form";
-import { ptBR } from "date-fns/locale"; // Necessário APENAS para a grid do calendário (Mo/Tu/We -> Seg/Ter/Qua)
+import { useTranslations } from "next-intl";
+import { ptBR } from "date-fns/locale";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/twMerge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -38,11 +39,14 @@ export function FormDatePicker({
   name,
   label,
   description,
-  placeholder = "Selecione uma data",
+  placeholder,
   disabled,
   minDate,
   maxDate,
 }: FormDatePickerProps) {
+  const t = useTranslations("common.actions");
+  const resolvedPlaceholder = placeholder ?? t("selectDate");
+
   return (
     <FormField
       control={control}
@@ -69,7 +73,7 @@ export function FormDatePicker({
                       {dayjs(field.value).format("DD/MM/YYYY")}
                     </span>
                   ) : (
-                    <span>{placeholder}</span>
+                    <span>{resolvedPlaceholder}</span>
                   )}
                   <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                 </Button>

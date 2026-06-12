@@ -35,6 +35,9 @@ export type ClientMinAggregateOutputType = {
   phone: string | null
   address: string | null
   logoReference: string | null
+  responsibleName: string | null
+  responsibleEmail: string | null
+  responsiblePhone: string | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -51,6 +54,9 @@ export type ClientMaxAggregateOutputType = {
   phone: string | null
   address: string | null
   logoReference: string | null
+  responsibleName: string | null
+  responsibleEmail: string | null
+  responsiblePhone: string | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -67,6 +73,9 @@ export type ClientCountAggregateOutputType = {
   phone: number
   address: number
   logoReference: number
+  responsibleName: number
+  responsibleEmail: number
+  responsiblePhone: number
   createdAt: number
   updatedAt: number
   deletedAt: number
@@ -85,6 +94,9 @@ export type ClientMinAggregateInputType = {
   phone?: true
   address?: true
   logoReference?: true
+  responsibleName?: true
+  responsibleEmail?: true
+  responsiblePhone?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -101,6 +113,9 @@ export type ClientMaxAggregateInputType = {
   phone?: true
   address?: true
   logoReference?: true
+  responsibleName?: true
+  responsibleEmail?: true
+  responsiblePhone?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -117,6 +132,9 @@ export type ClientCountAggregateInputType = {
   phone?: true
   address?: true
   logoReference?: true
+  responsibleName?: true
+  responsibleEmail?: true
+  responsiblePhone?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -206,6 +224,9 @@ export type ClientGroupByOutputType = {
   phone: string
   address: string | null
   logoReference: string | null
+  responsibleName: string | null
+  responsibleEmail: string | null
+  responsiblePhone: string | null
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
@@ -214,7 +235,7 @@ export type ClientGroupByOutputType = {
   _max: ClientMaxAggregateOutputType | null
 }
 
-type GetClientGroupByPayload<T extends ClientGroupByArgs> = Prisma.PrismaPromise<
+export type GetClientGroupByPayload<T extends ClientGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ClientGroupByOutputType, T['by']> &
       {
@@ -243,6 +264,9 @@ export type ClientWhereInput = {
   phone?: Prisma.StringFilter<"Client"> | string
   address?: Prisma.StringNullableFilter<"Client"> | string | null
   logoReference?: Prisma.StringNullableFilter<"Client"> | string | null
+  responsibleName?: Prisma.StringNullableFilter<"Client"> | string | null
+  responsibleEmail?: Prisma.StringNullableFilter<"Client"> | string | null
+  responsiblePhone?: Prisma.StringNullableFilter<"Client"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Client"> | Date | string | null
@@ -263,6 +287,9 @@ export type ClientOrderByWithRelationInput = {
   phone?: Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   logoReference?: Prisma.SortOrderInput | Prisma.SortOrder
+  responsibleName?: Prisma.SortOrderInput | Prisma.SortOrder
+  responsibleEmail?: Prisma.SortOrderInput | Prisma.SortOrder
+  responsiblePhone?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -287,6 +314,9 @@ export type ClientWhereUniqueInput = Prisma.AtLeast<{
   phone?: Prisma.StringFilter<"Client"> | string
   address?: Prisma.StringNullableFilter<"Client"> | string | null
   logoReference?: Prisma.StringNullableFilter<"Client"> | string | null
+  responsibleName?: Prisma.StringNullableFilter<"Client"> | string | null
+  responsibleEmail?: Prisma.StringNullableFilter<"Client"> | string | null
+  responsiblePhone?: Prisma.StringNullableFilter<"Client"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Client"> | Date | string | null
@@ -307,6 +337,9 @@ export type ClientOrderByWithAggregationInput = {
   phone?: Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   logoReference?: Prisma.SortOrderInput | Prisma.SortOrder
+  responsibleName?: Prisma.SortOrderInput | Prisma.SortOrder
+  responsibleEmail?: Prisma.SortOrderInput | Prisma.SortOrder
+  responsiblePhone?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -329,6 +362,9 @@ export type ClientScalarWhereWithAggregatesInput = {
   phone?: Prisma.StringWithAggregatesFilter<"Client"> | string
   address?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
   logoReference?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
+  responsibleName?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
+  responsibleEmail?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
+  responsiblePhone?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Client"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Client"> | Date | string | null
@@ -344,6 +380,9 @@ export type ClientCreateInput = {
   phone: string
   address?: string | null
   logoReference?: string | null
+  responsibleName?: string | null
+  responsibleEmail?: string | null
+  responsiblePhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -364,6 +403,9 @@ export type ClientUncheckedCreateInput = {
   phone: string
   address?: string | null
   logoReference?: string | null
+  responsibleName?: string | null
+  responsibleEmail?: string | null
+  responsiblePhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -382,6 +424,9 @@ export type ClientUpdateInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logoReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsiblePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -402,6 +447,9 @@ export type ClientUncheckedUpdateInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logoReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsiblePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -421,6 +469,9 @@ export type ClientCreateManyInput = {
   phone: string
   address?: string | null
   logoReference?: string | null
+  responsibleName?: string | null
+  responsibleEmail?: string | null
+  responsiblePhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -436,6 +487,9 @@ export type ClientUpdateManyMutationInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logoReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsiblePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -452,6 +506,9 @@ export type ClientUncheckedUpdateManyInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logoReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsiblePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -483,6 +540,9 @@ export type ClientCountOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   address?: Prisma.SortOrder
   logoReference?: Prisma.SortOrder
+  responsibleName?: Prisma.SortOrder
+  responsibleEmail?: Prisma.SortOrder
+  responsiblePhone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -499,6 +559,9 @@ export type ClientMaxOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   address?: Prisma.SortOrder
   logoReference?: Prisma.SortOrder
+  responsibleName?: Prisma.SortOrder
+  responsibleEmail?: Prisma.SortOrder
+  responsiblePhone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -515,6 +578,9 @@ export type ClientMinOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   address?: Prisma.SortOrder
   logoReference?: Prisma.SortOrder
+  responsibleName?: Prisma.SortOrder
+  responsibleEmail?: Prisma.SortOrder
+  responsiblePhone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -619,6 +685,9 @@ export type ClientCreateWithoutOrganizationInput = {
   phone: string
   address?: string | null
   logoReference?: string | null
+  responsibleName?: string | null
+  responsibleEmail?: string | null
+  responsiblePhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -637,6 +706,9 @@ export type ClientUncheckedCreateWithoutOrganizationInput = {
   phone: string
   address?: string | null
   logoReference?: string | null
+  responsibleName?: string | null
+  responsibleEmail?: string | null
+  responsiblePhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -685,6 +757,9 @@ export type ClientScalarWhereInput = {
   phone?: Prisma.StringFilter<"Client"> | string
   address?: Prisma.StringNullableFilter<"Client"> | string | null
   logoReference?: Prisma.StringNullableFilter<"Client"> | string | null
+  responsibleName?: Prisma.StringNullableFilter<"Client"> | string | null
+  responsibleEmail?: Prisma.StringNullableFilter<"Client"> | string | null
+  responsiblePhone?: Prisma.StringNullableFilter<"Client"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Client"> | Date | string | null
@@ -700,6 +775,9 @@ export type ClientCreateWithoutClientEmployeesInput = {
   phone: string
   address?: string | null
   logoReference?: string | null
+  responsibleName?: string | null
+  responsibleEmail?: string | null
+  responsiblePhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -719,6 +797,9 @@ export type ClientUncheckedCreateWithoutClientEmployeesInput = {
   phone: string
   address?: string | null
   logoReference?: string | null
+  responsibleName?: string | null
+  responsibleEmail?: string | null
+  responsiblePhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -752,6 +833,9 @@ export type ClientUpdateWithoutClientEmployeesInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logoReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsiblePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -771,6 +855,9 @@ export type ClientUncheckedUpdateWithoutClientEmployeesInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logoReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsiblePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -788,6 +875,9 @@ export type ClientCreateWithoutProjectsInput = {
   phone: string
   address?: string | null
   logoReference?: string | null
+  responsibleName?: string | null
+  responsibleEmail?: string | null
+  responsiblePhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -807,6 +897,9 @@ export type ClientUncheckedCreateWithoutProjectsInput = {
   phone: string
   address?: string | null
   logoReference?: string | null
+  responsibleName?: string | null
+  responsibleEmail?: string | null
+  responsiblePhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -840,6 +933,9 @@ export type ClientUpdateWithoutProjectsInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logoReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsiblePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -859,6 +955,9 @@ export type ClientUncheckedUpdateWithoutProjectsInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logoReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsiblePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -876,6 +975,9 @@ export type ClientCreateWithoutInvoicesInput = {
   phone: string
   address?: string | null
   logoReference?: string | null
+  responsibleName?: string | null
+  responsibleEmail?: string | null
+  responsiblePhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -895,6 +997,9 @@ export type ClientUncheckedCreateWithoutInvoicesInput = {
   phone: string
   address?: string | null
   logoReference?: string | null
+  responsibleName?: string | null
+  responsibleEmail?: string | null
+  responsiblePhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -928,6 +1033,9 @@ export type ClientUpdateWithoutInvoicesInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logoReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsiblePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -947,6 +1055,9 @@ export type ClientUncheckedUpdateWithoutInvoicesInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logoReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsiblePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -964,6 +1075,9 @@ export type ClientCreateManyOrganizationInput = {
   phone: string
   address?: string | null
   logoReference?: string | null
+  responsibleName?: string | null
+  responsibleEmail?: string | null
+  responsiblePhone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -979,6 +1093,9 @@ export type ClientUpdateWithoutOrganizationInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logoReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsiblePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -997,6 +1114,9 @@ export type ClientUncheckedUpdateWithoutOrganizationInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logoReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsiblePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1015,6 +1135,9 @@ export type ClientUncheckedUpdateManyWithoutOrganizationInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logoReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsibleEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responsiblePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1080,6 +1203,9 @@ export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   phone?: boolean
   address?: boolean
   logoReference?: boolean
+  responsibleName?: boolean
+  responsibleEmail?: boolean
+  responsiblePhone?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1101,6 +1227,9 @@ export type ClientSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   phone?: boolean
   address?: boolean
   logoReference?: boolean
+  responsibleName?: boolean
+  responsibleEmail?: boolean
+  responsiblePhone?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1118,6 +1247,9 @@ export type ClientSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   phone?: boolean
   address?: boolean
   logoReference?: boolean
+  responsibleName?: boolean
+  responsibleEmail?: boolean
+  responsiblePhone?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1135,12 +1267,15 @@ export type ClientSelectScalar = {
   phone?: boolean
   address?: boolean
   logoReference?: boolean
+  responsibleName?: boolean
+  responsibleEmail?: boolean
+  responsiblePhone?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type ClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "companyName" | "tradeName" | "slug" | "cnpj" | "email" | "phone" | "address" | "logoReference" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["client"]>
+export type ClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "companyName" | "tradeName" | "slug" | "cnpj" | "email" | "phone" | "address" | "logoReference" | "responsibleName" | "responsibleEmail" | "responsiblePhone" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["client"]>
 export type ClientInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   projects?: boolean | Prisma.Client$projectsArgs<ExtArgs>
@@ -1174,6 +1309,9 @@ export type $ClientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     phone: string
     address: string | null
     logoReference: string | null
+    responsibleName: string | null
+    responsibleEmail: string | null
+    responsiblePhone: string | null
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -1614,6 +1752,9 @@ export interface ClientFieldRefs {
   readonly phone: Prisma.FieldRef<"Client", 'String'>
   readonly address: Prisma.FieldRef<"Client", 'String'>
   readonly logoReference: Prisma.FieldRef<"Client", 'String'>
+  readonly responsibleName: Prisma.FieldRef<"Client", 'String'>
+  readonly responsibleEmail: Prisma.FieldRef<"Client", 'String'>
+  readonly responsiblePhone: Prisma.FieldRef<"Client", 'String'>
   readonly createdAt: Prisma.FieldRef<"Client", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Client", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Client", 'DateTime'>
@@ -1813,6 +1954,11 @@ export type ClientFindManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Skip the first `n` Clients.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Clients.
+   */
   distinct?: Prisma.ClientScalarFieldEnum | Prisma.ClientScalarFieldEnum[]
 }
 

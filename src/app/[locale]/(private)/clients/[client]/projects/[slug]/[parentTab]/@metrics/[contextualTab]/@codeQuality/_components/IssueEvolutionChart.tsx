@@ -17,6 +17,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
 interface HistoryData {
   date: string;
@@ -26,13 +27,14 @@ interface HistoryData {
 }
 
 export function IssueEvolutionChart({ data }: { data: HistoryData[] }) {
+  const tChart = useTranslations("projects.metrics.codeQuality.charts.issueEvolution");
+  const tSummary = useTranslations("projects.metrics.codeQuality.summary");
+
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle>Evolução de Issues</CardTitle>
-        <CardDescription>
-          Tendência de bugs, vulnerabilidades e code smells
-        </CardDescription>
+        <CardTitle>{tChart("title")}</CardTitle>
+        <CardDescription>{tChart("description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="h-[300px] w-full min-h-[300px]">
@@ -80,7 +82,6 @@ export function IssueEvolutionChart({ data }: { data: HistoryData[] }) {
               />
               <Legend verticalAlign="top" height={36} />
 
-              {/* Stacked Areas */}
               <Area
                 type="monotone"
                 dataKey="codeSmells"
@@ -88,7 +89,7 @@ export function IssueEvolutionChart({ data }: { data: HistoryData[] }) {
                 stroke="#eab308"
                 fill="#eab308"
                 fillOpacity={0.2}
-                name="Code Smells"
+                name={tSummary("codeSmells")}
               />
               <Area
                 type="monotone"
@@ -97,7 +98,7 @@ export function IssueEvolutionChart({ data }: { data: HistoryData[] }) {
                 stroke="#ea580c"
                 fill="#ea580c"
                 fillOpacity={0.3}
-                name="Vulnerabilidades"
+                name={tChart("vulnerabilities")}
               />
               <Area
                 type="monotone"
@@ -105,7 +106,7 @@ export function IssueEvolutionChart({ data }: { data: HistoryData[] }) {
                 stackId="1"
                 stroke="hsl(var(--destructive))"
                 fill="url(#colorBugs)"
-                name="Bugs"
+                name={tSummary("bugs")}
               />
             </AreaChart>
           </ResponsiveContainer>

@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { cache } from "react";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { getBacklogMetricsAction } from "@/actions/backlog/getBacklogMetricsAction";
@@ -14,9 +14,7 @@ export const getCachedBacklogMetrics = cache(async (slug: string) => {
   });
 
   if (error || !success?.success || !success?.data) {
-    throw new AppError(
-      success?.message || "Não foi possível recuperar as métricas de backlog"
-    );
+    throw new ValidationError(success?.message || "Não foi possível recuperar as métricas de backlog");
   }
 
   return success.data;

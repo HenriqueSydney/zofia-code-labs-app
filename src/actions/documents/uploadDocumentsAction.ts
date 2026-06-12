@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { revalidatePath } from "next/cache";
 import { makeAddProjectDocumentUseCase } from "@/useCases/projects/factories/makeAddProjectDocumentUseCase";
 import { auth } from "@/auth";
@@ -11,7 +12,7 @@ export async function uploadDocumentsAction(formData: FormData) {
     if (!session?.user) {
       return {
         success: false,
-        message: "Sessão expirada ou usuário não logado.",
+        message: await serverErrorMessage("sessionExpiredNotLoggedIn"),
       };
     }
 
@@ -20,11 +21,14 @@ export async function uploadDocumentsAction(formData: FormData) {
     const files = formData.getAll("files") as File[];
 
     if (!projectId) {
-      return { success: false, message: "ID do projeto não fornecido." };
+      return {
+        success: false,
+        message: await serverErrorMessage("projectIdNotProvided"),
+      };
     }
 
     if (!files || files.length === 0) {
-      return { success: false, message: "Nenhum arquivo selecionado." };
+      return { success: false, message: await serverErrorMessage("noFileSelected") };
     }
 
     const addDocumentsUseCase = makeAddProjectDocumentUseCase();
@@ -39,12 +43,11 @@ export async function uploadDocumentsAction(formData: FormData) {
     // Revalidação para atualizar a lista na tela imediatamente
     revalidatePath(`/projects/${projectId}`);
 
-    return { success: true, message: "Documentos adicionados com sucesso!" };
+    return { success: true, message: await resolveSuccessMessage("documentsAdded") };
   } catch (error) {
-    console.error("Erro na action uploadDocuments:", error);
     return {
       success: false,
-      message: "Erro ao fazer upload dos documentos.",
+      message: await resolveActionErrorMessage(error),
     };
   }
 }

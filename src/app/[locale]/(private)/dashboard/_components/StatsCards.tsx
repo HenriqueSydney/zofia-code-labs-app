@@ -1,7 +1,8 @@
 import { getOrganizationOverviewStatsAction } from "@/actions/stats/getOrganizationOverviewStatsAction";
-import { StatsCardsSkeleton } from "@/components/skeletons/StatsCardsSkeleton";
+import { StatsCardSkeleton } from "@/components/skeletons/StatsCardSkeleton";
 import { StatsCard } from "@/components/StatsCard"; // Seu componente existente
 import { CheckCircle2, FolderKanban, TrendingUp, Users } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 // Mapa de ícones para converter string do backend em componente React
 const iconMap = {
@@ -12,6 +13,8 @@ const iconMap = {
 };
 
 export async function StatsCards() {
+  const t = await getTranslations("admin");
+  const tCommon = await getTranslations("common");
   const { data: stats } = await getOrganizationOverviewStatsAction();
 
   if (!stats) return null;
@@ -31,14 +34,14 @@ export async function StatsCards() {
         return (
           <StatsCard
             key={index}
-            label={stat.title}
+            label={t(`stats.${stat.titleKey}` as Parameters<typeof t>[0])}
             mainInformation={stat.value}
             Icon={IconComponent}
             trend={trendValue}
-            // reverseColor=false significa que subir é BOM (verde)
             reverseColor={false}
-            description="em relação ao mês anterior"
+            description={t("statsTrend")}
             iconColor="bg-primary/10"
+            stableTrendLabel={tCommon("stable")}
           />
         );
       })}
@@ -51,7 +54,7 @@ export function StatsCardsSkeletonContainer() {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {[1, 2, 3, 4].map((i) => (
-        <StatsCardsSkeleton key={i} />
+        <StatsCardSkeleton key={i} />
       ))}
     </div>
   );

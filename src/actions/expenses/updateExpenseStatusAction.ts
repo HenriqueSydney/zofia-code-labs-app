@@ -1,7 +1,7 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { handleErrors } from "@/errors/handleErrors";
 import { ExpenseStatusSchema } from "@/schemas/expenses/expenseSchema";
 import { makeUpdateExpenseStatusUseCase } from "@/useCases/expenses/factories/makeUpdateExpenseStatusUseCase";
 import { revalidatePath } from "next/cache";
@@ -20,14 +20,14 @@ export async function updateExpenseStatusAction(
   paidAt?: Date
 ) {
   const session = await auth();
-  if (!session?.user?.id) return { success: false, message: "Não autorizado" };
+  if (!session?.user?.id) return { success: false, message: await serverErrorMessage("unauthorized") };
 
   const validation = statusActionSchema.safeParse({
     status: newStatus,
     paidAt,
   });
   if (!validation.success) {
-    return { success: false, message: "Status inválido." };
+    return { success: false, message: await serverErrorMessage("invalidStatus") };
   }
 
   try {
@@ -41,8 +41,8 @@ export async function updateExpenseStatusAction(
     });
 
     revalidatePath(`/projects/${projectSlug}/financial`);
-    return { success: true, message: "Status atualizado." };
+    return { success: true, message: await resolveSuccessMessage("statusUpdated") };
   } catch (error) {
-    return { success: false, message: handleErrors(error) };
+    return { success: false, message: await resolveActionErrorMessage(error) };
   }
 }

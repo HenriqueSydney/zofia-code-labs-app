@@ -1,12 +1,13 @@
 import { SpanStatusCode, trace } from "@opentelemetry/api";
 
 import Mailer from "@/lib/mailer/mailer-factory";
+import type { EmailAttachment, SentMessageInfo } from "@/lib/mailer/IMailer";
 
 type SendEmail = {
   to: string;
   subject: string;
   html: string;
-  attachments?: { filename: string; path: string; cid: string }[];
+  attachments?: EmailAttachment[];
 };
 
 export async function sendEmail({
@@ -14,7 +15,7 @@ export async function sendEmail({
   subject,
   html,
   attachments = [],
-}: SendEmail) {
+}: SendEmail): Promise<SentMessageInfo> {
   const tracer = trace.getTracer("mailer");
 
   return tracer.startActiveSpan("send-email", async (span) => {

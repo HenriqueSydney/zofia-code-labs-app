@@ -1,7 +1,7 @@
 import { Expense, Invoice } from "@/generated/prisma/client";
 import { AuthBasePermissionStrategy } from "./auth-base-strategy";
 import { Operation, UserContext } from "./types";
-import { AppError } from "@/errors/AppError";
+import { ValidationError, BusinessRuleError } from "@/errors";
 import { PERMISSIONS, PermissionString } from "@/constants/permissions";
 import { UserDoesNotHavePermissionError } from "@/errors/UserDoesNotHavePermissionError";
 
@@ -85,10 +85,7 @@ export class AuthFinancialStrategy extends AuthBasePermissionStrategy<FinancialA
 
     if (isLocked) {
       if (operation === "UPDATE" || operation === "DELETE") {
-        throw new AppError(
-          `Fatura com status ${invoice.status} está bloqueada para edições. Use a ação 'Cancelar' se necessário.`,
-          400,
-        );
+        throw new ValidationError(`Fatura com status ${invoice.status} está bloqueada para edições. Use a ação 'Cancelar' se necessário.`, { statusCode: 400 });
       }
     }
   }
@@ -100,10 +97,7 @@ export class AuthFinancialStrategy extends AuthBasePermissionStrategy<FinancialA
     const isLocked = ["PAID", "APPROVED"].includes(expense.status);
 
     if (isLocked && (operation === "DELETE" || operation === "UPDATE")) {
-      throw new AppError(
-        `Despesa ${expense.status} não pode ser alterada.`,
-        400,
-      );
+      throw new BusinessRuleError(`Despesa ${expense.status} não pode ser alterada.`, { statusCode: 400 });
     }
   }
 }

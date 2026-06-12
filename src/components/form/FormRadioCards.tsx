@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/twMerge";
 
 interface RadioCardOption {
   value: string;
@@ -25,6 +25,7 @@ interface FormRadioCardsProps {
   label?: string;
   options: RadioCardOption[];
   className?: string;
+  gridColumns?: number;
 }
 
 export function FormRadioCards({
@@ -33,6 +34,7 @@ export function FormRadioCards({
   label,
   options,
   className,
+  gridColumns = 2,
 }: FormRadioCardsProps) {
   return (
     <FormField
@@ -46,7 +48,7 @@ export function FormRadioCards({
               onValueChange={field.onChange}
               defaultValue={field.value}
               value={field.value}
-              className="grid grid-cols-2 gap-4"
+              className={cn("grid grid-cols-1 md:grid-cols-2 gap-4", `md:grid-cols-${gridColumns}`)}
             >
               {options.map((option) => (
                 <div key={option.value}>

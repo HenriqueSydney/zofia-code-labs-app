@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
 import { makeDeleteServiceTypeUseCase } from "@/useCases/services/factories/makeDeleteServiceUseCase";
 import { revalidatePath } from "next/cache";
@@ -14,13 +15,13 @@ export async function deleteServiceTypeAction(id: string) {
   const session = await auth();
   
   if (!session?.user?.organizationId) {
-    return { success: false, message: "Não autorizado." };
+    return { success: false, message: await serverErrorMessage("unauthorized") };
   }
 
   const parsed = deleteSchema.safeParse({ id });
 
   if (!parsed.success) {
-    return { success: false, message: "ID inválido." };
+    return { success: false, message: await serverErrorMessage("invalidId") };
   }
 
   try {
@@ -29,6 +30,7 @@ export async function deleteServiceTypeAction(id: string) {
     await useCase.execute({
       id,
       organizationId: session.user.organizationId,
+      userId: session.user.id,
     });
 
     revalidatePath("/dashboard/services");
@@ -36,6 +38,6 @@ export async function deleteServiceTypeAction(id: string) {
 
   } catch (error) {
     if (error instanceof Error) return { success: false, message: error.message };
-    return { success: false, message: "Erro ao remover serviço." };
+    return { success: false, message: await serverErrorMessage("serviceDeleteFailed") };
   }
 }

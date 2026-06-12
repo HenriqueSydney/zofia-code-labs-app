@@ -1,3 +1,4 @@
+import { ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { prisma } from "@/lib/prisma";
 import { IAuditLogRepository } from "@/repositories/IAuditLogRepository";
@@ -25,7 +26,7 @@ export class UpdateProposalUseCase {
 
   async execute(id: string, data: UpdateProposalInput) {
     const proposal = await this.proposalRepository.findById(id);
-    if (!proposal) throw new Error("Proposal not found");
+    if (!proposal) throw new ResourceNotFoundError("Proposal not found");
 
     await checkUserPermissionForAsset(
       "proposal",

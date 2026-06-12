@@ -1,7 +1,7 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
 import { makeGetUserAllInfoUseCase } from "@/useCases/users/factories/makeGetUserAllInfoUseCase";
 
 /**
@@ -14,7 +14,7 @@ export async function getUserInfoAction(userId?: string) {
   if (!session?.user?.id) {
     return {
       success: false,
-      message: "Usuário não autenticado.",
+      message: await serverErrorMessage("unauthenticated"),
       data: null,
     };
   }
@@ -38,19 +38,10 @@ export async function getUserInfoAction(userId?: string) {
       success: true,
       data: user,
     };
-  } catch (error: any) {
-    if (error instanceof AppError) {
-      return {
-        success: false,
-        message: error.message,
-        data: null,
-      };
-    }
-
-    console.error("Erro ao buscar informações do usuário:", error);
+  } catch (error) {
     return {
       success: false,
-      message: "Ocorreu um erro inesperado ao carregar o perfil.",
+      message: await resolveActionErrorMessage(error),
       data: null,
     };
   }

@@ -1,5 +1,5 @@
 import { StatsCardsSkeleton } from "@/components/skeletons/StatsCardsSkeleton";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/twMerge";
 
 interface ISummaryCardsSkeleton {
   colsCount?: number;

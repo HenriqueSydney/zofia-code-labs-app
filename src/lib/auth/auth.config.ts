@@ -22,31 +22,18 @@ export default {
     }),
   ],
   callbacks: {
-    // 1. JWT: Onde a mágica acontece. Roda no login E nas requisições subsequentes para atualizar o token.
-    async jwt({ token, user, trigger, session }) {
-      if (user) {
-        // Login inicial: pegamos dados do objeto User (que vem do DB via Adapter)
-        token.id = user.id as string;
-        // @ts-ignore - O Adapter já deve ter populado o role
-        token.role = user.role || "TENANT_MEMBER";
-        // @ts-ignore - O Adapter já deve ter populado o role
-        token.organizationId = user.organizationId;
-      }
-
-      // Se você quiser atualizar a sessão no cliente manualmente (update())
-      if (trigger === "update" && session?.user) {
-        token.role = session.user.role;
-      }
-
-      return token;
-    },
-    // 2. Session: Disponibiliza os dados do token para o front-end (useSession)
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id;
         session.user.role = token.role;
         session.user.image = token.picture;
         session.user.organizationId = token.organizationId;
+        session.user.permissions = token.permissions ?? [];
+        session.user.memberRole = token.memberRole ?? null;
+        session.user.roleName = token.roleName ?? null;
+        session.user.customRoleId = token.customRoleId ?? null;
+        session.user.clientMemberships = token.clientMemberships ?? [];
+        session.user.clientMembershipSlugs = token.clientMembershipSlugs ?? [];
       }
       return session;
     },

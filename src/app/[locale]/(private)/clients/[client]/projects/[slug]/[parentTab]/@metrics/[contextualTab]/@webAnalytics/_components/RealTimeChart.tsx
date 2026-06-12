@@ -1,7 +1,6 @@
 "use client";
 
 import { fetchUmamiRealTimeVisitorsAction } from "@/actions/integrations/umami/fetchUmamiRealTimeVisitorsAction";
-import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -10,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Data = {
   page: string;
@@ -21,6 +21,7 @@ interface IRealTimeChart {
 }
 
 export function RealTimeChart({ slug }: IRealTimeChart) {
+  const t = useTranslations("projects.metrics.webAnalytics.realTime");
   const [data, setData] = useState<Data[]>([]);
 
   const handleFetchRealTimeVisitors = async () => {
@@ -37,17 +38,15 @@ export function RealTimeChart({ slug }: IRealTimeChart) {
   return (
     <Card className="h-full flex flex-col">
       <CardHeader>
-        <CardTitle>Tempo Real</CardTitle>
-        <CardDescription>Visitantes ativos agora</CardDescription>
+        <CardTitle>{t("title")}</CardTitle>
+        <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent className="h-full">
         <div className="space-y-4 h-full">
           {data.length === 0 && (
             <div className="h-full flex flex-col items-center justify-center text-muted-foreground animate-in fade-in duration-500">
-              <span className="text-sm font-medium">Sem dados disponíveis</span>
-              <span className="text-xs">
-                Nenhum acesso registrado no período
-              </span>
+              <span className="text-sm font-medium">{t("noData")}</span>
+              <span className="text-xs">{t("noAccess")}</span>
             </div>
           )}
           {data.map((visitor, index) => (

@@ -10,11 +10,13 @@ import { useTransition } from "react";
 interface IStatsAndViewToggle {
   totalPoints: number;
   backlogLength: number;
+  canManageBacklog: boolean;
 }
 
 export function StatsAndViewToggle({
   totalPoints,
   backlogLength,
+  canManageBacklog,
 }: IStatsAndViewToggle) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -36,7 +38,7 @@ export function StatsAndViewToggle({
   };
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between w-full">
       <div className="flex gap-4 text-sm text-muted-foreground">
         <span>
           <strong className="text-foreground">{backlogLength}</strong> itens

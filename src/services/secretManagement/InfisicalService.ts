@@ -1,4 +1,4 @@
-import { handleErrors } from "@/errors/handleErrors";
+import { AppError, ExternalServiceError } from "@/errors";
 import { IntegrationBase } from "../IntegrationBase";
 import {
   ISecretManagementService,
@@ -64,7 +64,7 @@ export class InfisicalService
       }
     );
 
-    if (!response.ok) throw new Error("Falha na autenticação com Infisical");
+    if (!response.ok) throw new ExternalServiceError("Infisical", "Falha na autenticação com Infisical");
 
     const data = await response.json();
     this.accessToken = data.accessToken;
@@ -88,11 +88,25 @@ export class InfisicalService
     });
 
     if (!response.ok) {
-      const error = await response.text();
-      throw new Error(`[Infisical Error] ${response.status}: ${error}`);
+      const errorBody = await response.text();
+      throw new ExternalServiceError("Infisical", {
+        status: response.status,
+        body: errorBody,
+      });
     }
 
     return response.json();
+  }
+
+  private isAlreadyExistsError(error: unknown): boolean {
+    if (!(error instanceof AppError)) return false;
+
+    const message = error.message.toLowerCase();
+    return (
+      message.includes("already exists") ||
+      message.includes("já existe") ||
+      message.includes("duplicate")
+    );
   }
 
   async getSecret(key: string, options: SecretOptions): Promise<string> {
@@ -136,19 +150,29 @@ export class InfisicalService
   }
 
   async createFolder(path: string, options?: SecretOptions): Promise<void> {
+    const pathParts = path.split("/").filter(Boolean);
+    if (pathParts.length === 0) return;
+
+    // Garante cada segmento do path, criando pais antes dos filhos
+    let currentPath = "";
+    for (const segment of pathParts) {
+      currentPath += `/${segment}`;
+      await this.ensureFolderSegment(currentPath, options);
+    }
+  }
+
+  private async ensureFolderSegment(
+    path: string,
+    options?: SecretOptions
+  ): Promise<void> {
     const workspaceId =
       options?.workspaceId ?? process.env.INFISICAL_WORKSPACE_ID!;
     const environment =
       options?.environment ??
       (process.env.NODE_ENV === "production" ? "prod" : "dev");
 
-    // Extrai o nome da última pasta do path
-    // Ex: /org123/integrations/stripe -> name = "stripe"
     const pathParts = path.split("/").filter(Boolean);
     const folderName = pathParts.pop();
-
-    // O diretório pai é o que sobra
-    // Ex: /org123/integrations/stripe -> parentPath = "/org123/integrations"
     const parentPath = "/" + pathParts.join("/");
 
     if (!folderName) return;
@@ -159,15 +183,13 @@ export class InfisicalService
         body: JSON.stringify({
           workspaceId,
           environment,
-          name: folderName, // O campo que estava faltando!
-          path: parentPath, // Onde a pasta será criada
+          name: folderName,
+          path: parentPath,
         }),
       });
-    } catch (error: any) {
-      handleErrors(error);
-      console.log(
-        `[Infisical] Info: Pasta ${path} já existe ou não pôde ser criada.`
-      );
+    } catch (error: unknown) {
+      if (this.isAlreadyExistsError(error)) return;
+      throw error;
     }
   }
 
@@ -191,32 +213,17 @@ export class InfisicalService
     };
 
     try {
-      // 1. Tenta criar o segredo (POST)
       await this.request(`/v3/secrets/raw/${key}`, {
         method: "POST",
         body: JSON.stringify(payload),
       });
-    } catch (error: any) {
-      /**
-       * 2. Verifica se o erro é de segredo já existente.
-       * O Infisical retorna 400 com a mensagem "Secret already exists"
-       */
-      const errorMessage = error.message || "";
-      const isAlreadyExists =
-        errorMessage.includes("Secret already exists") ||
-        (error.response &&
-          JSON.stringify(error.response).includes("Secret already exists"));
+    } catch (error: unknown) {
+      if (!this.isAlreadyExistsError(error)) throw error;
 
-      if (isAlreadyExists) {
-        // 3. Se já existir, tenta atualizar (PATCH)
-        await this.request(`/v3/secrets/raw/${key}`, {
-          method: "PATCH",
-          body: JSON.stringify(payload),
-        });
-      } else {
-        // Se for outro erro (401, 403, 500), propaga para o Use Case
-        throw error;
-      }
+      await this.request(`/v3/secrets/raw/${key}`, {
+        method: "PATCH",
+        body: JSON.stringify(payload),
+      });
     }
   }
 }

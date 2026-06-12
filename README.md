@@ -4,6 +4,8 @@ Aplicação web para gestão comercial e operacional de projetos de software: cl
 
 O roteiro de produto, fases e checklists de entrega estão em [backlog.md](./backlog.md).
 
+Documentação de produto, requisitos, arquitetura e guias técnicos: **[docs/README.md](./docs/README.md)**.
+
 ## Requisitos
 
 - **Node.js** 20 ou superior (alinhado ao `@types/node` do projeto)

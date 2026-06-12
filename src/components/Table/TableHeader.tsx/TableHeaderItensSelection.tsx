@@ -2,6 +2,7 @@
 import { EllipsisVertical } from "lucide-react";
 import { Fragment, useState } from "react";
 import { CheckBoxActionSubmit, CheckBoxPerLineConfig } from "..";
+import { useTranslations } from "next-intl";
 
 interface ITableHeaderItensSelection {
   tableId: string;
@@ -15,6 +16,7 @@ export function TableHeaderItensSelection({
   selectedItems,
   handleAction,
 }: ITableHeaderItensSelection) {
+  const t = useTranslations("common.table");
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   function handleToggleSelectionBox() {
     setIsOptionsOpen((prevState) => !prevState);
@@ -28,7 +30,9 @@ export function TableHeaderItensSelection({
       <div className="info">
         <span className="count">{selectedItemsLength}</span>
         <span className="text">
-          {selectedItemsLength > 0 ? "itens selecionados" : "item selecionado"}
+          {selectedItemsLength > 1
+            ? t("itemsSelected")
+            : t("itemSelected")}
         </span>
       </div>
       <div
@@ -40,7 +44,7 @@ export function TableHeaderItensSelection({
           type="button"
           data-toggle="dropdown"
           aria-controls={`${tableId}-list-dropdown-selection`}
-          aria-label="Ver mais opções de ação"
+          aria-label={t("moreActionOptions")}
           aria-haspopup="true"
           aria-expanded={!isOptionsOpen}
           onClick={handleToggleSelectionBox}

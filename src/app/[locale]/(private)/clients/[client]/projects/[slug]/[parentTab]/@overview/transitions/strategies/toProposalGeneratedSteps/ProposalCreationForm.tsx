@@ -4,112 +4,95 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { UploadCloud } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Form } from "@/components/ui/form";
 
-// Actions e Utils
-import { fetchDocumentTemplatesAction } from "@/actions/templates/fetchDocumentTemplates";
 import { createProposalAction } from "@/actions/proposal/createProposal";
 import { date, date as day } from "@/lib/dayjs";
 import { calculateItemFinalPrice } from "@/utils/calculateItemFinalPrice";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { TransitionStrategyProps } from "../../types";
-import { TemplateType } from "@/generated/prisma/enums";
-import { FormRadioCards } from "@/components/form/FormRadioCards";
-import { FormSelect } from "@/components/form/FormSelect";
 import { FormNumberInput } from "@/components/form/FormNumberInput";
 import { FormDatePicker } from "@/components/form/FormDatePicker";
 
-// Seus Componentes Refatorados
+import { getPaymentGatewaysAvailableIntegrations } from "@/actions/integrations/paymentGateway/getPaymentGatewaysAvailableIntegrations";
+import { OrganizationIntegrationWithSafeInformation } from "@/repositories/IOrganizationIntegrationRepository";
+import {
+  paymentGatewayMapper,
+  paymentMethods,
+} from "@/mappers/paymentGatewayMapper";
+import { capitalizeFirstLetter } from "@/utils/capitalizeFirstLetter";
+import { FormRadioCards } from "@/components/form/FormRadioCards";
+import { FormSelect } from "@/components/form/FormSelect";
 
-type DocumentTemplates = {
-  type: TemplateType;
-  id: string;
-  title: string;
-};
+const createFormSchema = (requiredMessage: string) =>
+  z.object({
+    validUntil: z.date(),
+    downPaymentPercentage: z.number({ error: requiredMessage }).min(0).max(100),
+    items: z
+      .array(
+        z.object({
+          serviceTypeId: z.string(),
+          serviceName: z.string(),
+          discountType: z.enum(["PERCENTAGE", "FIXED"]),
+          discount: z.number().min(0),
+          basePrice: z.number().optional(),
+        }),
+      )
+      .optional(),
+    paymentGatewayId: z.string().optional(),
+    paymentMethod: z.enum(paymentMethods).nullable().optional(),
+  });
 
-const formSchema = z.object({
-  mode: z.enum(["template", "upload"]),
-  templateId: z.string().optional(),
-  validUntil: z.date(),
-  downPaymentPercentage: z.number({ error: "Obrigatório" }).min(0).max(100),
-  items: z
-    .array(
-      z.object({
-        serviceTypeId: z.string(),
-        serviceName: z.string(),
-        discountType: z.enum(["PERCENTAGE", "FIXED"]),
-        discount: z.number().min(0),
-        basePrice: z.number().optional(),
-      }),
-    )
-    .optional(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.infer<ReturnType<typeof createFormSchema>>;
 
 export function ProposalCreationForm({
   project,
-  targetStatus,
   onSuccess,
   onCancel,
 }: TransitionStrategyProps) {
-  const [availableTemplates, setAvailableTemplates] = useState<
-    DocumentTemplates[]
+  const t = useTranslations("projects.transitions.proposalCreation");
+  const tCommon = useTranslations("projects.transitions.common");
+  const tBack = useTranslations("common");
+  const [availablePaymentGateways, setAvailablePaymentGateways] = useState<
+    OrganizationIntegrationWithSafeInformation[]
   >([]);
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+
+  const formSchema = createFormSchema(tCommon("validation.required"));
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      mode: "template",
-      templateId: "",
       validUntil: day().add(7, "days").toDate(),
       downPaymentPercentage: 30,
-      items: project.projectServices.map((s: any) => ({
+      paymentGatewayId: "cash",
+      paymentMethod: "pix",
+      items: project.projectServices.map((s: { serviceTypeId: string; serviceType: { name: string; basePrice: number } }) => ({
         serviceTypeId: s.serviceTypeId,
         serviceName: s.serviceType.name,
-        discountType: "PERCENTAGE",
+        discountType: "PERCENTAGE" as const,
         discount: 0,
         basePrice: s.serviceType.basePrice,
       })),
     },
   });
 
-  const mode = form.watch("mode");
-  const hasAvailableTemplate = availableTemplates.length > 0;
-
-  // Carrega templates
-  useEffect(() => {
-    async function fetchAvailableTemplates() {
-      const templates = await fetchDocumentTemplatesAction("PROPOSAL");
-      if (templates.documentTemplates) {
-        setAvailableTemplates(templates.documentTemplates as any);
-        form.setValue(
-          "mode",
-          templates.totalOfRegisters > 0 ? "template" : "upload",
-        );
-      }
-    }
-    fetchAvailableTemplates();
-  }, [form]);
-
-  // Cálculo Dinâmico de Valores
   const watchedItems = form.watch("items");
+  const watchedPaymentGatewayId = form.watch("paymentGatewayId");
   const watchedDownPayment = form.watch("downPaymentPercentage");
 
   const calculatedTotal =
     watchedItems?.reduce((acc, item) => {
       const originalService = project.projectServices.find(
-        (s: any) => s.serviceTypeId === item.serviceTypeId,
+        (s: { serviceTypeId: string }) => s.serviceTypeId === item.serviceTypeId,
       );
       const basePrice = originalService?.serviceType?.basePrice || 0;
       return (
@@ -120,13 +103,8 @@ export function ProposalCreationForm({
   const downPaymentValue = calculatedTotal * (watchedDownPayment / 100);
 
   const handleSubmit = async (values: FormValues) => {
-    if (values.mode === "upload" && !file) {
-      toast.error("Selecione um arquivo PDF.");
-      return;
-    }
-
-    if (values.mode === "template" && !values.templateId) {
-      toast.error("Selecione um modelo de documento.");
+    if (!file) {
+      toast.error(tCommon("validation.selectPdfFile"));
       return;
     }
 
@@ -149,94 +127,103 @@ export function ProposalCreationForm({
         "downPaymentPercentage",
         String(values.downPaymentPercentage),
       );
-
-      if (values.mode === "template" && values.templateId) {
-        formData.append("documentTemplateId", values.templateId);
-      } else if (file) {
-        formData.append("document", file);
-      }
+      formData.append("paymentGatewayId", values.paymentGatewayId ?? "cash");
+      formData.append("paymentMethod", values.paymentMethod ?? "pix");
+      formData.append("document", file);
 
       const result = await createProposalAction(formData);
 
       if (result?.error) {
-        toast.error("Erro ao gerar proposta.");
+        toast.error(t("toast.generateError"));
         return;
       }
-      // Sucesso
       if (onSuccess) onSuccess();
-      else toast.success("Proposta criada com sucesso!");
-    } catch (error: any) {
-      if (error.message !== "NEXT_REDIRECT") {
-        toast.error("Erro inesperado ao criar proposta.");
+      else toast.success(t("toast.success"));
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message !== "NEXT_REDIRECT") {
+        toast.error(t("toast.unexpectedError"));
       }
+      onSuccess();
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    async function fetchAvailablePaymentGateways() {
+      const paymentGateways = await getPaymentGatewaysAvailableIntegrations();
+      setAvailablePaymentGateways(paymentGateways);
+    }
+    fetchAvailablePaymentGateways();
+  }, []);
+
+  const gatewayOptions = availablePaymentGateways.map((paymentGateway) => {
+    let description =
+      paymentGatewayMapper[
+        paymentGateway.integrationType.slug as keyof typeof paymentGatewayMapper
+      ].join("; ");
+    if (paymentGateway.healthStatus !== "HEALTHY") {
+      description = "Gateway de pagamento indisponível";
+    }
+    if (!paymentGateway.enabled) {
+      description = "Gateway de pagamento desativado";
+    }
+    return {
+      value: paymentGateway.integrationType.slug,
+      label: paymentGateway.integrationType.name,
+      description: capitalizeFirstLetter(description ?? ""),
+      disabled:
+        !paymentGateway.enabled || paymentGateway.healthStatus !== "HEALTHY",
+    };
+  });
+
+  const finalPaymentMethods = [
+    {
+      value: "cash",
+      label: "Dinheiro ou Pix",
+      description: "Sem utilização de gateway de pagamento",
+      disabled: false,
+    },
+    ...gatewayOptions,
+  ];
+
+  const gatewayPaymentMethods = watchedPaymentGatewayId
+    ? paymentGatewayMapper[
+        watchedPaymentGatewayId as keyof typeof paymentGatewayMapper
+      ]
+    : [];
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-        {/* Seleção de Modo Visual */}
-        <FormRadioCards
-          control={form.control}
-          name="mode"
-          options={[
-            {
-              value: "template",
-              label: "Gerar Automático",
-              description: "Usar modelo padrão",
-              disabled: !hasAvailableTemplate,
-            },
-            {
-              value: "upload",
-              label: "Upload PDF",
-              description: "Enviar arquivo pronto",
-            },
-          ]}
-        />
-
         <div className="space-y-4 border p-4 rounded-md bg-card">
-          {mode === "template" ? (
-            <FormSelect
-              control={form.control}
-              name="templateId"
-              label="Modelo de Documento"
-              placeholder="Selecione o template..."
-              options={availableTemplates.map((t) => ({
-                value: t.id,
-                label: t.title,
-              }))}
+          <div className="space-y-2 border border-dashed p-6 rounded-md bg-muted/20 flex flex-col items-center justify-center text-center">
+            <UploadCloud className="h-8 w-8 text-muted-foreground mb-2" />
+            <Label
+              htmlFor="file-upload"
+              className="cursor-pointer text-primary hover:underline"
+            >
+              {t("upload.clickToSelectPdf")}
+            </Label>
+            <Input
+              id="file-upload"
+              type="file"
+              accept=".pdf"
+              className="hidden"
+              onChange={(e) => setFile(e.target.files?.[0] || null)}
             />
-          ) : (
-            <div className="space-y-2 border border-dashed p-6 rounded-md bg-muted/20 flex flex-col items-center justify-center text-center">
-              <UploadCloud className="h-8 w-8 text-muted-foreground mb-2" />
-              <Label
-                htmlFor="file-upload"
-                className="cursor-pointer text-primary hover:underline"
-              >
-                Clique para selecionar o PDF
-              </Label>
-              <Input
-                id="file-upload"
-                type="file"
-                accept=".pdf"
-                className="hidden"
-                onChange={(e) => setFile(e.target.files?.[0] || null)}
-              />
-              {file && (
-                <p className="text-sm font-medium text-green-600 mt-2">
-                  Arquivo selecionado: {file.name}
-                </p>
-              )}
-            </div>
-          )}
+            {file && (
+              <p className="text-sm font-medium text-green-600 mt-2">
+                {t("upload.fileSelected")} {file.name}
+              </p>
+            )}
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t mt-4">
             <FormNumberInput
               control={form.control}
               name="downPaymentPercentage"
-              label="Percentual de Entrada"
+              label={t("fields.downPayment.label")}
               min={0}
               max={100}
               placeholder="30"
@@ -245,15 +232,14 @@ export function ProposalCreationForm({
             <FormDatePicker
               control={form.control}
               name="validUntil"
-              label="Proposta Válida até"
+              label={t("fields.validUntil.label")}
               minDate={date().toDate()}
             />
           </div>
 
-          {/* Lista de Itens / Serviços */}
           <div className="space-y-3">
             <Label className="text-base font-semibold">
-              Serviços e Descontos
+              {t("fields.items.title")}
             </Label>
             <div className="grid gap-3 max-h-[300px] overflow-y-auto pr-2 mt-2">
               {form.watch("items")?.map((item, index) => (
@@ -270,7 +256,8 @@ export function ProposalCreationForm({
                     </p>
                     {item.basePrice && (
                       <span className="text-xs text-muted-foreground">
-                        Base: {formatCurrency(item.basePrice)}
+                        {t("fields.items.basePriceLabel")}{" "}
+                        {formatCurrency(item.basePrice)}
                       </span>
                     )}
                   </div>
@@ -279,9 +266,7 @@ export function ProposalCreationForm({
                     <FormSelect
                       control={form.control}
                       name={`items.${index}.discountType`}
-                      label="Tipo"
-                      // Pequeno hack para esconder o label visualmente mas manter acessibilidade se desejar
-                      // ou você pode ajustar o FormSelect para aceitar labelClassName="sr-only"
+                      label={t("fields.items.discountType.label")}
                       options={[
                         { value: "PERCENTAGE", label: "%" },
                         { value: "FIXED", label: "R$" },
@@ -293,7 +278,7 @@ export function ProposalCreationForm({
                     <FormNumberInput
                       control={form.control}
                       name={`items.${index}.discount`}
-                      label="Valor"
+                      label={t("fields.items.discountValue.label")}
                       placeholder="0"
                       min={0}
                     />
@@ -304,18 +289,39 @@ export function ProposalCreationForm({
           </div>
         </div>
 
-        {/* Footer com Totais */}
+        <FormRadioCards
+          control={form.control}
+          name="paymentGatewayId"
+          options={finalPaymentMethods}
+          gridColumns={finalPaymentMethods.length}
+        />
+
+        {watchedPaymentGatewayId !== "cash" && (
+          <FormRadioCards
+            control={form.control}
+            name="paymentMethod"
+            options={gatewayPaymentMethods.map((method) => ({
+              value: method,
+              label: capitalizeFirstLetter(method ?? ""),
+              disabled: false,
+            }))}
+            gridColumns={finalPaymentMethods.length}
+          />
+        )}
+
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t mt-6">
           <div className="flex flex-col items-start">
             <span className="text-sm text-muted-foreground font-medium">
-              Valor Total da Proposta
+              {t("summary.totalLabel")}
             </span>
             <div className="flex items-baseline gap-2">
               <span className="text-2xl font-bold text-primary">
                 {formatCurrency(calculatedTotal)}
               </span>
               <span className="text-sm text-muted-foreground italic">
-                (Entrada: {formatCurrency(downPaymentValue)})
+                {t("summary.downPayment", {
+                  amount: formatCurrency(downPaymentValue),
+                })}
               </span>
             </div>
           </div>
@@ -328,14 +334,14 @@ export function ProposalCreationForm({
               className="flex-1 sm:flex-none"
               disabled={loading}
             >
-              Voltar
+              {tBack("back")}
             </Button>
             <Button
               type="submit"
               disabled={loading}
               className="flex-1 sm:flex-none"
             >
-              {loading ? "Processando..." : "Gerar Proposta"}
+              {loading ? tCommon("processing") : t("submit")}
             </Button>
           </div>
         </div>

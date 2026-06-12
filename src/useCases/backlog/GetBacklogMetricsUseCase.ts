@@ -1,5 +1,6 @@
+import { ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
-import { backlogStatusMapper } from "@/mappers/BacklogMappers";
+import { BACKLOG_STATUS_TRANSLATION_KEYS } from "@/mappers/BacklogMappers";
 import { IProjectsRepository } from "@/repositories/IProjectsRepository";
 import { IProjectStatsRepository } from "@/repositories/IProjectStatsRepository";
 
@@ -18,7 +19,7 @@ export class GetBacklogMetricsUseCase {
     const project = await this.projectsRepository.findBySlug(projectSlug);
 
     if (!project) {
-      throw new Error("Projeto não encontrado.");
+      throw new ResourceNotFoundError("Projeto não encontrado.");
     }
 
     await checkUserPermissionForAsset("project", userId, project, "READ");
@@ -38,7 +39,7 @@ export class GetBacklogMetricsUseCase {
         trends: metrics.trends,
       },
       chartData: metrics.statusDistribution.map((item) => ({
-        name: backlogStatusMapper[item.status],
+        name: BACKLOG_STATUS_TRANSLATION_KEYS[item.status],
         value: item.count,
       })),
     };

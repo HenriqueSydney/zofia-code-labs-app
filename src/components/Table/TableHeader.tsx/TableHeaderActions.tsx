@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { EllipsisVertical } from "lucide-react";
 import { Fragment } from "react";
+import { useTranslations } from "next-intl";
 
 export type HeaderActions = {
   action: () => void;
@@ -25,6 +26,7 @@ export function TableHeaderActions({
   headerActions,
   tableId = "",
 }: ITableHeaderActions) {
+  const t = useTranslations("common.table");
   function handleDensitySelection(type: "small" | "medium" | "large"): void {
     const table = document.querySelector(`.br-table#${tableId}`);
     table?.classList.remove("small", "medium", "large");
@@ -39,23 +41,23 @@ export function TableHeaderActions({
             className="rounded-full"
             variant="outline"
             type="button"
-            title="Ver mais opções"
-            aria-label="Definir densidade da tabela"
+            title={t("moreOptions")}
+            aria-label={t("densityLabel")}
           >
             <EllipsisVertical size={16} />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => handleDensitySelection("small")}>
-            Densidade alta
+            {t("densityHigh")}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => handleDensitySelection("medium")}>
-            Densidade média
+            {t("densityMedium")}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => handleDensitySelection("large")}>
-            Densidade baixa
+            {t("densityLow")}
           </DropdownMenuItem>
           {headerActions &&
             headerActions.map(({ action, label }) => (

@@ -1,7 +1,7 @@
 "use client";
 
 import { UserAvatar } from "@/components/UserAvatar";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/twMerge";
 import { getBacklogPriorityBadge } from "@/mappers/getBacklogPriorityBadge";
 import { getBacklogStatusBadge } from "@/mappers/getBacklogStatusBadge";
 import { BacklogItemWithDetails } from "@/repositories/IBacklogItemsRepository";
@@ -10,16 +10,20 @@ import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, Hash } from "lucide-react";
 import { ServiceDefaultBacklogItemWithDetails } from "@/repositories/IServiceDefaultBacklogItemsRepository";
 import { BacklogDetailsModal } from "./BacklogDetailsModal";
+import { useTranslations } from "next-intl";
 
 interface ISortableBacklogItem {
   item: ServiceDefaultBacklogItemWithDetails;
   marginBotton: boolean;
+  canEditBacklog: boolean;
 }
 
 export function SortableBacklogItem({
   item,
   marginBotton = true,
+  canEditBacklog = false,
 }: ISortableBacklogItem) {
+  const tPriority = useTranslations("projects.backlog.priorityLabels");
   const {
     attributes,
     listeners,
@@ -47,17 +51,19 @@ export function SortableBacklogItem({
       )}
     >
       {/* O Drag Handle recebe os listeners e attributes */}
-      <div
-        {...attributes}
-        {...listeners}
-        className="mt-1 opacity-30 hover:opacity-100 cursor-grab active:cursor-grabbing"
-      >
-        <GripVertical className="h-5 w-5 text-muted-foreground" />
-      </div>
+      {canEditBacklog && (
+        <div
+          {...attributes}
+          {...listeners}
+          className="mt-1 opacity-30 hover:opacity-100 cursor-grab active:cursor-grabbing"
+        >
+          <GripVertical className="h-5 w-5 text-muted-foreground" />
+        </div>
+      )}
       <div className="flex-1 min-w-0 space-y-2">
         {/* Linha 1: Título e Status */}
         <div className="flex justify-between items-start gap-4">
-          <BacklogDetailsModal item={item}>
+          <BacklogDetailsModal item={item} canEditBacklog={canEditBacklog}>
             <button
               type="button" // Importante para não submeter formulários acidentalmente
               className={cn(
@@ -71,7 +77,7 @@ export function SortableBacklogItem({
           </BacklogDetailsModal>
           <div className="flex items-center gap-2 shrink-0">
             {/* Badges menores ou alinhados a direita */}
-            {getBacklogPriorityBadge(item.priority)}
+            {getBacklogPriorityBadge(item.priority, (k) => tPriority(k as never))}
           </div>
         </div>
 

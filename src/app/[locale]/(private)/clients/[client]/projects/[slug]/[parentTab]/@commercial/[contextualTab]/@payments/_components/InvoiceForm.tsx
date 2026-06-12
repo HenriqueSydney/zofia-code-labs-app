@@ -25,6 +25,7 @@ import { FormInput } from "@/components/form/FormInput";
 import { FormNumberInput } from "@/components/form/FormNumberInput";
 import { FormDatePicker } from "@/components/form/FormDatePicker";
 import { FormSelect } from "@/components/form/FormSelect";
+import { useTranslations } from "next-intl";
 
 // Mapeamento de Opções
 const BANK_OPTIONS = Object.values(InternetBankingProvider).map((p) => ({
@@ -48,6 +49,9 @@ export function InvoiceForm({
   invoice,
   handleCloseModal,
 }: IInvoiceFormProps) {
+  const t = useTranslations("projects.commercial.invoices.form");
+  const tCommon = useTranslations("common.actions");
+  const tTransition = useTranslations("projects.transitions.common");
   const [isPending, startTransition] = useTransition();
 
   const form = useForm({
@@ -90,8 +94,8 @@ export function InvoiceForm({
             <FormInput
               control={form.control}
               name="description"
-              label="Descrição da Fatura"
-              placeholder="Ex: Desenvolvimento Web - Março"
+              label={t("description")}
+              placeholder={t("descriptionPlaceholder")}
               disabled={isPending}
             />
 
@@ -99,7 +103,7 @@ export function InvoiceForm({
               <FormNumberInput
                 control={form.control}
                 name="amount"
-                label="Valor (R$)"
+                label={t("amount")}
                 placeholder="0.00"
                 min={0}
                 step={0.01}
@@ -109,8 +113,8 @@ export function InvoiceForm({
               <FormDatePicker
                 control={form.control}
                 name="dueDate"
-                label="Vencimento"
-                placeholder="Selecione"
+                label={t("dueDate")}
+                placeholder={tCommon("select")}
                 disabled={isPending}
               />
             </div>
@@ -122,8 +126,8 @@ export function InvoiceForm({
               <FormSelect
                 control={form.control}
                 name="internetBankingProvider"
-                label="Banco"
-                placeholder="Selecione"
+                label={t("bank")}
+                placeholder={tCommon("select")}
                 options={BANK_OPTIONS}
                 disabled={isPending}
                 // Dica: Se quiser ícone no label, pode passar no prop label ou usar o componente original
@@ -132,8 +136,8 @@ export function InvoiceForm({
               <FormSelect
                 control={form.control}
                 name="paymentType"
-                label="Tipo de Recebimento"
-                placeholder="Selecione"
+                label={t("paymentType")}
+                placeholder={tCommon("select")}
                 options={PAYMENT_OPTIONS}
                 disabled={isPending}
               />
@@ -143,13 +147,13 @@ export function InvoiceForm({
 
             <div className="space-y-3">
               <h3 className="text-sm font-semibold flex items-center gap-2 text-muted-foreground">
-                <FileText className="w-4 h-4" /> Dados Fiscais (Opcional)
+                <FileText className="w-4 h-4" /> {t("fiscalSection")}
               </h3>
 
               <FormInput
                 control={form.control}
                 name="nfseNumber"
-                label="Número da NF-e"
+                label={t("nfeNumber")}
                 placeholder="Ex: 2024001"
                 disabled={isPending}
               />
@@ -157,7 +161,7 @@ export function InvoiceForm({
               <FormInput
                 control={form.control}
                 name="nfseLink"
-                label="Link do PDF da Nota"
+                label={t("nfseLink")}
                 placeholder="https://..."
                 disabled={isPending}
               />
@@ -173,14 +177,10 @@ export function InvoiceForm({
             onClick={handleCloseModal}
             disabled={isPending}
           >
-            Cancelar
+            {tCommon("cancel")}
           </Button>
           <Button type="submit" disabled={isPending}>
-            {isPending
-              ? "Processando..."
-              : invoice
-                ? "Atualizar Fatura"
-                : "Gerar Fatura"}
+            {isPending ? tTransition("processing") : invoice ? t("update") : t("generate")}
           </Button>
         </div>
       </form>

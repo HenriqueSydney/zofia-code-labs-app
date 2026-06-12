@@ -1,10 +1,14 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
+import { v } from "@/schemas/validationMessages";
 import { z } from "zod";
-import { auth } from "@/auth"; // Seu Auth.js
+import { auth } from "@/auth";
+import { extractClientIp } from "@/lib/auth/extractClientIp";
 import { PrismaUsersRepository } from "@/repositories/prisma/PrismaUsersRepository";
 import { UpdatePasswordUseCase } from "@/useCases/users/UpdatePasswordUseCase";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 
 // Schema igual ao do client para garantir consistência
 const updatePasswordSchema = z
@@ -14,7 +18,7 @@ const updatePasswordSchema = z
     confirmPassword: z.string().min(1),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "As senhas não coincidem",
+    message: v.passwordsMismatch,
     path: ["confirmPassword"],
   });
 
@@ -35,7 +39,7 @@ export async function updatePasswordAction(
   // 1. Autenticação
   const session = await auth();
   if (!session?.user?.id) {
-    return { success: false, message: "Sessão expirada." };
+    return { success: false, message: await serverErrorMessage("sessionExpired") };
   }
 
   // 2. Validação Zod
@@ -49,7 +53,7 @@ export async function updatePasswordAction(
     return {
       success: false,
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Verifique os erros no formulário.",
+      message: await serverErrorMessage("checkFormFields"),
     };
   }
 
@@ -60,31 +64,35 @@ export async function updatePasswordAction(
     const usersRepository = new PrismaUsersRepository();
     const useCase = new UpdatePasswordUseCase(usersRepository);
 
-    // 4. Execução
+    const headersList = await headers();
+
     await useCase.execute({
       userId: session.user.id,
       currentPassword,
       newPassword,
+      ipAddress: extractClientIp(headersList.get("x-forwarded-for")),
+      userAgent: headersList.get("user-agent"),
     });
 
     // 5. Revalidação (Opcional, pois senha não muda nada visual na tela geralmente)
     revalidatePath("/dashboard/profile");
 
-    return { success: true, message: "Senha atualizada com sucesso!" };
+    return { success: true, message: await resolveSuccessMessage("passwordUpdated") };
   } catch (error: any) {
     // Tratamento de erros conhecidos
-    if (error.message === "Senha atual incorreta.") {
+    if (error.message === "wrongCurrentPassword" || error.message === "Senha atual incorreta.") {
       return {
         success: false,
-        errors: { currentPassword: ["A senha atual digitada está incorreta."] }, // Mapeia para o campo
-        message: "Erro de validação.",
+        errors: {
+          currentPassword: [await serverErrorMessage("wrongCurrentPassword")],
+        },
+        message: await serverErrorMessage("invalidData"),
       };
     }
 
-    console.error("Erro updatePasswordAction:", error);
     return {
       success: false,
-      message: error.message || "Erro interno ao atualizar senha.",
+      message: await resolveActionErrorMessage(error),
     };
   }
 }

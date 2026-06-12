@@ -1,3 +1,4 @@
+import { ValidationError } from "@/errors";
 export const localeMap: Record<string, string> = {
   pt: "pt-BR", // Português (Brasil)
   en: "en-US", // Inglês (EUA)
@@ -20,7 +21,7 @@ export function formatDate(
   if (Number.isNaN(d.getTime())) {
     // Em UI é geralmente melhor retornar um fallback do que estourar erro,
     // mas mantive seu throw se preferir validação estrita.
-    throw new Error(`Data inválida fornecida: ${date}`);
+    throw new ValidationError(`Data inválida fornecida: ${date}`);
   }
 
   const resolvedLocale = localeMap[locale] ?? locale;

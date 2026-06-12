@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
 import { makeDeleteExpenseCategoryUseCase } from "@/useCases/expenses/factories/makeDeleteExpenseCategoryUseCase";
 import { revalidatePath } from "next/cache";
@@ -8,7 +9,7 @@ export async function deleteExpenseCategoryAction(id: string) {
   const session = await auth();
 
   if (!session?.user?.organizationId) {
-    return { success: false, message: "Sessão expirada." };
+    return { success: false, message: await serverErrorMessage("sessionExpired") };
   }
 
   try {

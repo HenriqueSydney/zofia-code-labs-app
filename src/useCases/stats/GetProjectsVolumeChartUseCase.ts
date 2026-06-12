@@ -1,4 +1,5 @@
 // use-cases/dashboard/GetProjectsVolumeChartUseCase.ts
+import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IProjectStatsRepository } from "@/repositories/IProjectStatsRepository";
 
 interface IGetProjectsVolumeChartUseCaseParams {
@@ -13,8 +14,12 @@ export class GetProjectsVolumeChartUseCase {
     organizationId,
     userId,
   }: IGetProjectsVolumeChartUseCaseParams) {
-    // 1. Verificação de Segurança (placeholder)
-    // await checkUserPermissionForOrganization(organizationId, userId);
+    await checkUserPermissionForAsset(
+      "project",
+      userId,
+      { organizationId },
+      "READ",
+    );
 
     // 2. Busca dos dados
     const volumeData =

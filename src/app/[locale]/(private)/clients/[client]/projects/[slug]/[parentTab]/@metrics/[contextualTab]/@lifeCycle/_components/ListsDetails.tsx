@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useMemo, useState } from "react";
 import {
   Card,
   CardContent,
@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { MetricsResponse } from "@/useCases/integration/umami/GetUmamiMetricsUseCase";
+import { useTranslations } from "next-intl";
 import { PagesTable } from "../../@webAnalytics/_components/PagesTable";
 import { ReferrerTable } from "../../@webAnalytics/_components/ReferrerTable";
 import { CountriesTable } from "../../@webAnalytics/_components/CountriesTable";
@@ -28,49 +29,52 @@ type AvailableTablesMetadata = {
 };
 
 export function ListsDetails({ metrics }: ListsDetailsProps) {
+  const t = useTranslations("projects.metrics.analytics.tables");
   const [selectedTable, setSelectedTable] = useState<AvailableTables>("pages");
 
   const selectedTableMapper: Record<AvailableTables, AvailableTablesMetadata> =
-    {
-      pages: {
-        label: "Páginas",
-        title: "Páginas Mais Visitadas",
-        description: "Ranking de páginas por visualizações",
-        content: (
-          <PagesTable
-            totalPageViews={metrics.pageviews}
-            pages={metrics.breakdown.pages}
-          />
-        ),
-      },
-      refered: {
-        label: "Referências",
-        title: "Fontes de Tráfego",
-        description: "De onde vêm seus visitantes",
-        content: (
-          <ReferrerTable
-            totalPageViews={metrics.pageviews}
-            referrers={metrics.breakdown.referrers}
-          />
-        ),
-      },
-      countries: {
-        label: "Países",
-        title: "Visitantes por País",
-        description: "Distribuição geográfica dos acessos",
-        content: (
-          <CountriesTable
-            countries={metrics.breakdown.countries}
-            totalPageViews={metrics.pageviews}
-            totalVisitors={metrics.visitors}
-          />
-        ),
-      },
-    };
+    useMemo(
+      () => ({
+        pages: {
+          label: t("pages"),
+          title: t("topPagesTitle"),
+          description: t("topPagesDescription"),
+          content: (
+            <PagesTable
+              totalPageViews={metrics.pageviews}
+              pages={metrics.breakdown.pages}
+            />
+          ),
+        },
+        refered: {
+          label: t("referrers"),
+          title: t("trafficSourcesTitle"),
+          description: t("trafficSourcesDescription"),
+          content: (
+            <ReferrerTable
+              totalPageViews={metrics.pageviews}
+              referrers={metrics.breakdown.referrers}
+            />
+          ),
+        },
+        countries: {
+          label: t("countries"),
+          title: t("countriesTitle"),
+          description: t("countriesDescription"),
+          content: (
+            <CountriesTable
+              countries={metrics.breakdown.countries}
+              totalPageViews={metrics.pageviews}
+              totalVisitors={metrics.visitors}
+            />
+          ),
+        },
+      }),
+      [metrics, t],
+    );
 
   return (
     <Card className="w-full">
-      {/* O componente Tabs deve envolver o que depende do estado dele */}
       <Tabs
         value={selectedTable}
         onValueChange={(value) => setSelectedTable(value as AvailableTables)}

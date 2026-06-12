@@ -1,6 +1,6 @@
 import { listInvoicesAction } from "@/actions/financial/listInvoicesAction";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { getParams } from "@/utils/getParams";
 import { TabsContent } from "@radix-ui/react-tabs";
@@ -11,13 +11,38 @@ import { FinancialStatus } from "@/generated/prisma/enums";
 import { Separator } from "@/components/ui/separator";
 import { ArrowUpCircle, DollarSign } from "lucide-react";
 import { EmptyState } from "@/components/EmptyState";
+import { getTranslations } from "next-intl/server";
+import { auth } from "@/auth";
+import { hasPermission } from "@/utils/hasPermission";
+import { PERMISSIONS } from "@/constants/permissions";
 
 interface IParams {
   params?: Promise<{ slug: string }>;
 }
 
 export default async function PaymentTab({ params }: IParams) {
+  const t = await getTranslations("projects.commercial.payments");
+  const tErrors = await getTranslations("projects.errors");
+  const session = await auth();
   const { slug } = await getParams(params, ["slug"]);
+
+  const canCreatePayment = hasPermission(
+    session?.user,
+    PERMISSIONS.INVOICE.CREATE,
+  );
+  const canReadPayment = hasPermission(session?.user, PERMISSIONS.INVOICE.READ);
+
+  if (!canReadPayment) {
+    return (
+      <TabsContent value="payments" className="mt-6">
+        <EmptyState
+          title={tErrors("noPermissionTitle")}
+          icon={DollarSign}
+          description={tErrors("noPermissionPayment")}
+        />
+      </TabsContent>
+    );
+  }
 
   const [error, success] = await operationWrapper(
     "action",
@@ -31,7 +56,7 @@ export default async function PaymentTab({ params }: IParams) {
   );
 
   if (error) {
-    throw new AppError("Erro ao listar os pagamentos");
+    throw new ValidationError("Erro ao listar os pagamentos");
   }
 
   const payments = success.data ?? [];
@@ -68,16 +93,20 @@ export default async function PaymentTab({ params }: IParams) {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg">Histórico de Pagamentos</CardTitle>
-          <CreateInvoceForm projectSlug={slug} />
+          {canCreatePayment && <CreateInvoceForm projectSlug={slug} />}
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
             {payments.length === 0 ? (
               <EmptyState
-                title="Nenhum pagamento "
-                description="Nenhum pagamento reconhecido até o momento. Registre um pagamento ou aguarde o projeto chegar na fase de pagamento."
+                title={t("emptyTitle")}
+                description={t("emptyDescription")}
                 icon={DollarSign}
-                action={<CreateInvoceForm projectSlug={slug} />}
+                action={
+                  canCreatePayment ? (
+                    <CreateInvoceForm projectSlug={slug} />
+                  ) : undefined
+                }
               />
             ) : (
               payments.map((payment) => (
@@ -85,6 +114,7 @@ export default async function PaymentTab({ params }: IParams) {
                   key={payment.id}
                   payment={payment}
                   projectSlug={slug}
+                  canCreatePayment={canCreatePayment}
                 />
               ))
             )}

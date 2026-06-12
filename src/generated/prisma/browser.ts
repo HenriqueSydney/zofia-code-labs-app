@@ -74,11 +74,6 @@ export type ServiceType = Prisma.ServiceTypeModel
  */
 export type ServiceDefaultBacklogItem = Prisma.ServiceDefaultBacklogItemModel
 /**
- * Model DocumentTemplate
- * Modelos de documentos HTML/Markdown
- */
-export type DocumentTemplate = Prisma.DocumentTemplateModel
-/**
  * Model Client
  * Carteira de Clientes da Organização
  */
@@ -95,7 +90,7 @@ export type ClientEmployees = Prisma.ClientEmployeesModel
 export type Proposal = Prisma.ProposalModel
 /**
  * Model ProposalTemplate
- * 
+ * Snapshot de conteúdo da proposta (ex.: metadados Documenso / versão editável).
  */
 export type ProposalTemplate = Prisma.ProposalTemplateModel
 /**
@@ -110,7 +105,7 @@ export type ProposalItem = Prisma.ProposalItemModel
 export type Contract = Prisma.ContractModel
 /**
  * Model ContractTemplate
- * 
+ * Snapshot de conteúdo do contrato (ex.: metadados Documenso / versão editável).
  */
 export type ContractTemplate = Prisma.ContractTemplateModel
 /**
@@ -134,6 +129,11 @@ export type ProjectMember = Prisma.ProjectMemberModel
  */
 export type ProjectDocuments = Prisma.ProjectDocumentsModel
 /**
+ * Model ProjectRating
+ * 
+ */
+export type ProjectRating = Prisma.ProjectRatingModel
+/**
  * Model ProjectServices
  * 
  */
@@ -153,6 +153,11 @@ export type Sprint = Prisma.SprintModel
  * 
  */
 export type BacklogItem = Prisma.BacklogItemModel
+/**
+ * Model BacklogItemChecklistItem
+ * 
+ */
+export type BacklogItemChecklistItem = Prisma.BacklogItemChecklistItemModel
 /**
  * Model BudgetEntry
  * 

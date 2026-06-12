@@ -1,3 +1,5 @@
+"use client";
+
 import { PricingPlan } from "@/@types/pricing";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Check, LucideIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface IPrincingCard {
   plan: PricingPlan;
@@ -17,8 +20,8 @@ interface IPrincingCard {
 }
 
 export function PrincingCard({ plan, isYearly }: IPrincingCard) {
+  const t = useTranslations("components.pricing");
   const Icon = plan.icon as unknown as LucideIcon;
-  // Fallback para evitar erro caso o preço seja nulo
   const price = isYearly ? plan.price.yearly : plan.price.monthly;
   const isIndicated = plan.isIndicated;
 
@@ -34,7 +37,7 @@ export function PrincingCard({ plan, isYearly }: IPrincingCard) {
       {isIndicated && (
         <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
           <Badge className="bg-gradient-to-r from-primary to-secondary text-primary-foreground shadow-md border-none">
-            Indicado
+            {t("card.recommended")}
           </Badge>
         </div>
       )}
@@ -68,25 +71,25 @@ export function PrincingCard({ plan, isYearly }: IPrincingCard) {
                 </span>
               </div>
               <span className="text-sm text-muted-foreground">
-                /{isYearly ? "ano" : "mês"}
+                {isYearly ? t("card.perYear") : t("card.perMonth")}
               </span>
               {isYearly && plan.price.monthly && (
                 <p className="text-xs text-emerald-500 font-medium mt-1">
-                  Economia de R${" "}
-                  {plan.price.monthly * 12 - (plan.price.yearly ?? 0)} no ano
+                  {t("card.yearlySavings", {
+                    amount: plan.price.monthly * 12 - (plan.price.yearly ?? 0),
+                  })}
                 </p>
               )}
             </>
           ) : (
             <div className="py-2">
               <span className="text-2xl font-bold text-foreground">
-                Sob Consulta
+                {t("card.contactUs")}
               </span>
             </div>
           )}
         </div>
 
-        {/* Lista de Features Principais */}
         <ul className="space-y-3 mb-6">
           {plan.features.map((feature, index) => (
             <li key={index} className="flex items-start gap-3 text-sm">
@@ -108,11 +111,10 @@ export function PrincingCard({ plan, isYearly }: IPrincingCard) {
           ))}
         </ul>
 
-        {/* Seção de Inteligência de Dados (Data Points) */}
         {plan.dataPoints.length > 0 && (
           <div className="pt-4 border-t border-border">
             <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
-              Métricas Inclusas:
+              {t("card.includedMetrics")}
             </p>
             <div className="flex flex-wrap gap-1.5">
               {plan.dataPoints.map((point, idx) => (

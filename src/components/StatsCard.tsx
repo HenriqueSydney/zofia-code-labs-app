@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils"; // Ajustado para o padrão comum do shadcn
+import { cn } from "@/utils/twMerge";
 import { LucideIcon, TrendingDown, TrendingUp, Minus } from "lucide-react";
 import { ReactNode } from "react";
 
@@ -9,9 +9,11 @@ interface IStatsCard {
   description?: string;
   Icon: LucideIcon;
   trend?: number;
-  reverseColor?: boolean; // Default true: subir é ruim (ex: bugs). False: subir é bom (ex: coverage).
+  reverseColor?: boolean;
   iconColor?: string;
-  badge?: ReactNode
+  badge?: ReactNode;
+  /** Rótulo exibido quando trend === 0 (ex.: tradução de common.stable). */
+  stableTrendLabel?: string;
 }
 
 export function StatsCard({
@@ -22,7 +24,8 @@ export function StatsCard({
   description,
   reverseColor = true,
   iconColor = "bg-primary/10",
-  badge
+  badge,
+  stableTrendLabel = "—",
 }: IStatsCard) {
   const isPositive = trend !== undefined && trend > 0;
   const isNegative = trend !== undefined && trend < 0;
@@ -73,7 +76,7 @@ export function StatsCard({
               {isNegative && <TrendingDown className="h-3 w-3 mr-0.5" />}
               {isNeutral && <Minus className="h-3 w-3 mr-0.5" />}
               {trend !== undefined && (
-                <span>{isNeutral ? "estável" : `${Math.abs(trend)}%`}</span>
+                <span>{isNeutral ? stableTrendLabel : `${Math.abs(trend)}%`}</span>
               )}
               {description  && (
                 <span className="text-muted-foreground! ml-1">{description}</span>

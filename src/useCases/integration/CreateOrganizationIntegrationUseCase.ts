@@ -1,7 +1,12 @@
+import { IntegrationError, ValidationError } from "@/errors";
 import { OrganizationIntegration } from "@/generated/prisma/client";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IIntegrationTypeRepository } from "@/repositories/IIntegrationTypeRepository";
 import { IOrganizationIntegrationRepository } from "@/repositories/IOrganizationIntegrationRepository";
+import {
+  getInfisicalIntegrationFieldKeys,
+  getInfisicalIntegrationFields,
+} from "@/schemas/integration/integrationType";
 import { makeSecretManagementService } from "@/services/secretManagement/makeSecretManagementService";
 
 interface CreateRequest {
@@ -36,18 +41,19 @@ export class CreateOrganizationIntegrationUseCase {
     // 2. Busca o Tipo de Integração
     const type = await this.typeRepository.findById(integrationTypeId);
     if (!type) {
-      throw new Error("Tipo de integração não encontrado no catálogo global.");
+      throw new IntegrationError("Tipo de integração não encontrado no catálogo global.");
     }
 
-    const fieldsSchema = (type.fieldsSchema as any[]) || [];
+    const fieldsSchema = (type.fieldsSchema as Record<string, unknown>[]) || [];
+    const infisicalFields = getInfisicalIntegrationFields(fieldsSchema);
 
     // 3. Validação condicional: Só valida campos se BYOL estiver ativo
     // Se for Modo Gerenciado, o usuário não envia chaves
     if (enableByol) {
-      for (const field of fieldsSchema) {
-        if (!secretValues[field.key]) {
-          throw new Error(
-            `O campo '${field.label}' é obrigatório para instâncias próprias.`
+      for (const field of infisicalFields) {
+        if (!secretValues[String(field.key)]) {
+          throw new ValidationError(
+            `O campo '${field.label}' é obrigatório para instâncias próprias.`,
           );
         }
       }
@@ -59,9 +65,7 @@ export class CreateOrganizationIntegrationUseCase {
       integrationTypeId
     );
     if (alreadyConnected) {
-      throw new Error(
-        "Esta organização já possui esta integração configurada."
-      );
+      throw new ValidationError("Esta organização já possui esta integração configurada.");
     }
 
     const hints: Record<string, string> = {};
@@ -79,17 +83,17 @@ export class CreateOrganizationIntegrationUseCase {
       // 1. Garantir que a pasta existe (incluindo subpastas)
       await secretManagementService.createFolder(infisicalPath);
 
-      // 2. Gravar os segredos
-      for (const field of fieldsSchema) {
-        const value = secretValues[field.key];
+      // 2. Gravar os segredos (tags não vão para o Infisical)
+      for (const field of infisicalFields) {
+        const fieldKey = String(field.key);
+        const value = secretValues[fieldKey];
 
         if (value) {
-          // Só grava se houver valor enviado
-          await secretManagementService.upsertSecret(field.key, value, {
+          await secretManagementService.upsertSecret(fieldKey, value, {
             path: infisicalPath,
           });
 
-          hints[field.key] = value.length > 4 ? `***${value.slice(-4)}` : "***";
+          hints[fieldKey] = value.length > 4 ? `***${value.slice(-4)}` : "***";
         }
       }
     }
@@ -105,7 +109,9 @@ export class CreateOrganizationIntegrationUseCase {
         infisical: {
           path: shouldSaveToInfisical ? infisicalPath : null,
           env: process.env.NODE_ENV === "production" ? "prod" : "dev",
-          keys: shouldSaveToInfisical ? fieldsSchema.map((f) => f.key) : [],
+          keys: shouldSaveToInfisical
+            ? getInfisicalIntegrationFieldKeys(fieldsSchema)
+            : [],
         },
         metadata: {
           addedAt: new Date().toISOString(),

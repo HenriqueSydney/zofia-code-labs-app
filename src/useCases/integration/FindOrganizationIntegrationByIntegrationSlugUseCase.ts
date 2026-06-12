@@ -20,8 +20,8 @@ export class FindOrganizationIntegrationByIntegrationSlugUseCase {
     await checkUserPermissionForAsset(
       "organizationIntegration",
       userId,
-      integrationInfo,
-      "READ"
+      integrationInfo ?? { organizationId },
+      "READ",
     );
 
     return integrationInfo;

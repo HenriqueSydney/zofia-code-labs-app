@@ -6,7 +6,7 @@ import { IClientsRepository } from "@/repositories/IClientsRepository";
 import { IUserRepository } from "@/repositories/IUsersRepository";
 import { randomUUID } from "crypto";
 import { hash } from "bcryptjs";
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError, ValidationError } from "@/errors";
 
 interface ResetClientEmployeePasswordUseCaseRequest {
   userId: string;
@@ -28,7 +28,7 @@ export class ResetClientEmployeePasswordUseCase {
   }: ResetClientEmployeePasswordUseCaseRequest): Promise<void> {
     const client = await this.clientsRepository.findBySlug(clientSlug);
 
-    if (!client) throw new Error("Cliente não encontrado.");
+    if (!client) throw new ResourceNotFoundError("Cliente não encontrado.");
 
     await checkUserPermissionForAsset(
       "clientEmployee",
@@ -41,11 +41,11 @@ export class ResetClientEmployeePasswordUseCase {
       await this.clientEmployeesRepository.findById(employeeId);
 
     if (!employeeExists) {
-      throw new AppError("Usuário não associado à empresa");
+      throw new ValidationError("Usuário não associado à empresa");
     }
 
     if (employeeExists.clientId !== client.id) {
-      throw new AppError("Usuário não associado à empresa");
+      throw new ValidationError("Usuário não associado à empresa");
     }
 
     const passwordHash = await hash(randomUUID(), 6);

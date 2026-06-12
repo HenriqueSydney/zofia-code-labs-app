@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError, ValidationError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IContractRepository } from "@/repositories/IContractRepository";
 import { IContractTemplateRepository } from "@/repositories/IContractTemplateRepository";
@@ -21,11 +21,11 @@ export class UpdateContractTemplateUseCase {
     const contract = await this.contractRepository.findById(data.contractId);
 
     if (!contract) {
-      throw new AppError("Contrato não localizada");
+      throw new ResourceNotFoundError("Contrato não localizada");
     }
 
     if (!contract.contractTemplate) {
-      throw new AppError("Contrato não foi gerada pelo sistema");
+      throw new ValidationError("Contrato não foi gerada pelo sistema");
     }
 
     await checkUserPermissionForAsset(

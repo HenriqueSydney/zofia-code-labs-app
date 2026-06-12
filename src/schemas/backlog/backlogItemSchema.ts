@@ -1,3 +1,4 @@
+import { v } from "@/schemas/validationMessages";
 import {
   backlogPriorityArray,
   backlogStatusArray,
@@ -8,45 +9,39 @@ export const BacklogStatusEnum = z.enum(backlogStatusArray);
 
 export const BacklogPriorityEnum = z.enum(backlogPriorityArray);
 
-// 2. Schema de Validação
 export const backlogItemSchema = z.object({
-  // ID é opcional pois na criação não existe, mas na edição é necessário
   id: z.cuid().optional(),
 
   title: z
-    .string({ error: "O título é obrigatório." })
-    .min(3, "O título deve ter pelo menos 3 caracteres.")
-    .max(255, "O título deve ter no máximo 255 caracteres."),
+    .string({ error: v.titleRequired })
+    .min(3, v.titleMinLength)
+    .max(255, v.titleMaxLength),
 
   description: z
-    .string({ error: "A descrição é obrigatória." })
-    .min(1, "A descrição não pode ser vazia."),
+    .string({ error: v.descriptionRequired })
+    .min(1, v.descriptionMinLength),
 
   status: BacklogStatusEnum.default("TODO"),
 
-  projectId: z.cuid("ID do projeto inválido."),
+  projectId: z.cuid(v.invalidProjectId),
 
-  sprintId: z.cuid("ID da sprint inválido.").optional().nullable(),
+  sprintId: z.cuid(v.invalidSprintId).optional().nullable(),
 
   points: z
-    .number({ error: "Os pontos devem ser um número." })
-    .int("Os pontos devem ser um número inteiro.")
-    .min(0, "Os pontos não podem ser negativos.")
+    .number({ error: v.pointsMustBeNumber })
+    .int(v.pointsMustBeInteger)
+    .min(0, v.pointsNonNegative)
     .default(0),
 
   priority: BacklogPriorityEnum.default("LOW"),
 
-  assigneeId: z
-    .cuid("ID do responsável inválido.") // Assume que o ID do User é CUID/UUID
-    .optional()
-    .nullable(),
+  assigneeId: z.cuid(v.responsibleIdInvalid).optional().nullable(),
 
   externalLink: z
-    .url("Deve ser uma URL válida (ex: https://jira...).")
+    .url(v.jiraUrlInvalid)
     .optional()
     .nullable()
-    .or(z.literal("")), // Permite string vazia para limpar o campo
+    .or(z.literal("")),
 });
 
-// 3. Exportando o Type inferido
 export type BacklogItemSchema = z.infer<typeof backlogItemSchema>;

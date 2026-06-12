@@ -26,7 +26,7 @@ import { updateProjectAction } from "@/actions/projects/updateProject";
 import { createProjectAction } from "@/actions/projects/createProject";
 import { handleActionError } from "@/utils/handleActionError";
 import { Badge } from "@/components/ui/badge"; // Import do Badge para as tags
-import { priorityOptions } from "@/mappers/projectPriorityMapper";
+import { getPriorityOptions } from "@/mappers/projectPriorityMapper";
 import { toast } from "sonner";
 import { date } from "@/lib/dayjs";
 import { FormInput } from "@/components/form/FormInput";
@@ -35,6 +35,7 @@ import { FormCurrencyInput } from "@/components/form/FormCurrencyInput";
 import { FormTextarea } from "@/components/form/FormTextarea";
 import { FormDatePicker } from "@/components/form/FormDatePicker";
 import { FormMultiFileUpload } from "@/components/form/FormMultiFileUpload";
+import { useTranslations } from "next-intl";
 
 interface ProjectFormProps {
   projectId?: string;
@@ -48,6 +49,13 @@ export function ProjectForm({
   clients,
   initialData,
 }: ProjectFormProps) {
+  const t = useTranslations("projects.form");
+  const tCommon = useTranslations("common");
+  const tCommonErrors = useTranslations("common.errors");
+  const tPriority = useTranslations("projects.priority");
+  const priorityOptions = getPriorityOptions(
+    (key) => tPriority(key as never),
+  );
   const [tagInput, setTagInput] = useState("");
 
   const form = useForm({
@@ -126,7 +134,10 @@ export function ProjectForm({
         formData.append("id", projectId);
         const updateResult = await updateProjectAction(formData);
         if (updateResult?.error) {
-          handleActionError(updateResult.error, setError);
+          handleActionError(updateResult.error, setError, {
+            checkFormFields: tCommonErrors("checkFormFields"),
+            processRequest: tCommonErrors("processRequest"),
+          });
           return;
         }
         return;
@@ -134,14 +145,17 @@ export function ProjectForm({
 
       const result = await createProjectAction(formData);
       if (result?.error) {
-        handleActionError(result.error, setError);
+        handleActionError(result.error, setError, {
+          checkFormFields: tCommonErrors("checkFormFields"),
+          processRequest: tCommonErrors("processRequest"),
+        });
         return;
       }
     } catch (error: any) {
       if (error.message === "NEXT_REDIRECT") {
         return;
       }
-      toast.error("Erro inesperado ao criar proposta.");
+      toast.error(t("toastUnexpectedError"));
     }
   }
 
@@ -151,18 +165,18 @@ export function ProjectForm({
         {/* --- SEÇÃO 1: Identificação --- */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormInput
-            label="Nome do Projeto *"
+            label={t("name")}
             control={form.control}
             name="name"
-            placeholder="Ex: Migração Cloud AWS"
+            placeholder={t("namePlaceholder")}
           />
 
           <FormSelect
-            label="Cliente *"
+            label={t("client")}
             control={form.control}
             disabled={!!initialData?.clientId}
             name="clientId"
-            placeholder="Selecione o cliente"
+            placeholder={t("selectClient")}
             options={clients.map((client) => ({
               value: client.id,
               label: client.tradeName
@@ -175,10 +189,10 @@ export function ProjectForm({
         {/* --- SEÇÃO 2: Planejamento e Status --- */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <FormSelect
-            label="Prioridade"
+            label={t("priority")}
             control={form.control}
             name="priority"
-            placeholder="Prioridade"
+            placeholder={t("priority")}
             options={priorityOptions.map((prio) => ({
               value: prio.value,
               label: prio.label,
@@ -186,7 +200,7 @@ export function ProjectForm({
           />
 
           <FormCurrencyInput
-            label="Orçamento Total (R$)"
+            label={t("totalBudget")}
             placeholder="R$ 0.00"
             control={form.control}
             name="totalBudget"
@@ -195,16 +209,16 @@ export function ProjectForm({
           <FormDatePicker
             control={form.control}
             name="estimatedStartDate"
-            label="Previsão de Início"
-            placeholder="Selecione a data"
+            label={t("startDate")}
+            placeholder={t("selectDate")}
             minDate={date().toDate()}
           />
 
           <FormDatePicker
             control={form.control}
             name="endDate"
-            label="Prazo Final (Deadline)"
-            placeholder="Selecione a data"
+            label={t("endDate")}
+            placeholder={t("selectDate")}
             minDate={date().toDate()}
           />
 
@@ -218,13 +232,13 @@ export function ProjectForm({
             name="tags"
             render={({ field }) => (
               <FormItem className="flex flex-col gap-1">
-                <FormLabel>Tags</FormLabel>
+                <FormLabel>{tCommon("tags")}</FormLabel>
 
                 {/* Input e Botão */}
                 <div className="flex gap-2">
                   <FormControl>
                     <Input
-                      placeholder="Tecnologia, Squad..."
+                      placeholder={t("tagsPlaceholder")}
                       value={tagInput}
                       onChange={(e) => setTagInput(e.target.value)}
                       onKeyDown={handleKeyDownTag}
@@ -264,20 +278,20 @@ export function ProjectForm({
 
         {/* --- SEÇÃO 4: Detalhes --- */}
         <FormTextarea
-          label="Descrição e Escopo Inicial *"
+          label={t("description")}
           control={form.control}
           name="description"
           className="resize-y custom-scrollbar"
           rows={6}
-          placeholder="Descreva os objetivos principais e requisitos do projeto..."
+          placeholder={t("descriptionPlaceholder")}
         />
 
         {/* --- SEÇÃO 5: Documentos --- */}
         <FormMultiFileUpload
           control={form.control}
           name="documents"
-          label="Documentos de Referência"
-          description="Anexe especificações ou contratos."
+          label={t("documents")}
+          description={t("documentsDescription")}
           maxFiles={5}
           maxSize={10 * 1024 * 1024}
           accept={{
@@ -290,7 +304,7 @@ export function ProjectForm({
 
         <div className="flex justify-end pt-4 border-t">
           <Button type="submit" size="lg">
-            {projectId ? "Salvar Alterações" : "Criar Projeto"}
+            {projectId ? tCommon("actions.saveChanges") : t("create")}
           </Button>
         </div>
       </form>

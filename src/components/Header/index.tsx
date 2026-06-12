@@ -1,17 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { ThemeToggle } from "./ThemeToogle";
-import { InternalizationSelect } from "./InternalizationSelect";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/utils/twMerge";
-import { Menu, X } from "lucide-react";
-import { Button } from "../ui/button";
 
 const Header = () => {
-
   const [isScrolled, setIsScrolled] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -39,27 +34,11 @@ const Header = () => {
           <Image
             src="/zofia-logo.webp"
             alt="Sophia Code Labs Logo"
-            width={150}
-            height={40} // Ajuste a altura para manter proporção se necessário
-            className="object-contain"
+            width={677}
+            height={369}
+            className="h-14 w-auto"
           />
         </Link>
-
-        <div className="flex items-center gap-2">
-          <Button
-            className="md:hidden text-foreground"
-            variant="outline"
-            size="icon"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
-            aria-expanded={isMobileMenuOpen}
-            aria-controls="mobile-menu"
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </Button>
-          <ThemeToggle />
-          <InternalizationSelect />
-        </div>
       </nav>
     </header>
   );

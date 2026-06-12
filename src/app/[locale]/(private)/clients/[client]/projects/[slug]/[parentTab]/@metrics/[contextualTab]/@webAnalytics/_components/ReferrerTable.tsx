@@ -11,10 +11,11 @@ import {
 import { calculateProportion } from "@/utils/calculateProportion";
 import { Progress } from "@/components/ui/progress";
 import { formatDuration } from "@/utils/formatDuration";
+import { useTranslations } from "next-intl";
 
 type ReferrerData = {
-  name: string; // O domínio (ex: google.com, t.co, facebook.com)
-  value: number; // Visitantes únicos
+  name: string;
+  value: number;
   pageviews: number;
   avgTime: number;
   bounces: number;
@@ -26,13 +27,15 @@ interface IReferrerTable {
 }
 
 export function ReferrerTable({ referrers, totalPageViews }: IReferrerTable) {
+  const t = useTranslations("projects.metrics.webAnalytics.tables.referrer");
+  const directLabel = t("direct");
+
   const data = referrers.map((ref) => {
-    // Correção da taxa de rejeição: calculada sobre pageviews para não exceder 100%
     const bounceRate =
       ref.pageviews > 0 ? calculateProportion(ref.pageviews, ref.bounces) : 0;
 
     return {
-      domain: ref.name === "" ? "Direto / Nenhum" : ref.name,
+      domain: ref.name === "" ? directLabel : ref.name,
       visitors: ref.value,
       pageViews: ref.pageviews,
       avgTime: ref.avgTime,
@@ -45,12 +48,12 @@ export function ReferrerTable({ referrers, totalPageViews }: IReferrerTable) {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[300px]">Fonte de Origem</TableHead>
-          <TableHead className="text-right">Visualizações</TableHead>
-          <TableHead className="w-[180px]">Participação</TableHead>
-          <TableHead className="text-right">Visitantes</TableHead>
-          <TableHead className="text-right">Permanência</TableHead>
-          <TableHead className="text-right">Rejeição</TableHead>
+          <TableHead className="w-[300px]">{t("source")}</TableHead>
+          <TableHead className="text-right">{t("views")}</TableHead>
+          <TableHead className="w-[180px]">{t("share")}</TableHead>
+          <TableHead className="text-right">{t("visitors")}</TableHead>
+          <TableHead className="text-right">{t("duration")}</TableHead>
+          <TableHead className="text-right">{t("bounce")}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -58,8 +61,7 @@ export function ReferrerTable({ referrers, totalPageViews }: IReferrerTable) {
           <TableRow key={item.domain}>
             <TableCell className="font-medium">
               <div className="flex items-center gap-2">
-                {/* Ícone rápido para identificar a fonte (Google, LinkedIn, etc) */}
-                {item.domain !== "Direto / Nenhum" && (
+                {item.domain !== directLabel && (
                   <img
                     src={`https://www.google.com/s2/favicons?domain=${item.domain}&sz=32`}
                     alt=""

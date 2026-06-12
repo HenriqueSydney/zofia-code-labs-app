@@ -2,7 +2,7 @@ import { TabsContent } from "@/components/ui/tabs";
 import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { getParams } from "@/utils/getParams";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { BacklogFilter } from "./components/BacklogFilter";
 import { StatsAndViewToggle } from "./components/StatsAndViewToggle";
 import { BacklogKanban } from "./components/BacklogKanban";
@@ -16,6 +16,9 @@ import { EmptyState } from "@/components/EmptyState";
 import { ListTodo } from "lucide-react";
 import { BacklogCreateForm } from "./components/BacklogCreateForm";
 import { IncludeServiceDefaultBacklog } from "./components/IncludeServiceDefaultBacklog";
+import { getTranslations } from "next-intl/server";
+import { hasPermission } from "@/utils/hasPermission";
+import { PERMISSIONS } from "@/constants/permissions";
 
 interface IBacklog {
   params: Promise<{ slug: string }>;
@@ -28,6 +31,9 @@ interface IBacklog {
 }
 
 export default async function Backlog({ params, searchParams }: IBacklog) {
+  const t = await getTranslations("projects.backlog");
+  const tErrors = await getTranslations("projects.errors");
+  const tCommon = await getTranslations("common.errors");
   const { slug } = await getParams<{
     slug: string;
   }>(params, ["slug"]);
@@ -45,7 +51,7 @@ export default async function Backlog({ params, searchParams }: IBacklog) {
   }>(searchParams, ["viewMode", "priority", "query", "status"]);
   const session = await auth();
 
-  if (!session) throw new AppError("Usuário não autenticado");
+  if (!session) throw new ValidationError(tCommon("unauthenticated"));
 
   const [projectError, projectSuccess] = await operationWrapper<{
     project: ProjectWithDetails;
@@ -60,9 +66,27 @@ export default async function Backlog({ params, searchParams }: IBacklog) {
     },
   );
 
-  if (projectError) throw new AppError("Falha ao tentar localizar o projeto");
+  if (projectError) throw new ValidationError(tErrors("projectNotFound"));
 
   const project = projectSuccess.project;
+
+  const canManageBacklog = hasPermission(
+    session.user,
+    PERMISSIONS.BACKLOG.MANAGE,
+  );
+  const canReadBacklog = hasPermission(session.user, PERMISSIONS.BACKLOG.READ);
+
+  if (!canReadBacklog) {
+    return (
+      <TabsContent value="backlog" className="space-y-6 mt-6">
+        <EmptyState
+          title={tErrors("noPermissionTitle")}
+          icon={ListTodo}
+          description={tErrors("noPermissionBacklog")}
+        />
+      </TabsContent>
+    );
+  }
 
   const [error, success] = await operationWrapper<{
     data: ListBacklogItemsResponse;
@@ -83,26 +107,33 @@ export default async function Backlog({ params, searchParams }: IBacklog) {
   );
 
   if (error) {
-    throw new AppError("Lista de backlog não localizada");
+    throw new ValidationError(tErrors("backlogNotFound"));
   }
 
   const currentViewMode = rawViewMode === "kanban" ? "kanban" : "list";
 
   const backlogTotalOfRegisters = success.data.items.length;
+
   return (
     <TabsContent value="backlog" className="space-y-6 mt-6">
-      <BacklogFilter projectId={project.id} />
+      <BacklogFilter
+        projectId={project.id}
+        canManageBacklog={canManageBacklog}
+      />
 
       <div className="flex gap-2">
-        <IncludeServiceDefaultBacklog
-          buttonLabel={false}
-          projectId={project.id}
-          availableServices={project.projectServices.map((service) => ({
-            id: service.serviceTypeId,
-            name: service.serviceType.name,
-          }))}
-        />
+        {canManageBacklog && (
+          <IncludeServiceDefaultBacklog
+            buttonLabel={false}
+            projectId={project.id}
+            availableServices={project.projectServices.map((service) => ({
+              id: service.serviceTypeId,
+              name: service.serviceType.name,
+            }))}
+          />
+        )}
         <StatsAndViewToggle
+          canManageBacklog={canManageBacklog}
           backlogLength={
             success.data.items.filter(
               (item) => item.status !== "CANCELED" && item.status !== "DONE",
@@ -115,29 +146,37 @@ export default async function Backlog({ params, searchParams }: IBacklog) {
         <EmptyState
           title="Backlog do Produto"
           icon={ListTodo}
-          description="Nenhum item de backlog cadastrado até o momento. Inicie a gestão do backlog com o cadastramento de ao menos 1 item."
+          description={t("emptyDescription")}
           action={
-            <div className="flex gap-2 items-center">
-              <BacklogCreateForm projectId={project.id} />
-              <IncludeServiceDefaultBacklog
-                projectId={project.id}
-                availableServices={project.projectServices.map((service) => ({
-                  id: service.serviceTypeId,
-                  name: service.serviceType.name,
-                }))}
-              />
-            </div>
+            canManageBacklog ? (
+              <div className="flex gap-2 items-center">
+                <BacklogCreateForm projectId={project.id} />
+                <IncludeServiceDefaultBacklog
+                  projectId={project.id}
+                  availableServices={project.projectServices.map((service) => ({
+                    id: service.serviceTypeId,
+                    name: service.serviceType.name,
+                  }))}
+                />
+              </div>
+            ) : undefined
           }
         />
       )}
 
       <div key={currentViewMode} className="w-full">
         {currentViewMode === "kanban" && backlogTotalOfRegisters > 0 && (
-          <BacklogKanban backlog={success.data.items} />
+          <BacklogKanban
+            backlog={success.data.items}
+            canManageBacklog={canManageBacklog}
+          />
         )}
 
         {currentViewMode === "list" && backlogTotalOfRegisters > 0 && (
-          <BacklogList backlog={success.data.items} />
+          <BacklogList
+            backlog={success.data.items}
+            canManageBacklog={canManageBacklog}
+          />
         )}
       </div>
     </TabsContent>

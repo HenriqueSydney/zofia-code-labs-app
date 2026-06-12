@@ -1,6 +1,6 @@
 # Requisitos não funcionais
 
-Requisitos não funcionais (RNF) descrevem **qualidades** do sistema: segurança, desempenho, disponibilidade, manutenibilidade, etc. A lista abaixo está alinhada à stack do repositório (Next.js, PostgreSQL, Prisma, NextAuth, deploy típico serverless/Vercel).
+Requisitos não funcionais (RNF) descrevem **qualidades** do sistema: segurança, desempenho, disponibilidade, manutenibilidade, etc. A lista abaixo está alinhada à stack atual (Next.js 16, React 19, PostgreSQL, Prisma 7, NextAuth v5, deploy típico Vercel/standalone).
 
 **Convenção**: **RNF-XXX**.
 
@@ -11,7 +11,7 @@ Requisitos não funcionais (RNF) descrevem **qualidades** do sistema: segurança
 | ID | Prioridade | Requisito |
 |----|------------|-----------|
 | RNF-SEC-01 | M | **Isolamento multi-tenant**: dados de uma organização não devem ser acessíveis por usuários de outra, exceto mecanismos explícitos de suporte (se existirem). |
-| RNF-SEC-02 | M | **Autorização no servidor**: decisões de permissão não podem depender apenas da UI; validação em actions/use cases ou camada equivalente. |
+| RNF-SEC-02 | M | **Autorização no servidor**: decisões de permissão não podem depender apenas da UI; validação em use cases (`checkUserPermissionForAsset`) e no **proxy de rotas** (`src/proxy.ts`). |
 | RNF-SEC-03 | M | **Segredos** (tokens de integração, chaves de API) não devem ser expostos ao cliente; uso de cofre (ex.: Infisical) ou variáveis de ambiente server-side. |
 | RNF-SEC-04 | M | **Senhas** armazenadas com hashing adequado (`bcryptjs` no modelo atual). |
 | RNF-SEC-05 | S | **Sessões** com expiração e invalidação coerentes com NextAuth. |
@@ -58,7 +58,8 @@ Requisitos não funcionais (RNF) descrevem **qualidades** do sistema: segurança
 | RNF-MNT-01 | M | Separação em **camadas** reconhecíveis: repositórios, casos de uso, actions, componentes de UI. |
 | RNF-MNT-02 | M | Validação de entrada com **Zod** (ou equivalente) nas fronteiras do sistema. |
 | RNF-MNT-03 | S | **TypeScript** estrito para reduzir regressões em refactors. |
-| RNF-MNT-04 | S | Schema único de verdade no **Prisma**; migrações versionadas em `prisma/migrations`. |
+| RNF-MNT-04 | S | Schema único de verdade no **Prisma 7**; client gerado em `src/generated/prisma`; migrações em `prisma/migrations`. |
+| RNF-MNT-05 | S | Mensagens de erro de domínio centralizadas (`src/errors`) com resolução i18n nas Server Actions. |
 
 ---
 
@@ -76,8 +77,8 @@ Requisitos não funcionais (RNF) descrevem **qualidades** do sistema: segurança
 
 | ID | Prioridade | Requisito |
 |----|------------|-----------|
-| RNF-I18N-01 | S | Textos de interface externalizados; evitar strings hardcoded em português único se o produto pretende outros locales. |
-| RNF-I18N-02 | C | Formatação de **datas, números e moeda** coerente com o locale ativo (`next-intl`, `date-fns`/`dayjs`). |
+| RNF-I18N-01 | M | Textos de interface em `messages/pt.json` e `messages/en.json`; locales `pt` (padrão) e `en` em `src/i18n/routing.ts`. |
+| RNF-I18N-02 | S | Formatação de **datas, números e moeda** coerente com o locale ativo (`next-intl`, `dayjs` em `lib/dayjs.ts`). |
 
 ---
 

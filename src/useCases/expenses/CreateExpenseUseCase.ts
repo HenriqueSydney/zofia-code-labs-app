@@ -2,7 +2,7 @@ import { Prisma } from "@/generated/prisma/client";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IExpenseRepository } from "@/repositories/IExpenseRepository";
 import { IProjectsRepository } from "@/repositories/IProjectsRepository";
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError } from "@/errors";
 import { date } from "@/lib/dayjs";
 
 interface CreateExpenseUseCaseRequest
@@ -27,7 +27,7 @@ export class CreateExpenseUseCase {
     const project = await this.projectsRepository.findBySlug(projectSlug);
 
     if (!project) {
-      throw new AppError("Projeto não encontrado.");
+      throw new ResourceNotFoundError("Projeto não encontrado.");
     }
 
     // 2. Verifica permissão no projeto

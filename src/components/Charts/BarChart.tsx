@@ -17,6 +17,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CustomTooltip } from "@/components/Charts/CustomTooltip";
+import { ChartContainer } from "./ChartContainer";
 import { ChartEmptyState } from "./ChartEmptyState";
 
 export interface ChartCategory {
@@ -54,13 +55,12 @@ export function BarChart({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div
-          style={{ height: `${height}px`, width: "100%" }}
-          className="flex items-center justify-center"
-        >
+        <div className="flex min-h-0 min-w-0 items-center justify-center">
           {hasData ? (
-            <ResponsiveContainer width="100%" height="100%">
-              <RechartsBarChart
+            <ChartContainer height={height}>
+              {({ width, height: chartHeight }) => (
+                <ResponsiveContainer width={width} height={chartHeight}>
+                  <RechartsBarChart
                 data={data}
                 margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
               >
@@ -96,10 +96,11 @@ export function BarChart({
                     barSize={categories.length > 1 ? 20 : 40} // Ajusta largura se for único ou múltiplo
                   />
                 ))}
-              </RechartsBarChart>
-            </ResponsiveContainer>
+                  </RechartsBarChart>
+                </ResponsiveContainer>
+              )}
+            </ChartContainer>
           ) : (
-            /* Componente de fallback unificado */
             <ChartEmptyState />
           )}
         </div>

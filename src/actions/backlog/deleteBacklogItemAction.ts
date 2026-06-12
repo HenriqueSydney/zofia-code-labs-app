@@ -1,13 +1,15 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
+import { v } from "@/schemas/validationMessages";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { makeDeleteBacklogItemUseCase } from "@/useCases/backlog/factories/makeDeleteBacklogItemUseCase";
 
 // Schema simples apenas para o ID, caso não queira criar um arquivo separado
 const deleteBacklogSchema = z.object({
-  id: z.cuid("ID do backlog inválido"),
+  id: z.cuid(v.invalidBacklogId),
   projectSlug: z.string(),
 });
 
@@ -19,7 +21,7 @@ export async function deleteBacklogAction(data: DeleteBacklogType) {
   if (!session?.user?.organizationId) {
     return {
       success: false,
-      message: "Sessão expirada.",
+      message: await serverErrorMessage("sessionExpired"),
     };
   }
 
@@ -29,7 +31,7 @@ export async function deleteBacklogAction(data: DeleteBacklogType) {
   if (!parsed.success) {
     return {
       success: false,
-      message: "ID inválido.",
+      message: await serverErrorMessage("invalidId"),
     };
   }
 
@@ -59,7 +61,7 @@ export async function deleteBacklogAction(data: DeleteBacklogType) {
 
     return {
       success: false,
-      message: "Erro interno ao excluir backlog.",
+      message: await serverErrorMessage("backlogDeleteFailed"),
     };
   }
 }

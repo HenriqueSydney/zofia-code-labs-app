@@ -1,8 +1,9 @@
 "use client";
 
 import { Dispatch, ReactNode, SetStateAction } from "react";
+import { useTranslations } from "next-intl";
 import { Dialog, DialogClose, DialogContent, DialogTitle } from "./ui/dialog";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/twMerge";
 
 interface IModal {
   children: ReactNode;
@@ -19,6 +20,8 @@ export function Modal({
   isModalOpen,
   className,
 }: IModal) {
+  const t = useTranslations("common.actions");
+
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
       <DialogContent
@@ -35,7 +38,7 @@ export function Modal({
           className="absolute right-4 cursor-pointer top-4 z-50 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
         >
           <div>
-            <span className="sr-only">Fechar</span>
+            <span className="sr-only">{t("close")}</span>
           </div>
         </DialogClose>
         <div className="mt-10">{children}</div>

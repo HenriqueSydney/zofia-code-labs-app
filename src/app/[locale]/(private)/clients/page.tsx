@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Mail, Phone } from "lucide-react"; // Ícones atualizados
+import { Building2, Mail, Phone, User } from "lucide-react"; // Ícones atualizados
 
 import { SectionHeading } from "@/components/SectionHeading";
 import { CreateClientForm } from "./_components/CreateClientForm";
@@ -14,6 +14,10 @@ import { makeS3StorageService } from "@/services/s3Client/makeS3StorageService";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "@/i18n/navigation";
 import { mask } from "@/utils/mask";
+import { getTranslations } from "next-intl/server";
+import { auth } from "@/auth";
+import { PERMISSIONS } from "@/constants/permissions";
+import { hasPermission } from "@/utils/hasPermission";
 
 interface IParams {
   searchParams?: Promise<{ [key: string]: string | undefined }>;
@@ -22,16 +26,20 @@ interface IParams {
 const Clients = async ({ searchParams }: IParams) => {
   const { query } = await getParams(searchParams, ["query"]);
 
-  const [clientsError, clientsSuccess] = await operationWrapper(
-    "action",
-    "fetchClientsAction",
-    () => {
-      return fetchClientsAction(query);
-    },
-    {
-      cache: "no-cache",
-    },
-  );
+  const [[clientsError, clientsSuccess], t, session] = await Promise.all([
+    operationWrapper(
+      "action",
+      "fetchClientsAction",
+      () => {
+        return fetchClientsAction(query);
+      },
+      {
+        cache: "no-cache",
+      },
+    ),
+    getTranslations("clients.list"),
+    auth(),
+  ]);
 
   const rawClients = clientsError ? [] : clientsSuccess.clients;
 
@@ -53,19 +61,19 @@ const Clients = async ({ searchParams }: IParams) => {
       return { ...client, logoUrl: null };
     }),
   );
+  const canCreate = hasPermission(session?.user, PERMISSIONS.CLIENT.CREATE);
+  const canUpdate = hasPermission(session?.user, PERMISSIONS.CLIENT.UPDATE);
+  const canDelete = hasPermission(session?.user, PERMISSIONS.CLIENT.DELETE);
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         {/* Título Ajustado para o contexto de Clientes */}
-        <SectionHeading
-          title="Carteira de Clientes"
-          description="Gerencie as empresas e contatos cadastrados"
-        />
-        <CreateClientForm />
+        <SectionHeading title={t("title")} description={t("description")} />
+        {canCreate && <CreateClientForm />}
       </div>
 
-      <QueryFilter placeholder="Buscar cliente..." />
+      <QueryFilter placeholder={t("searchPlaceholder")} />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {clientsWithLogos.map((client) => {
           return (
@@ -83,7 +91,7 @@ const Clients = async ({ searchParams }: IParams) => {
                         <Avatar className="h-16 w-24 rounded-lg border">
                           <AvatarImage
                             src={client.logoUrl ?? undefined}
-                            alt={`Logo da empresa ${client.companyName}`}
+                            alt={t("logoAlt", { name: client.companyName })}
                             className="object-fit p-1 rounded-md"
                           />
                           <AvatarFallback className="bg-primary/5 flex flex-col items-center justify-center gap-1">
@@ -119,11 +127,17 @@ const Clients = async ({ searchParams }: IParams) => {
                         variant="destructive"
                         className="mt-1 text-xs font-medium"
                       >
-                        Inativo
+                        {t("inactive")}
                       </Badge>
                     )}
                   </Link>
-                  {!client.deletedAt && <ClientRemoveOrEdit client={client} />}
+                  {!client.deletedAt && (
+                    <ClientRemoveOrEdit
+                      client={client}
+                      canUpdate={canUpdate}
+                      canDelete={canDelete}
+                    />
+                  )}
                 </div>
               </CardHeader>
 
@@ -133,28 +147,40 @@ const Clients = async ({ searchParams }: IParams) => {
                   client.tradeName !== client.companyName && (
                     <div className="text-sm font-medium text-foreground/80">
                       <span className="text-muted-foreground font-normal">
-                        Nome da empresa:
+                        {t("companyNameLabel")}
                       </span>{" "}
                       {client.companyName}
                     </div>
                   )}
 
                 <div className="mt-auto space-y-2 pt-2 border-t">
+                  {client.responsibleName ? (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground truncate">
+                      <User className="h-4 w-4 shrink-0" />
+                      <span className="truncate" title={client.responsibleName}>
+                        {client.responsibleName}
+                      </span>
+                    </div>
+                  ) : (
+                    <Badge variant="outline" className="text-xs">
+                      {t("noResponsible")}
+                    </Badge>
+                  )}
                   {/* E-mail */}
                   <div className="flex items-center gap-2 text-sm text-muted-foreground truncate">
                     <Mail className="h-4 w-4 shrink-0" />
                     <span
                       className="truncate"
-                      title={client.email || "Sem e-mail"}
+                      title={client.email || t("noEmail")}
                     >
-                      {client.email || "Sem e-mail cadastrado"}
+                      {client.email || t("noEmailRegistered")}
                     </span>
                   </div>
 
                   {/* Telefone */}
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Phone className="h-4 w-4 shrink-0" />
-                    <span>{client.phone || "Sem telefone cadastrado"}</span>
+                    <span>{client.phone || t("noPhoneRegistered")}</span>
                   </div>
                 </div>
               </CardContent>
@@ -166,8 +192,8 @@ const Clients = async ({ searchParams }: IParams) => {
       {clientsWithLogos.length === 0 && (
         <EmptyState
           icon={Building2}
-          title="Nenhum cliente localizado"
-          description="Cadastre o primeiro cliente para que possa iniciar a realização de projetos"
+          title={t("emptyTitle")}
+          description={t("emptyDescription")}
         />
       )}
     </div>

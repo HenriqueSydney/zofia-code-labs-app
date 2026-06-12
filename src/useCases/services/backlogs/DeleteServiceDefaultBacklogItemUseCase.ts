@@ -1,3 +1,4 @@
+import { ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IServiceDefaultBacklogItemsRepository } from "@/repositories/IServiceDefaultBacklogItemsRepository";
 
@@ -19,10 +20,10 @@ export class DeleteServiceDefaultBacklogItemUseCase {
       await this.serviceDefaultBacklogItemsRepository.findById(id);
 
     if (!itemExists) {
-      throw new Error("Item do backlog do serviço não encontrado.");
+      throw new ResourceNotFoundError("Item do backlog do serviço não encontrado.");
     }
 
-    await checkUserPermissionForAsset("services", userId, itemExists, "DELETE");
+    await checkUserPermissionForAsset("servicesBacklog", userId, itemExists, "DELETE");
 
     await this.serviceDefaultBacklogItemsRepository.delete(id);
   }

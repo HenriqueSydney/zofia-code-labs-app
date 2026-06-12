@@ -8,6 +8,7 @@ import { TableHeader } from "./TableHeader.tsx";
 import { EmptyState } from "../EmptyState";
 import { Button } from "../ui/button";
 import { MainTable } from "./MainTable";
+import { useTranslations } from "next-intl";
 
 export type CheckBoxPerLineConfig = {
   label: string;
@@ -83,6 +84,7 @@ export function Table({
   emptyState,
   ...rest
 }: ITableProps) {
+  const t = useTranslations("components.table");
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   function handleToggleAllSelection() {
@@ -143,18 +145,16 @@ export function Table({
       }
 
       toast({
-        title: "Sua solicitação de contato foi enviada com sucesso. ",
+        title: t("toast.successTitle"),
         description: formSubmissionResult,
         action: <CheckCircle className="h-7 w-7 text-green-500" />,
       });
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Oppsss. Infelizmente algo deu errado.",
+        title: t("toast.errorTitle"),
         description:
-          error instanceof Error
-            ? error.message
-            : "Não se preocupe, pois já fui comunicado e tentarei localizar o seu contato.",
+          error instanceof Error ? error.message : t("toast.errorDescription"),
         action: <XCircle className="h-7 w-7 text-destructive-foreground" />,
       });
     }
@@ -174,11 +174,11 @@ export function Table({
       {data.length === 0 && (
         <div className="my-5">
           <EmptyState
-            title={emptyState ? emptyState.title : "Nenhum registro localizado"}
+            title={emptyState ? emptyState.title : t("empty.defaultTitle")}
             description={
               emptyState
                 ? emptyState.description
-                : "Isso pode ter ocorrido por causa de algum filtro aplicado ou por não existir nenhum registro cadastrado"
+                : t("empty.defaultDescription")
             }
             icon={emptyState ? emptyState.icon : Clipboard}
           />

@@ -1,3 +1,4 @@
+import { ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IProposalRepository } from "@/repositories/IProposalRepository";
 
@@ -13,7 +14,7 @@ export class GetProposalByIdUseCase {
     const proposal = await this.proposalRepository.findById(id);
 
     if (!proposal) {
-      throw new Error("Proposal not found");
+      throw new ResourceNotFoundError("Proposal not found");
     }
 
     await checkUserPermissionForAsset(

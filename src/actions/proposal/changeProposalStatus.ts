@@ -1,8 +1,8 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
-import { handleErrors } from "@/errors/handleErrors";
+import { ValidationError } from "@/errors";
 import { ProposalStatus } from "@/generated/prisma/enums";
 import { makeChangeProposalStatus } from "@/useCases/proposal/factories/makeChangeProposalStatusUseCase";
 import { revalidatePath } from "next/cache";
@@ -10,19 +10,19 @@ import { revalidatePath } from "next/cache";
 export async function changeProposalStatusAction(
   proposalId: string,
   newStatus: ProposalStatus,
-  communicationChannel?: "whatsapp" | "email",
+  communicationChannel?: "whatsapp" | "email" | "none",
   rejectFormDetails?: any,
 ) {
   const session = await auth();
-  if (!session?.user) return { error: "Não autorizado" };
+  if (!session?.user) return { error: await serverErrorMessage("unauthorized") };
 
   const useCase = makeChangeProposalStatus();
 
   if (
     communicationChannel &&
-    !["whatsapp", "email"].includes(communicationChannel)
+    !["whatsapp", "email", "none"].includes(communicationChannel)
   ) {
-    throw new AppError("Canal de comunicação inválido");
+    throw new ValidationError("invalidCommunicationChannel");
   }
 
   try {
@@ -35,10 +35,10 @@ export async function changeProposalStatusAction(
     });
 
     revalidatePath(`/projects/${updatedProposal.projectId}/project`);
-    return { result: true, message: "Proposta encaminhada para próxima fase" };
+    return { result: true, message: await resolveSuccessMessage("proposalAdvanced") };
   } catch (error) {
     return {
-      error: handleErrors(error),
+      error: await resolveActionErrorMessage(error),
     };
   }
 }

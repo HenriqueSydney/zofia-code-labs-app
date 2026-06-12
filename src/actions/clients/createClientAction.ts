@@ -1,7 +1,7 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { handleErrors } from "@/errors/handleErrors";
 import { clientFormSchema } from "@/schemas/clients/clientFormSchema";
 import { makeCreateClientUseCase } from "@/useCases/clients/factories/makeCreateClientUseCase";
 import { revalidatePath } from "next/cache";
@@ -9,7 +9,7 @@ import { revalidatePath } from "next/cache";
 export async function createClientAction(formData: FormData) {
   const session = await auth();
 
-  if (!session?.user) return { success: false, message: "Não autorizado" };
+  if (!session?.user) return { success: false, message: await serverErrorMessage("unauthorized") };
 
   try {
     const rawData = {
@@ -18,6 +18,9 @@ export async function createClientAction(formData: FormData) {
       cnpj: formData.get("cnpj") as string,
       email: formData.get("email") as string,
       phone: formData.get("phone") as string,
+      responsibleName: (formData.get("responsibleName") as string) || null,
+      responsibleEmail: (formData.get("responsibleEmail") as string) || null,
+      responsiblePhone: (formData.get("responsiblePhone") as string) || null,
     };
 
     // Validação
@@ -40,9 +43,9 @@ export async function createClientAction(formData: FormData) {
     );
 
     revalidatePath("/clients");
-    return { success: true, message: "Cliente cadastrado com sucesso!" };
+    return { success: true, message: await resolveSuccessMessage("clientCreated") };
   } catch (error) {
-    const message = handleErrors(error);
+    const message = await resolveActionErrorMessage(error);
     return { success: false, message: message };
   }
 }

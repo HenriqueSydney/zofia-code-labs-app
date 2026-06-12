@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { ContractWithDetails } from "@/repositories/IContractRepository";
 import { ContractHistoryList } from "./ContractHistoryList";
 import { EmptyState } from "./EmptyState";
@@ -13,6 +14,8 @@ interface IContractList {
 }
 
 export function ContractList({ contracts, totalOfRegister }: IContractList) {
+  const t = useTranslations("contracts.list");
+  const tCommon = useTranslations("common.loadingMore");
 
   const router = useRouter();
   const pathname = usePathname();
@@ -36,7 +39,7 @@ export function ContractList({ contracts, totalOfRegister }: IContractList) {
         // Evita duplicatas caso o useEffect dispare duas vezes em Strict Mode
         const newContracts = contracts.filter(
           (newContract) =>
-            !prev.some((prevContract) => prevContract.id === newContract.id)
+            !prev.some((prevContract) => prevContract.id === newContract.id),
         );
         return [...prev, ...newContracts];
       });
@@ -62,7 +65,7 @@ export function ContractList({ contracts, totalOfRegister }: IContractList) {
           loadMore();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     if (observerTarget.current) {
@@ -82,9 +85,9 @@ export function ContractList({ contracts, totalOfRegister }: IContractList) {
 
       {totalOfRegister === 0 && (
         <EmptyState
-          title="Nenhum contrato localizado"
+          title={t("emptyTitle")}
           icon={FileText}
-          description="Nenhum contrato cadastrado até o momento. Siga o fluxo do projeto para criar um a partir de um template ou anexe o contrato para encaminhamento para assinatura"
+          description={t("emptyDescription")}
         />
       )}
 
@@ -93,7 +96,7 @@ export function ContractList({ contracts, totalOfRegister }: IContractList) {
         <div ref={observerTarget} className="flex justify-center py-8">
           <div className="flex items-center gap-2 text-muted-foreground animate-pulse">
             <Loader2 className="h-5 w-5 animate-spin" />
-            <span>Carregando mais contratos...</span>
+            <span>{tCommon("contracts")}</span>
           </div>
         </div>
       )}

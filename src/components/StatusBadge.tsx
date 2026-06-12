@@ -1,29 +1,38 @@
+"use client";
+
 import { ProjectStatus } from "@/generated/prisma/enums";
+import { useTranslations } from "next-intl";
+
 import { Badge } from "./ui/badge";
-import { allStages } from "@/mappers/projectStageMapper";
-import { cn } from "@/lib/utils";
+import {
+  allStages,
+  translateStageConfig,
+} from "@/mappers/projectStageMapper";
+import { cn } from "@/utils/twMerge";
 
 interface IStatusBadge {
   status: ProjectStatus;
 }
 
 export function StatusBadge({ status }: IStatusBadge) {
-  const stage = allStages.find((stage) => stage.key === status);
+  const tStages = useTranslations("projects.stages");
+  const stage = allStages.find((item) => item.key === status);
+  const translated = stage
+    ? translateStageConfig(stage, (key) => tStages(key as Parameters<typeof tStages>[0]))
+    : null;
 
   return (
     <Badge
-      // whitespace-nowrap impede que o texto "Em Andamento" quebre em duas linhas
-      // w-fit garante que o badge não estique além do necessário
       className={cn(
-        stage?.color,
+        translated?.color,
         "flex items-center justify-center gap-1.5 flex-nowrap whitespace-nowrap w-fit px-2.5",
       )}
     >
-      {stage?.icon && (
-        <stage.icon className="h-3.5 w-3.5 text-white shrink-0" />
+      {translated?.icon && (
+        <translated.icon className="h-3.5 w-3.5 text-white shrink-0" />
       )}
       <span className="leading-none text-[11px] font-semibold">
-        {stage?.shortLabel}
+        {translated?.shortLabel ?? status}
       </span>
     </Badge>
   );

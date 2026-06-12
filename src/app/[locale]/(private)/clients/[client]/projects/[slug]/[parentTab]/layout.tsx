@@ -9,11 +9,12 @@ import { ProjectTabs } from "./_components/ProjectTabs";
 import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { getProjectBySlugAction } from "@/actions/projects/getProjectBySlug";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { GoBackButton } from "@/components/GoBackButton";
 import { date } from "@/lib/dayjs";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { getProjectHealthBadge } from "@/mappers/projectHealthMapper";
+import { getTranslations } from "next-intl/server";
 
 interface LayoutProps {
   overview: React.ReactNode;
@@ -32,6 +33,8 @@ export default async function ProjectLayout({
   metrics,
   params,
 }: LayoutProps) {
+  const tHealth = await getTranslations("projects");
+  const tLayout = await getTranslations("projects.layout");
   const { slug, parentTab } = await getParams<{
     slug: string;
     parentTab: string;
@@ -51,7 +54,7 @@ export default async function ProjectLayout({
   );
 
   if (getProjectError) {
-    throw new AppError("Erro ao tentar localizar os projetos da Organização");
+    throw new ValidationError(tLayout("fetchError"));
   }
 
   const project = getProjectSuccess.project;
@@ -67,14 +70,16 @@ export default async function ProjectLayout({
 
     if (endDate && startDate.isBefore(date())) {
       return {
-        label: "Prazo para entrega (deadline)",
+        label: tLayout("deadlineLabel"),
         mainInformation: endDate,
-        description: `Inicio programado: ${startDate.format("DD/MM/YYYY")}`,
+        description: tLayout("scheduledStart", {
+          date: startDate.format("DD/MM/YYYY"),
+        }),
       };
     }
 
     return {
-      label: project.startDate ? "Início" : "Previsão de Início",
+      label: project.startDate ? tLayout("start") : tLayout("estimatedStart"),
       mainInformation: startDate.format("DD/MM/YYYY"),
       description: endDate,
     };
@@ -104,7 +109,9 @@ export default async function ProjectLayout({
         <GoBackButton withLabel={false} className="mt-2" />
         <SectionHeading
           title={project.name}
-          description={`Cliente: ${project.client.companyName}`}
+          description={tLayout("clientLabel", {
+            name: project.client.companyName,
+          })}
         />
         <div className="flex h-full mt-2">
           <StatusBadge status={getProjectSuccess.project.status} />
@@ -119,7 +126,7 @@ export default async function ProjectLayout({
           Icon={Calendar}
         />
         <StatsCard
-          label="Orçamento"
+          label={tLayout("budget")}
           mainInformation={
             project.totalBudget
               ? formatCurrency(project.totalBudget)
@@ -128,18 +135,25 @@ export default async function ProjectLayout({
           Icon={DollarSign}
           description={
             project.remainingBudget
-              ? `Saldo: ${formatCurrency(project.remainingBudget)}`
-              : `Saldo: ${formatCurrency(project.totalBudget)}`
+              ? tLayout("balance", {
+                  amount: formatCurrency(project.remainingBudget),
+                })
+              : tLayout("balance", {
+                  amount: formatCurrency(project.totalBudget),
+                })
           }
           iconColor={getBudgetIndicator(project)}
         />
-        <StatsCard label="Equipe" mainInformation="2" Icon={Users} />
+        <StatsCard label={tLayout("team")} mainInformation="2" Icon={Users} />
         <StatsCard
-          label="Progresso"
+          label={tLayout("progress")}
           mainInformation="70%"
           Icon={Clock}
           iconColor="bg-accent/10"
-          badge={getProjectHealthBadge(project.health)}
+          badge={getProjectHealthBadge(
+            project.health,
+            (key) => tHealth(key as "health.HEALTHY" | "health.AT_RISK" | "health.DELAYED"),
+          )}
         />
       </div>
       <ProjectTabs>

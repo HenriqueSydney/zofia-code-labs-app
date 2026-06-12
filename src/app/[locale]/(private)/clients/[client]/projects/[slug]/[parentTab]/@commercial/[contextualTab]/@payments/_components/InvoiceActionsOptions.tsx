@@ -37,10 +37,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/twMerge";
 import { Calendar } from "@/components/ui/calendar";
 import { date } from "@/lib/dayjs";
 import { AlertDialogFooter } from "@/components/ui/alert-dialog";
+import { useTranslations } from "next-intl";
 
 interface IInvoiceActionsOptions {
   projectSlug: string;
@@ -51,6 +52,8 @@ export function InvoiceActionsOptions({
   projectSlug,
   invoice,
 }: IInvoiceActionsOptions) {
+  const t = useTranslations("projects.commercial.invoices.actions");
+  const tCommon = useTranslations("common.actions");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isPayModalOpen, setIsPayModalOpen] = useState(false);
   const [paymentDate, setPaymentDate] = useState<Date | undefined>(new Date());
@@ -63,7 +66,7 @@ export function InvoiceActionsOptions({
       return;
     }
 
-    toast.success("Pagamento excluído com sucesso!");
+    toast.success(t("toastDeleted"));
   }
 
   async function handleUpdateStatus(
@@ -80,7 +83,7 @@ export function InvoiceActionsOptions({
       return toast.error(result.message);
     }
 
-    toast.success("Pagamento atualizado!");
+    toast.success(t("toastUpdated"));
     setIsPayModalOpen(false);
   }
 
@@ -89,10 +92,8 @@ export function InvoiceActionsOptions({
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-6xl">
           <DialogHeader>
-            <DialogTitle>{"Editar Tipo de Integração"}</DialogTitle>
-            <DialogDescription>
-              Preencha os dados do tipo de integração
-            </DialogDescription>
+            <DialogTitle>{t("editTitle")}</DialogTitle>
+            <DialogDescription>{t("editDescription")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4"></div>
           <InvoiceForm
@@ -102,18 +103,19 @@ export function InvoiceActionsOptions({
           />
         </DialogContent>
       </Dialog>
-      {/* Modal de Confirmação de Pagamento (Data de Recebimento) */}
       <Dialog open={isPayModalOpen} onOpenChange={setIsPayModalOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Confirmar Recebimento</DialogTitle>
+            <DialogTitle>{t("confirmReceiptTitle")}</DialogTitle>
             <DialogDescription>
-              Selecione a data em que o valor caiu na conta.
+              {t("confirmReceiptDescription")}
             </DialogDescription>
           </DialogHeader>
 
           <div className="py-4 space-y-2">
-            <label className="text-sm font-medium">Data do Recebimento</label>
+            <label className="text-sm font-medium">
+              {t("receiptDateLabel")}
+            </label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -123,7 +125,7 @@ export function InvoiceActionsOptions({
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {paymentDate
                     ? date(paymentDate).format("DD/MM/YYYY")
-                    : "Selecione a data"}
+                    : tCommon("selectDate")}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
@@ -139,14 +141,14 @@ export function InvoiceActionsOptions({
 
           <AlertDialogFooter>
             <Button variant="ghost" onClick={() => setIsPayModalOpen(false)}>
-              Cancelar
+              {tCommon("cancel")}
             </Button>
             <Button
               onClick={() =>
                 handleUpdateStatus(FinancialStatus.PAID, paymentDate)
               }
             >
-              Confirmar Pagamento
+              {t("confirmPayment")}
             </Button>
           </AlertDialogFooter>
         </DialogContent>
@@ -164,17 +166,16 @@ export function InvoiceActionsOptions({
             className="text-green-600 focus:text-green-600 focus:bg-green-50 cursor-pointer"
           >
             <CheckCircle2 className="mr-2 h-4 w-4" />
-            <span>Marcar como Pago</span>
+            <span>{t("markAsPaid")}</span>
           </DropdownMenuItem>
 
-          {/* Ação: Cancelar Fatura */}
           <DropdownMenuItem
             onClick={() => handleUpdateStatus(FinancialStatus.CANCELLED)}
             disabled={invoice.status === FinancialStatus.CANCELLED}
             className="text-accent focus:text-accent cursor-pointer"
           >
             <XCircle className="mr-2 h-4 w-4" />
-            <span>Cancelar Fatura</span>
+            <span>{t("cancelInvoice")}</span>
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
@@ -185,7 +186,7 @@ export function InvoiceActionsOptions({
                 onClick={() => window.open(invoice.nfseLink!, "_blank")}
               >
                 <ExternalLink className="mr-2 h-4 w-4" />
-                Ver Nota Fiscal
+                {t("viewInvoice")}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
             </>
@@ -195,14 +196,14 @@ export function InvoiceActionsOptions({
             onClick={() => setIsDialogOpen(true)}
           >
             <Edit className="mr-2 h-4 w-4" />
-            Editar
+            {tCommon("edit")}
           </DropdownMenuItem>
           <DropdownMenuItem
             className="text-destructive focus:text-destructive cursor-pointer"
             onClick={() => handleDelete(invoice.id)}
           >
             <Trash2 className="mr-2 h-4 w-4" />
-            Excluir
+            {tCommon("delete")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

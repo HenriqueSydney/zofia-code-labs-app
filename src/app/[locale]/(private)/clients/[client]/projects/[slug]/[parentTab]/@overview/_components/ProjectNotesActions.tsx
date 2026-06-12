@@ -3,19 +3,18 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { User } from "@/generated/prisma/client";
 import { date } from "@/lib/dayjs";
 import { ProjectNotesWithDetails } from "@/repositories/IProjectNotesRepository";
-import { Edit, Edit2, Trash2 } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ProjectNotesForm } from "./ProjectNotesForm";
 import { removeProjectNoteAction } from "@/actions/projectNotes/removeProjectNoteAction";
+import { useTranslations } from "next-intl";
 
 interface IProjectNotesActions {
   note: ProjectNotesWithDetails;
@@ -23,6 +22,7 @@ interface IProjectNotesActions {
 }
 
 export function ProjectNotesActions({ note, userId }: IProjectNotesActions) {
+  const t = useTranslations("projects.notes");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isRemoving, setIsRemoving] = useState(false);
 
@@ -35,7 +35,7 @@ export function ProjectNotesActions({ note, userId }: IProjectNotesActions) {
       return;
     }
 
-    toast.success("Observação excluída com sucesso!");
+    toast.success(t("toastDeleted"));
   }
   const canEdit = note.updatedAt
     ? date().diff(date(note.updatedAt), "minute") < 30
@@ -65,7 +65,7 @@ export function ProjectNotesActions({ note, userId }: IProjectNotesActions) {
         </DialogTrigger>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Editar Observação</DialogTitle>
+            <DialogTitle>{t("editTitle")}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4"></div>
           <ProjectNotesForm

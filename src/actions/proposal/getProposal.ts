@@ -1,12 +1,12 @@
 "use server";
 
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { makeGetProposalByIdUseCase } from "@/useCases/proposal/factories/makeGetProposalByIdUseCase";
 
 export async function getProposalAction(proposalId: string) {
   const session = await auth();
-  if (!session?.user) throw new AppError("Não autorizado");
+  if (!session?.user) throw new ValidationError("unauthorized", { statusCode: 401, severity: "low" });
 
   const useCase = makeGetProposalByIdUseCase();
 
@@ -19,6 +19,6 @@ export async function getProposalAction(proposalId: string) {
     return proposal;
   } catch (error) {
     console.error(error);
-    throw new AppError("Erro ao localizar a proposta vigente.");
+    throw new ValidationError("Erro ao localizar a proposta vigente.");
   }
 }

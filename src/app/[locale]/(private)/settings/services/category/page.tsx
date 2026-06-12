@@ -8,16 +8,24 @@ import { getParams } from "@/utils/getParams";
 import { fetchServiceCategoryAction } from "@/actions/services/fetchServiceCategoryAction";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { ServiceCategoryRemoveOrEdit } from "./components/ServiceCategoryRemoveOrEdit";
-import { Tooltip } from "@/components/Tooltip";
 import { QueryFilter } from "@/components/QueryFilter";
+import { auth } from "@/auth";
+import { PERMISSIONS } from "@/constants/permissions";
+import { hasPermission } from "@/utils/hasPermission";
+import { getTranslations } from "next-intl/server";
 
 interface IParams {
   searchParams?: Promise<{ [key: string]: string | undefined }>;
 }
 
 const ServiceCategory = async ({ searchParams }: IParams) => {
+  const t = await getTranslations("settings.services.category");
   const { query } = await getParams(searchParams, ["query"]);
-
+  const session = await auth();
+  const canEdit = hasPermission(
+    session?.user,
+    PERMISSIONS.SERVICE_CATALOG.MANAGE,
+  );
   const [serviceCategorysError, serviceCategorysSuccess] =
     await operationWrapper(
       "action",
@@ -38,13 +46,13 @@ const ServiceCategory = async ({ searchParams }: IParams) => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <SectionHeading
-          title="Categoria de Serviços"
-          description="Gerencie as categorias de serviços oferecidos pela empresa"
+          title={t("title")}
+          description={t("description")}
         />
-        <CreateServiceCategoryForm categories={[]} />
+        {canEdit && <CreateServiceCategoryForm categories={[]} />}
       </div>
 
-      <QueryFilter placeholder="Buscar categoria..." />
+      <QueryFilter placeholder={t("search")} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
         {serviceCategories.map((serviceCategory) => (
@@ -65,15 +73,17 @@ const ServiceCategory = async ({ searchParams }: IParams) => {
                   </div>
                 </div>
 
-                <ServiceCategoryRemoveOrEdit
-                  serviceCategory={serviceCategory}
-                  categories={[]}
-                />
+                {canEdit && (
+                  <ServiceCategoryRemoveOrEdit
+                    serviceCategory={serviceCategory}
+                    categories={[]}
+                  />
+                )}
               </div>
             </CardHeader>
             <CardContent className="flex flex-1 flex-col justify-between space-y-3">
               <div className="flex-1">
-                <p className="text-sm text-muted-foreground line-clamp-1">
+                <p className="text-sm text-muted-foreground line-clamp-3">
                   {serviceCategory.description}
                 </p>
               </div>
@@ -91,8 +101,8 @@ const ServiceCategory = async ({ searchParams }: IParams) => {
       {serviceCategories.length === 0 && (
         <EmptyState
           icon={Boxes}
-          title="Nenhuma categoria de serviço localizada"
-          description="Cadastre categorias de serviços e vincule-as a serviços para que possa integrar com sistemas de emissão de Notas Fiscais, bem como agrupá-los por contexto"
+          title={t("emptyTitle")}
+          description={t("emptyDescription")}
         />
       )}
     </div>

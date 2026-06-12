@@ -1,3 +1,4 @@
+import { ConfigurationError } from "@/errors";
 import z from "zod";
 
 export const envSchema = z.object({
@@ -19,13 +20,19 @@ export const envSchema = z.object({
   SMTP_PASSWORD: z.string().default("sei_muito_bem"),
   GOOGLE_APP_PASSWORD: z.string().default("sei_muito_bem"),
   GOOGLE_EMAIL: z.email().default("teste_admin@zofiacodelabs.com"),
+  MAILER_PROVIDER: z.enum(["nodemailer", "resend"]).default("nodemailer"),
+  RESEND_API_KEY: z.string().optional(),
+  MAILER_FROM: z
+    .string()
+    .default("Zofia Code Labs <contato@zofiacodelabs.com>"),
+  STRIPE_WEBHOOK_SECRET: z.string().optional(),
 });
 
 const env = envSchema.safeParse(process.env);
 
 if (!env.success) {
   console.error("❌ Invalid environment variables:", env.error.message);
-  throw new Error("Invalid environment variables");
+  throw new ConfigurationError("Invalid environment variables");
 }
 
 export const envVariables = env.data;

@@ -1,7 +1,10 @@
 import { BacklogStatus } from "@/generated/prisma/enums";
-import { backlogStatusMapper } from "./BacklogMappers";
+import { getBacklogStatusLabel } from "./BacklogMappers";
 
-export const getBacklogStatusBadge = (status: BacklogStatus) => {
+export const getBacklogStatusBadge = (
+  status: BacklogStatus,
+  t: (key: string) => string,
+) => {
   const colors: Record<BacklogStatus, string> = {
     TODO: "bg-muted text-muted-foreground",
     IN_PROGRESS: "bg-accent/20 text-accent",
@@ -15,7 +18,7 @@ export const getBacklogStatusBadge = (status: BacklogStatus) => {
     <span
       className={`px-2 py-1 rounded-full text-xs font-medium ${colors[status]}`}
     >
-      {backlogStatusMapper[status]}
+      {getBacklogStatusLabel(status, t)}
     </span>
   );
 };

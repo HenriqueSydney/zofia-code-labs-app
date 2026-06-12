@@ -16,6 +16,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { CreateExpenseCategoryDTO } from "@/repositories/IExpenseCategoryRepository";
 import { deleteExpenseCategoryAction } from "@/actions/expenses/deleteExpenseCategoryAction";
+import { useTranslations } from "next-intl";
 
 interface IServiceTypeRemoveOrEdit {
   expenseCategory: CreateExpenseCategoryDTO & { id: string };
@@ -24,6 +25,7 @@ interface IServiceTypeRemoveOrEdit {
 export function ExpenseCategoryRemoveOrEdit({
   expenseCategory,
 }: IServiceTypeRemoveOrEdit) {
+  const t = useTranslations("settings.expenses.category.form");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   async function handleDelete(id: string) {
@@ -34,7 +36,7 @@ export function ExpenseCategoryRemoveOrEdit({
       return;
     }
 
-    toast.success("Categoria de Despesa criado com sucesso!");
+    toast.success(t("toastDeleteSuccess"));
   }
 
   return (
@@ -51,10 +53,8 @@ export function ExpenseCategoryRemoveOrEdit({
         </DialogTrigger>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Editar Categoria de Despesa</DialogTitle>
-            <DialogDescription>
-              Preencha os dados da categoria de despesa
-            </DialogDescription>
+            <DialogTitle>{t("dialogEditTitle")}</DialogTitle>
+            <DialogDescription>{t("dialogEditDescription")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4"></div>
           <ExpenseCategoryForm

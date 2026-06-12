@@ -16,24 +16,17 @@ export const PERMISSIONS = {
   // --- Project Ecosystem ---
   PROJECT: {
     READ: "project:read",
+    READ_OBSERVATIONS: "project:read_observations",
+    READ_RECENT_UPDATES: "project:read_recent_updates",
+    MANAGE: "project:manage",
     CREATE: "project:create",
     UPDATE: "project:update",
     DELETE: "project:delete",
     ARCHIVE: "project:archive",
   },
-  // PROJECT_NOTES: {
-  //   READ: "project_notes:read",
-  //   CREATE: "project_notes:create",
-  //   DELETE: "project_notes:delete",
-  // },
-  // DOCUMENTS: {
-  //   READ: "documents:read",
-  //   UPLOAD: "documents:upload",
-  //   DELETE: "documents:delete",
-  // },
   BACKLOG: {
     READ: "backlog:read",
-    MANAGE: "backlog:manage", // Criar/Editar/Mover itens
+    MANAGE: "backlog:manage",
   },
 
   // --- Commercial & CRM ---
@@ -46,7 +39,7 @@ export const PERMISSIONS = {
   PROPOSAL: {
     READ: "proposal:read",
     CREATE: "proposal:create",
-    APPROVE: "proposal:approve", // Ação específica de negócio
+    APPROVE: "proposal:approve",
     SEND: "proposal:send",
   },
   CONTRACT: {
@@ -55,13 +48,19 @@ export const PERMISSIONS = {
     SIGN: "contract:sign",
   },
   SERVICE_CATALOG: {
-    READ: "service_catalog:read", // Ver quais serviços a empresa oferece
-    MANAGE: "service_catalog:manage", // Criar/Editar os templates de serviço
+    READ: "service_catalog:read",
+    MANAGE: "service_catalog:manage",
+  },
+  SERVICE_BACKLOG: {
+    READ: "service_backlog:read",
+    MANAGE: "service_backlog:manage",
   },
 
   // --- Financial ---
   FINANCIAL: {
     VIEW_DASHBOARD: "financial:view_dashboard",
+    CREATE: "financial:create",
+    EXPORT: "financial:export",
   },
   INVOICE: {
     READ: "invoice:read",
@@ -79,9 +78,8 @@ export const PERMISSIONS = {
     MANAGE_MEMBERS: "settings:manage_members",
     MANAGE_BILLING: "settings:manage_billing",
     MANAGE_INTEGRATIONS: "settings:manage_integrations",
-  },
-  DOCUMENT_TEMPLATE: {
-    MANAGE: "document_template:manage", // Criar/Editar templates globais
+    READ_INTEGRATIONS: "settings:read_integrations",
+    MANAGE_EXPENSE_CATEGORIES: "settings:manage_expense_categories",
   },
 } as const;
 
@@ -100,218 +98,113 @@ export type PermissionString = RecursivePermissionValues<typeof PERMISSIONS>;
 
 export interface PermissionItem {
   key: PermissionString;
-
-  label: string;
-
-  description: string;
+  labelKey: string;
+  descriptionKey: string;
 }
 
 export interface PermissionCategory {
   key: string;
-
-  label: string;
-
+  labelKey: string;
   icon: LucideIcon;
-
   permissions: PermissionItem[];
+}
+
+export interface ResolvedPermissionItem {
+  key: PermissionString;
+  label: string;
+  description: string;
+}
+
+export interface ResolvedPermissionCategory {
+  key: string;
+  label: string;
+  icon: LucideIcon;
+  permissions: ResolvedPermissionItem[];
+}
+
+function permissionItemKeys(
+  key: PermissionString,
+): Pick<PermissionItem, "labelKey" | "descriptionKey"> {
+  const i18nKey = key.replace(":", "_");
+  return {
+    labelKey: `items.${i18nKey}.label`,
+    descriptionKey: `items.${i18nKey}.description`,
+  };
+}
+
+function permissionItem(key: PermissionString): PermissionItem {
+  return {
+    key,
+    ...permissionItemKeys(key),
+  };
 }
 
 export const PERMISSIONS_MAP: PermissionCategory[] = [
   {
     key: "projects_ecosystem",
-    label: "Gestão de Projetos",
+    labelKey: "categories.projects_ecosystem",
     icon: FolderKanban,
     permissions: [
-      {
-        key: PERMISSIONS.PROJECT.READ,
-        label: "Visualizar Projetos",
-        description: "Permite ver a lista de projetos e seus detalhes básicos.",
-      },
-      {
-        key: PERMISSIONS.PROJECT.CREATE,
-        label: "Criar Projetos",
-        description: "Permite iniciar novos projetos na organização.",
-      },
-      {
-        key: PERMISSIONS.PROJECT.UPDATE,
-        label: "Editar Projetos",
-        description: "Alterar dados, datas, status e propriedades do projeto.",
-      },
-      {
-        key: PERMISSIONS.PROJECT.ARCHIVE,
-        label: "Arquivar Projetos",
-        description:
-          "Mover projetos concluídos para o arquivo morto (somente leitura).",
-      },
-      {
-        key: PERMISSIONS.PROJECT.DELETE,
-        label: "Excluir Projetos",
-        description: "Ação destrutiva: remover projetos permanentemente.",
-      },
-      {
-        key: PERMISSIONS.BACKLOG.READ,
-        label: "Ver Backlog/Tarefas",
-        description: "Acesso de leitura às tarefas e quadros do projeto.",
-      },
-      {
-        key: PERMISSIONS.BACKLOG.MANAGE,
-        label: "Gerenciar Backlog",
-        description: "Criar, editar, mover e deletar tarefas/stories.",
-      },
+      permissionItem(PERMISSIONS.PROJECT.READ),
+      permissionItem(PERMISSIONS.PROJECT.READ_OBSERVATIONS),
+      permissionItem(PERMISSIONS.PROJECT.READ_RECENT_UPDATES),
+      permissionItem(PERMISSIONS.PROJECT.MANAGE),
+      permissionItem(PERMISSIONS.PROJECT.CREATE),
+      permissionItem(PERMISSIONS.PROJECT.UPDATE),
+      permissionItem(PERMISSIONS.PROJECT.ARCHIVE),
+      permissionItem(PERMISSIONS.PROJECT.DELETE),
+      permissionItem(PERMISSIONS.BACKLOG.READ),
+      permissionItem(PERMISSIONS.BACKLOG.MANAGE),
     ],
   },
   {
     key: "crm_sales",
-    label: "Vendas & CRM",
+    labelKey: "categories.crm_sales",
     icon: Briefcase,
     permissions: [
-      // --- Clientes ---
-      {
-        key: PERMISSIONS.CLIENT.READ,
-        label: "Ver Clientes",
-        description: "Acesso à base de contatos e empresas.",
-      },
-      {
-        key: PERMISSIONS.CLIENT.CREATE,
-        label: "Cadastrar Clientes",
-        description: "Adicionar novos clientes ao CRM.",
-      },
-      {
-        key: PERMISSIONS.CLIENT.UPDATE,
-        label: "Editar Clientes",
-        description: "Atualizar dados cadastrais de clientes existentes.",
-      },
-      {
-        key: PERMISSIONS.CLIENT.DELETE,
-        label: "Excluir Clientes",
-        description: "Remover registros de clientes da base.",
-      },
-
-      // --- Propostas ---
-      {
-        key: PERMISSIONS.PROPOSAL.READ,
-        label: "Ver Propostas",
-        description: "Visualizar histórico de orçamentos.",
-      },
-      {
-        key: PERMISSIONS.PROPOSAL.CREATE,
-        label: "Criar/Editar Propostas",
-        description: "Gerar novos orçamentos comerciais (Rascunhos).",
-      },
-      {
-        key: PERMISSIONS.PROPOSAL.SEND,
-        label: "Enviar Propostas",
-        description: "Autorização para disparar a proposta final ao cliente.",
-      },
-      {
-        key: PERMISSIONS.PROPOSAL.APPROVE,
-        label: "Aprovar Propostas (Gestor)",
-        description:
-          "Permite aprovar descontos ou condições especiais e deletar propostas de terceiros.",
-      },
-
-      // --- Contratos ---
-      {
-        key: PERMISSIONS.CONTRACT.READ,
-        label: "Ver Contratos",
-        description: "Acesso às minutas e contratos vigentes.",
-      },
-      {
-        key: PERMISSIONS.CONTRACT.CREATE,
-        label: "Gerar Contratos",
-        description: "Criar minutas a partir de templates.",
-      },
-      {
-        key: PERMISSIONS.CONTRACT.SIGN,
-        label: "Assinar/Finalizar",
-        description:
-          "Marcar contratos como assinados (bloqueia edições futuras).",
-      },
+      permissionItem(PERMISSIONS.CLIENT.READ),
+      permissionItem(PERMISSIONS.CLIENT.CREATE),
+      permissionItem(PERMISSIONS.CLIENT.UPDATE),
+      permissionItem(PERMISSIONS.CLIENT.DELETE),
+      permissionItem(PERMISSIONS.PROPOSAL.READ),
+      permissionItem(PERMISSIONS.PROPOSAL.CREATE),
+      permissionItem(PERMISSIONS.PROPOSAL.SEND),
+      permissionItem(PERMISSIONS.PROPOSAL.APPROVE),
+      permissionItem(PERMISSIONS.CONTRACT.READ),
+      permissionItem(PERMISSIONS.CONTRACT.CREATE),
+      permissionItem(PERMISSIONS.CONTRACT.SIGN),
     ],
   },
   {
     key: "financial",
-    label: "Financeiro",
+    labelKey: "categories.financial",
     icon: Wallet,
     permissions: [
-      {
-        key: PERMISSIONS.FINANCIAL.VIEW_DASHBOARD,
-        label: "Dashboard Financeiro",
-        description: "Visão gerencial de fluxo de caixa e totais.",
-      },
-
-      // --- Faturas (Receitas) ---
-      {
-        key: PERMISSIONS.INVOICE.READ,
-        label: "Ver Faturas",
-        description: "Acesso ao histórico de cobranças emitidas.",
-      },
-      {
-        key: PERMISSIONS.INVOICE.CREATE,
-        label: "Emitir Cobranças",
-        description: "Gerar e enviar faturas/boletos para clientes.",
-      },
-      {
-        key: PERMISSIONS.INVOICE.CANCEL,
-        label: "Cancelar Faturas",
-        description: "Permite anular uma nota fiscal ou cobrança emitida.",
-      },
-
-      // --- Despesas (Custos) ---
-      {
-        key: PERMISSIONS.EXPENSE.READ,
-        label: "Ver Despesas",
-        description: "Visualizar custos lançados no sistema.",
-      },
-      {
-        key: PERMISSIONS.EXPENSE.CREATE,
-        label: "Lançar Despesas",
-        description: "Registrar novos custos ou solicitações de reembolso.",
-      },
-      {
-        key: PERMISSIONS.EXPENSE.APPROVE,
-        label: "Aprovar Despesas",
-        description: "Autorizar o pagamento efetivo de contas.",
-      },
+      permissionItem(PERMISSIONS.FINANCIAL.VIEW_DASHBOARD),
+      permissionItem(PERMISSIONS.FINANCIAL.CREATE),
+      permissionItem(PERMISSIONS.FINANCIAL.EXPORT),
+      permissionItem(PERMISSIONS.INVOICE.READ),
+      permissionItem(PERMISSIONS.INVOICE.CREATE),
+      permissionItem(PERMISSIONS.INVOICE.CANCEL),
+      permissionItem(PERMISSIONS.EXPENSE.READ),
+      permissionItem(PERMISSIONS.EXPENSE.CREATE),
+      permissionItem(PERMISSIONS.EXPENSE.APPROVE),
     ],
   },
   {
     key: "admin",
-    label: "Administração & Configurações",
+    labelKey: "categories.admin",
     icon: Settings,
     permissions: [
-      {
-        key: PERMISSIONS.SETTINGS.MANAGE_MEMBERS,
-        label: "Gerir Equipe",
-        description: "Convidar membros, remover acessos e definir cargos.",
-      },
-      {
-        key: PERMISSIONS.SETTINGS.MANAGE_INTEGRATIONS,
-        label: "Integrações",
-        description: "Conectar ferramentas (Slack, Stripe, etc).",
-      },
-      {
-        key: PERMISSIONS.SETTINGS.MANAGE_BILLING,
-        label: "Assinatura do Sistema",
-        description: "Gerenciar plano, cartão de crédito e faturas do SaaS.",
-      },
-      {
-        key: PERMISSIONS.DOCUMENT_TEMPLATE.MANAGE,
-        label: "Templates de Documentos",
-        description: "Criar e editar modelos padrões de contratos e propostas.",
-      },
-      // Catálogo de Serviços geralmente é configurado por Admins/Gerentes
-      {
-        key: PERMISSIONS.SERVICE_CATALOG.READ,
-        label: "Ver Catálogo de Serviços",
-        description: "Visualizar a lista de serviços padrão oferecidos.",
-      },
-      {
-        key: PERMISSIONS.SERVICE_CATALOG.MANAGE,
-        label: "Gerir Catálogo de Serviços",
-        description:
-          "Definir o escopo padrão dos serviços (templates de backlog).",
-      },
+      permissionItem(PERMISSIONS.SETTINGS.MANAGE_MEMBERS),
+      permissionItem(PERMISSIONS.SETTINGS.READ_INTEGRATIONS),
+      permissionItem(PERMISSIONS.SETTINGS.MANAGE_INTEGRATIONS),
+      permissionItem(PERMISSIONS.SETTINGS.MANAGE_BILLING),
+      permissionItem(PERMISSIONS.SETTINGS.MANAGE_EXPENSE_CATEGORIES),
+      permissionItem(PERMISSIONS.SERVICE_CATALOG.READ),
+      permissionItem(PERMISSIONS.SERVICE_CATALOG.MANAGE),
+      permissionItem(PERMISSIONS.SERVICE_BACKLOG.READ),
+      permissionItem(PERMISSIONS.SERVICE_BACKLOG.MANAGE),
     ],
   },
 ];
@@ -320,23 +213,50 @@ export const PERMISSIONS_MAP: PermissionCategory[] = [
 // 4. HELPERS
 // ============================================================================
 
-export function getPermissionInfo(permissionKey: string) {
+type PermissionTranslator = (key: string) => string;
+
+export function getPermissionsMap(
+  t: PermissionTranslator,
+): ResolvedPermissionCategory[] {
+  return PERMISSIONS_MAP.map((category) => ({
+    key: category.key,
+    label: t(category.labelKey),
+    icon: category.icon,
+    permissions: category.permissions.map((perm) => ({
+      key: perm.key,
+      label: t(perm.labelKey),
+      description: t(perm.descriptionKey),
+    })),
+  }));
+}
+
+export function getPermissionInfo(
+  permissionKey: string,
+  t?: PermissionTranslator,
+) {
   for (const category of PERMISSIONS_MAP) {
     const found = category.permissions.find((p) => p.key === permissionKey);
-    if (found) return found;
+    if (found) {
+      if (t) {
+        return {
+          label: t(found.labelKey),
+          description: t(found.descriptionKey),
+        };
+      }
+      return {
+        label: permissionKey,
+        description: found.descriptionKey,
+      };
+    }
   }
-  // Fallback amigável se a permissão não estiver mapeada na UI
+
   const [resource, action] = permissionKey.split(":");
   return {
     label: `${resource} - ${action}`,
-    description: "Permissão do sistema",
+    description: t ? t("fallback.description") : "Permissão do sistema",
   };
 }
 
-/**
- * Helper para verificar se uma permissão existe na lista do usuário
- * Ex: userHasPermission(user.permissions, PERMISSIONS.PROJECT.CREATE)
- */
 export function userHasPermission(
   userPermissions: string[],
   requiredPermission: PermissionString,

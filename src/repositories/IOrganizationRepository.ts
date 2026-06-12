@@ -4,11 +4,11 @@ import {
   IndustryType,
   CustomRole,
   LoginHistory,
-  Role,
   Member,
   MemberRole,
+  MemberStatus,
+  Prisma,
 } from "@/generated/prisma/client";
-import { UserSafe } from "./IUsersRepository";
 
 export interface ICreateOrganizationDTO {
   name: string;
@@ -61,6 +61,25 @@ export interface IUpdateCustomRoleDTO {
   permissions?: string[];
 }
 
+export interface ICreateOrganizationMemberDTO {
+  userId: string;
+  organizationId: string;
+  role: MemberRole;
+  customRoleId?: string | null;
+  status?: MemberStatus;
+}
+
+export interface IReactivateOrganizationMemberDTO {
+  role: MemberRole;
+  customRoleId?: string | null;
+  status?: MemberStatus;
+}
+
+export type OrganizationAdminContact = {
+  name: string | null;
+  email: string;
+};
+
 export interface IOrganizationsRepository {
   create(
     data: ICreateOrganizationDTO,
@@ -92,6 +111,34 @@ export interface IOrganizationsRepository {
     memberId: string,
     organizationId: string,
   ): Promise<OrganizationMember | null>;
+
+  findMemberByUserIdAndOrganizationId(
+    userId: string,
+    organizationId: string,
+    tx?: Prisma.TransactionClient,
+  ): Promise<Member | null>;
+
+  createMember(
+    data: ICreateOrganizationMemberDTO,
+    tx?: Prisma.TransactionClient,
+  ): Promise<Member>;
+
+  reactivateMember(
+    memberId: string,
+    data: IReactivateOrganizationMemberDTO,
+    tx?: Prisma.TransactionClient,
+  ): Promise<Member>;
+
+  findPendingMembersByUserId(
+    userId: string,
+    tx?: Prisma.TransactionClient,
+  ): Promise<Member[]>;
+
+  activateMember(memberId: string, tx?: Prisma.TransactionClient): Promise<Member>;
+
+  findOrganizationAdminContacts(
+    organizationId: string,
+  ): Promise<OrganizationAdminContact[]>;
 
   updateMemberCustomRole(memberId: string, customRoleId: string): Promise<void>;
 

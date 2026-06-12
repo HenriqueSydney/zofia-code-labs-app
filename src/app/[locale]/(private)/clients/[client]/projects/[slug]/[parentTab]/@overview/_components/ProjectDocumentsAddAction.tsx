@@ -19,6 +19,7 @@ import {
 import { Form } from "@/components/ui/form";
 import { uploadDocumentsAction } from "@/actions/documents/uploadDocumentsAction";
 import { FormMultiFileUpload } from "@/components/form/FormMultiFileUpload";
+import { useTranslations } from "next-intl";
 
 interface IProjectDocumentsAddAction {
   projectId: string;
@@ -26,20 +27,24 @@ interface IProjectDocumentsAddAction {
 }
 
 // Schema simples apenas para validar que existem arquivos
-const uploadSchema = z.object({
-  documents: z
-    .array(z.instanceof(File))
-    .min(1, "Selecione pelo menos um arquivo para enviar."),
-});
+const createUploadSchema = (minFilesMessage: string) =>
+  z.object({
+    documents: z.array(z.instanceof(File)).min(1, minFilesMessage),
+  });
 
-type UploadSchemaType = z.infer<typeof uploadSchema>;
+type UploadSchemaType = z.infer<ReturnType<typeof createUploadSchema>>;
 
 export function ProjectDocumentsAddAction({
   projectId,
   variant = "ghost",
 }: IProjectDocumentsAddAction) {
+  const t = useTranslations("projects.documents");
+  const tCommon = useTranslations("common");
+  const tActions = useTranslations("common.actions");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
+
+  const uploadSchema = createUploadSchema(t("validationMinFiles"));
 
   const form = useForm<UploadSchemaType>({
     resolver: zodResolver(uploadSchema),
@@ -84,13 +89,13 @@ export function ProjectDocumentsAddAction({
       <DialogTrigger asChild>
         <Button variant={variant} size="sm" className="gap-1">
           <FilePlus className="h-4 w-4" />
-          Adicionar
+          {t("add")}
         </Button>
       </DialogTrigger>
 
       <DialogContent className="max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Adicionar arquivos ao projeto</DialogTitle>
+          <DialogTitle>{t("addDialogTitle")}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -104,8 +109,8 @@ export function ProjectDocumentsAddAction({
             <FormMultiFileUpload
               control={form.control}
               name="documents"
-              label="Arquivos"
-              description="Arraste seus documentos aqui. Aceita PDF, Imagens, Word e Excel."
+              label={t("filesLabel")}
+              description={t("filesDescription")}
               maxFiles={10} // Ajuste conforme sua regra de negócio
               disabled={isPending}
               accept={{
@@ -126,7 +131,7 @@ export function ProjectDocumentsAddAction({
                 onClick={() => setIsDialogOpen(false)}
                 disabled={isPending}
               >
-                Cancelar
+                {tActions("cancel")}
               </Button>
 
               <Button
@@ -140,10 +145,10 @@ export function ProjectDocumentsAddAction({
                 {isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Enviando...
+                    {t("uploading")}
                   </>
                 ) : (
-                  "Salvar Arquivos"
+                  t("save")
                 )}
               </Button>
             </DialogFooter>

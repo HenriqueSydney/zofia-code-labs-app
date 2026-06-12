@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Download, Plus } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import {
   FinancialStatsCards,
   FinancialStatsCardsSkeleton,
@@ -14,36 +15,42 @@ import { FinancialProjections } from "./_components/FinancialProjections";
 import { LineChartSkeleton } from "@/components/skeletons/LineChartSkeleton";
 import { PieChartSkeleton } from "@/components/skeletons/PieSkeleton";
 import { ListSkeleton } from "@/components/skeletons/ListSkeleton";
+import { hasPermission } from "@/utils/hasPermission";
+import { auth } from "@/auth";
+import { PERMISSIONS } from "@/constants/permissions";
 
-export default function FinancialPage() {
+export default async function FinancialPage() {
+  const t = await getTranslations("financial.page");
+  const session = await auth();
+  const canCreate = hasPermission(session?.user, PERMISSIONS.FINANCIAL.CREATE);
+  const canExport = hasPermission(session?.user, PERMISSIONS.FINANCIAL.EXPORT);
   return (
     <div className="space-y-6 p-8">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Financeiro</h2>
-          <p className="text-muted-foreground">
-            Visão geral e controle de caixa.
-          </p>
+          <h2 className="text-3xl font-bold tracking-tight">{t("title")}</h2>
+          <p className="text-muted-foreground">{t("description")}</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
-            <Download className="h-4 w-4 mr-2" />
-            Exportar
-          </Button>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Nova Transação
-          </Button>
+          {canExport && (
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              {t("export")}
+            </Button>
+          )}
+          {canCreate && (
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              {t("newTransaction")}
+            </Button>
+          )}
         </div>
       </div>
 
-      {/* KPI Cards */}
       <Suspense fallback={<FinancialStatsCardsSkeleton />}>
         <FinancialStatsCards />
       </Suspense>
 
-      {/* Gráficos Principais */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Suspense
           fallback={
@@ -60,12 +67,13 @@ export default function FinancialPage() {
         </Suspense>
       </div>
 
-      {/* Abas de Detalhamento */}
       <Tabs defaultValue="transactions" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="transactions">Transações</TabsTrigger>
-          <TabsTrigger value="pending">Pagamentos Pendentes</TabsTrigger>
-          <TabsTrigger value="projections">Projeções</TabsTrigger>
+          <TabsTrigger value="transactions">
+            {t("tabs.transactions")}
+          </TabsTrigger>
+          <TabsTrigger value="pending">{t("tabs.pending")}</TabsTrigger>
+          <TabsTrigger value="projections">{t("tabs.projections")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="transactions" className="space-y-4">

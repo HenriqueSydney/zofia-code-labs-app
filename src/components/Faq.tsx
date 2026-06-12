@@ -1,4 +1,6 @@
-import { string } from "zod";
+"use client";
+
+import { useTranslations } from "next-intl";
 
 interface IFaq {
   faq: {
@@ -8,9 +10,11 @@ interface IFaq {
 }
 
 export function Faq({ faq }: IFaq) {
+  const t = useTranslations("common.faq");
+
   return (
     <div className="mt-20 max-w-3xl mx-auto text-center">
-      <h2 className="text-2xl font-bold mb-4">Dúvidas frequentes</h2>
+      <h2 className="text-2xl font-bold mb-4">{t("title")}</h2>
       <div className="grid gap-6 text-left mt-8">
         {faq.map(({ question, answer }, index) => (
           <div

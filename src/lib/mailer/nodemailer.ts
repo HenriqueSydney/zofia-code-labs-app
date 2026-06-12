@@ -8,7 +8,30 @@ import { htmlToText } from "html-to-text";
 
 import { apiLogger } from "../logger";
 
-import { IMailer, SendEmailOptions } from "./IMailer";
+import {
+  EmailAttachment,
+  IMailer,
+  SendEmailOptions,
+  SentMessageInfo,
+} from "./IMailer";
+
+function toNodemailerAttachments(attachments: EmailAttachment[]) {
+  return attachments.map((attachment) => {
+    if ("content" in attachment) {
+      return {
+        filename: attachment.filename,
+        content: attachment.content,
+        contentType: attachment.contentType ?? "application/octet-stream",
+      };
+    }
+
+    return {
+      filename: attachment.filename,
+      path: attachment.path,
+      cid: attachment.cid,
+    };
+  });
+}
 
 export class NodemailerMailer implements IMailer {
   private static instance: NodemailerMailer;
@@ -62,7 +85,7 @@ export class NodemailerMailer implements IMailer {
     subject,
     html,
     attachments = [],
-  }: SendEmailOptions): Promise<SMTPTransport.SentMessageInfo> {
+  }: SendEmailOptions): Promise<SentMessageInfo> {
     const plainText = htmlToText(html, {
       wordwrap: 130,
       selectors: [
@@ -81,10 +104,20 @@ export class NodemailerMailer implements IMailer {
       subject,
       html,
       text: plainText,
-      attachments,
+      attachments: toNodemailerAttachments(attachments),
     });
 
     apiLogger.info({ to, subject }, `Message sent: ${info.messageId}`);
-    return info;
+
+    return {
+      messageId: info.messageId,
+      accepted: info.accepted?.map((entry) =>
+        typeof entry === "string" ? entry : entry.address,
+      ),
+      rejected: info.rejected?.map((entry) =>
+        typeof entry === "string" ? entry : entry.address,
+      ),
+      response: info.response,
+    };
   }
 }

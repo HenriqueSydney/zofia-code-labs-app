@@ -1,5 +1,6 @@
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError, ForbiddenError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
+import { toOrganizationAsset } from "@/lib/auth/toOrganizationAsset";
 import { IOrganizationsRepository } from "@/repositories/IOrganizationRepository";
 
 interface UpdateOrganizationCustomRoleUseCaseRequest {
@@ -27,25 +28,26 @@ export class UpdateOrganizationCustomRoleUseCase {
       await this.organizationsRepository.findCustomRoleById(roleId);
 
     if (!existingRole) {
-      throw new AppError("Perfil de acesso não encontrado.");
+      throw new ResourceNotFoundError("Perfil de acesso não encontrado.");
     }
 
     // 2. Segurança de Tenant: O Role pertence à organização informada?
     if (existingRole.organizationId !== organizationId) {
-      throw new AppError(
-        "Acesso negado: Este perfil pertence a outra organização.",
-        403,
-      );
+      throw new ForbiddenError("Acesso negado: Este perfil pertence a outra organização.");
     }
 
     // 3. Busca a Organização (para passar para o checkUserPermission)
     const organization =
       await this.organizationsRepository.findById(organizationId);
 
-    if (!organization) throw new AppError("Organização não localizada.");
+    if (!organization) throw new ResourceNotFoundError("Organização não localizada.");
 
-    // 4. Validação de Permissão
-    //await checkUserPermissionForAsset("client", userId, organization, "UPDATE");
+    await checkUserPermissionForAsset(
+      "organization",
+      userId,
+      toOrganizationAsset(organization),
+      "UPDATE",
+    );
 
     // 5. Atualização
     const role = await this.organizationsRepository.updateCustomRole({

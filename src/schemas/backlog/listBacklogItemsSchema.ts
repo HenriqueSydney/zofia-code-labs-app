@@ -1,3 +1,4 @@
+import { v } from "@/schemas/validationMessages";
 import {
   backlogPriorityArray,
   backlogStatusArray,
@@ -5,18 +6,18 @@ import {
 import { z } from "zod";
 
 export const listBacklogItemsSchema = z.object({
-  projectId: z.cuid("ID do projeto inválido."),
+  projectId: z.cuid(v.invalidProjectId),
 
   page: z.coerce
     .number()
-    .min(1, "A página deve ser no mínimo 1.")
+    .min(1, v.pageMin)
     .default(1)
     .optional(),
 
   numberPerPage: z.coerce
     .number()
     .min(1)
-    .max(100, "O limite máximo por página é 100.")
+    .max(100, v.pageMax)
     .default(20)
     .optional(),
 

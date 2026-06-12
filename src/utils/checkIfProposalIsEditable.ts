@@ -1,14 +1,14 @@
 import { ProposalStatus } from "@/generated/prisma/enums";
 
 export function checkIfProposalIsEditable(proposalStatus: ProposalStatus) {
-  if (proposalStatus) {
-    return {
-      isProposalInactive: true,
-      isProposalAccepted: true,
-      isProposalEditable: true,
-      canBeCancelled: true,
-    };
-  }
+  // if (proposalStatus) {
+  //   return {
+  //     isProposalInactive: true,
+  //     isProposalAccepted: true,
+  //     isProposalEditable: true,
+  //     canBeCancelled: true,
+  //   };
+  // }
 
   const inactiveProposals: ProposalStatus[] = ["REJECTED", "CANCELLED"];
   const acceptedProposals: ProposalStatus[] = ["ACCEPTED"];

@@ -1,13 +1,13 @@
 // @/actions/financial/listInvoicesAction.ts
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { handleErrors } from "@/errors/handleErrors";
 import { makeListInvoiceUseCase } from "@/useCases/financial/factories/makeListInvoiceUseCase";
 
 export async function listInvoicesAction(projectSlug: string) {
   const session = await auth();
-  if (!session?.user?.id) return { success: false, message: "Não autorizado" };
+  if (!session?.user?.id) return { success: false, message: await serverErrorMessage("unauthorized") };
 
   try {
     const useCase = makeListInvoiceUseCase();
@@ -18,6 +18,6 @@ export async function listInvoicesAction(projectSlug: string) {
 
     return { success: true, data: invoices };
   } catch (error) {
-    return { success: false, message: handleErrors(error) };
+    return { success: false, message: await resolveActionErrorMessage(error) };
   }
 }

@@ -2,7 +2,7 @@ import { defineRouting } from "next-intl/routing";
 
 export const SUPPORTED_LOCALES = [
   "pt", // Português
-  //"en", // Inglês
+  "en", // Inglês
 ] as const;
 export const DEFAULT_LOCALE = "pt";
 export type SupportedLocales = (typeof SUPPORTED_LOCALES)[number];

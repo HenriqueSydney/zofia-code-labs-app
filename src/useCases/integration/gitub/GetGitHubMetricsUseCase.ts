@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { IntegrationError } from "@/errors";
 import { IProjectIntegrationRepository } from "@/repositories/IProjectIntegrationRepository";
 import {
   CommitData,
@@ -67,7 +67,7 @@ export class GetGitHubMetricsUseCase {
       );
 
     if (!projectLink || !projectLink.organizationIntegration) {
-      throw new AppError("Integração não configurada.", 404);
+      throw new IntegrationError("Integração não configurada.", { statusCode: 404 });
     }
 
     const projectConfig = projectLink.config as any;

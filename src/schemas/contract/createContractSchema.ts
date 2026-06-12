@@ -1,10 +1,10 @@
+import { v } from "@/schemas/validationMessages";
 import { z } from "zod";
 
 export const createContractSchema = z.object({
-  documentTemplateId: z.cuid().nullable(),
   projectId: z.cuid(),
   documents: z
-    .custom<File>((val) => val instanceof File, "Arquivo inválido")
+    .custom<File>((val) => val instanceof File, v.invalidFile)
     .nullable()
     .optional(),
 });

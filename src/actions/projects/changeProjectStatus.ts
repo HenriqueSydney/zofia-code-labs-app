@@ -1,11 +1,11 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth"; // Seu helper de auth (NextAuth/Auth.js)
 import { PROJECT_STATUS_FLOW } from "@/domain/project/ProjectWorkflow";
 import { makeChangeProjectStatusUseCase } from "@/useCases/projects/factories/makeChangeProjectStatusUseCase";
-import { handleErrors } from "@/errors/handleErrors";
 
 const changeStatusSchema = z.object({
   projectId: z.cuid(),
@@ -21,14 +21,14 @@ export async function changeProjectStatusAction(formData: {
     // 1. Autenticação
     const session = await auth();
     if (!session?.user?.id) {
-      return { error: "Usuário não autorizado" };
+      return { error: await serverErrorMessage("unauthorized") };
     }
 
     // 2. Validação de Input (Zod)
     const result = changeStatusSchema.safeParse(formData);
 
     if (!result.success) {
-      return { error: "Status inválido" };
+      return { error: await serverErrorMessage("invalidStatus") };
     }
 
     const { projectId, newStatus } = result.data;
@@ -49,11 +49,10 @@ export async function changeProjectStatusAction(formData: {
     );
     revalidatePath("/projects");
 
-    return { success: true, message: "Status atualizado com sucesso." };
+    return { success: true, message: await resolveSuccessMessage("statusUpdatedSuccess") };
   } catch (error) {
     return {
-      error:
-        handleErrors(error) || "Erro inexperado. Tente novamente mais tarde.",
+      error: await resolveActionErrorMessage(error),
     };
   }
 }

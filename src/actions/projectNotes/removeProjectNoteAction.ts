@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
 import {
   removeProjectNoteSchema,
@@ -16,7 +17,7 @@ export async function removeProjectNoteAction(
   if (!session?.user) {
     return {
       success: false,
-      message: "Sessão expirada ou usuário não logado.",
+      message: await serverErrorMessage("sessionExpiredNotLoggedIn"),
     };
   }
 
@@ -26,7 +27,7 @@ export async function removeProjectNoteAction(
   if (!parsed.success) {
     return {
       success: false,
-      message: parsed.error.issues[0].message || "Dados inválidos.",
+      message: parsed.error.issues[0].message || await serverErrorMessage("invalidData"),
     };
   }
 
@@ -49,16 +50,9 @@ export async function removeProjectNoteAction(
 
     return { success: true };
   } catch (error) {
-    if (error instanceof Error) {
-      return {
-        success: false,
-        message: error.message,
-      };
-    }
-
     return {
       success: false,
-      message: "Erro interno ao editar observação.",
+      message: await resolveActionErrorMessage(error),
     };
   }
 }

@@ -1,8 +1,8 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
-import { handleErrors } from "@/errors/handleErrors";
+import { UnauthorizedError, IntegrationError, ExternalServiceError } from "@/errors";
 import { makeProjectIntegrationRepository } from "@/repositories/factories/makeProjectIntegrationRepository";
 import {
   IntegrationFactory,
@@ -16,7 +16,7 @@ export async function fetchUmamiRealTimeVisitorsAction(projectSlug: string) {
   try {
     // Aqui você verificaria se o usuário é o ADMIN do sistema
     if (!session?.user) {
-      throw new AppError("Não autorizado.");
+      throw new UnauthorizedError("unauthorized");
     }
 
     const projectIntegrationRepository = makeProjectIntegrationRepository();
@@ -28,7 +28,7 @@ export async function fetchUmamiRealTimeVisitorsAction(projectSlug: string) {
       );
 
     if (!projectIntegration) {
-      throw new Error(`Integração do Projeto com o Umami não encontrada.`);
+      throw new IntegrationError("umamiIntegrationNotFound");
     }
 
     const integrationFactory = new IntegrationFactory();
@@ -43,7 +43,7 @@ export async function fetchUmamiRealTimeVisitorsAction(projectSlug: string) {
 
     const websiteId = "f4d85941-32ee-40f6-a0c0-80a788a6de7e"; //(projectIntegration.config as any)?.externalId;
     if (!websiteId) {
-      throw new Error("ID do website não configurado na integração do Umami.");
+      throw new ExternalServiceError("umamiWebsiteIdMissing");
     }
 
     const result = await service.getRealtimeMetrics(websiteId);
@@ -51,10 +51,10 @@ export async function fetchUmamiRealTimeVisitorsAction(projectSlug: string) {
     return {
       success: true,
       data: result,
-      message: "Dados retornados com sucesso",
+      message: await resolveSuccessMessage("dataFetched"),
     };
   } catch (error) {
-    const message = handleErrors(error);
+    const message = await resolveActionErrorMessage(error);
     return { success: false, message };
   }
 }

@@ -14,7 +14,7 @@ import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model ContractTemplate
- * 
+ * Snapshot de conteúdo do contrato (ex.: metadados Documenso / versão editável).
  */
 export type ContractTemplateModel = runtime.Types.Result.DefaultSelection<Prisma.$ContractTemplatePayload>
 
@@ -26,7 +26,6 @@ export type AggregateContractTemplate = {
 
 export type ContractTemplateMinAggregateOutputType = {
   id: string | null
-  documentTemplateId: string | null
   isDefault: boolean | null
   isActive: boolean | null
   createdAt: Date | null
@@ -36,7 +35,6 @@ export type ContractTemplateMinAggregateOutputType = {
 
 export type ContractTemplateMaxAggregateOutputType = {
   id: string | null
-  documentTemplateId: string | null
   isDefault: boolean | null
   isActive: boolean | null
   createdAt: Date | null
@@ -46,7 +44,6 @@ export type ContractTemplateMaxAggregateOutputType = {
 
 export type ContractTemplateCountAggregateOutputType = {
   id: number
-  documentTemplateId: number
   content: number
   isDefault: number
   isActive: number
@@ -59,7 +56,6 @@ export type ContractTemplateCountAggregateOutputType = {
 
 export type ContractTemplateMinAggregateInputType = {
   id?: true
-  documentTemplateId?: true
   isDefault?: true
   isActive?: true
   createdAt?: true
@@ -69,7 +65,6 @@ export type ContractTemplateMinAggregateInputType = {
 
 export type ContractTemplateMaxAggregateInputType = {
   id?: true
-  documentTemplateId?: true
   isDefault?: true
   isActive?: true
   createdAt?: true
@@ -79,7 +74,6 @@ export type ContractTemplateMaxAggregateInputType = {
 
 export type ContractTemplateCountAggregateInputType = {
   id?: true
-  documentTemplateId?: true
   content?: true
   isDefault?: true
   isActive?: true
@@ -163,8 +157,7 @@ export type ContractTemplateGroupByArgs<ExtArgs extends runtime.Types.Extensions
 
 export type ContractTemplateGroupByOutputType = {
   id: string
-  documentTemplateId: string
-  content: runtime.JsonValue
+  content: runtime.JsonValue | null
   isDefault: boolean
   isActive: boolean
   createdAt: Date
@@ -175,7 +168,7 @@ export type ContractTemplateGroupByOutputType = {
   _max: ContractTemplateMaxAggregateOutputType | null
 }
 
-type GetContractTemplateGroupByPayload<T extends ContractTemplateGroupByArgs> = Prisma.PrismaPromise<
+export type GetContractTemplateGroupByPayload<T extends ContractTemplateGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ContractTemplateGroupByOutputType, T['by']> &
       {
@@ -195,27 +188,23 @@ export type ContractTemplateWhereInput = {
   OR?: Prisma.ContractTemplateWhereInput[]
   NOT?: Prisma.ContractTemplateWhereInput | Prisma.ContractTemplateWhereInput[]
   id?: Prisma.StringFilter<"ContractTemplate"> | string
-  documentTemplateId?: Prisma.StringFilter<"ContractTemplate"> | string
-  content?: Prisma.JsonFilter<"ContractTemplate">
+  content?: Prisma.JsonNullableFilter<"ContractTemplate">
   isDefault?: Prisma.BoolFilter<"ContractTemplate"> | boolean
   isActive?: Prisma.BoolFilter<"ContractTemplate"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ContractTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ContractTemplate"> | Date | string
   contractId?: Prisma.StringFilter<"ContractTemplate"> | string
-  template?: Prisma.XOR<Prisma.DocumentTemplateScalarRelationFilter, Prisma.DocumentTemplateWhereInput>
   contract?: Prisma.XOR<Prisma.ContractScalarRelationFilter, Prisma.ContractWhereInput>
 }
 
 export type ContractTemplateOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  documentTemplateId?: Prisma.SortOrder
-  content?: Prisma.SortOrder
+  content?: Prisma.SortOrderInput | Prisma.SortOrder
   isDefault?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   contractId?: Prisma.SortOrder
-  template?: Prisma.DocumentTemplateOrderByWithRelationInput
   contract?: Prisma.ContractOrderByWithRelationInput
 }
 
@@ -225,20 +214,17 @@ export type ContractTemplateWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ContractTemplateWhereInput | Prisma.ContractTemplateWhereInput[]
   OR?: Prisma.ContractTemplateWhereInput[]
   NOT?: Prisma.ContractTemplateWhereInput | Prisma.ContractTemplateWhereInput[]
-  documentTemplateId?: Prisma.StringFilter<"ContractTemplate"> | string
-  content?: Prisma.JsonFilter<"ContractTemplate">
+  content?: Prisma.JsonNullableFilter<"ContractTemplate">
   isDefault?: Prisma.BoolFilter<"ContractTemplate"> | boolean
   isActive?: Prisma.BoolFilter<"ContractTemplate"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ContractTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ContractTemplate"> | Date | string
-  template?: Prisma.XOR<Prisma.DocumentTemplateScalarRelationFilter, Prisma.DocumentTemplateWhereInput>
   contract?: Prisma.XOR<Prisma.ContractScalarRelationFilter, Prisma.ContractWhereInput>
 }, "id" | "contractId">
 
 export type ContractTemplateOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  documentTemplateId?: Prisma.SortOrder
-  content?: Prisma.SortOrder
+  content?: Prisma.SortOrderInput | Prisma.SortOrder
   isDefault?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -254,8 +240,7 @@ export type ContractTemplateScalarWhereWithAggregatesInput = {
   OR?: Prisma.ContractTemplateScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ContractTemplateScalarWhereWithAggregatesInput | Prisma.ContractTemplateScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"ContractTemplate"> | string
-  documentTemplateId?: Prisma.StringWithAggregatesFilter<"ContractTemplate"> | string
-  content?: Prisma.JsonWithAggregatesFilter<"ContractTemplate">
+  content?: Prisma.JsonNullableWithAggregatesFilter<"ContractTemplate">
   isDefault?: Prisma.BoolWithAggregatesFilter<"ContractTemplate"> | boolean
   isActive?: Prisma.BoolWithAggregatesFilter<"ContractTemplate"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ContractTemplate"> | Date | string
@@ -265,19 +250,17 @@ export type ContractTemplateScalarWhereWithAggregatesInput = {
 
 export type ContractTemplateCreateInput = {
   id?: string
-  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isDefault?: boolean
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  template: Prisma.DocumentTemplateCreateNestedOneWithoutContractTemplatesInput
   contract: Prisma.ContractCreateNestedOneWithoutContractTemplateInput
 }
 
 export type ContractTemplateUncheckedCreateInput = {
   id?: string
-  documentTemplateId: string
-  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isDefault?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -287,19 +270,17 @@ export type ContractTemplateUncheckedCreateInput = {
 
 export type ContractTemplateUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  template?: Prisma.DocumentTemplateUpdateOneRequiredWithoutContractTemplatesNestedInput
   contract?: Prisma.ContractUpdateOneRequiredWithoutContractTemplateNestedInput
 }
 
 export type ContractTemplateUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  documentTemplateId?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -309,8 +290,7 @@ export type ContractTemplateUncheckedUpdateInput = {
 
 export type ContractTemplateCreateManyInput = {
   id?: string
-  documentTemplateId: string
-  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isDefault?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -320,7 +300,7 @@ export type ContractTemplateCreateManyInput = {
 
 export type ContractTemplateUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -329,23 +309,12 @@ export type ContractTemplateUpdateManyMutationInput = {
 
 export type ContractTemplateUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  documentTemplateId?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contractId?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
-export type ContractTemplateListRelationFilter = {
-  every?: Prisma.ContractTemplateWhereInput
-  some?: Prisma.ContractTemplateWhereInput
-  none?: Prisma.ContractTemplateWhereInput
-}
-
-export type ContractTemplateOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
 }
 
 export type ContractTemplateNullableScalarRelationFilter = {
@@ -355,7 +324,6 @@ export type ContractTemplateNullableScalarRelationFilter = {
 
 export type ContractTemplateCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  documentTemplateId?: Prisma.SortOrder
   content?: Prisma.SortOrder
   isDefault?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -366,7 +334,6 @@ export type ContractTemplateCountOrderByAggregateInput = {
 
 export type ContractTemplateMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  documentTemplateId?: Prisma.SortOrder
   isDefault?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -376,54 +343,11 @@ export type ContractTemplateMaxOrderByAggregateInput = {
 
 export type ContractTemplateMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  documentTemplateId?: Prisma.SortOrder
   isDefault?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   contractId?: Prisma.SortOrder
-}
-
-export type ContractTemplateCreateNestedManyWithoutTemplateInput = {
-  create?: Prisma.XOR<Prisma.ContractTemplateCreateWithoutTemplateInput, Prisma.ContractTemplateUncheckedCreateWithoutTemplateInput> | Prisma.ContractTemplateCreateWithoutTemplateInput[] | Prisma.ContractTemplateUncheckedCreateWithoutTemplateInput[]
-  connectOrCreate?: Prisma.ContractTemplateCreateOrConnectWithoutTemplateInput | Prisma.ContractTemplateCreateOrConnectWithoutTemplateInput[]
-  createMany?: Prisma.ContractTemplateCreateManyTemplateInputEnvelope
-  connect?: Prisma.ContractTemplateWhereUniqueInput | Prisma.ContractTemplateWhereUniqueInput[]
-}
-
-export type ContractTemplateUncheckedCreateNestedManyWithoutTemplateInput = {
-  create?: Prisma.XOR<Prisma.ContractTemplateCreateWithoutTemplateInput, Prisma.ContractTemplateUncheckedCreateWithoutTemplateInput> | Prisma.ContractTemplateCreateWithoutTemplateInput[] | Prisma.ContractTemplateUncheckedCreateWithoutTemplateInput[]
-  connectOrCreate?: Prisma.ContractTemplateCreateOrConnectWithoutTemplateInput | Prisma.ContractTemplateCreateOrConnectWithoutTemplateInput[]
-  createMany?: Prisma.ContractTemplateCreateManyTemplateInputEnvelope
-  connect?: Prisma.ContractTemplateWhereUniqueInput | Prisma.ContractTemplateWhereUniqueInput[]
-}
-
-export type ContractTemplateUpdateManyWithoutTemplateNestedInput = {
-  create?: Prisma.XOR<Prisma.ContractTemplateCreateWithoutTemplateInput, Prisma.ContractTemplateUncheckedCreateWithoutTemplateInput> | Prisma.ContractTemplateCreateWithoutTemplateInput[] | Prisma.ContractTemplateUncheckedCreateWithoutTemplateInput[]
-  connectOrCreate?: Prisma.ContractTemplateCreateOrConnectWithoutTemplateInput | Prisma.ContractTemplateCreateOrConnectWithoutTemplateInput[]
-  upsert?: Prisma.ContractTemplateUpsertWithWhereUniqueWithoutTemplateInput | Prisma.ContractTemplateUpsertWithWhereUniqueWithoutTemplateInput[]
-  createMany?: Prisma.ContractTemplateCreateManyTemplateInputEnvelope
-  set?: Prisma.ContractTemplateWhereUniqueInput | Prisma.ContractTemplateWhereUniqueInput[]
-  disconnect?: Prisma.ContractTemplateWhereUniqueInput | Prisma.ContractTemplateWhereUniqueInput[]
-  delete?: Prisma.ContractTemplateWhereUniqueInput | Prisma.ContractTemplateWhereUniqueInput[]
-  connect?: Prisma.ContractTemplateWhereUniqueInput | Prisma.ContractTemplateWhereUniqueInput[]
-  update?: Prisma.ContractTemplateUpdateWithWhereUniqueWithoutTemplateInput | Prisma.ContractTemplateUpdateWithWhereUniqueWithoutTemplateInput[]
-  updateMany?: Prisma.ContractTemplateUpdateManyWithWhereWithoutTemplateInput | Prisma.ContractTemplateUpdateManyWithWhereWithoutTemplateInput[]
-  deleteMany?: Prisma.ContractTemplateScalarWhereInput | Prisma.ContractTemplateScalarWhereInput[]
-}
-
-export type ContractTemplateUncheckedUpdateManyWithoutTemplateNestedInput = {
-  create?: Prisma.XOR<Prisma.ContractTemplateCreateWithoutTemplateInput, Prisma.ContractTemplateUncheckedCreateWithoutTemplateInput> | Prisma.ContractTemplateCreateWithoutTemplateInput[] | Prisma.ContractTemplateUncheckedCreateWithoutTemplateInput[]
-  connectOrCreate?: Prisma.ContractTemplateCreateOrConnectWithoutTemplateInput | Prisma.ContractTemplateCreateOrConnectWithoutTemplateInput[]
-  upsert?: Prisma.ContractTemplateUpsertWithWhereUniqueWithoutTemplateInput | Prisma.ContractTemplateUpsertWithWhereUniqueWithoutTemplateInput[]
-  createMany?: Prisma.ContractTemplateCreateManyTemplateInputEnvelope
-  set?: Prisma.ContractTemplateWhereUniqueInput | Prisma.ContractTemplateWhereUniqueInput[]
-  disconnect?: Prisma.ContractTemplateWhereUniqueInput | Prisma.ContractTemplateWhereUniqueInput[]
-  delete?: Prisma.ContractTemplateWhereUniqueInput | Prisma.ContractTemplateWhereUniqueInput[]
-  connect?: Prisma.ContractTemplateWhereUniqueInput | Prisma.ContractTemplateWhereUniqueInput[]
-  update?: Prisma.ContractTemplateUpdateWithWhereUniqueWithoutTemplateInput | Prisma.ContractTemplateUpdateWithWhereUniqueWithoutTemplateInput[]
-  updateMany?: Prisma.ContractTemplateUpdateManyWithWhereWithoutTemplateInput | Prisma.ContractTemplateUpdateManyWithWhereWithoutTemplateInput[]
-  deleteMany?: Prisma.ContractTemplateScalarWhereInput | Prisma.ContractTemplateScalarWhereInput[]
 }
 
 export type ContractTemplateCreateNestedOneWithoutContractInput = {
@@ -458,80 +382,18 @@ export type ContractTemplateUncheckedUpdateOneWithoutContractNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ContractTemplateUpdateToOneWithWhereWithoutContractInput, Prisma.ContractTemplateUpdateWithoutContractInput>, Prisma.ContractTemplateUncheckedUpdateWithoutContractInput>
 }
 
-export type ContractTemplateCreateWithoutTemplateInput = {
-  id?: string
-  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  isDefault?: boolean
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contract: Prisma.ContractCreateNestedOneWithoutContractTemplateInput
-}
-
-export type ContractTemplateUncheckedCreateWithoutTemplateInput = {
-  id?: string
-  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  isDefault?: boolean
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contractId: string
-}
-
-export type ContractTemplateCreateOrConnectWithoutTemplateInput = {
-  where: Prisma.ContractTemplateWhereUniqueInput
-  create: Prisma.XOR<Prisma.ContractTemplateCreateWithoutTemplateInput, Prisma.ContractTemplateUncheckedCreateWithoutTemplateInput>
-}
-
-export type ContractTemplateCreateManyTemplateInputEnvelope = {
-  data: Prisma.ContractTemplateCreateManyTemplateInput | Prisma.ContractTemplateCreateManyTemplateInput[]
-  skipDuplicates?: boolean
-}
-
-export type ContractTemplateUpsertWithWhereUniqueWithoutTemplateInput = {
-  where: Prisma.ContractTemplateWhereUniqueInput
-  update: Prisma.XOR<Prisma.ContractTemplateUpdateWithoutTemplateInput, Prisma.ContractTemplateUncheckedUpdateWithoutTemplateInput>
-  create: Prisma.XOR<Prisma.ContractTemplateCreateWithoutTemplateInput, Prisma.ContractTemplateUncheckedCreateWithoutTemplateInput>
-}
-
-export type ContractTemplateUpdateWithWhereUniqueWithoutTemplateInput = {
-  where: Prisma.ContractTemplateWhereUniqueInput
-  data: Prisma.XOR<Prisma.ContractTemplateUpdateWithoutTemplateInput, Prisma.ContractTemplateUncheckedUpdateWithoutTemplateInput>
-}
-
-export type ContractTemplateUpdateManyWithWhereWithoutTemplateInput = {
-  where: Prisma.ContractTemplateScalarWhereInput
-  data: Prisma.XOR<Prisma.ContractTemplateUpdateManyMutationInput, Prisma.ContractTemplateUncheckedUpdateManyWithoutTemplateInput>
-}
-
-export type ContractTemplateScalarWhereInput = {
-  AND?: Prisma.ContractTemplateScalarWhereInput | Prisma.ContractTemplateScalarWhereInput[]
-  OR?: Prisma.ContractTemplateScalarWhereInput[]
-  NOT?: Prisma.ContractTemplateScalarWhereInput | Prisma.ContractTemplateScalarWhereInput[]
-  id?: Prisma.StringFilter<"ContractTemplate"> | string
-  documentTemplateId?: Prisma.StringFilter<"ContractTemplate"> | string
-  content?: Prisma.JsonFilter<"ContractTemplate">
-  isDefault?: Prisma.BoolFilter<"ContractTemplate"> | boolean
-  isActive?: Prisma.BoolFilter<"ContractTemplate"> | boolean
-  createdAt?: Prisma.DateTimeFilter<"ContractTemplate"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"ContractTemplate"> | Date | string
-  contractId?: Prisma.StringFilter<"ContractTemplate"> | string
-}
-
 export type ContractTemplateCreateWithoutContractInput = {
   id?: string
-  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isDefault?: boolean
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  template: Prisma.DocumentTemplateCreateNestedOneWithoutContractTemplatesInput
 }
 
 export type ContractTemplateUncheckedCreateWithoutContractInput = {
   id?: string
-  documentTemplateId: string
-  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isDefault?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -556,108 +418,59 @@ export type ContractTemplateUpdateToOneWithWhereWithoutContractInput = {
 
 export type ContractTemplateUpdateWithoutContractInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  template?: Prisma.DocumentTemplateUpdateOneRequiredWithoutContractTemplatesNestedInput
 }
 
 export type ContractTemplateUncheckedUpdateWithoutContractInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  documentTemplateId?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type ContractTemplateCreateManyTemplateInput = {
-  id?: string
-  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  isDefault?: boolean
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contractId: string
-}
-
-export type ContractTemplateUpdateWithoutTemplateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contract?: Prisma.ContractUpdateOneRequiredWithoutContractTemplateNestedInput
-}
-
-export type ContractTemplateUncheckedUpdateWithoutTemplateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contractId?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
-export type ContractTemplateUncheckedUpdateManyWithoutTemplateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contractId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
 
 export type ContractTemplateSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  documentTemplateId?: boolean
   content?: boolean
   isDefault?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   contractId?: boolean
-  template?: boolean | Prisma.DocumentTemplateDefaultArgs<ExtArgs>
   contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["contractTemplate"]>
 
 export type ContractTemplateSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  documentTemplateId?: boolean
   content?: boolean
   isDefault?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   contractId?: boolean
-  template?: boolean | Prisma.DocumentTemplateDefaultArgs<ExtArgs>
   contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["contractTemplate"]>
 
 export type ContractTemplateSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  documentTemplateId?: boolean
   content?: boolean
   isDefault?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   contractId?: boolean
-  template?: boolean | Prisma.DocumentTemplateDefaultArgs<ExtArgs>
   contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["contractTemplate"]>
 
 export type ContractTemplateSelectScalar = {
   id?: boolean
-  documentTemplateId?: boolean
   content?: boolean
   isDefault?: boolean
   isActive?: boolean
@@ -666,30 +479,25 @@ export type ContractTemplateSelectScalar = {
   contractId?: boolean
 }
 
-export type ContractTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "documentTemplateId" | "content" | "isDefault" | "isActive" | "createdAt" | "updatedAt" | "contractId", ExtArgs["result"]["contractTemplate"]>
+export type ContractTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "content" | "isDefault" | "isActive" | "createdAt" | "updatedAt" | "contractId", ExtArgs["result"]["contractTemplate"]>
 export type ContractTemplateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  template?: boolean | Prisma.DocumentTemplateDefaultArgs<ExtArgs>
   contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
 }
 export type ContractTemplateIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  template?: boolean | Prisma.DocumentTemplateDefaultArgs<ExtArgs>
   contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
 }
 export type ContractTemplateIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  template?: boolean | Prisma.DocumentTemplateDefaultArgs<ExtArgs>
   contract?: boolean | Prisma.ContractDefaultArgs<ExtArgs>
 }
 
 export type $ContractTemplatePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ContractTemplate"
   objects: {
-    template: Prisma.$DocumentTemplatePayload<ExtArgs>
     contract: Prisma.$ContractPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    documentTemplateId: string
-    content: runtime.JsonValue
+    content: runtime.JsonValue | null
     isDefault: boolean
     isActive: boolean
     createdAt: Date
@@ -1089,7 +897,6 @@ readonly fields: ContractTemplateFieldRefs;
  */
 export interface Prisma__ContractTemplateClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  template<T extends Prisma.DocumentTemplateDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DocumentTemplateDefaultArgs<ExtArgs>>): Prisma.Prisma__DocumentTemplateClient<runtime.Types.Result.GetResult<Prisma.$DocumentTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   contract<T extends Prisma.ContractDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContractDefaultArgs<ExtArgs>>): Prisma.Prisma__ContractClient<runtime.Types.Result.GetResult<Prisma.$ContractPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1121,7 +928,6 @@ export interface Prisma__ContractTemplateClient<T, Null = never, ExtArgs extends
  */
 export interface ContractTemplateFieldRefs {
   readonly id: Prisma.FieldRef<"ContractTemplate", 'String'>
-  readonly documentTemplateId: Prisma.FieldRef<"ContractTemplate", 'String'>
   readonly content: Prisma.FieldRef<"ContractTemplate", 'Json'>
   readonly isDefault: Prisma.FieldRef<"ContractTemplate", 'Boolean'>
   readonly isActive: Prisma.FieldRef<"ContractTemplate", 'Boolean'>
@@ -1324,6 +1130,11 @@ export type ContractTemplateFindManyArgs<ExtArgs extends runtime.Types.Extension
    * Skip the first `n` ContractTemplates.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of ContractTemplates.
+   */
   distinct?: Prisma.ContractTemplateScalarFieldEnum | Prisma.ContractTemplateScalarFieldEnum[]
 }
 

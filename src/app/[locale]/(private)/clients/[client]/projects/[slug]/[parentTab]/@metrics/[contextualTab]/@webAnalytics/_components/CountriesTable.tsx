@@ -9,10 +9,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { RecentIssue } from "@/services/codeQuality/ICodeQualityService";
 import { calculateProportion } from "@/utils/calculateProportion";
 import { Progress } from "@/components/ui/progress";
 import { countriesMap } from "@/mappers/countryMapper";
+import { useTranslations } from "next-intl";
 
 type CountriesData = {
   name: string;
@@ -31,6 +31,8 @@ export function CountriesTable({
   totalVisitors,
   totalPageViews,
 }: ICountriesTable) {
+  const t = useTranslations("projects.metrics.webAnalytics.tables.countries");
+
   const data = countries.map((country) => {
     return {
       country: countriesMap[country.name],
@@ -40,7 +42,7 @@ export function CountriesTable({
       visitorsPercentage: calculateProportion(totalVisitors, country.value),
       pageViewsPercentage: calculateProportion(
         totalPageViews,
-        country.pageviews
+        country.pageviews,
       ),
     };
   });
@@ -49,12 +51,12 @@ export function CountriesTable({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>País</TableHead>
-          <TableHead>Código</TableHead>
-          <TableHead>Visualizações</TableHead>
-          <TableHead>% Visualizações</TableHead>
-          <TableHead>Visitantes</TableHead>
-          <TableHead>% Visitantes</TableHead>
+          <TableHead>{t("country")}</TableHead>
+          <TableHead>{t("code")}</TableHead>
+          <TableHead>{t("views")}</TableHead>
+          <TableHead>{t("viewsPercent")}</TableHead>
+          <TableHead>{t("visitors")}</TableHead>
+          <TableHead>{t("visitorsPercent")}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

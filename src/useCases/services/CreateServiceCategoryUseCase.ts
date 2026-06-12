@@ -1,7 +1,10 @@
+import { ConflictError } from "@/errors";
+import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IServiceCategoryRepository } from "@/repositories/IServiceCategoryRepository";
 
 interface CreateCreateServiceCategoryUseCaseRequest {
   organizationId: string;
+  userId: string;
   name: string;
   description?: string | null;
   taxCode?: string | null;
@@ -12,6 +15,7 @@ export class CreateServiceCategoryUseCase {
 
   async execute({
     organizationId,
+    userId,
     name,
     description,
     taxCode,
@@ -19,10 +23,15 @@ export class CreateServiceCategoryUseCase {
     const serviceAlreadyExists =
       await this.serviceCategoryRepository.findByName(name, organizationId);
 
+    await checkUserPermissionForAsset(
+      "serviceCategory",
+      userId,
+      { organizationId },
+      "CREATE",
+    );
+
     if (serviceAlreadyExists) {
-      throw new Error(
-        "Já existe uma categoria de serviço cadastrada com este nome."
-      );
+      throw new ConflictError("Já existe uma categoria de serviço cadastrada com este nome.",);
     }
 
     await this.serviceCategoryRepository.create({

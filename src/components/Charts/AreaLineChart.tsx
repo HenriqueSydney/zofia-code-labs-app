@@ -18,6 +18,7 @@ import {
 } from "recharts";
 import { CustomTooltip } from "@/components/Charts/CustomTooltip";
 import { CustomLegend } from "@/components/Charts/CustomLegend";
+import { ChartContainer } from "./ChartContainer";
 import { ChartEmptyState } from "./ChartEmptyState";
 
 export interface ChartCategory {
@@ -52,13 +53,12 @@ export function AreaLineChart({
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <div
-          style={{ height: `${height}px`, width: "100%" }}
-          className="flex items-center justify-center"
-        >
+        <div className="flex min-h-0 min-w-0 items-center justify-center">
           {hasData ? (
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data}>
+            <ChartContainer height={height}>
+              {({ width, height: chartHeight }) => (
+                <ResponsiveContainer width={width} height={chartHeight}>
+                  <AreaChart data={data}>
                 <defs>
                   {categories.map((cat) => (
                     <linearGradient
@@ -118,8 +118,10 @@ export function AreaLineChart({
                     activeDot={{ r: 4, strokeWidth: 0 }}
                   />
                 ))}
-              </AreaChart>
-            </ResponsiveContainer>
+                  </AreaChart>
+                </ResponsiveContainer>
+              )}
+            </ChartContainer>
           ) : (
             <ChartEmptyState />
           )}

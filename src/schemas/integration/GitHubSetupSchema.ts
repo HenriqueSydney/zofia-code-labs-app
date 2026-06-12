@@ -1,3 +1,4 @@
+import { v } from "@/schemas/validationMessages";
 import z from "zod";
 
 export const GitHubSetupSchema = z
@@ -6,7 +7,7 @@ export const GitHubSetupSchema = z
     shouldClone: z.boolean().default(false), // Novo switch
     repoName: z
       .string()
-      .min(3, "Mínimo 3 caracteres")
+      .min(3, v.minThreeChars)
       .regex(/^[a-z0-9-]+$/),
     repositoryId: z.string().optional(), // Para vincular existente
     templateRepoId: z.string().optional(), // Para clonar de um base
@@ -19,7 +20,7 @@ export const GitHubSetupSchema = z
       return true;
     },
     {
-      message: "Seleção obrigatória",
+      message: v.selectionRequired,
       path: ["templateRepoId"],
     }
   );

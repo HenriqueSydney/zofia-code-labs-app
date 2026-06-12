@@ -12,27 +12,32 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, Calendar } from "lucide-react";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { getPendingSettlementsAction } from "@/actions/stats/getPendingSettlementsAction";
+import { getLocale, getTranslations } from "next-intl/server";
 
 export async function PendingSettlements() {
+  const t = await getTranslations("financial.pendingSettlements");
+  const locale = await getLocale();
   const { data } = await getPendingSettlementsAction();
 
   if (!data) return null;
 
+  const dateFormatter = new Intl.DateTimeFormat(locale);
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Pagamentos Pendentes</CardTitle>
+        <CardTitle>{t("title")}</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Cliente</TableHead>
-              <TableHead>Projeto</TableHead>
-              <TableHead className="text-right">Valor</TableHead>
-              <TableHead>Vencimento</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Ações</TableHead>
+              <TableHead>{t("columns.client")}</TableHead>
+              <TableHead>{t("columns.project")}</TableHead>
+              <TableHead className="text-right">{t("columns.amount")}</TableHead>
+              <TableHead>{t("columns.dueDate")}</TableHead>
+              <TableHead>{t("columns.status")}</TableHead>
+              <TableHead className="text-right">{t("columns.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -51,21 +56,23 @@ export async function PendingSettlements() {
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
-                    {new Date(payment.dueDate).toLocaleDateString("pt-BR")}
+                    {dateFormatter.format(new Date(payment.dueDate))}
                   </div>
                 </TableCell>
                 <TableCell>
                   {payment.daysOverdue > 0 ? (
                     <Badge variant="destructive">
-                      {payment.daysOverdue} dias atrasado
+                      {t("status.overdueDays", {
+                        count: payment.daysOverdue,
+                      })}
                     </Badge>
                   ) : (
-                    <Badge variant="secondary">No prazo</Badge>
+                    <Badge variant="secondary">{t("status.onTime")}</Badge>
                   )}
                 </TableCell>
                 <TableCell className="text-right">
                   <Button variant="outline" size="sm">
-                    Enviar Lembrete
+                    {t("sendReminder")}
                   </Button>
                 </TableCell>
               </TableRow>
@@ -76,7 +83,7 @@ export async function PendingSettlements() {
                   colSpan={6}
                   className="text-center h-24 text-muted-foreground"
                 >
-                  Nenhum pagamento pendente.
+                  {t("empty")}
                 </TableCell>
               </TableRow>
             )}

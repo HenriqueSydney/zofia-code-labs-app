@@ -214,6 +214,9 @@ export interface IDocumentSignService {
   /** Dispara o processo de coleta de assinaturas (envia e-mails) */
   sendForSignature(documentId: string): Promise<void>;
 
+  /** Cancela um documento pendente no provedor de assinatura */
+  cancelDocument(documentId: string): Promise<void>;
+
   /** Verifica o status atual do documento */
   getDocumentStatus(documentId: string): Promise<DocumentStatus>;
 

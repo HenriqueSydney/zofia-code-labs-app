@@ -1,4 +1,6 @@
-import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
+import { ResourceNotFoundError } from "@/errors";
+import { assertClientAccessForUser } from "@/lib/auth/resolveClientAccess";
+import { MemberRole } from "@/generated/prisma/enums";
 import {
   IClientsRepository,
   IUpdateClientDTO,
@@ -6,20 +8,32 @@ import {
 import { IS3StorageService } from "@/services/s3Client/IS3StorageService";
 import { prepareFileToUpload } from "@/utils/prepareFileToUpload";
 
+interface UpdateClientUseCaseRequest {
+  data: IUpdateClientDTO;
+  userId: string;
+  memberRole?: MemberRole | null;
+}
+
 export class UpdateClientUseCase {
   constructor(
     private clientsRepository: IClientsRepository,
     private storageService: IS3StorageService,
   ) {}
 
-  async execute(data: IUpdateClientDTO, userId: string) {
+  async execute({ data, userId, memberRole }: UpdateClientUseCaseRequest) {
     const client = await this.clientsRepository.findById(data.id);
 
     if (!client) {
-      throw new Error("Cliente não encontrado.");
+      throw new ResourceNotFoundError("Cliente não encontrado.");
     }
 
-    await checkUserPermissionForAsset("client", userId, client, "READ");
+    await assertClientAccessForUser({
+      userId,
+      memberRole,
+      clientSlug: client.slug,
+      client,
+      operation: "UPDATE",
+    });
 
     let uploadedDocument: any;
     if (data.file) {

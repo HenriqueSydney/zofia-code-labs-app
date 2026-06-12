@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { getParams } from "@/utils/getParams";
 import { TabsContent } from "@radix-ui/react-tabs";
@@ -11,15 +11,39 @@ import { Separator } from "@/components/ui/separator";
 import { ArrowDownCircle, BanknoteX, Wallet } from "lucide-react";
 import { listExpensesAction } from "@/actions/expenses/listExpenseAction";
 import { EmptyState } from "@/components/EmptyState";
+import { getTranslations } from "next-intl/server";
+import { auth } from "@/auth";
+import { hasPermission } from "@/utils/hasPermission";
+import { PERMISSIONS } from "@/constants/permissions";
 
 interface IParams {
   params?: Promise<{ slug: string }>;
 }
 
 export default async function ExpenseTab({ params }: IParams) {
+  const t = await getTranslations("projects.commercial.expenses");
+  const tErrors = await getTranslations("projects.errors");
+  const session = await auth();
   const { slug } = await getParams(params, ["slug"]);
 
-  // Chama a server action de listar despesas
+  const canCreateExpense = hasPermission(
+    session?.user,
+    PERMISSIONS.EXPENSE.CREATE,
+  );
+  const canReadExpense = hasPermission(session?.user, PERMISSIONS.EXPENSE.READ);
+
+  if (!canReadExpense) {
+    return (
+      <TabsContent value="expenses" className="mt-6">
+        <EmptyState
+          title={tErrors("noPermissionTitle")}
+          icon={BanknoteX}
+          description={tErrors("noPermissionExpense")}
+        />
+      </TabsContent>
+    );
+  }
+
   const [error, success] = await operationWrapper(
     "action",
     "listExpensesAction",
@@ -32,7 +56,7 @@ export default async function ExpenseTab({ params }: IParams) {
   );
 
   if (error) {
-    throw new AppError("Erro ao listar as despesas");
+    throw new ValidationError("Erro ao listar as despesas");
   }
 
   const expenses = success.data?.expenses ?? [];
@@ -81,19 +105,23 @@ export default async function ExpenseTab({ params }: IParams) {
         <CardHeader className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-2">
             <Wallet className="w-5 h-5 text-muted-foreground" />
-            <CardTitle className="text-lg">Contas a Pagar & Despesas</CardTitle>
+            <CardTitle className="text-lg">{t("pageTitle")}</CardTitle>
           </div>
-          <CreateExpenseForm projectSlug={slug} />
+          {canCreateExpense && <CreateExpenseForm projectSlug={slug} />}
         </CardHeader>
         <CardContent>
           {/* Lista de Despesas */}
           <div className="space-y-3">
             {expenses.length === 0 ? (
               <EmptyState
-                title="Nenhuma despesa "
-                description="Nenhum despesa registrada até o momento. Registre um pagamento ou aguarde o projeto chegar na fase de pagamento."
+                title={t("emptyTitle")}
+                description={t("emptyDescription")}
                 icon={BanknoteX}
-                action={<CreateExpenseForm projectSlug={slug} />}
+                action={
+                  canCreateExpense ? (
+                    <CreateExpenseForm projectSlug={slug} />
+                  ) : undefined
+                }
               />
             ) : (
               expenses.map((expense) => (
@@ -101,6 +129,7 @@ export default async function ExpenseTab({ params }: IParams) {
                   key={expense.id}
                   expense={expense}
                   projectSlug={slug}
+                  canCreateExpense={canCreateExpense}
                 />
               ))
             )}

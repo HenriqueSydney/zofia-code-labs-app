@@ -1,6 +1,6 @@
 # Requisitos funcionais
 
-Esta seção lista **requisitos funcionais** alinhados ao domínio da Zofia Code Labs App e ao estado atual do código/roadmap. Itens **planejados** ou **parciais** estão indicados explicitamente.
+Esta seção lista **requisitos funcionais** alinhados ao domínio da Zofia Code Labs App e ao estado atual do código/roadmap (atualizado com base em `backlog.md` e na implementação em maio/2026). Itens **implementados**, **parciais** ou **planejados** estão indicados explicitamente.
 
 **Convenções**
 
@@ -16,9 +16,12 @@ Esta seção lista **requisitos funcionais** alinhados ao domínio da Zofia Code
 | RF-AUTH-01 | M | O sistema deve permitir autenticação de usuários (sessão/credenciais compatíveis com Login/Senha e OAUTH). |
 | RF-AUTH-02 | M | Dados de negócio devem ser **isolados por organização** (`Organization` / tenant). |
 | RF-AUTH-03 | M | Deve existir gestão de **membros** da organização com papéis base (`MemberRole`) e opcionalmente **perfil customizado** (`CustomRole`). |
-| RF-AUTH-04 | M | Operações sensíveis em recursos (projeto, proposta, contrato, catálogo, etc.) devem ser condicionadas a **permissões** verificadas no backend (estratégias por tipo de ativo). |
-| RF-AUTH-05 | S | Histórico de logins pode ser registrado para segurança e suporte (`LoginHistory`). |
-| RF-AUTH-06 | C | **Convites** com token e fluxo público de aceitação — *planejado no roadmap* (`README.md`). |
+| RF-AUTH-04 | M | Operações sensíveis em recursos (projeto, proposta, contrato, catálogo, etc.) devem ser condicionadas a **permissões** verificadas no backend (Strategy Pattern em `lib/auth/strategies`). |
+| RF-AUTH-05 | M | Rotas da área privada devem respeitar **mapa de permissões** no middleware (`routePermissionMap`, `proxy.ts`). |
+| RF-AUTH-06 | M | **Perfis customizados** (`CustomRole`) e permissões específicas por `Member` devem compor o conjunto efetivo de permissões na sessão. |
+| RF-AUTH-07 | S | Histórico de logins registrado para segurança e suporte (`LoginHistory`). |
+| RF-AUTH-08 | C | **Convites** de membros com token e página pública de aceitação — *UI pronta; backend de envio/token pendente* (`backlog.md`). |
+| RF-AUTH-09 | M | Usuários **portal** (`TENANT_OBSERVER`) devem acessar apenas clientes e rotas permitidas (`clientPortalRouteMap`). |
 
 ---
 
@@ -28,7 +31,10 @@ Esta seção lista **requisitos funcionais** alinhados ao domínio da Zofia Code
 |----|------------|-----------|
 | RF-CRM-01 | M | Cadastro e manutenção de **clientes** com dados de PJ (razão social, nome fantasia, CNPJ, contatos, endereço conforme modelo). |
 | RF-CRM-02 | M | Unicidade de cliente por **CNPJ dentro da mesma organização**. |
-| RF-CRM-03 | S | Associação de **usuários internos** ao cliente como “funcionários do cliente” (`ClientEmployees`), com papel e status. |
+| RF-CRM-03 | M | Cadastro de **responsável legal** (nome, e-mail, telefone) obrigatório para envio de contrato ao Documenso (`assertClientHasResponsible`). |
+| RF-CRM-04 | M | **Funcionários do cliente** (`ClientEmployees`) com papéis `ADMIN`, `USER`, `VIEWER` e convite ao portal. |
+| RF-CRM-05 | S | Dashboard do cliente: estatísticas, pipeline de projetos, evolução de entrega e impedimentos (blockers). |
+| RF-CRM-06 | C | Indicadores de saúde do cliente (NPS, ticket médio) — *UI placeholder em `ClientHealthCard`; dados reais pendentes*. |
 
 ---
 
@@ -122,20 +128,32 @@ Esta seção lista **requisitos funcionais** alinhados ao domínio da Zofia Code
 | RF-DSH-01 | M | **Dashboard principal** com visão consolidada relevante ao usuário/organização. |
 | RF-DSH-02 | S | **Dashboard financeiro** organizacional. |
 | RF-DSH-03 | S | Áreas de **métricas por projeto**: ciclo de vida, qualidade de código, analytics — conforme abas implementadas. |
-| RF-DSH-04 | C | Relatórios de IA / analytics adicionais onde existirem rotas dedicadas (`ai-reports`, etc.). |
+| RF-DSH-04 | C | Relatórios de IA / analytics adicionais onde existirem rotas dedicadas (`ai-reports`, etc.) — *rotas existem; conteúdo dinâmico em evolução*. |
 
 ---
 
-## 11. Notificações
+## 11. Organização (tenant) e SaaS
 
 | ID | Prioridade | Requisito |
 |----|------------|-----------|
-| RF-NOT-01 | S | Envio de **e-mails transacionais** (React Email) para eventos de negócio (proposta, contrato, pagamento, etc.). |
-| RF-NOT-02 | C | Cobertura completa de todos os templates na **orquestração dos eventos** — *parcial conforme checklist em `README.md`*. |
+| RF-ORG-01 | M | Visualização e edição de **membros** da organização com papéis e permissões específicas. |
+| RF-ORG-02 | M | CRUD de **perfis de acesso** customizados com seleção granular de permissões. |
+| RF-ORG-03 | S | **Dashboard da organização** com estatísticas operacionais. |
+| RF-ORG-04 | S | Tela de **billing** (plano, consumo, faturas) — *UI implementada; integração real com gateway pendente*. |
+| RF-ORG-05 | C | **Criação self-service** de nova organização (onboarding SaaS) — *planejado*. |
 
 ---
 
-## 12. Auditoria
+## 12. Notificações
+
+| ID | Prioridade | Requisito |
+|----|------------|-----------|
+| RF-NOT-01 | M | Biblioteca de **templates** React Email para eventos de negócio (proposta, contrato, pagamento, SLA, NPS, etc.). |
+| RF-NOT-02 | S | **Disparo automático** nos use cases e jobs (crons) conforme mudança de status — *templates prontos; ligação aos fluxos pendente* (`backlog.md`). |
+
+---
+
+## 13. Auditoria
 
 | ID | Prioridade | Requisito |
 |----|------------|-----------|
@@ -143,11 +161,12 @@ Esta seção lista **requisitos funcionais** alinhados ao domínio da Zofia Code
 
 ---
 
-## 13. Internacionalização
+## 14. Internacionalização
 
 | ID | Prioridade | Requisito |
 |----|------------|-----------|
-| RF-I18N-01 | S | Interface disponível por **locale** nas rotas `[locale]`, com textos externalizados (`next-intl`). |
+| RF-I18N-01 | M | Interface disponível por **locale** nas rotas `[locale]` (`pt`, `en`), com textos em `messages/*.json`. |
+| RF-I18N-02 | S | Mensagens de erro de actions resolvidas com i18n (`resolveActionErrorMessage`). |
 
 ---
 

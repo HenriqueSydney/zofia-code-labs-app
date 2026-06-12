@@ -1,7 +1,7 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { handleErrors } from "@/errors/handleErrors";
 
 import {
   UpdateMemberSpecificPermissionsSchema,
@@ -16,7 +16,7 @@ export async function updateMemberSpecificPermissionsAction(
   const session = await auth();
 
   if (!session) {
-    return { success: false, error: "Usuário não logado." };
+    return { success: false, error: await serverErrorMessage("notLoggedIn") };
   }
 
   const validation = updateMemberSpecificPermissionsSchema.safeParse(data);
@@ -37,7 +37,7 @@ export async function updateMemberSpecificPermissionsAction(
     revalidatePath(`/organization/${session.user.organizationId}/members`);
     return { success: true, data: member };
   } catch (error) {
-    const message = handleErrors(error);
+    const message = await resolveActionErrorMessage(error);
     return { success: false, error: message };
   }
 }

@@ -1,4 +1,5 @@
 // use-cases/dashboard/GetRecentProjectsUseCase.ts
+import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IProjectStatsRepository } from "@/repositories/IProjectStatsRepository";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { date } from "@/lib/dayjs"; // Para formatar a data se quiser retornar string
@@ -12,8 +13,12 @@ export class GetRecentProjectsUseCase {
   constructor(private statsRepo: IProjectStatsRepository) {}
 
   async execute({ organizationId, userId }: IGetRecentProjectsUseCaseParams) {
-    // 1. Verificação de Segurança
-    // await checkUserPermissionForOrganization(organizationId, userId);
+    await checkUserPermissionForAsset(
+      "project",
+      userId,
+      { organizationId },
+      "READ",
+    );
 
     // 2. Busca dos dados
     const projects = await this.statsRepo.getRecentProjects(organizationId);

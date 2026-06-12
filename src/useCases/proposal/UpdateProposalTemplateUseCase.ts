@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError, ValidationError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IProposalRepository } from "@/repositories/IProposalRepository";
 import { IProposalTemplateRepository } from "@/repositories/IProposalTemplateRepository";
@@ -21,11 +21,11 @@ export class UpdateProposalTemplateUseCase {
     const proposal = await this.proposalRepository.findById(data.proposalId);
 
     if (!proposal) {
-      throw new AppError("Proposta não localizada");
+      throw new ResourceNotFoundError("Proposta não localizada");
     }
 
     if (!proposal.proposalTemplate) {
-      throw new AppError("Proposta não foi gerada pelo sistema");
+      throw new ValidationError("Proposta sem snapshot de documento");
     }
 
     await checkUserPermissionForAsset(

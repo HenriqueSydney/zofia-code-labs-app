@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { IntegrationTypeForm } from "./IntegrationTypeForm";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { deleteIntegrationTypeAction } from "@/actions/integrations/deleteIntegrationTypeAction";
 
@@ -30,6 +31,7 @@ interface IIntegrationTypeRemoveOrEdit {
 export function IntegrationTypeRemoveOrEdit({
   integration,
 }: IIntegrationTypeRemoveOrEdit) {
+  const t = useTranslations("settings.integrations.catalog.form");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   async function handleDelete(id: string) {
@@ -40,7 +42,7 @@ export function IntegrationTypeRemoveOrEdit({
       return;
     }
 
-    toast.success("Tipo de Integração criado com sucesso!");
+    toast.success(t("toastDeleteSuccess"));
   }
 
   return (
@@ -57,10 +59,8 @@ export function IntegrationTypeRemoveOrEdit({
         </DialogTrigger>
         <DialogContent className="max-w-6xl">
           <DialogHeader>
-            <DialogTitle>{"Editar Tipo de Integração"}</DialogTitle>
-            <DialogDescription>
-              Preencha os dados do tipo de integração
-            </DialogDescription>
+            <DialogTitle>{t("dialogEditTitle")}</DialogTitle>
+            <DialogDescription>{t("dialogEditDescription")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 "></div>
           <IntegrationTypeForm

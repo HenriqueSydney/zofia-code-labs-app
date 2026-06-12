@@ -16,15 +16,16 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
 export function TechnicalDebtBarChart({ data }: { data: any[] }) {
+  const t = useTranslations("projects.metrics.codeQuality.charts.technicalDebt");
+
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle>Débito Técnico</CardTitle>
-        <CardDescription>
-          Horas estimadas para correção ao longo do tempo
-        </CardDescription>
+        <CardTitle>{t("title")}</CardTitle>
+        <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="h-[250px] w-full min-h-[250px]">
@@ -57,7 +58,10 @@ export function TechnicalDebtBarChart({ data }: { data: any[] }) {
                   borderRadius: "8px",
                   borderColor: "hsl(var(--border))",
                 }}
-                formatter={(value) => [`${value} horas`, "Dívida Técnica"]}
+                formatter={(value) => [
+                  t("hoursValue", { value: Number(value ?? 0) }),
+                  t("tooltip"),
+                ]}
               />
               <Bar
                 dataKey="technicalDebt"

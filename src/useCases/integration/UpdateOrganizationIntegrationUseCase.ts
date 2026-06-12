@@ -1,7 +1,12 @@
+import { IntegrationError, ValidationError } from "@/errors";
 import { OrganizationIntegration } from "@/generated/prisma/client";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IIntegrationTypeRepository } from "@/repositories/IIntegrationTypeRepository";
 import { IOrganizationIntegrationRepository } from "@/repositories/IOrganizationIntegrationRepository";
+import {
+  getInfisicalIntegrationFieldKeys,
+  isTagIntegrationField,
+} from "@/schemas/integration/integrationType";
 import { makeSecretManagementService } from "@/services/secretManagement/makeSecretManagementService";
 
 interface UpdateRequest {
@@ -28,7 +33,7 @@ export class UpdateOrganizationIntegrationUseCase {
    
     // 1. Busca a integração atual
     const integration = await this.repository.findById(id);
-    if (!integration) throw new Error("Integração não encontrada.");
+    if (!integration) throw new IntegrationError("Integração não encontrada.");
 
     // 2. Valida permissão (Multi-tenant)
     await checkUserPermissionForAsset(
@@ -42,9 +47,9 @@ export class UpdateOrganizationIntegrationUseCase {
     const type = await this.typeRepository.findById(
       integration.integrationTypeId
     );
-    if (!type) throw new Error("Tipo de integração não encontrado.");
+    if (!type) throw new IntegrationError("Tipo de integração não encontrado.");
 
-    const fieldsSchema = (type.fieldsSchema as any[]) || [];
+    const fieldsSchema = (type.fieldsSchema as Record<string, unknown>[]) || [];
     const currentConfig = integration.config as any;
 
     // Determina o estado final do BYOL (se não enviado, mantém o atual)
@@ -56,14 +61,18 @@ export class UpdateOrganizationIntegrationUseCase {
       // Se estiver migrando para BYOL agora ou atualizando chaves,
       // validamos se as chaves enviadas condizem com o schema
       for (const field of fieldsSchema) {
+        if (isTagIntegrationField(field)) {
+          continue;
+        }
+
         // Se for uma migração para BYOL, todos os campos do schema devem estar presentes
         if (
           enableByol === true &&
           !integration.enableByol &&
-          !secretValues[field.key]
+          !secretValues[String(field.key)]
         ) {
-          throw new Error(
-            `O campo '${field.label}' é obrigatório para ativar instância própria.`
+          throw new ValidationError(
+            `O campo '${field.label}' é obrigatório para ativar instância própria.`,
           );
         }
       }
@@ -83,15 +92,22 @@ export class UpdateOrganizationIntegrationUseCase {
       // Garante que a pasta existe (caso tenha sido deletada ou erro no create)
       await secretManagementService.createFolder(infisicalPath);
 
-      for (const [key, value] of Object.entries(secretValues)) {
-        if (value) {
-          await secretManagementService.upsertSecret(key, value, {
-            path: infisicalPath,
-          });
+      const tagKeys = new Set(
+        fieldsSchema
+          .filter(isTagIntegrationField)
+          .map((field) => String(field.key)),
+      );
 
-          // Atualiza o hint apenas do que foi alterado
-          hints[key] = value.length > 4 ? `***${value.slice(-4)}` : "***";
+      for (const [key, value] of Object.entries(secretValues)) {
+        if (tagKeys.has(key) || !value) {
+          continue;
         }
+
+        await secretManagementService.upsertSecret(key, value, {
+          path: infisicalPath,
+        });
+
+        hints[key] = value.length > 4 ? `***${value.slice(-4)}` : "***";
       }
     }
 
@@ -113,7 +129,9 @@ export class UpdateOrganizationIntegrationUseCase {
         infisical: {
           path: shouldSaveToInfisical ? infisicalPath : null,
           env: process.env.NODE_ENV === "production" ? "prod" : "dev",
-          keys: shouldSaveToInfisical ? fieldsSchema.map((f) => f.key) : [],
+          keys: shouldSaveToInfisical
+            ? getInfisicalIntegrationFieldKeys(fieldsSchema)
+            : [],
         },
         metadata,
       },

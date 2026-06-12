@@ -1,3 +1,4 @@
+import { ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import {
   IProjectsRepository,
@@ -19,7 +20,7 @@ export class GetProjectBySlugUseCase {
     const project = await this.projectsRepository.findBySlug(slug);
 
     if (!project) {
-      throw new Error("Projeto não encontrado.");
+      throw new ResourceNotFoundError("Projeto não encontrado.");
     }
 
     await checkUserPermissionForAsset("project", userId, project, "READ");

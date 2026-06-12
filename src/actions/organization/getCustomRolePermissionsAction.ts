@@ -1,18 +1,18 @@
 "use server";
 
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
+import { UnauthorizedError, ValidationError } from "@/errors";
 import { makeGetOrganizationCustomRoleByIdUseCase } from "@/useCases/organization/factories/makeGetOrganizationCustomRoleByIdUseCase";
 
 export async function getCustomRolePermissionsAction(customRoleId: string) {
   const session = await auth();
 
   if (!session) {
-    throw new AppError("Usuário não logado.");
+    throw new UnauthorizedError("notLoggedIn");
   }
 
   if (!customRoleId) {
-    throw new AppError("ID do Perfil de Acesso é obrigatório.");
+    throw new ValidationError("ID do Perfil de Acesso é obrigatório.");
   }
 
   const useCase = makeGetOrganizationCustomRoleByIdUseCase();

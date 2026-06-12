@@ -24,32 +24,35 @@ import { reorderBacklogItemAction } from "@/actions/backlog/reorderBacklogItemAc
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "@/i18n/navigation";
-import { EmptyState } from "@/components/EmptyState";
-import { ListTodo } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface IBacklogList {
   backlog: BacklogItemWithDetails[];
+  canManageBacklog: boolean;
 }
 
-export function BacklogList({ backlog }: IBacklogList) {
+export function BacklogList({ backlog, canManageBacklog }: IBacklogList) {
+  const t = useTranslations("projects.backlog");
+  const tSave = useTranslations("settings.services.backlog.saveStatus");
+  const tCommon = useTranslations("common");
   const [items, setItems] = useState(backlog);
   const [saveIndicator, setSaveIndicator] = useState<
-    "Error ao salvar..." | "Salvando..." | "Salvo" | null
+    "error" | "saving" | "saved" | null
   >(null);
-  const router = useRouter();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const handleDragEnd = async (event: DragEndEvent) => {
+    if (!canManageBacklog) return;
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
-    setSaveIndicator("Salvando...");
+    setSaveIndicator("saving");
 
     // 1. Calcule a nova lista PRIMEIRO (fora do setItems)
     const oldIndex = items.findIndex((item) => item.id === active.id);
@@ -72,34 +75,36 @@ export function BacklogList({ backlog }: IBacklogList) {
       });
 
       if (!result.success) {
-        toast.error("Erro ao sincronizar ordem. Revertendo...");
-        setSaveIndicator("Error ao salvar...");
+        toast.error(tCommon("errors.syncOrder"));
+        setSaveIndicator("error");
         setItems(backlog); // Reverte para a prop inicial vinda do servidor
         return;
       }
 
-      setSaveIndicator("Salvo");
+      setSaveIndicator("saved");
       // Limpa o indicador após 2 segundos
       setTimeout(() => setSaveIndicator(null), 2000);
     } catch (error) {
-      setSaveIndicator("Error ao salvar...");
-      toast.error("Erro de conexão.");
+      setSaveIndicator("error");
+      toast.error(tCommon("errors.connection"));
       setItems(backlog); // Reverte em caso de erro de rede
     }
   };
 
   const itemsWithoutCancel = items.filter(
-    (item) => item.status !== "CANCELED" && item.status !== "DONE"
+    (item) => item.status !== "CANCELED" && item.status !== "DONE",
   );
 
   return (
     <Card>
       <CardHeader className="border-b">
         <div className="flex items-center justify-between">
-          <CardTitle>Backlog do Produto</CardTitle>
+          <CardTitle>{t("listTitle")}</CardTitle>
           {saveIndicator && (
             <Badge variant="outline" className="text-muted-foreground">
-              {saveIndicator}
+              {saveIndicator === "saving" && tSave("saving")}
+              {saveIndicator === "saved" && tSave("saved")}
+              {saveIndicator === "error" && tSave("saving")}
             </Badge>
           )}
         </div>
@@ -119,6 +124,7 @@ export function BacklogList({ backlog }: IBacklogList) {
                 .filter((item) => item.status !== "CANCELED")
                 .map((item, index) => (
                   <SortableBacklogItem
+                    canManageBacklog={canManageBacklog}
                     key={item.id}
                     item={item}
                     marginBotton={itemsWithoutCancel.length > index + 1}

@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
 import {
   reorderBacklogItemSchema,
@@ -14,7 +15,7 @@ export async function reorderBacklogItemAction(data: ReorderBacklogItemType) {
   if (!session?.user?.organizationId) {
     return {
       success: false,
-      message: "Sessão expirada ou usuário sem organização vinculada.",
+      message: await serverErrorMessage("sessionExpiredNoOrg"),
     };
   }
 
@@ -25,7 +26,7 @@ export async function reorderBacklogItemAction(data: ReorderBacklogItemType) {
     return {
       success: false,
       message:
-        parsed.error.issues[0].message || "Dados inválidos para atualização.",
+        parsed.error.issues[0].message || await serverErrorMessage("invalidData"),
     };
   }
 
@@ -59,7 +60,7 @@ export async function reorderBacklogItemAction(data: ReorderBacklogItemType) {
 
     return {
       success: false,
-      message: "Erro interno ao atualizar backlog.",
+      message: await serverErrorMessage("backlogUpdateFailed"),
     };
   }
 }

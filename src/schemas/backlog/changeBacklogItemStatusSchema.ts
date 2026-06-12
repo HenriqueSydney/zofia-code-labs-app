@@ -1,10 +1,11 @@
+import { v } from "@/schemas/validationMessages";
 import { z } from "zod";
 
 export const changeBacklogItemStatusSchema = z.object({
-  id: z.cuid("ID do backlog inválido."),
+  id: z.cuid(v.invalidBacklogId),
 
   status: z.enum(["TODO", "IN_PROGRESS", "REVIEW", "DONE", "CANCELED"], {
-    error: "Status fornecido é inválido.",
+    error: v.invalidBacklogStatus,
   }),
 });
 

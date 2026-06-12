@@ -1,3 +1,4 @@
+import { IntegrationError, ExternalServiceError } from "@/errors";
 import { IProjectIntegrationRepository } from "@/repositories/IProjectIntegrationRepository";
 import { IUmamiRepository } from "@/repositories/IUmamiRepository";
 import {
@@ -22,7 +23,7 @@ export class SyncUmamiMetricsUseCase {
       );
 
     if (!projectIntegration) {
-      throw new Error(`Integração do Projeto com o Umami não encontrada.`);
+      throw new IntegrationError(`Integração do Projeto com o Umami não encontrada.`);
     }
 
     // 2. Instancia o serviço através da Factory
@@ -38,9 +39,10 @@ export class SyncUmamiMetricsUseCase {
      * Geralmente o Umami precisa de um range de datas.
      * Aqui buscamos os dados consolidados dos últimos 30 dias para o snapshot.
      */
-    const websiteId = "f4d85941-32ee-40f6-a0c0-80a788a6de7e"; //(projectIntegration.config as any)?.externalId;
+    const websiteId = (projectIntegration.config as { externalId?: string } | null)
+      ?.externalId;
     if (!websiteId) {
-      throw new Error("ID do website não configurado na integração do Umami.");
+      throw new ExternalServiceError("ID do website não configurado na integração do Umami.");
     }
 
     const startAt = new Date();

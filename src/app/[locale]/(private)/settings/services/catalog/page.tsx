@@ -15,6 +15,10 @@ import { fetchServiceCategoryAction } from "@/actions/services/fetchServiceCateg
 import { QueryFilter } from "@/components/QueryFilter";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
+import { PERMISSIONS } from "@/constants/permissions";
+import { auth } from "@/auth";
+import { hasPermission } from "@/utils/hasPermission";
+import { getTranslations } from "next-intl/server";
 
 interface IParams {
   searchParams?: Promise<{ [key: string]: string | undefined }>;
@@ -23,29 +27,39 @@ interface IParams {
 const ServiceCatalog = async ({ searchParams }: IParams) => {
   const { query } = await getParams(searchParams, ["query"]);
 
-  const [serviceCategoriesResponse, serviceTypeResponse] = await Promise.all([
-    operationWrapper(
-      "action",
-      "fetchServiceCategoryAction",
-      () => {
-        return fetchServiceCategoryAction();
-      },
-      {
-        cache: "no-cache",
-      },
-    ),
-    operationWrapper(
-      "action",
-      "fetchServiceTypeAction",
-      () => {
-        return fetchServiceTypeAction(query);
-      },
-      {
-        cache: "no-cache",
-      },
-    ),
-  ]);
-
+  const [serviceCategoriesResponse, serviceTypeResponse, t, session] =
+    await Promise.all([
+      operationWrapper(
+        "action",
+        "fetchServiceCategoryAction",
+        () => {
+          return fetchServiceCategoryAction();
+        },
+        {
+          cache: "no-cache",
+        },
+      ),
+      operationWrapper(
+        "action",
+        "fetchServiceTypeAction",
+        () => {
+          return fetchServiceTypeAction(query);
+        },
+        {
+          cache: "no-cache",
+        },
+      ),
+      getTranslations("settings.services.catalog"),
+      auth(),
+    ]);
+  const canEdit = hasPermission(
+    session?.user,
+    PERMISSIONS.SERVICE_CATALOG.MANAGE,
+  );
+  const canRead = hasPermission(
+    session?.user,
+    PERMISSIONS.SERVICE_CATALOG.READ,
+  );
   const [serviceCategoriesError, serviceCategoriesSuccess] =
     serviceCategoriesResponse;
 
@@ -65,14 +79,11 @@ const ServiceCatalog = async ({ searchParams }: IParams) => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <SectionHeading
-          title="Catálogo de Serviços"
-          description="Gerencie os serviços oferecidos pela empresa"
-        />
-        <CreateServiceTypeForm categories={categories} />
+        <SectionHeading title={t("title")} description={t("description")} />
+        {canEdit && <CreateServiceTypeForm categories={categories} />}
       </div>
 
-      <QueryFilter placeholder="Buscar serviços..." />
+      <QueryFilter placeholder={t("search")} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
         {serviceTypes.map((service) => (
@@ -94,10 +105,12 @@ const ServiceCatalog = async ({ searchParams }: IParams) => {
                   </div>
                 </div>
 
-                <ServiceTypeRemoveOrEdit
-                  service={service}
-                  categories={categories}
-                />
+                {canEdit && (
+                  <ServiceTypeRemoveOrEdit
+                    service={service}
+                    categories={categories}
+                  />
+                )}
               </div>
             </CardHeader>
             <CardContent className="flex flex-1 flex-col justify-between space-y-3">
@@ -108,12 +121,14 @@ const ServiceCatalog = async ({ searchParams }: IParams) => {
               </div>
 
               <div className="w-full flex items-center justify-between">
-                <Link href={`${service.id}`}>
-                  <Button className="m-0" variant="outline" type="button">
-                    <FileCodeCorner className="w-4 h-4" />
-                    Detalhes do Serviço
-                  </Button>
-                </Link>
+                {canRead && (
+                  <Link href={`${service.id}`}>
+                    <Button className="m-0" variant="outline" type="button">
+                      <FileCodeCorner className="w-4 h-4" />
+                      Detalhes do Serviço
+                    </Button>
+                  </Link>
+                )}
                 <p className="text-xl font-bold text-primary text-end">
                   {formatCurrency(service.basePrice ?? 0)}
                 </p>
@@ -126,8 +141,8 @@ const ServiceCatalog = async ({ searchParams }: IParams) => {
       {serviceTypes.length === 0 && (
         <EmptyState
           icon={Package}
-          title="Nenhum serviço localizado"
-          description="Cadastre os serviços que sua empresa fornece para que você possa montar propostas contextualizadas e com valor agregado"
+          title={t("emptyTitle")}
+          description={t("emptyDescription")}
         />
       )}
     </div>

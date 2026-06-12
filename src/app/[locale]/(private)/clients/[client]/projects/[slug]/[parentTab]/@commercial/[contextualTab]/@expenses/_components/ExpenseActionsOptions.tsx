@@ -32,7 +32,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/twMerge";
 import { Calendar } from "@/components/ui/calendar";
 import { date } from "@/lib/dayjs";
 import { AlertDialogFooter } from "@/components/ui/alert-dialog";
@@ -41,6 +41,7 @@ import { ExpenseForm } from "./ExpenseForm";
 import { ExpenseStatus } from "@/generated/prisma/enums";
 import { deleteExpenseAction } from "@/actions/expenses/deleteExpenseAction";
 import { updateExpenseStatusAction } from "@/actions/expenses/updateExpenseStatusAction";
+import { useTranslations } from "next-intl";
 
 interface IExpenseActionsOptions {
   projectSlug: string;
@@ -51,6 +52,9 @@ export function ExpenseActionsOptions({
   projectSlug,
   expense,
 }: IExpenseActionsOptions) {
+  const t = useTranslations("projects.commercial.expenses");
+  const tActions = useTranslations("projects.commercial.expenses.actions");
+  const tCommon = useTranslations("common.actions");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isPayModalOpen, setIsPayModalOpen] = useState(false);
   const [paymentDate, setPaymentDate] = useState<Date | undefined>(new Date());
@@ -63,7 +67,7 @@ export function ExpenseActionsOptions({
       return;
     }
 
-    toast.success("Despesa excluída com sucesso!");
+    toast.success(t("toastDeleted"));
   }
 
   async function handleUpdateStatus(status: ExpenseStatus, customDate?: Date) {
@@ -77,7 +81,7 @@ export function ExpenseActionsOptions({
       return toast.error(result.message);
     }
 
-    toast.success("Status da despesa atualizado!");
+    toast.success(t("toastStatusUpdated"));
     setIsPayModalOpen(false);
   }
 
@@ -87,10 +91,8 @@ export function ExpenseActionsOptions({
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-6xl">
           <DialogHeader>
-            <DialogTitle>Editar Despesa</DialogTitle>
-            <DialogDescription>
-              Altere os dados da despesa ou conta a pagar.
-            </DialogDescription>
+            <DialogTitle>{tActions("editTitle")}</DialogTitle>
+            <DialogDescription>{tActions("editDescription")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4"></div>
           <ExpenseForm
@@ -105,14 +107,16 @@ export function ExpenseActionsOptions({
       <Dialog open={isPayModalOpen} onOpenChange={setIsPayModalOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Confirmar Pagamento</DialogTitle>
+            <DialogTitle>{tActions("confirmPaymentTitle")}</DialogTitle>
             <DialogDescription>
-              Selecione a data em que o valor saiu da conta.
+              {tActions("confirmPaymentDescription")}
             </DialogDescription>
           </DialogHeader>
 
           <div className="py-4 space-y-2">
-            <label className="text-sm font-medium">Data do Pagamento</label>
+            <label className="text-sm font-medium">
+              {tActions("paymentDateLabel")}
+            </label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -122,7 +126,7 @@ export function ExpenseActionsOptions({
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {paymentDate
                     ? date(paymentDate).format("DD/MM/YYYY")
-                    : "Selecione a data"}
+                    : tCommon("selectDate")}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
@@ -137,16 +141,15 @@ export function ExpenseActionsOptions({
 
           <AlertDialogFooter>
             <Button variant="ghost" onClick={() => setIsPayModalOpen(false)}>
-              Cancelar
+              {tCommon("cancel")}
             </Button>
             <Button
               onClick={() =>
                 handleUpdateStatus(ExpenseStatus.PAID, paymentDate)
               }
-              // Variante destructive opcional para indicar saída de dinheiro
               variant="destructive"
             >
-              Confirmar Baixa
+              {tActions("confirmWriteOff")}
             </Button>
           </AlertDialogFooter>
         </DialogContent>
@@ -166,18 +169,16 @@ export function ExpenseActionsOptions({
             className="text-green-600 focus:text-green-600 focus:bg-green-50 cursor-pointer"
           >
             <CheckCircle2 className="mr-2 h-4 w-4" />
-            <span>Marcar como Pago</span>
+            <span>{tActions("markAsPaid")}</span>
           </DropdownMenuItem>
 
-          {/* Ação: Cancelar Despesa */}
-          {/* Nota: Verifique se no seu Enum é CANCELED ou CANCELLED */}
           <DropdownMenuItem
             onClick={() => handleUpdateStatus(ExpenseStatus.CANCELED)}
             disabled={expense.status === ExpenseStatus.CANCELED}
             className="text-orange-600 focus:text-orange-600 focus:bg-orange-50 cursor-pointer"
           >
             <XCircle className="mr-2 h-4 w-4" />
-            <span>Cancelar Despesa</span>
+            <span>{tActions("cancelExpense")}</span>
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
@@ -190,7 +191,7 @@ export function ExpenseActionsOptions({
                 onClick={() => window.open(expense.receiptLink!, "_blank")}
               >
                 <ExternalLink className="mr-2 h-4 w-4" />
-                Ver Comprovante
+                {tActions("viewReceipt")}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
             </>
@@ -201,7 +202,7 @@ export function ExpenseActionsOptions({
             onClick={() => setIsDialogOpen(true)}
           >
             <Edit className="mr-2 h-4 w-4" />
-            Editar
+            {tCommon("edit")}
           </DropdownMenuItem>
 
           <DropdownMenuItem
@@ -209,7 +210,7 @@ export function ExpenseActionsOptions({
             onClick={() => handleDelete(expense.id)}
           >
             <Trash2 className="mr-2 h-4 w-4" />
-            Excluir
+            {tCommon("delete")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

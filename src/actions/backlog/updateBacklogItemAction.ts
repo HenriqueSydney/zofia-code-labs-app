@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
 import { updateBacklogItemSchema } from "@/schemas/backlog/updateBacklogItemSchema";
 import { makeUpdateBacklogItemUseCase } from "@/useCases/backlog/factories/makeUpdateBacklogItemUseCase";
@@ -11,7 +12,7 @@ export async function updateBacklogAction(data: unknown, projectSlug: string) {
   if (!session?.user?.organizationId) {
     return {
       success: false,
-      message: "Sessão expirada ou usuário sem organização vinculada.",
+      message: await serverErrorMessage("sessionExpiredNoOrg"),
     };
   }
 
@@ -22,7 +23,7 @@ export async function updateBacklogAction(data: unknown, projectSlug: string) {
     return {
       success: false,
       message:
-        parsed.error.issues[0].message || "Dados inválidos para atualização.",
+        parsed.error.issues[0].message || await serverErrorMessage("invalidData"),
     };
   }
 
@@ -72,7 +73,7 @@ export async function updateBacklogAction(data: unknown, projectSlug: string) {
 
     return {
       success: false,
-      message: "Erro interno ao atualizar backlog.",
+      message: await serverErrorMessage("backlogUpdateFailed"),
     };
   }
 }

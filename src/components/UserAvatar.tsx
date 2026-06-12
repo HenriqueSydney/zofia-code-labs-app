@@ -1,5 +1,8 @@
+"use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/utils/twMerge";
+import { useTranslations } from "next-intl";
 
 type Size = "large" | "medium" | "small" | "tiny";
 
@@ -9,9 +12,10 @@ interface IUserAvatar {
   size?: Size;
 }
 export function UserAvatar({ userName, image, size = "large" }: IUserAvatar) {
+  const t = useTranslations("userProfile.placeholders");
   const userNames = userName
     ? userName.split(" ")
-    : ["Usuário", "Desconhecido"];
+    : [t("user"), "?"];
   const fallbackAvatar = `${userNames[0].charAt(0)} ${
     ["large", "medium"].includes(size)
       ? (userNames[userNames.length - 1].charAt(0) ?? "")

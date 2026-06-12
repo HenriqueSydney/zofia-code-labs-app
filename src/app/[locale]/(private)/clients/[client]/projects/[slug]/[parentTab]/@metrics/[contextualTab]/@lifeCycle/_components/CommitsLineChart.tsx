@@ -3,7 +3,7 @@ import {
   ChartCategory,
 } from "@/components/Charts/AreaLineChart";
 import { date } from "@/lib/dayjs";
-
+import { getTranslations } from "next-intl/server";
 import { getCachedGitHubMetrics } from "../_data/get-github-metrics";
 
 interface ICommitLineChart {
@@ -11,6 +11,7 @@ interface ICommitLineChart {
 }
 
 export async function CommitLineChart({ slug }: ICommitLineChart) {
+  const t = await getTranslations("projects.metrics.lifecycle.charts.commitActivity");
   const { activity } = await getCachedGitHubMetrics(slug);
 
   const { commits } = activity;
@@ -19,18 +20,18 @@ export async function CommitLineChart({ slug }: ICommitLineChart) {
     commits: item.count,
   }));
 
-  // 2. Configuração visual das categorias (colunas do gráfico)
   const categories: ChartCategory[] = [
     {
       key: "commits",
-      label: "Commits",
+      label: t("commits"),
       color: "hsl(var(--primary))",
     },
   ];
+
   return (
     <AreaLineChart
-      title="Atividade de Commits"
-      description="Últimos 30 dias"
+      title={t("title")}
+      description={t("description")}
       data={chartData}
       indexKey="displayDate"
       categories={categories}

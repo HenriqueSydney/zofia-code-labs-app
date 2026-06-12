@@ -2,6 +2,7 @@
 
 import { EmbedSignDocument } from "@documenso/embed-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 interface IDocumensoEmbedding {
@@ -14,6 +15,7 @@ export const DocumensoEmbedding = ({
   host,
 }: IDocumensoEmbedding) => {
   const router = useRouter();
+  const t = useTranslations("common.documenso");
   return (
     <div className="overflow-y-auto">
       <EmbedSignDocument
@@ -22,12 +24,12 @@ export const DocumensoEmbedding = ({
         host={host}
         lockName={false}
         onDocumentCompleted={() => {
-          toast.success("Documento assinado com sucesso!");
+          toast.success(t("documentSignedSuccess"));
           router.refresh();
         }}
         onDocumentError={(error) => {
           console.error("Erro no Documenso:", error);
-          toast.error("Ocorreu um erro ao carregar o contrato.");
+          toast.error(t("loadContractError"));
         }}
         className="w-full min-h-[800px] bg-background flex flex-col justify-start"
        

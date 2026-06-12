@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -14,15 +15,16 @@ import { changeProjectStatusAction } from "@/actions/projects/changeProjectStatu
 import { FormMultiCheckbox } from "@/components/form/FormMultiCheckbox";
 import { FormTextarea } from "@/components/form/FormTextarea";
 
-// Componentes Refatorados
+const createToProposalSchema = (
+  observationMin: string,
+  selectService: string,
+) =>
+  z.object({
+    observation: z.string().min(10, observationMin),
+    serviceIds: z.array(z.string()).min(1, selectService),
+  });
 
-// Schema
-const toProposalSchema = z.object({
-  observation: z.string().min(10, "Informe uma observação técnica detalhada."),
-  serviceIds: z.array(z.string()).min(1, "Selecione pelo menos um serviço."),
-});
-
-type FormValues = z.infer<typeof toProposalSchema>;
+type FormValues = z.infer<ReturnType<typeof createToProposalSchema>>;
 
 export function ToProposal({
   project,
@@ -31,13 +33,17 @@ export function ToProposal({
   onCancel,
   contextData,
 }: TransitionStrategyProps) {
+  const t = useTranslations("projects.transitions.toProposal");
+  const tCommon = useTranslations("projects.transitions.common");
   const [isPending, startTransition] = useTransition();
 
-  // Tipagem segura para os serviços vindos do contextData
-  // Supondo que contextData seja um array de { id, name, ... }
+  const toProposalSchema = createToProposalSchema(
+    t("validation.observationMin"),
+    tCommon("validation.selectAtLeastOneService"),
+  );
+
   const availableServices = (contextData as any[]) || [];
 
-  // IDs iniciais já vinculados ao projeto
   const initialServiceIds = project.projectServices.map(
     (service) => service.serviceTypeId,
   );
@@ -60,13 +66,13 @@ export function ToProposal({
         });
 
         if (result.success) {
-          toast.success("Projeto encaminhado para proposta!");
+          toast.success(t("toast.success"));
           onSuccess();
         } else {
           toast.error(result.error);
         }
       } catch (error) {
-        toast.error("Erro inesperado ao processar solicitação.");
+        toast.error(tCommon("errors.unexpected"));
       }
     });
   };
@@ -75,38 +81,32 @@ export function ToProposal({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-1">
-          <h3 className="font-medium">Definição Técnica</h3>
-          <p className="text-sm text-muted-foreground">
-            Revise os serviços e adicione o parecer técnico para a equipe
-            comercial.
-          </p>
+          <h3 className="font-medium">{t("title")}</h3>
+          <p className="text-sm text-muted-foreground">{t("description")}</p>
         </div>
 
-        {/* Campo Serviços (Refatorado) */}
         <FormMultiCheckbox
           control={form.control}
           name="serviceIds"
-          label="Serviços Necessários"
-          description="Selecione os serviços que comporão o escopo desta proposta."
+          label={t("fields.services.label")}
+          description={t("fields.services.description")}
           disabled={isPending}
-          className="grid-cols-1 md:grid-cols-2" // Customizando o grid do componente
+          className="grid-cols-1 md:grid-cols-2"
           options={availableServices.map((s) => ({
             id: s.id,
             label: s.name,
           }))}
         />
 
-        {/* Campo Observação (Refatorado) */}
         <FormTextarea
           control={form.control}
           name="observation"
-          label="Parecer Técnico"
-          placeholder="Descreva detalhes técnicos, complexidade estimada e requisitos específicos..."
+          label={t("fields.observation.label")}
+          placeholder={t("fields.observation.placeholder")}
           rows={4}
           disabled={isPending}
         />
 
-        {/* Footer com Ações */}
         <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-4 border-t">
           <Button
             type="button"
@@ -114,11 +114,11 @@ export function ToProposal({
             onClick={onCancel}
             disabled={isPending}
           >
-            Cancelar
+            {tCommon("cancel")}
           </Button>
           <Button type="submit" disabled={isPending}>
             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Encaminhar para Proposta
+            {t("submit")}
           </Button>
         </div>
       </form>

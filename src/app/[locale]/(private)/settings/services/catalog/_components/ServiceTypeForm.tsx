@@ -1,23 +1,24 @@
-import { Form } from "@/components/ui/form";
+"use client";
 
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
+import { Form } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { FormInput } from "@/components/form/FormInput";
+import { FormSelect } from "@/components/form/FormSelect";
+import { FormTextarea } from "@/components/form/FormTextarea";
+import { FormCurrencyInput } from "@/components/form/FormCurrencyInput";
 import { createServiceTypeAction } from "@/actions/services/createServiceTypeAction";
 import {
   createServiceTypeSchema,
   type CreateServiceTypeSchema,
 } from "@/schemas/services/createServiceTypeSchema";
-import { Button } from "@/components/ui/button";
 import { updateServiceTypeAction } from "@/actions/services/updateServiceTypeAction";
 import { CreateServiceDTO } from "@/repositories/IServiceTypeRepository";
-import { FormInput } from "@/components/form/FormInput";
-import { FormSelect } from "@/components/form/FormSelect";
-import { FormTextarea } from "@/components/form/FormTextarea";
-import { FormCurrencyInput } from "@/components/form/FormCurrencyInput";
 
 export type CategoryOption = {
   id: string;
@@ -35,9 +36,10 @@ export function ServiceTypeForm({
   service,
   handleCloseModal,
 }: IServiceFormProps) {
+  const t = useTranslations("settings.services.catalog.form");
+  const tCommon = useTranslations("common");
   const [isPending, startTransition] = useTransition();
 
-  // 1. Tipagem explícita no useForm resolve o conflito do Resolver
   const form = useForm<CreateServiceTypeSchema>({
     resolver: zodResolver(createServiceTypeSchema),
     defaultValues: {
@@ -49,7 +51,6 @@ export function ServiceTypeForm({
     },
   });
 
-  // 2. O onSubmit agora recebe o tipo correto inferido
   const onSubmit = (data: CreateServiceTypeSchema) => {
     startTransition(async () => {
       if (service) {
@@ -63,7 +64,7 @@ export function ServiceTypeForm({
           return;
         }
 
-        toast.success("Serviço atualizado com sucesso!");
+        toast.success(t("toastUpdateSuccess"));
         form.setValue("basePrice", data.basePrice);
         form.setValue("categoryId", data.categoryId);
         form.setValue("description", data.description);
@@ -80,7 +81,7 @@ export function ServiceTypeForm({
         return;
       }
 
-      toast.success("Serviço criado com sucesso!");
+      toast.success(t("toastCreateSuccess"));
       form.reset();
       handleCloseModal();
     });
@@ -93,18 +94,18 @@ export function ServiceTypeForm({
         className="space-y-6 max-w-2xl"
       >
         <FormInput
-          label="Nome do Serviço"
+          label={t("name")}
           control={form.control}
           name="name"
-          placeholder="Ex: Landing Page Express"
+          placeholder={t("namePlaceholder")}
           disabled={isPending}
         />
 
         <FormSelect
-          label="Categoria (para NFe)"
+          label={t("category")}
           control={form.control}
           name="categoryId"
-          placeholder="Selecione uma categoria..."
+          placeholder={t("categoryPlaceholder")}
           options={categories.map((cat) => ({
             value: cat.id,
             label: cat.name,
@@ -115,17 +116,17 @@ export function ServiceTypeForm({
         <FormCurrencyInput
           control={form.control}
           name="basePrice"
-          label="Preço Base"
-          placeholder="R$ 0,00"
-          description="Deixe zerado ou vazio se for sob orçamento."
+          label={t("basePrice")}
+          placeholder={t("basePricePlaceholder")}
+          description={t("basePriceDescription")}
           disabled={isPending}
         />
 
         <FormTextarea
-          label="Descrição"
+          label={t("description")}
           control={form.control}
           name="description"
-          placeholder="Detalhes do que está incluso..."
+          placeholder={t("descriptionPlaceholder")}
           className="resize-none"
           rows={4}
           disabled={isPending}
@@ -133,9 +134,9 @@ export function ServiceTypeForm({
 
         <div className="w-full flex justify-end">
           <Button type="submit" disabled={isPending}>
-            {isPending && "Salvando..."}
-            {!isPending && service && "Editar Categoria"}
-            {!isPending && !service && "Criar Categoria"}
+            {isPending && tCommon("saving")}
+            {!isPending && service && t("edit")}
+            {!isPending && !service && t("create")}
           </Button>
         </div>
       </form>

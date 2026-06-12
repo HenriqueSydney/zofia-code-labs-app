@@ -1,4 +1,5 @@
 // useCases/financial/ListInvoicesByProjectUseCase.ts
+import { ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import {
   IInvoiceRepository,
@@ -24,10 +25,15 @@ export class ListInvoicesByProjectUseCase {
     const project = await this.projectRepository.findBySlug(projectSlug);
 
     if (!project) {
-      throw new Error("Projeto não encontrado.");
+      throw new ResourceNotFoundError("Projeto não encontrado.");
     }
 
-    await checkUserPermissionForAsset("invoice", userId, project, "UPDATE");
+    await checkUserPermissionForAsset(
+      "invoice",
+      userId,
+      { organizationId: project.organizationId },
+      "READ",
+    );
 
     return await this.invoiceRepository.findByProjectId(project.id);
   }

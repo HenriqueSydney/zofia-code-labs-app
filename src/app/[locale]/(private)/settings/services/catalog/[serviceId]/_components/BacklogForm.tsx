@@ -3,12 +3,13 @@
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { backlogPriorityMapper } from "@/mappers/BacklogMappers";
+import { getBacklogPriorityOptions } from "@/mappers/BacklogMappers";
 import {
   defaultbacklogItemSchema,
   DefaultBacklogItemSchema,
@@ -32,6 +33,9 @@ export function BacklogForm({
   backlog,
   handleCloseModal,
 }: IBacklogForm) {
+  const t = useTranslations("settings.services.backlog.form");
+  const tPriority = useTranslations("projects.backlog.priorityLabels");
+  const tCommon = useTranslations("common");
   const [isPending, startTransition] = useTransition();
 
   const form = useForm({
@@ -60,7 +64,7 @@ export function BacklogForm({
             return;
           }
 
-          toast.success("Item atualizado com sucesso!");
+          toast.success(t("toastUpdateSuccess"));
         } else {
           const result = await createServiceDefaultBacklogItemAction({
             ...data,
@@ -72,13 +76,13 @@ export function BacklogForm({
             return;
           }
 
-          toast.success("Item criado com sucesso!");
+          toast.success(t("toastCreateSuccess"));
           form.reset();
         }
 
         handleCloseModal();
       } catch (error) {
-        toast.error("Ocorreu um erro inesperado.");
+        toast.error(t("toastUnexpectedError"));
         console.error(error);
       }
     });
@@ -91,8 +95,8 @@ export function BacklogForm({
         <FormInput
           control={form.control}
           name="title"
-          label="Título da Tarefa"
-          placeholder="Ex: Implementar Login OAuth"
+          label={t("title")}
+          placeholder={t("titlePlaceholder")}
           disabled={isPending}
         />
 
@@ -102,19 +106,16 @@ export function BacklogForm({
             <FormSelect
               control={form.control}
               name="priority"
-              label="Prioridade"
-              placeholder="Prioridade"
-              options={BacklogPriorityEnum.options.map((prio) => ({
-                value: prio,
-                label: backlogPriorityMapper[prio] ?? prio,
-              }))}
+              label={t("priority")}
+              placeholder={t("priority")}
+              options={getBacklogPriorityOptions((k) => tPriority(k as never))}
               disabled={isPending}
             />
           </div>
           <FormNumberInput
             control={form.control}
             name="points"
-            label="Story Points"
+            label={t("storyPoints")}
             placeholder="0"
             min={0} // Evita números negativos
             step={1} // Garante inteiros se necessário
@@ -124,10 +125,10 @@ export function BacklogForm({
 
         {/* Descrição */}
         <FormTextarea
-          label="Descrição Detalhada"
+          label={t("description")}
           control={form.control}
           name="description"
-          placeholder="Critérios de aceitação, detalhes técnicos..."
+          placeholder={t("descriptionPlaceholder")}
           className="resize-none min-h-[100px]"
           disabled={isPending}
         />
@@ -139,14 +140,14 @@ export function BacklogForm({
             onClick={handleCloseModal}
             className="mr-2"
           >
-            Cancelar
+            {t("cancel")}
           </Button>
           <Button type="submit" disabled={isPending}>
             {isPending
-              ? "Salvando..."
+              ? tCommon("saving")
               : backlog?.id
-                ? "Salvar Alterações"
-                : "Criar Tarefa"}
+                ? tCommon("actions.saveChanges")
+                : t("createTask")}
           </Button>
         </div>
       </form>

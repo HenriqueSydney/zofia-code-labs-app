@@ -2,8 +2,10 @@ import { StatsCard } from "@/components/StatsCard";
 import { CheckCircle, Clock, Code, Shield, ListTodo } from "lucide-react";
 import { getCachedBacklogMetrics } from "../_data/get-cached-backlog-metrics";
 import { getCachedFinancialMetrics } from "../_data/get-cached-financial-metrics";
+import { getTranslations } from "next-intl/server";
 
 export async function MetricsCardsGrid({ slug }: { slug: string }) {
+  const t = await getTranslations("projects.dashboard.metrics");
   // Chamadas reais às actions através do cache
   const [backlogMetrics, financialMetrics] = await Promise.all([
     getCachedBacklogMetrics(slug),
@@ -14,7 +16,7 @@ export async function MetricsCardsGrid({ slug }: { slug: string }) {
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
       {/* Dados vindos do GetBacklogMetrics UseCase */}
       <StatsCard
-        label="Total de Tarefas"
+        label={t("totalTasks")}
         mainInformation={backlogMetrics.cards.totalTasks}
         trend={backlogMetrics.cards.trends.tasks}
         Icon={ListTodo}
@@ -23,7 +25,7 @@ export async function MetricsCardsGrid({ slug }: { slug: string }) {
       />
 
       <StatsCard
-        label="Tarefas concluídas"
+        label={t("completedTasks")}
         mainInformation={backlogMetrics.cards.completedTasks}
         trend={backlogMetrics.cards.trends.completed}
         Icon={CheckCircle}
@@ -32,7 +34,7 @@ export async function MetricsCardsGrid({ slug }: { slug: string }) {
       />
 
       <StatsCard
-        label="Progresso"
+        label={t("progress")}
         mainInformation={backlogMetrics.cards.progress}
         trend={backlogMetrics.cards.trends.progress}
         Icon={Code}
@@ -42,7 +44,7 @@ export async function MetricsCardsGrid({ slug }: { slug: string }) {
 
       {/* Dados vindos do GetFinancialMetrics UseCase */}
       <StatsCard
-        label="Valores Recebidos"
+        label={t("received")}
         mainInformation={financialMetrics.cards.totalReceived}
         trend={financialMetrics.cards.trends.received}
         Icon={Shield}
@@ -51,7 +53,7 @@ export async function MetricsCardsGrid({ slug }: { slug: string }) {
       />
 
       <StatsCard
-        label="Despesas"
+        label={t("expenses")}
         mainInformation={financialMetrics.cards.totalExpenses}
         trend={financialMetrics.cards.trends.expenses}
         Icon={Clock}

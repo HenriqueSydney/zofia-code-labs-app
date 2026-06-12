@@ -1,3 +1,4 @@
+import { IntegrationError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IProjectIntegrationRepository } from "@/repositories/IProjectIntegrationRepository";
 import { ISonarQubeRepository } from "@/repositories/ISonarQubeRepository";
@@ -23,15 +24,15 @@ export class SyncSonarQubeMetricsUseCase {
       );
 
     if (!projectIntegration) {
-      throw new Error(`Integração do Projeto com o SonarQube não encontrada.`);
+      throw new IntegrationError(`Integração do Projeto com o SonarQube não encontrada.`);
     }
 
-    // await checkUserPermissionForAsset(
-    //   "organizationIntegration",
-    //   userId,
-    //   project,
-    //   "UPDATE"
-    // );
+    await checkUserPermissionForAsset(
+      "organizationIntegration",
+      userId,
+      projectIntegration.organizationIntegration,
+      "UPDATE",
+    );
 
     const service =
       await this.integrationFactory.getIntegration<SonarQubeService>({

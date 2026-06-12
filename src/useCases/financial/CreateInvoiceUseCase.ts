@@ -1,9 +1,11 @@
 // useCases/financial/CreateInvoiceUseCase.ts
 import { Prisma } from "@/generated/prisma/client";
+import { FinancialStatus } from "@/generated/prisma/enums";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
+import { maybeSendPaymentPendingEmailForInvoiceId } from "@/lib/invoices/invoicePaymentEmails";
 import { IInvoiceRepository } from "@/repositories/IInvoiceRepository";
 import { IProjectsRepository } from "@/repositories/IProjectsRepository";
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError } from "@/errors";
 
 interface CreateInvoiceUseCaseRequest
   extends Omit<Prisma.InvoiceUncheckedCreateInput, "projectId" | "clientId"> {
@@ -24,17 +26,21 @@ export class CreateInvoiceUseCase {
     const project = await this.projectsRepository.findBySlug(projectSlug);
 
     if (!project) {
-      throw new AppError("Projeto não encontrado.");
+      throw new ResourceNotFoundError("Projeto não encontrado.");
     }
 
-    await checkUserPermissionForAsset("project", userId, project, "UPDATE");
+    await checkUserPermissionForAsset("invoice", userId, project, "CREATE");
 
     // 3. Cria a invoice vinculando o projectId obtido e a organizationId do projeto
-    await this.invoiceRepository.create({
+    const invoice = await this.invoiceRepository.create({
       ...invoiceData,
       projectId: project.id,
       clientId: project.clientId,
       organizationId: project.organizationId, // Garante que a invoice pertença à mesma org do projeto
     });
+
+    if ((invoice.status ?? FinancialStatus.PENDING) === FinancialStatus.PENDING) {
+      await maybeSendPaymentPendingEmailForInvoiceId(invoice.id);
+    }
   }
 }

@@ -1,3 +1,4 @@
+import { ExternalServiceError } from "@/errors";
 import { IntegrationBase } from "../IntegrationBase";
 import {
   IProjectLinkable,
@@ -82,9 +83,7 @@ export class UmamiWebAnalyticsService
     const response = await fetch(url, { ...options, headers });
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        `[Umami API Error] ${response.status} - ${JSON.stringify(errorData)}`
-      );
+      throw new ExternalServiceError("Umami API Error", "${response.status} - ${JSON.stringify(errorData)}");
     }
 
     return response.json() as Promise<T>;
@@ -102,7 +101,7 @@ export class UmamiWebAnalyticsService
       }),
     });
 
-    if (!response.ok) throw new Error("Falha na autenticação com Umami");
+    if (!response.ok) throw new ExternalServiceError("Umami", "Falha na autenticação com Umami");
 
     const data = await response.json();
     this.token = data.token;

@@ -4,7 +4,6 @@ import {
 } from "@/generated/prisma/client";
 import { AuthBasePermissionStrategy } from "./auth-base-strategy";
 import { Operation, UserContext } from "./types";
-import { AppError } from "@/errors/AppError";
 import { PERMISSIONS, PermissionString } from "@/constants/permissions";
 import { UserDoesNotHavePermissionError } from "@/errors/UserDoesNotHavePermissionError";
 

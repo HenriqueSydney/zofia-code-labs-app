@@ -3,6 +3,7 @@ import { AppError } from "./AppError";
 
 export class SubscriptionNotFoundError extends AppError {
   constructor() {
-    super('Inscrição à newsletter não localizada', 400)
+    super("Inscrição à newsletter não localizada", 400);
+    this.name = "SubscriptionNotFoundError";
   }
 }

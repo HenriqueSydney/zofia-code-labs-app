@@ -8,6 +8,7 @@ import {
   Eye,
   EyeClosed,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,6 +35,9 @@ export function ProposalReview({
   onSuccess,
   onBack,
 }: ProposalReviewProps) {
+  const t = useTranslations("projects.transitions.proposalReview");
+  const tCommon = useTranslations("common");
+  const tProposals = useTranslations("proposals.history");
   const [loading, setLoading] = useState(false);
 
   const handleApprove = async () => {
@@ -45,12 +49,10 @@ export function ProposalReview({
         toast.error(result.error);
         return;
       }
-      toast.success("Proposta aprovada com sucesso");
+      toast.success(t("toast.approved"));
       onSuccess();
     } catch (error) {
-      toast.error(
-        "Erro inesperado ao encaminhar a proposta ao cliente. Tente novamente mais tarde."
-      );
+      toast.error(t("toast.unexpectedError"));
     } finally {
       setLoading(false);
     }
@@ -65,33 +67,24 @@ export function ProposalReview({
     }
 
     const { url } = result;
-
-    // Abre em nova aba ou inicia download
     window.open(url, "_blank");
   };
 
-  const isTemplate = proposal.sourceType === "SYSTEM_TEMPLATE";
-
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      {/* Cabeçalho de Status */}
       <Alert className="bg-accent/10 border-accent/30">
         <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Aprovação Pendente</AlertTitle>
-        <AlertDescription>
-          Revise os dados abaixo. Após a aprovação, a proposta estará pronta
-          para ser enviada ao cliente.
-        </AlertDescription>
+        <AlertTitle>{t("alert.title")}</AlertTitle>
+        <AlertDescription>{t("alert.description")}</AlertDescription>
       </Alert>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Coluna Principal - Detalhes */}
         <div className="md:col-span-2 space-y-4">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <FileText className="h-5 w-5 text-muted-foreground" />
-                Conteúdo da Proposta
+                {t("contentTitle")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -100,20 +93,16 @@ export function ProposalReview({
           </Card>
         </div>
 
-        {/* Coluna Lateral - Resumo e Ações */}
         <div className="flex flex-col space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">
-                Proposta comercial Gerada
-              </CardTitle>
+              <CardTitle className="text-base">{t("generatedTitle")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-4">
                 <div className="flex gap-2 text-sm text-muted-foreground">
-                  <strong>Origem:</strong>
-                  {isTemplate && <span>Modelo de Documento</span>}
-                  {!isTemplate && <span>Upload de arquivo</span>}
+                  <strong>{tCommon("origin")}</strong>
+                  <span>{t("originUpload")}</span>
                 </div>
                 <Separator />
                 <div className="space-y-4">
@@ -122,7 +111,7 @@ export function ProposalReview({
                       <AttachmentIcon extension="pdf" />
                       <div>
                         <p className="text-sm font-medium line-clamp-1">
-                          Proposta Comercial Gerada
+                          {t("generatedDocument")}
                         </p>
                         <p className="text-xs text-muted-foreground">
                           {date(proposal.createdAt).format("DD/MM/YYYY HH:mm")}
@@ -132,8 +121,8 @@ export function ProposalReview({
                     <Tooltip
                       description={
                         proposal.fileKey
-                          ? "Baixar documento"
-                          : "Erro ao localizar o documento"
+                          ? tProposals("downloadDocument")
+                          : tProposals("documentNotFound")
                       }
                     >
                       <Button
@@ -156,36 +145,23 @@ export function ProposalReview({
           </Card>
           <Card className="flex flex-col flex-1">
             <CardHeader>
-              <CardTitle className="text-base">Resumo</CardTitle>
+              <CardTitle className="text-base">{tCommon("summary")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 flex-1">
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Criado em:</span>
+                <span className="text-muted-foreground">{t("createdAt")}</span>
                 <span>
                   {date(proposal.createdAt).format("DD/MM/YYYY HH:mm")}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Origem:</span>
+                <span className="text-muted-foreground">{t("originLabel")}</span>
                 <Badge variant="outline">
-                  {isTemplate ? "Sistema (Modelo)" : "Arquivo PDF"}
+                  {t("originPdfFile")}
                 </Badge>
               </div>
-              {isTemplate && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Modelo:</span>
-                  <span
-                    className="truncate max-w-[150px] text-right"
-                    title={proposal?.proposalTemplate?.template?.title || ""}
-                  >
-                    {proposal?.proposalTemplate?.template?.title || "Padrão"}
-                  </span>
-                </div>
-              )}
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">
-                  Valor Total da Proposta:
-                </span>
+                <span className="text-muted-foreground">{t("totalValue")}</span>
                 <strong className="truncate max-w-[150px] text-right ">
                   {formatCurrency(Number(proposal.totalValue))}
                 </strong>
@@ -201,11 +177,11 @@ export function ProposalReview({
                   disabled={loading}
                 >
                   {loading ? (
-                    "Processando..."
+                    tCommon("processing")
                   ) : (
                     <>
                       <CheckCircle2 className="mr-2 h-5 w-5" />
-                      Aprovar Proposta
+                      {t("approveButton")}
                     </>
                   )}
                 </Button>
@@ -217,7 +193,7 @@ export function ProposalReview({
                     onClick={onBack}
                     disabled={loading}
                   >
-                    Voltar e Editar
+                    {t("backAndEdit")}
                   </Button>
                 )}
               </div>

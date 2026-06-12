@@ -7,23 +7,31 @@ import {
   CreateAuditLogDTO,
   PrismaTransaction,
 } from "../IAuditLogRepository";
+import { sanitizeAuditUserId } from "@/constants/systemActors";
 import { normalizePrisma } from "@/utils/normalizePrisma"; // Se você usar aquele helper
 
 export class PrismaAuditLogRepository implements IAuditLogRepository {
   async create(
-    { changes, metadata, ...rest }: CreateAuditLogDTO,
+    { changes, metadata, userId, ...rest }: CreateAuditLogDTO,
     tx?: PrismaTransaction
   ): Promise<AuditLog> {
     // Se a transação (tx) foi passada, usa ela. Se não, usa o client global.
     const client = tx || prisma;
 
+    const { userId: auditUserId, actor } = sanitizeAuditUserId(userId);
+    const auditMetadata =
+      actor !== undefined
+        ? { ...(metadata ?? {}), actor }
+        : (metadata ?? undefined);
+
     const log = await client.auditLog.create({
       data: {
         ...rest,
+        userId: auditUserId,
         // O Prisma lida bem com objetos JS direto para campos Json,
         // mas as vezes precisamos garantir que não seja undefined
         changes: changes ?? Prisma.DbNull,
-        metadata: metadata ?? Prisma.DbNull,
+        metadata: auditMetadata ?? Prisma.DbNull,
       },
     });
 

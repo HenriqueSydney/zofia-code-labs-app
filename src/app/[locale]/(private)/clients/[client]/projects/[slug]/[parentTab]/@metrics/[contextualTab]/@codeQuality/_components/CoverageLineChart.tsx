@@ -16,15 +16,16 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
 export function CoverageLineChart({ data }: { data: any[] }) {
+  const t = useTranslations("projects.metrics.codeQuality.charts.coverage");
+
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle>Cobertura de Código</CardTitle>
-        <CardDescription>
-          Evolução mensal da cobertura de testes
-        </CardDescription>
+        <CardTitle>{t("title")}</CardTitle>
+        <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="h-[250px] w-full min-h-[250px]">
@@ -57,12 +58,12 @@ export function CoverageLineChart({ data }: { data: any[] }) {
                   borderRadius: "8px",
                   borderColor: "hsl(var(--border))",
                 }}
-                formatter={(value) => [`${value}%`, "Cobertura"]}
+                formatter={(value) => [`${value}%`, t("tooltip")]}
               />
               <Line
                 type="monotone"
                 dataKey="coverage"
-                stroke="#a855f7" // Purple-500
+                stroke="#a855f7"
                 strokeWidth={3}
                 dot={{ r: 4, fill: "#a855f7", strokeWidth: 2 }}
                 activeDot={{ r: 6, strokeWidth: 0 }}

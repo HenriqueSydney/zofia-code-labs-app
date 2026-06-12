@@ -1,5 +1,7 @@
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError } from "@/errors";
 import { CustomRole } from "@/generated/prisma/client";
+import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
+import { toOrganizationAsset } from "@/lib/auth/toOrganizationAsset";
 import { IOrganizationsRepository } from "@/repositories/IOrganizationRepository";
 
 interface GetOrganizationCustomRoleByIdUseCaseRequest {
@@ -23,13 +25,15 @@ export class GetOrganizationCustomRoleByIdUseCase {
       await this.organizationsRepository.findCustomRoleById(customRoleId);
 
     if (!customRole) {
-      throw new AppError("Perfil de Acesso não localizado.");
+      throw new ResourceNotFoundError("Perfil de Acesso não localizado.");
     }
 
-    // 2. Verifica Permissão
-    // Para ver roles, o usuário deve ter acesso de leitura à organização
-    // ou, se quiser ser mais restrito, acesso a SETTINGS.MANAGE_ROLES (se tiver implementado)
-    //await checkUserPermissionForAsset("client", userId, organization, "READ");
+    await checkUserPermissionForAsset(
+      "organization",
+      userId,
+      toOrganizationAsset({ id: customRole.organizationId }),
+      "READ",
+    );
 
     return { customRole };
   }

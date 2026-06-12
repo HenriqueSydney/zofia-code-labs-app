@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
 import { updateProposalTemplateSchema } from "@/schemas/proposal/updateProposalTemplateSchema";
 import { makeUpdateProposalTemplateUseCase } from "@/useCases/proposal/factories/makeUpdateProposalTemplateUseCase";
@@ -7,7 +8,7 @@ import { revalidatePath } from "next/cache";
 
 export async function updateProposalTemplateAction(formData: FormData) {
   const session = await auth();
-  if (!session?.user) return { error: "Não autorizado" };
+  if (!session?.user) return { error: await serverErrorMessage("unauthorized") };
 
   const rawData = {
     proposalId: formData.get("proposalId"),
@@ -17,7 +18,7 @@ export async function updateProposalTemplateAction(formData: FormData) {
   const validation = updateProposalTemplateSchema.safeParse(rawData);
   if (!validation.success) {
     console.error("Erro de validação:", validation.error.flatten());
-    return { error: "Dados inválidos. Verifique os campos obrigatórios." };
+    return { error: await serverErrorMessage("checkFormFields") };
   }
 
   const useCase = makeUpdateProposalTemplateUseCase();

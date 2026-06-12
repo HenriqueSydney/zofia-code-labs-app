@@ -4,11 +4,17 @@ import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 import { fetchContractHistory } from "@/actions/contract/fetchContractHistory";
 import { getParams } from "@/utils/getParams";
 import { operationWrapper } from "@/lib/operationWrapper";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { ContractWithDetails } from "@/repositories/IContractRepository";
 import { getProjectBySlugAction } from "@/actions/projects/getProjectBySlug";
 import { ContractList } from "@/components/ContractList";
 import { TabsContent } from "@/components/ui/tabs";
+import { getTranslations } from "next-intl/server";
+import { auth } from "@/auth";
+import { FileSignature } from "lucide-react";
+import { hasPermission } from "@/utils/hasPermission";
+import { PERMISSIONS } from "@/constants/permissions";
+import { EmptyState } from "@/components/EmptyState";
 
 interface IContractTab {
   params: Promise<{
@@ -20,6 +26,9 @@ interface IContractTab {
 }
 
 export default async function ContractTab({ params }: IContractTab) {
+  const t = await getTranslations("projects.commercial.contracts");
+  const tErrors = await getTranslations("projects.errors");
+  const session = await auth();
   const {
     slug,
     page = 1,
@@ -41,7 +50,7 @@ export default async function ContractTab({ params }: IContractTab) {
     },
   );
 
-  if (projectError) throw new AppError("Falha ao tentar localizar o projeto");
+  if (projectError) throw new ValidationError(t("fetchProjectError"));
 
   const project = projectSuccess.project;
 
@@ -60,17 +69,32 @@ export default async function ContractTab({ params }: IContractTab) {
   );
 
   if (error) {
-    throw new AppError("Falha ao tentar localizar o histórico de contratos");
+    throw new ValidationError(t("fetchHistoryError"));
+  }
+  const canCreateContract = hasPermission(
+    session?.user,
+    PERMISSIONS.CONTRACT.CREATE,
+  );
+  const canReadContract = hasPermission(
+    session?.user,
+    PERMISSIONS.CONTRACT.READ,
+  );
+  if (!canReadContract) {
+    return (
+      <EmptyState
+        title={tErrors("noPermissionTitle")}
+        icon={FileSignature}
+        description={tErrors("noPermissionContract")}
+      />
+    );
   }
 
   return (
     <TabsContent value="contracts" className="mt-6">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-lg">
-            Histórico de Contratos do Projeto
-          </CardTitle>
-          <CreateNewContractButton project={project} />
+          <CardTitle className="text-lg">{t("historyTitle")}</CardTitle>
+          {canCreateContract && <CreateNewContractButton project={project} />}
         </CardHeader>
         <CardContent>
           <ContractList

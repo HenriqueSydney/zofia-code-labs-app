@@ -3,6 +3,7 @@
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { ShieldCheck, Info } from "lucide-react";
 
 import { Form } from "@/components/ui/form";
@@ -13,6 +14,8 @@ import { updateOrganizationIntegrationAction } from "@/actions/integrations/upda
 import { Integration } from "../page";
 import { FormSecretInput } from "@/components/form/FormSecretInput";
 import { FormSwitchCard } from "@/components/form/FormSwitchCard";
+import { FormInput } from "@/components/form/FormInput";
+import { IntegrationFieldSchema } from "@/schemas/integration/integrationType";
 
 interface IConnectIntegrationFormProps {
   integration: Integration;
@@ -23,6 +26,8 @@ export function IntegrationConfigForm({
   integration,
   handleCloseModal,
 }: IConnectIntegrationFormProps) {
+  const t = useTranslations("settings.integrations.config.form");
+  const tCommon = useTranslations("common");
   const [isPending, startTransition] = useTransition();
   const isUpdate = !!integration.orgIntegrationId;
 
@@ -54,6 +59,38 @@ export function IntegrationConfigForm({
         (f) => !f.dependsOnByol && !integration.enableByol,
       );
 
+  const renderIntegrationField = (field: IntegrationFieldSchema) => {
+    if (field.type === "password") {
+      return (
+        <FormSecretInput
+          key={field.key}
+          control={form.control}
+          name={field.key}
+          label={field.label}
+          hint={hints[field.key]}
+          disabled={isPending}
+          placeholder={
+            hints[field.key]
+              ? "••••••••••••"
+              : t("secretPlaceholder", { label: field.label })
+          }
+        />
+      );
+    }
+
+    return (
+      <FormInput
+        key={field.key}
+        control={form.control}
+        name={field.key}
+        label={field.label}
+        type={field.type}
+        disabled={isPending}
+        placeholder={t("secretPlaceholder", { label: field.label })}
+      />
+    );
+  };
+
   const onSubmit = (values: Record<string, any>) => {
     const { enableByol, ...restValues } = values;
 
@@ -80,7 +117,9 @@ export function IntegrationConfigForm({
         return;
       }
 
-      toast.success(isUpdate ? "Configurações atualizadas!" : "Conectado!");
+      toast.success(
+        isUpdate ? t("toastUpdateSuccess") : t("toastConnectSuccess"),
+      );
       handleCloseModal();
     });
   };
@@ -93,8 +132,8 @@ export function IntegrationConfigForm({
           <FormSwitchCard
             control={form.control}
             name="enableByol"
-            label="Trazer minha própria instância"
-            description="Ative para usar sua própria infraestrutura e licença."
+            label={t("byol")}
+            description={t("byolDescription")}
             icon={ShieldCheck}
             disabled={isPending}
           />
@@ -109,20 +148,20 @@ export function IntegrationConfigForm({
               </div>
               <div className="space-y-1">
                 <h4 className="text-sm font-semibold text-primary">
-                  Instância Gerenciada Ativa
+                  {t("managedInstanceTitle")}
                 </h4>
                 <p className="text-xs text-muted-foreground max-w-[250px]">
-                  Não é necessário configurar chaves. Cuidamos da
-                  infraestrutura, segurança e atualizações para você.
+                  {t("managedInstanceDescription")}
                 </p>
               </div>
             </div>
             <Alert className="bg-primary/5 border-primary py-3">
               <Info className="h-4 w-4 " />
-              <AlertTitle className="font-bold">Modo Gerenciado</AlertTitle>
+              <AlertTitle className="font-bold">
+                {t("managedModeTitle")}
+              </AlertTitle>
               <AlertDescription className="font-medium">
-                Utilizaremos a infraestrutura padrão da Zofia Code Labs para
-                este serviço (serviço sujeiro a cobranças).
+                {t("managedModeDescription")}
               </AlertDescription>
             </Alert>
           </>
@@ -130,21 +169,9 @@ export function IntegrationConfigForm({
 
         {/* Renderização Dinâmica dos Campos */}
         <div className="space-y-4 transition-all duration-300">
-          {visibleFields.map((field) => (
-            <FormSecretInput
-              key={field.key}
-              control={form.control}
-              name={field.key}
-              label={field.label}
-              hint={hints[field.key]}
-              disabled={isPending}
-              placeholder={
-                hints[field.key]
-                  ? "••••••••••••"
-                  : `Insira o valor para ${field.label}`
-              }
-            />
-          ))}
+          {visibleFields
+            .filter((field) => field.keyType !== "TAG")
+            .map((field) => renderIntegrationField(field))}
         </div>
 
         <div className="flex justify-end gap-3 pt-4 border-t">
@@ -154,15 +181,15 @@ export function IntegrationConfigForm({
             onClick={handleCloseModal}
             disabled={isPending}
           >
-            Cancelar
+            {t("cancel")}
           </Button>
           {visibleFields.length > 0 && (
             <Button type="submit" disabled={isPending}>
               {isPending
-                ? "Processando..."
+                ? t("processing")
                 : isUpdate
-                  ? "Salvar Alterações"
-                  : "Conectar Serviço"}
+                  ? tCommon("actions.saveChanges")
+                  : t("connect")}
             </Button>
           )}
         </div>

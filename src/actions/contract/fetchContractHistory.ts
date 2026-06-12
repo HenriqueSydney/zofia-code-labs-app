@@ -1,7 +1,8 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
+import { UnauthorizedError } from "@/errors";
 import { makeListContractsByProjectIdUseCase } from "@/useCases/contract/factories/makeListContractsByProjectIdUseCase";
 
 export async function fetchContractHistory(
@@ -9,7 +10,7 @@ export async function fetchContractHistory(
   pagination?: { page?: number; numberPerPage?: number }
 ) {
   const session = await auth();
-  if (!session?.user) throw new AppError("Usuário não autenticado");
+  if (!session?.user) throw new UnauthorizedError(await serverErrorMessage("unauthenticated"));
   const contractUseCase = makeListContractsByProjectIdUseCase();
 
   const contractHistory = await contractUseCase.execute({

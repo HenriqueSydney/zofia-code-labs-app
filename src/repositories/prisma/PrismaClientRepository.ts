@@ -14,7 +14,9 @@ import { Client, Prisma, ProjectStatus } from "@/generated/prisma/client";
 import { date } from "@/lib/dayjs";
 import { DocumentInput } from "@/@types/DocumentInput";
 import { normalizePrisma } from "@/utils/normalizePrisma";
-import { allStages, commercialStages } from "@/mappers/projectStageMapper";
+import {
+  PIPELINE_CATEGORY_BY_STATUS,
+} from "@/mappers/projectStageMapper";
 
 export class PrismaClientsRepository implements IClientsRepository {
   async create(
@@ -277,16 +279,10 @@ export class PrismaClientsRepository implements IClientsRepository {
       _count: { status: true },
     });
 
-    return result.map((item) => {
-      const status = allStages.find(
-        (stage) => stage.key === item.status,
-      )?.label;
-
-      return {
-        status: status || item.status,
-        count: item._count.status,
-      };
-    });
+    return result.map((item) => ({
+      status: item.status,
+      count: item._count.status,
+    }));
   }
 
   async getClientBlockers(slug: string): Promise<ClientBlockerItem[]> {

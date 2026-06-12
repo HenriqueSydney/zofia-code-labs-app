@@ -30,6 +30,7 @@ export type MemberMinAggregateOutputType = {
   organizationId: string | null
   role: $Enums.MemberRole | null
   customRoleId: string | null
+  status: $Enums.MemberStatus | null
   createdAt: Date | null
   updatedAt: Date | null
   removedAt: Date | null
@@ -41,6 +42,7 @@ export type MemberMaxAggregateOutputType = {
   organizationId: string | null
   role: $Enums.MemberRole | null
   customRoleId: string | null
+  status: $Enums.MemberStatus | null
   createdAt: Date | null
   updatedAt: Date | null
   removedAt: Date | null
@@ -53,6 +55,7 @@ export type MemberCountAggregateOutputType = {
   role: number
   customRoleId: number
   specificPermissions: number
+  status: number
   createdAt: number
   updatedAt: number
   removedAt: number
@@ -66,6 +69,7 @@ export type MemberMinAggregateInputType = {
   organizationId?: true
   role?: true
   customRoleId?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
   removedAt?: true
@@ -77,6 +81,7 @@ export type MemberMaxAggregateInputType = {
   organizationId?: true
   role?: true
   customRoleId?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
   removedAt?: true
@@ -89,6 +94,7 @@ export type MemberCountAggregateInputType = {
   role?: true
   customRoleId?: true
   specificPermissions?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
   removedAt?: true
@@ -174,6 +180,7 @@ export type MemberGroupByOutputType = {
   role: $Enums.MemberRole
   customRoleId: string | null
   specificPermissions: string[]
+  status: $Enums.MemberStatus
   createdAt: Date
   updatedAt: Date
   removedAt: Date | null
@@ -182,7 +189,7 @@ export type MemberGroupByOutputType = {
   _max: MemberMaxAggregateOutputType | null
 }
 
-type GetMemberGroupByPayload<T extends MemberGroupByArgs> = Prisma.PrismaPromise<
+export type GetMemberGroupByPayload<T extends MemberGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<MemberGroupByOutputType, T['by']> &
       {
@@ -207,6 +214,7 @@ export type MemberWhereInput = {
   role?: Prisma.EnumMemberRoleFilter<"Member"> | $Enums.MemberRole
   customRoleId?: Prisma.StringNullableFilter<"Member"> | string | null
   specificPermissions?: Prisma.StringNullableListFilter<"Member">
+  status?: Prisma.EnumMemberStatusFilter<"Member"> | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   removedAt?: Prisma.DateTimeNullableFilter<"Member"> | Date | string | null
@@ -223,6 +231,7 @@ export type MemberOrderByWithRelationInput = {
   role?: Prisma.SortOrder
   customRoleId?: Prisma.SortOrderInput | Prisma.SortOrder
   specificPermissions?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   removedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -243,6 +252,7 @@ export type MemberWhereUniqueInput = Prisma.AtLeast<{
   role?: Prisma.EnumMemberRoleFilter<"Member"> | $Enums.MemberRole
   customRoleId?: Prisma.StringNullableFilter<"Member"> | string | null
   specificPermissions?: Prisma.StringNullableListFilter<"Member">
+  status?: Prisma.EnumMemberStatusFilter<"Member"> | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   removedAt?: Prisma.DateTimeNullableFilter<"Member"> | Date | string | null
@@ -259,6 +269,7 @@ export type MemberOrderByWithAggregationInput = {
   role?: Prisma.SortOrder
   customRoleId?: Prisma.SortOrderInput | Prisma.SortOrder
   specificPermissions?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   removedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -277,6 +288,7 @@ export type MemberScalarWhereWithAggregatesInput = {
   role?: Prisma.EnumMemberRoleWithAggregatesFilter<"Member"> | $Enums.MemberRole
   customRoleId?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
   specificPermissions?: Prisma.StringNullableListFilter<"Member">
+  status?: Prisma.EnumMemberStatusWithAggregatesFilter<"Member"> | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Member"> | Date | string
   removedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Member"> | Date | string | null
@@ -286,6 +298,7 @@ export type MemberCreateInput = {
   id?: string
   role?: $Enums.MemberRole
   specificPermissions?: Prisma.MemberCreatespecificPermissionsInput | string[]
+  status?: $Enums.MemberStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   removedAt?: Date | string | null
@@ -302,6 +315,7 @@ export type MemberUncheckedCreateInput = {
   role?: $Enums.MemberRole
   customRoleId?: string | null
   specificPermissions?: Prisma.MemberCreatespecificPermissionsInput | string[]
+  status?: $Enums.MemberStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   removedAt?: Date | string | null
@@ -312,6 +326,7 @@ export type MemberUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   specificPermissions?: Prisma.MemberUpdatespecificPermissionsInput | string[]
+  status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -328,6 +343,7 @@ export type MemberUncheckedUpdateInput = {
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   customRoleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   specificPermissions?: Prisma.MemberUpdatespecificPermissionsInput | string[]
+  status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -341,6 +357,7 @@ export type MemberCreateManyInput = {
   role?: $Enums.MemberRole
   customRoleId?: string | null
   specificPermissions?: Prisma.MemberCreatespecificPermissionsInput | string[]
+  status?: $Enums.MemberStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   removedAt?: Date | string | null
@@ -350,6 +367,7 @@ export type MemberUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   specificPermissions?: Prisma.MemberUpdatespecificPermissionsInput | string[]
+  status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -362,6 +380,7 @@ export type MemberUncheckedUpdateManyInput = {
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   customRoleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   specificPermissions?: Prisma.MemberUpdatespecificPermissionsInput | string[]
+  status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -397,6 +416,7 @@ export type MemberCountOrderByAggregateInput = {
   role?: Prisma.SortOrder
   customRoleId?: Prisma.SortOrder
   specificPermissions?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   removedAt?: Prisma.SortOrder
@@ -408,6 +428,7 @@ export type MemberMaxOrderByAggregateInput = {
   organizationId?: Prisma.SortOrder
   role?: Prisma.SortOrder
   customRoleId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   removedAt?: Prisma.SortOrder
@@ -419,6 +440,7 @@ export type MemberMinOrderByAggregateInput = {
   organizationId?: Prisma.SortOrder
   role?: Prisma.SortOrder
   customRoleId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   removedAt?: Prisma.SortOrder
@@ -526,6 +548,10 @@ export type MemberUpdatespecificPermissionsInput = {
   push?: string | string[]
 }
 
+export type EnumMemberStatusFieldUpdateOperationsInput = {
+  set?: $Enums.MemberStatus
+}
+
 export type MemberCreateNestedManyWithoutCustomRoleInput = {
   create?: Prisma.XOR<Prisma.MemberCreateWithoutCustomRoleInput, Prisma.MemberUncheckedCreateWithoutCustomRoleInput> | Prisma.MemberCreateWithoutCustomRoleInput[] | Prisma.MemberUncheckedCreateWithoutCustomRoleInput[]
   connectOrCreate?: Prisma.MemberCreateOrConnectWithoutCustomRoleInput | Prisma.MemberCreateOrConnectWithoutCustomRoleInput[]
@@ -588,6 +614,7 @@ export type MemberCreateWithoutOrganizationInput = {
   id?: string
   role?: $Enums.MemberRole
   specificPermissions?: Prisma.MemberCreatespecificPermissionsInput | string[]
+  status?: $Enums.MemberStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   removedAt?: Date | string | null
@@ -602,6 +629,7 @@ export type MemberUncheckedCreateWithoutOrganizationInput = {
   role?: $Enums.MemberRole
   customRoleId?: string | null
   specificPermissions?: Prisma.MemberCreatespecificPermissionsInput | string[]
+  status?: $Enums.MemberStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   removedAt?: Date | string | null
@@ -644,6 +672,7 @@ export type MemberScalarWhereInput = {
   role?: Prisma.EnumMemberRoleFilter<"Member"> | $Enums.MemberRole
   customRoleId?: Prisma.StringNullableFilter<"Member"> | string | null
   specificPermissions?: Prisma.StringNullableListFilter<"Member">
+  status?: Prisma.EnumMemberStatusFilter<"Member"> | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   removedAt?: Prisma.DateTimeNullableFilter<"Member"> | Date | string | null
@@ -653,6 +682,7 @@ export type MemberCreateWithoutUserInput = {
   id?: string
   role?: $Enums.MemberRole
   specificPermissions?: Prisma.MemberCreatespecificPermissionsInput | string[]
+  status?: $Enums.MemberStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   removedAt?: Date | string | null
@@ -667,6 +697,7 @@ export type MemberUncheckedCreateWithoutUserInput = {
   role?: $Enums.MemberRole
   customRoleId?: string | null
   specificPermissions?: Prisma.MemberCreatespecificPermissionsInput | string[]
+  status?: $Enums.MemberStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   removedAt?: Date | string | null
@@ -703,6 +734,7 @@ export type MemberCreateWithoutCustomRoleInput = {
   id?: string
   role?: $Enums.MemberRole
   specificPermissions?: Prisma.MemberCreatespecificPermissionsInput | string[]
+  status?: $Enums.MemberStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   removedAt?: Date | string | null
@@ -717,6 +749,7 @@ export type MemberUncheckedCreateWithoutCustomRoleInput = {
   organizationId: string
   role?: $Enums.MemberRole
   specificPermissions?: Prisma.MemberCreatespecificPermissionsInput | string[]
+  status?: $Enums.MemberStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   removedAt?: Date | string | null
@@ -753,6 +786,7 @@ export type MemberCreateWithoutCreatedProjectsInput = {
   id?: string
   role?: $Enums.MemberRole
   specificPermissions?: Prisma.MemberCreatespecificPermissionsInput | string[]
+  status?: $Enums.MemberStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   removedAt?: Date | string | null
@@ -768,6 +802,7 @@ export type MemberUncheckedCreateWithoutCreatedProjectsInput = {
   role?: $Enums.MemberRole
   customRoleId?: string | null
   specificPermissions?: Prisma.MemberCreatespecificPermissionsInput | string[]
+  status?: $Enums.MemberStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   removedAt?: Date | string | null
@@ -793,6 +828,7 @@ export type MemberUpdateWithoutCreatedProjectsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   specificPermissions?: Prisma.MemberUpdatespecificPermissionsInput | string[]
+  status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -808,6 +844,7 @@ export type MemberUncheckedUpdateWithoutCreatedProjectsInput = {
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   customRoleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   specificPermissions?: Prisma.MemberUpdatespecificPermissionsInput | string[]
+  status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -819,6 +856,7 @@ export type MemberCreateManyOrganizationInput = {
   role?: $Enums.MemberRole
   customRoleId?: string | null
   specificPermissions?: Prisma.MemberCreatespecificPermissionsInput | string[]
+  status?: $Enums.MemberStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   removedAt?: Date | string | null
@@ -828,6 +866,7 @@ export type MemberUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   specificPermissions?: Prisma.MemberUpdatespecificPermissionsInput | string[]
+  status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -842,6 +881,7 @@ export type MemberUncheckedUpdateWithoutOrganizationInput = {
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   customRoleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   specificPermissions?: Prisma.MemberUpdatespecificPermissionsInput | string[]
+  status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -854,6 +894,7 @@ export type MemberUncheckedUpdateManyWithoutOrganizationInput = {
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   customRoleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   specificPermissions?: Prisma.MemberUpdatespecificPermissionsInput | string[]
+  status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -865,6 +906,7 @@ export type MemberCreateManyUserInput = {
   role?: $Enums.MemberRole
   customRoleId?: string | null
   specificPermissions?: Prisma.MemberCreatespecificPermissionsInput | string[]
+  status?: $Enums.MemberStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   removedAt?: Date | string | null
@@ -874,6 +916,7 @@ export type MemberUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   specificPermissions?: Prisma.MemberUpdatespecificPermissionsInput | string[]
+  status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -888,6 +931,7 @@ export type MemberUncheckedUpdateWithoutUserInput = {
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   customRoleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   specificPermissions?: Prisma.MemberUpdatespecificPermissionsInput | string[]
+  status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -900,6 +944,7 @@ export type MemberUncheckedUpdateManyWithoutUserInput = {
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   customRoleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   specificPermissions?: Prisma.MemberUpdatespecificPermissionsInput | string[]
+  status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -911,6 +956,7 @@ export type MemberCreateManyCustomRoleInput = {
   organizationId: string
   role?: $Enums.MemberRole
   specificPermissions?: Prisma.MemberCreatespecificPermissionsInput | string[]
+  status?: $Enums.MemberStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   removedAt?: Date | string | null
@@ -920,6 +966,7 @@ export type MemberUpdateWithoutCustomRoleInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   specificPermissions?: Prisma.MemberUpdatespecificPermissionsInput | string[]
+  status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -934,6 +981,7 @@ export type MemberUncheckedUpdateWithoutCustomRoleInput = {
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   specificPermissions?: Prisma.MemberUpdatespecificPermissionsInput | string[]
+  status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -946,6 +994,7 @@ export type MemberUncheckedUpdateManyWithoutCustomRoleInput = {
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumMemberRoleFieldUpdateOperationsInput | $Enums.MemberRole
   specificPermissions?: Prisma.MemberUpdatespecificPermissionsInput | string[]
+  status?: Prisma.EnumMemberStatusFieldUpdateOperationsInput | $Enums.MemberStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   removedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -989,6 +1038,7 @@ export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   role?: boolean
   customRoleId?: boolean
   specificPermissions?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   removedAt?: boolean
@@ -1006,6 +1056,7 @@ export type MemberSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   role?: boolean
   customRoleId?: boolean
   specificPermissions?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   removedAt?: boolean
@@ -1021,6 +1072,7 @@ export type MemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   role?: boolean
   customRoleId?: boolean
   specificPermissions?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   removedAt?: boolean
@@ -1036,12 +1088,13 @@ export type MemberSelectScalar = {
   role?: boolean
   customRoleId?: boolean
   specificPermissions?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   removedAt?: boolean
 }
 
-export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "organizationId" | "role" | "customRoleId" | "specificPermissions" | "createdAt" | "updatedAt" | "removedAt", ExtArgs["result"]["member"]>
+export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "organizationId" | "role" | "customRoleId" | "specificPermissions" | "status" | "createdAt" | "updatedAt" | "removedAt", ExtArgs["result"]["member"]>
 export type MemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
@@ -1075,6 +1128,7 @@ export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     role: $Enums.MemberRole
     customRoleId: string | null
     specificPermissions: string[]
+    status: $Enums.MemberStatus
     createdAt: Date
     updatedAt: Date
     removedAt: Date | null
@@ -1511,6 +1565,7 @@ export interface MemberFieldRefs {
   readonly role: Prisma.FieldRef<"Member", 'MemberRole'>
   readonly customRoleId: Prisma.FieldRef<"Member", 'String'>
   readonly specificPermissions: Prisma.FieldRef<"Member", 'String[]'>
+  readonly status: Prisma.FieldRef<"Member", 'MemberStatus'>
   readonly createdAt: Prisma.FieldRef<"Member", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Member", 'DateTime'>
   readonly removedAt: Prisma.FieldRef<"Member", 'DateTime'>
@@ -1710,6 +1765,11 @@ export type MemberFindManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Skip the first `n` Members.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Members.
+   */
   distinct?: Prisma.MemberScalarFieldEnum | Prisma.MemberScalarFieldEnum[]
 }
 

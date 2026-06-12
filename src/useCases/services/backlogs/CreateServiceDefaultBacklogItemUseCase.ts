@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import {
   ICreateServiceDefaultBacklogItemDTO,
@@ -30,14 +30,14 @@ export class CreateServiceDefaultBacklogItemUseCase {
     );
 
     if (!doesProjectExists) {
-      throw new AppError("Serviço não localizado");
+      throw new ResourceNotFoundError("Serviço não localizado");
     }
 
     await checkUserPermissionForAsset(
-      "services",
+      "servicesBacklog",
       userId,
       doesProjectExists,
-      "UPDATE",
+      "CREATE",
     );
 
     const backlogItem = await this.serviceDefaultBacklogItemsRepository.create({

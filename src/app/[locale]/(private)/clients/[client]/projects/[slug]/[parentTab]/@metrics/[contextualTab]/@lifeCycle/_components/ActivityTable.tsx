@@ -8,23 +8,24 @@ import {
 } from "@/components/ui/card";
 import { date } from "@/lib/dayjs";
 import { GitCommit } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { getCachedGitHubMetrics } from "../_data/get-github-metrics";
 
 interface IActivityTable {
   slug: string;
 }
+
 export async function ActivityTable({ slug }: IActivityTable) {
+  const t = await getTranslations("projects.metrics.lifecycle.activity");
   const metrics = await getCachedGitHubMetrics(slug);
-  
-  // Usando os dados crus vindos da API que você postou no log
   const commits = metrics.activity.commits.commitsRaw || [];
 
   return (
     <Card className="bg-gray-900/50 border-gray-800/50">
       <CardHeader className="pb-2">
-        <CardTitle className="text-white text-lg">Últimas Alterações</CardTitle>
+        <CardTitle className="text-white text-lg">{t("title")}</CardTitle>
         <CardDescription className="text-gray-400">
-          Timeline de commits recentes
+          {t("description")}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -34,10 +35,9 @@ export async function ActivityTable({ slug }: IActivityTable) {
               <div className="absolute left-[19px] top-2 bottom-4 w-px bg-gray-800" />
               <div className="space-y-6">
                 {commits.map((commit: any) => {
-                  // Extraímos os dados baseado no objeto que você postou no log
                   const authorLogin = commit.author?.login || "Unknown";
                   const avatarUrl = commit.author?.avatar_url;
-                  const message = commit.commit?.message?.split('\n')[0]; // Pega só a primeira linha
+                  const message = commit.commit?.message?.split("\n")[0];
                   const shaShort = commit.sha.substring(0, 7);
                   const commitDate = commit.commit?.author?.date;
 
@@ -59,7 +59,6 @@ export async function ActivityTable({ slug }: IActivityTable) {
                               {message}
                             </p>
                             <div className="flex items-center gap-2 mt-1">
-                              {/* CORREÇÃO: Renderizando authorLogin (string) em vez do objeto author */}
                               <span className="text-xs text-gray-400">
                                 {authorLogin}
                               </span>
@@ -89,7 +88,7 @@ export async function ActivityTable({ slug }: IActivityTable) {
               <div className="bg-gray-800/30 p-4 rounded-full mb-3">
                 <GitCommit className="w-8 h-8 opacity-20" />
               </div>
-              <p className="text-sm font-medium">Nenhum commit recente</p>
+              <p className="text-sm font-medium">{t("noCommits")}</p>
             </div>
           )}
         </div>

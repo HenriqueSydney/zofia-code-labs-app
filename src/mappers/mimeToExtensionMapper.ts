@@ -7,7 +7,7 @@ export const mimeToExtension = (mime: string) => {
     "image/svg+xml": ".svg",
     "image/webp": ".webp",
     "application/pdf": ".pdf",
-    "image/*": `.${SUPPORTED_IMAGE_EXTENSIONS.splice(0, 20).join("; .")}..`,
+    "image/*": `.${SUPPORTED_IMAGE_EXTENSIONS.join("; .")}`,
   };
   return map[mime] || "";
 };

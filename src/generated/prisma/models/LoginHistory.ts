@@ -31,6 +31,8 @@ export type LoginHistoryMinAggregateOutputType = {
   userAgent: string | null
   device: string | null
   city: string | null
+  country: string | null
+  region: string | null
   createdAt: Date | null
 }
 
@@ -41,6 +43,8 @@ export type LoginHistoryMaxAggregateOutputType = {
   userAgent: string | null
   device: string | null
   city: string | null
+  country: string | null
+  region: string | null
   createdAt: Date | null
 }
 
@@ -51,6 +55,8 @@ export type LoginHistoryCountAggregateOutputType = {
   userAgent: number
   device: number
   city: number
+  country: number
+  region: number
   createdAt: number
   _all: number
 }
@@ -63,6 +69,8 @@ export type LoginHistoryMinAggregateInputType = {
   userAgent?: true
   device?: true
   city?: true
+  country?: true
+  region?: true
   createdAt?: true
 }
 
@@ -73,6 +81,8 @@ export type LoginHistoryMaxAggregateInputType = {
   userAgent?: true
   device?: true
   city?: true
+  country?: true
+  region?: true
   createdAt?: true
 }
 
@@ -83,6 +93,8 @@ export type LoginHistoryCountAggregateInputType = {
   userAgent?: true
   device?: true
   city?: true
+  country?: true
+  region?: true
   createdAt?: true
   _all?: true
 }
@@ -166,13 +178,15 @@ export type LoginHistoryGroupByOutputType = {
   userAgent: string | null
   device: string | null
   city: string | null
+  country: string | null
+  region: string | null
   createdAt: Date
   _count: LoginHistoryCountAggregateOutputType | null
   _min: LoginHistoryMinAggregateOutputType | null
   _max: LoginHistoryMaxAggregateOutputType | null
 }
 
-type GetLoginHistoryGroupByPayload<T extends LoginHistoryGroupByArgs> = Prisma.PrismaPromise<
+export type GetLoginHistoryGroupByPayload<T extends LoginHistoryGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<LoginHistoryGroupByOutputType, T['by']> &
       {
@@ -197,6 +211,8 @@ export type LoginHistoryWhereInput = {
   userAgent?: Prisma.StringNullableFilter<"LoginHistory"> | string | null
   device?: Prisma.StringNullableFilter<"LoginHistory"> | string | null
   city?: Prisma.StringNullableFilter<"LoginHistory"> | string | null
+  country?: Prisma.StringNullableFilter<"LoginHistory"> | string | null
+  region?: Prisma.StringNullableFilter<"LoginHistory"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LoginHistory"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
@@ -208,6 +224,8 @@ export type LoginHistoryOrderByWithRelationInput = {
   userAgent?: Prisma.SortOrderInput | Prisma.SortOrder
   device?: Prisma.SortOrderInput | Prisma.SortOrder
   city?: Prisma.SortOrderInput | Prisma.SortOrder
+  country?: Prisma.SortOrderInput | Prisma.SortOrder
+  region?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
@@ -222,6 +240,8 @@ export type LoginHistoryWhereUniqueInput = Prisma.AtLeast<{
   userAgent?: Prisma.StringNullableFilter<"LoginHistory"> | string | null
   device?: Prisma.StringNullableFilter<"LoginHistory"> | string | null
   city?: Prisma.StringNullableFilter<"LoginHistory"> | string | null
+  country?: Prisma.StringNullableFilter<"LoginHistory"> | string | null
+  region?: Prisma.StringNullableFilter<"LoginHistory"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LoginHistory"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
@@ -233,6 +253,8 @@ export type LoginHistoryOrderByWithAggregationInput = {
   userAgent?: Prisma.SortOrderInput | Prisma.SortOrder
   device?: Prisma.SortOrderInput | Prisma.SortOrder
   city?: Prisma.SortOrderInput | Prisma.SortOrder
+  country?: Prisma.SortOrderInput | Prisma.SortOrder
+  region?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.LoginHistoryCountOrderByAggregateInput
   _max?: Prisma.LoginHistoryMaxOrderByAggregateInput
@@ -249,6 +271,8 @@ export type LoginHistoryScalarWhereWithAggregatesInput = {
   userAgent?: Prisma.StringNullableWithAggregatesFilter<"LoginHistory"> | string | null
   device?: Prisma.StringNullableWithAggregatesFilter<"LoginHistory"> | string | null
   city?: Prisma.StringNullableWithAggregatesFilter<"LoginHistory"> | string | null
+  country?: Prisma.StringNullableWithAggregatesFilter<"LoginHistory"> | string | null
+  region?: Prisma.StringNullableWithAggregatesFilter<"LoginHistory"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"LoginHistory"> | Date | string
 }
 
@@ -258,6 +282,8 @@ export type LoginHistoryCreateInput = {
   userAgent?: string | null
   device?: string | null
   city?: string | null
+  country?: string | null
+  region?: string | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutLoginHistoriesInput
 }
@@ -269,6 +295,8 @@ export type LoginHistoryUncheckedCreateInput = {
   userAgent?: string | null
   device?: string | null
   city?: string | null
+  country?: string | null
+  region?: string | null
   createdAt?: Date | string
 }
 
@@ -278,6 +306,8 @@ export type LoginHistoryUpdateInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   device?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutLoginHistoriesNestedInput
 }
@@ -289,6 +319,8 @@ export type LoginHistoryUncheckedUpdateInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   device?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -299,6 +331,8 @@ export type LoginHistoryCreateManyInput = {
   userAgent?: string | null
   device?: string | null
   city?: string | null
+  country?: string | null
+  region?: string | null
   createdAt?: Date | string
 }
 
@@ -308,6 +342,8 @@ export type LoginHistoryUpdateManyMutationInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   device?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -318,6 +354,8 @@ export type LoginHistoryUncheckedUpdateManyInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   device?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -338,6 +376,8 @@ export type LoginHistoryCountOrderByAggregateInput = {
   userAgent?: Prisma.SortOrder
   device?: Prisma.SortOrder
   city?: Prisma.SortOrder
+  country?: Prisma.SortOrder
+  region?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -348,6 +388,8 @@ export type LoginHistoryMaxOrderByAggregateInput = {
   userAgent?: Prisma.SortOrder
   device?: Prisma.SortOrder
   city?: Prisma.SortOrder
+  country?: Prisma.SortOrder
+  region?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -358,6 +400,8 @@ export type LoginHistoryMinOrderByAggregateInput = {
   userAgent?: Prisma.SortOrder
   device?: Prisma.SortOrder
   city?: Prisma.SortOrder
+  country?: Prisma.SortOrder
+  region?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -409,6 +453,8 @@ export type LoginHistoryCreateWithoutUserInput = {
   userAgent?: string | null
   device?: string | null
   city?: string | null
+  country?: string | null
+  region?: string | null
   createdAt?: Date | string
 }
 
@@ -418,6 +464,8 @@ export type LoginHistoryUncheckedCreateWithoutUserInput = {
   userAgent?: string | null
   device?: string | null
   city?: string | null
+  country?: string | null
+  region?: string | null
   createdAt?: Date | string
 }
 
@@ -457,6 +505,8 @@ export type LoginHistoryScalarWhereInput = {
   userAgent?: Prisma.StringNullableFilter<"LoginHistory"> | string | null
   device?: Prisma.StringNullableFilter<"LoginHistory"> | string | null
   city?: Prisma.StringNullableFilter<"LoginHistory"> | string | null
+  country?: Prisma.StringNullableFilter<"LoginHistory"> | string | null
+  region?: Prisma.StringNullableFilter<"LoginHistory"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LoginHistory"> | Date | string
 }
 
@@ -466,6 +516,8 @@ export type LoginHistoryCreateManyUserInput = {
   userAgent?: string | null
   device?: string | null
   city?: string | null
+  country?: string | null
+  region?: string | null
   createdAt?: Date | string
 }
 
@@ -475,6 +527,8 @@ export type LoginHistoryUpdateWithoutUserInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   device?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -484,6 +538,8 @@ export type LoginHistoryUncheckedUpdateWithoutUserInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   device?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -493,6 +549,8 @@ export type LoginHistoryUncheckedUpdateManyWithoutUserInput = {
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   device?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -505,6 +563,8 @@ export type LoginHistorySelect<ExtArgs extends runtime.Types.Extensions.Internal
   userAgent?: boolean
   device?: boolean
   city?: boolean
+  country?: boolean
+  region?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["loginHistory"]>
@@ -516,6 +576,8 @@ export type LoginHistorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   userAgent?: boolean
   device?: boolean
   city?: boolean
+  country?: boolean
+  region?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["loginHistory"]>
@@ -527,6 +589,8 @@ export type LoginHistorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   userAgent?: boolean
   device?: boolean
   city?: boolean
+  country?: boolean
+  region?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["loginHistory"]>
@@ -538,10 +602,12 @@ export type LoginHistorySelectScalar = {
   userAgent?: boolean
   device?: boolean
   city?: boolean
+  country?: boolean
+  region?: boolean
   createdAt?: boolean
 }
 
-export type LoginHistoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "ipAddress" | "userAgent" | "device" | "city" | "createdAt", ExtArgs["result"]["loginHistory"]>
+export type LoginHistoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "ipAddress" | "userAgent" | "device" | "city" | "country" | "region" | "createdAt", ExtArgs["result"]["loginHistory"]>
 export type LoginHistoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -564,6 +630,8 @@ export type $LoginHistoryPayload<ExtArgs extends runtime.Types.Extensions.Intern
     userAgent: string | null
     device: string | null
     city: string | null
+    country: string | null
+    region: string | null
     createdAt: Date
   }, ExtArgs["result"]["loginHistory"]>
   composites: {}
@@ -995,6 +1063,8 @@ export interface LoginHistoryFieldRefs {
   readonly userAgent: Prisma.FieldRef<"LoginHistory", 'String'>
   readonly device: Prisma.FieldRef<"LoginHistory", 'String'>
   readonly city: Prisma.FieldRef<"LoginHistory", 'String'>
+  readonly country: Prisma.FieldRef<"LoginHistory", 'String'>
+  readonly region: Prisma.FieldRef<"LoginHistory", 'String'>
   readonly createdAt: Prisma.FieldRef<"LoginHistory", 'DateTime'>
 }
     
@@ -1192,6 +1262,11 @@ export type LoginHistoryFindManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Skip the first `n` LoginHistories.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of LoginHistories.
+   */
   distinct?: Prisma.LoginHistoryScalarFieldEnum | Prisma.LoginHistoryScalarFieldEnum[]
 }
 

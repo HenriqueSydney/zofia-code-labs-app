@@ -1,3 +1,4 @@
+import { ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IBacklogItemsRepository } from "@/repositories/IBacklogItemsRepository";
 import { IProjectsRepository } from "@/repositories/IProjectsRepository";
@@ -25,7 +26,7 @@ export class SyncServiceDefaultBacklogUseCase {
     const project = await this.projectsRepository.findById(projectId);
 
     if (!project) {
-      throw new Error("Projeto não encontrado.");
+      throw new ResourceNotFoundError("Projeto não encontrado.");
     }
 
     // 2. Verifica se o usuário tem permissão para editar este projeto

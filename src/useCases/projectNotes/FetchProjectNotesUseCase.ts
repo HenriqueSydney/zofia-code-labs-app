@@ -1,5 +1,5 @@
 import { PrismaToPlain } from "@/@types/PrismaToPlain";
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import {
   IProjectNotesRepository,
@@ -33,7 +33,7 @@ export class FetchProjectNotesUseCase {
   }> {
     const projectExists = await this.projectRepository.findById(projectId);
 
-    if (!projectExists) throw new AppError("Projeto não localizado");
+    if (!projectExists) throw new ResourceNotFoundError("Projeto não localizado");
 
     await checkUserPermissionForAsset(
       "projectNotes",

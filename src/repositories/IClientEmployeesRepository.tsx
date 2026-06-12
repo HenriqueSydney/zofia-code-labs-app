@@ -25,5 +25,9 @@ export interface IClientEmployeesRepository {
     clientId: string,
     userId: string
   ): Promise<ClientEmployees | null>;
+  findByClientAndEmail(
+    clientId: string,
+    email: string
+  ): Promise<ClientEmployees | null>;
   listByClient(clientId: string): Promise<ClientEmployeesWithDetails[]>;
 }

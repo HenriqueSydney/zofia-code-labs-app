@@ -1,11 +1,12 @@
+import { v } from "@/schemas/validationMessages";
 import { z } from "zod";
 
 export const updateMemberRoleSchema = z.object({
-  memberId: z.cuid("O identificador do usuário deve ser válido"),
+  memberId: z.cuid(v.invalidMemberId),
   customRoleId: z.union([
-    z.cuid("O identificador do perfil de acesso deve ser válido"),
+    z.cuid(v.invalidRoleId),
     z.enum(["admin", "member", "viewer"], {
-      error: "O identificador do perfil de acesso deve ser válido",
+      error: v.invalidRoleId,
     }),
   ]),
 });

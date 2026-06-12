@@ -1,0 +1,63 @@
+---
+description: Diretrizes gerais do Agent — TL;DR, anti-padrões, checklist e referências
+alwaysApply: true
+---
+
+# Zofia Code Labs App — diretrizes para o Agent
+
+Painel **multi-tenant** (CRM, projetos, Documenso, financeiro, backlog, integrações, portal do cliente). Detalhes: `docs/`, `backlog.md`. Regras por área: `.cursor/rules/*.mdc`. Testes (exemplos completos): `docs/guia-testes.md`.
+
+## Regras obrigatórias (TL;DR)
+
+1. **Camadas:** UI → Server Action → Use Case → Repository / Service — sem Prisma nem regra de negócio em `page.tsx` ou actions.
+2. **TypeScript estrito** — evitar `any`; tipos de formulário via Zod (`z.infer`); DTOs em `repositories/I*.ts`; entidades Prisma em `@/generated/prisma`.
+3. **RSC por padrão** — `'use client'` só em formulários/interatividade; nunca em `page.tsx`.
+4. **Server Actions:** `auth()`, Zod, `make*UseCase()`, `{ success, message }`, `resolveActionErrorMessage`; erros de domínio estendem `AppError`.
+5. **RBAC:** `checkUserPermissionForAsset` nos use cases; `routePermissionMap` + `hasPermission` na UI; i18n em `messages/pt.json` e `messages/en.json`.
+6. **Leitura em páginas:** `operationWrapper` + actions, ou `_data/get-cached-*` com `cache()` do React.
+7. **UI:** `@/components/` e `@/components/ui/`; Lucide; `Link` de `@/i18n/navigation`.
+8. **Testes unitários:** In Memory em `repositories/in-memory/`; use case com `sut` no construtor (sem `make*UseCase` no spec); sem PostgreSQL no Vitest. Runner: `vitest.config.ts`, `npm run test` / `npm run test:watch`.
+9. **Nova feature:** schema + migration → `I*` + `Prisma*` + **`InMemory*`** → use case + spec → action → UI + permissões + i18n.
+
+## Não fazer
+
+- Lógica de negócio, transação ou `prisma` direto em Server Action, `page.tsx` ou componente de UI.
+- `make*UseCase()` ou `make*Repository()` de **produção** dentro de teste unitário de use case.
+- Mensagens de erro de regra de negócio só como string solta — usar erros tipados (`ValidationError`, `ResourceNotFoundError`, …).
+- Vazar stack ou detalhe interno na resposta da action.
+- Criar componente/form novo sem consultar `src/components/form/` e módulos similares.
+- Ícones fora do Lucide; rotas sem considerar `[locale]`.
+- Testar use case contra banco real no Vitest unitário.
+
+**Exceção histórica:** algumas actions antigas não usam sufixo `Action` (ex.: `changeContractStatus.ts`). Novas actions devem usar `*Action.ts`.
+
+## Checklist — nova funcionalidade
+
+1. `prisma/schema.prisma` + migration (comentários de dicionário quando possível) + `npx prisma generate`
+2. `I*Repository` + `Prisma*Repository` + `make*Repository` (se novo agregado)
+3. **`InMemory*Repository`** em `src/repositories/in-memory/` implementando **todos** os métodos do contrato
+4. `*UseCase.ts` + `make*UseCase.ts` + `checkUserPermissionForAsset` quando protegido
+5. **`*UseCase.spec.ts`** — cenários felizes, validação e `rejects.toBeInstanceOf` (ver tabela de erros em `zofia-testing.mdc`)
+6. `*Action.ts` com padrão de action (ver `zofia-architecture.mdc`)
+7. UI em `app/[locale]/...` + chaves i18n `pt`/`en`
+8. Permissões + `routePermissionMap` + gate na UI (`hasPermission`)
+9. Atualizar `docs/` ou `backlog.md` se mudar comportamento de produto
+
+## Onde consultar
+
+| Tópico | Onde |
+|--------|------|
+| Arquitetura (camadas, proxy, erros) | `zofia-architecture.mdc`, `docs/arquitetura.md` |
+| UI (páginas, RSC, i18n) | `zofia-ui.mdc` |
+| Testes (In Memory, Vitest, mocks) | `zofia-testing.mdc`, `docs/guia-testes.md` |
+| Setup local / scripts | `docs/guia-desenvolvimento.md`, `README.md` |
+| RBAC | `docs/permissoes-e-rbac.md`, `src/lib/auth/` |
+| Modelo de dados | `docs/modelo-de-dados.md`, `prisma/schema.prisma` |
+| Tipos auxiliares | `src/@types/` (`DocumentInput`, `PrismaToPlain`, `OperationWrapperTypes`) |
+| Roadmap | `backlog.md`, `currentBacklog.md` |
+
+## Em caso de falhas nos testes
+
+1. Revisar mocks e `beforeEach` antes de alterar produção
+2. Máximo 3 tentativas por falha; não forçar assert
+3. Nunca commitar `.env` ou credenciais

@@ -4,41 +4,59 @@ import { FinancialStatus } from "@/generated/prisma/enums";
 import { InvoiceWithDetails } from "@/repositories/IInvoiceRepository";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { InvoiceActionsOptions } from "./InvoiceActionsOptions";
+import { getTranslations } from "next-intl/server";
 
 interface PaymentItemProps {
   projectSlug: string;
   payment: InvoiceWithDetails;
+  canCreatePayment: boolean;
 }
 
-export function PaymentItem({ payment, projectSlug }: PaymentItemProps) {
-  // Mapeamento de cores e estilos baseado no FinancialStatus do Prisma
+const INVOICE_STATUS_KEYS: Record<FinancialStatus, string> = {
+  [FinancialStatus.PAID]: "PAID",
+  [FinancialStatus.OVERDUE]: "OVERDUE",
+  [FinancialStatus.PENDING]: "PENDING",
+  [FinancialStatus.CANCELLED]: "CANCELLED",
+  [FinancialStatus.DRAFT]: "DRAFT",
+};
+
+export async function PaymentItem({
+  payment,
+  projectSlug,
+  canCreatePayment,
+}: PaymentItemProps) {
+  const t = await getTranslations("projects.commercial.payments");
+  const tStatus = await getTranslations("projects.commercial.payments.status");
+
   const statusConfig: Record<
     FinancialStatus,
-    { container: string; icon: string; label: string }
+    { container: string; icon: string }
   > = {
     [FinancialStatus.PAID]: {
       container: "bg-green-500/10",
       icon: "text-green-500",
-      label: "Pago",
     },
     [FinancialStatus.OVERDUE]: {
       container: "bg-red-500/10",
       icon: "text-red-500",
-      label: "Atrasado",
     },
     [FinancialStatus.PENDING]: {
       container: "bg-yellow-500/10",
       icon: "text-yellow-500",
-      label: "Pendente",
     },
     [FinancialStatus.CANCELLED]: {
       container: "bg-muted",
       icon: "text-muted-foreground",
-      label: "Cancelado",
+    },
+    [FinancialStatus.DRAFT]: {
+      container: "bg-gray-100",
+      icon: "text-gray-500",
     },
   };
 
-  const currentStatus = statusConfig[payment.status as FinancialStatus];
+  const status = payment.status as FinancialStatus;
+  const currentStatus = statusConfig[status];
+  const statusLabel = tStatus(INVOICE_STATUS_KEYS[status] as never);
 
   return (
     <div className="flex items-center justify-between p-4 border rounded-lg transition-colors">
@@ -56,7 +74,7 @@ export function PaymentItem({ payment, projectSlug }: PaymentItemProps) {
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Calendar className="h-3 w-3" />
             <span>
-              Vencimento: {date(payment.dueDate).format("DD/MM/YYYY")}
+              {t("item.dueDate")}: {date(payment.dueDate).format("DD/MM/YYYY")}
             </span>
             {payment.paidAt && (
               <>
@@ -64,7 +82,8 @@ export function PaymentItem({ payment, projectSlug }: PaymentItemProps) {
                 <div className="flex items-center gap-1">
                   <Banknote className="h-3 w-3" />
                   <span>
-                    Pagamento: {date(payment.paidAt).format("DD/MM/YYYY")}
+                    {t("item.paymentDate")}:{" "}
+                    {date(payment.paidAt).format("DD/MM/YYYY")}
                   </span>
                 </div>
               </>
@@ -74,7 +93,9 @@ export function PaymentItem({ payment, projectSlug }: PaymentItemProps) {
                 <span>•</span>
                 <div className="flex items-center gap-1">
                   <FileText className="h-3 w-3" />
-                  <span>NF: {payment.nfseNumber}</span>
+                  <span>
+                    {t("item.nf")}: {payment.nfseNumber}
+                  </span>
                 </div>
               </>
             )}
@@ -93,15 +114,18 @@ export function PaymentItem({ payment, projectSlug }: PaymentItemProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Badge de Status Simples */}
           <span
             className={`text-[10px] font-bold uppercase px-2 py-1 rounded-full ${currentStatus.container} ${currentStatus.icon}`}
           >
-            {currentStatus.label}
+            {statusLabel}
           </span>
 
-          {/* Menu de Ações */}
-          <InvoiceActionsOptions projectSlug={projectSlug} invoice={payment} />
+          {canCreatePayment && (
+            <InvoiceActionsOptions
+              projectSlug={projectSlug}
+              invoice={payment}
+            />
+          )}
         </div>
       </div>
     </div>

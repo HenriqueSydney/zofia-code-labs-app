@@ -2,8 +2,9 @@
 
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Button } from "./ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/twMerge";
 
 interface IGoBackButton {
   withLabel?: boolean;
@@ -12,6 +13,7 @@ interface IGoBackButton {
 
 export function GoBackButton({ withLabel = true, className }: IGoBackButton) {
   const router = useRouter();
+  const t = useTranslations("common");
 
   return (
     <Button
@@ -23,7 +25,7 @@ export function GoBackButton({ withLabel = true, className }: IGoBackButton) {
       onClick={() => router.back()}
     >
       <ArrowLeft className="!w-5 !h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
-      {withLabel && "Voltar"}
+      {withLabel && t("back")}
     </Button>
   );
 }

@@ -1,16 +1,38 @@
 // src/useCases/projects/ChangeProjectStatusUseCase.ts
 import {
+  ResourceNotFoundError,
+  BusinessRuleError,
+  ValidationError,
+} from "@/errors";
+import {
+  sendDevStartEmail,
+  sendHomologationReadyEmail,
+  sendProjectHandover,
+} from "@/email/send";
+import {
   IProjectsRepository,
   ProjectWithDetails,
 } from "@/repositories/IProjectsRepository";
 import { Prisma, ProjectStatus } from "@/generated/prisma/client";
 import { validateProjectTransition } from "@/domain/project/ProjectWorkflow";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
+import { isSystemActor } from "@/constants/systemActors";
 import { prisma } from "@/lib/prisma";
 import { IProjectNotesRepository } from "@/repositories/IProjectNotesRepository";
 import { IAuditLogRepository } from "@/repositories/IAuditLogRepository";
+import { IUserRepository } from "@/repositories/IUsersRepository";
 import { getServicesDiffMessage } from "@/utils/getServicesDiffMessage";
-import { allStages } from "@/mappers/projectStageMapper";
+import { findTranslatedStage } from "@/mappers/projectStageMapper";
+import { getTranslations } from "next-intl/server";
+import {
+  buildDefaultDeliveryDate,
+  buildDefaultFormattedDate,
+  buildDefaultHomologationDeadline,
+  buildProjectBoardUrl,
+  buildProjectOverviewUrl,
+  getClientDisplayName,
+  resolveProjectStatusEmailOverrides,
+} from "@/lib/project/projectStatusEmailContext";
 
 interface Request {
   projectId: string;
@@ -24,6 +46,7 @@ export class ChangeProjectStatusUseCase {
     private projectsRepository: IProjectsRepository,
     private projectNotesRepository: IProjectNotesRepository,
     private auditLogRepository: IAuditLogRepository,
+    private usersRepository: IUserRepository,
   ) {}
 
   async execute(
@@ -33,41 +56,126 @@ export class ChangeProjectStatusUseCase {
     const project = await this.projectsRepository.findById(projectId);
 
     if (!project) {
-      throw new Error("Projeto não localizado.");
+      throw new ResourceNotFoundError("Projeto não localizado.");
     }
 
     await checkUserPermissionForAsset("project", userId, project, "UPDATE");
 
-    // 2. Validar Transição (State Machine Guard)
+    if (project.status === newStatus) {
+      return project;
+    }
+
     const isValid = validateProjectTransition(project.status, newStatus);
 
     if (!isValid) {
-      throw new Error(
+      throw new BusinessRuleError(
         `Transição inválida do status ${project.status} para ${newStatus}`,
       );
     }
-    if (tx) {
-      return this.performStatusChange(
-        projectId,
-        newStatus,
-        userId,
-        data,
-        tx,
-        project,
-      );
+
+    const updatedProject = tx
+      ? await this.performStatusChange(
+          projectId,
+          newStatus,
+          userId,
+          data,
+          tx,
+          project,
+        )
+      : await prisma.$transaction(async (newTx) => {
+          return this.performStatusChange(
+            projectId,
+            newStatus,
+            userId,
+            data,
+            newTx,
+            project,
+          );
+        });
+
+    if (project.status !== newStatus) {
+      try {
+        await this.sendStatusChangeEmails(project, newStatus, userId, data);
+      } catch (error) {
+        console.error("Erro ao enviar e-mail de mudança de status:", error);
+      }
     }
 
-    // Se não existir, abre uma nova
-    return await prisma.$transaction(async (newTx) => {
-      return this.performStatusChange(
-        projectId,
-        newStatus,
-        userId,
-        data,
-        newTx,
-        project,
-      );
-    });
+    return updatedProject;
+  }
+
+  private async sendStatusChangeEmails(
+    project: ProjectWithDetails,
+    newStatus: ProjectStatus,
+    userId: string,
+    data: unknown,
+  ) {
+    const clientEmail = project.client.email?.trim();
+
+    if (!clientEmail) {
+      return;
+    }
+
+    const overrides = resolveProjectStatusEmailOverrides(data);
+    const clientName = getClientDisplayName(project);
+    const operator = await this.usersRepository.findUserById(
+      userId,
+      project.organizationId,
+    );
+    const pmName =
+      overrides.pmName ?? operator?.name ?? "Equipe Zofia Code Labs";
+
+    switch (newStatus) {
+      case "IN_PROGRESS":
+        await sendDevStartEmail({
+          to: clientEmail,
+          clientName,
+          projectName: project.name,
+          startDate: overrides.startDate ?? buildDefaultFormattedDate(),
+          methodology: overrides.methodology ?? "Scrum (Sprints de 15 dias)",
+          pmName,
+          boardUrl:
+            overrides.boardUrl ??
+            buildProjectBoardUrl(project.client.slug, project.slug),
+        });
+        break;
+
+      case "REVIEW":
+        await sendHomologationReadyEmail({
+          to: clientEmail,
+          clientName,
+          projectName: project.name,
+          featureName:
+            overrides.featureName ?? overrides.observation ?? project.name,
+          version: overrides.version ?? "v1.0.0",
+          homologationUrl:
+            overrides.homologationUrl ??
+            buildProjectOverviewUrl(project.client.slug, project.slug),
+          deadlineDate:
+            overrides.deadlineDate ?? buildDefaultHomologationDeadline(),
+        });
+        break;
+
+      case "DELIVERED":
+      case "COMPLETED":
+        await sendProjectHandover({
+          to: clientEmail,
+          clientName,
+          projectName: project.name,
+          deliveryDate: overrides.deliveryDate ?? buildDefaultDeliveryDate(),
+          repoLink:
+            overrides.repoLink ??
+            buildProjectOverviewUrl(project.client.slug, project.slug),
+          docsLink:
+            overrides.docsLink ??
+            buildProjectOverviewUrl(project.client.slug, project.slug),
+          warrantyPeriod: overrides.warrantyPeriod ?? "90 dias",
+        });
+        break;
+
+      default:
+        break;
+    }
   }
 
   private async performStatusChange(
@@ -91,14 +199,23 @@ export class ChangeProjectStatusUseCase {
       tx,
     );
 
+    const tStages = await getTranslations("projects.stages");
+    const stageT = (key: string) =>
+      tStages(key as Parameters<typeof tStages>[0]);
+
     const currentStatusLabel =
-      allStages.find((s) => s.key === project.status)?.label ?? project.status;
+      findTranslatedStage(project.status, stageT)?.label ?? project.status;
     const newStatusLabel =
-      allStages.find((s) => s.key === newStatus)?.label ?? newStatus;
+      findTranslatedStage(newStatus, stageT)?.label ?? newStatus;
 
     let header = "";
     if (project.status !== newStatus) {
-      header = `Mudança de status de ${currentStatusLabel} para ${newStatusLabel}`;
+      header = await getTranslations("projects.overview.timeline").then((t) =>
+        t("statusChangeNote", {
+          from: currentStatusLabel,
+          to: newStatusLabel,
+        }),
+      );
     }
 
     let finalObservation = !!header ? `[${header}]` : "";
@@ -112,7 +229,7 @@ export class ChangeProjectStatusUseCase {
     }
 
     let createdNoteId: string | null = null;
-    if (finalObservation) {
+    if (finalObservation && !isSystemActor(userId)) {
       const observation = await this.projectNotesRepository.create(
         { projectId, userId, content: finalObservation },
         tx,
@@ -152,7 +269,6 @@ export class ChangeProjectStatusUseCase {
       case "PROPOSAL":
         return await this.handleToProposal(project, data, tx);
 
-      // Adicione outros casos conforme necessidade
       default:
         break;
     }
@@ -173,7 +289,6 @@ export class ChangeProjectStatusUseCase {
     let finalObservation = "";
     let services = currentServices.map((service) => service.serviceTypeId);
     if (!data.isRegress) {
-      // 1. Calcula o Diff
       const diffMessage = getServicesDiffMessage(
         currentServices,
         data.serviceIds,
@@ -186,7 +301,6 @@ export class ChangeProjectStatusUseCase {
       }
     }
 
-    // 3. Atualiza no Banco (Sync)
     await this.projectsRepository.updateProjectServices(
       project.id,
       services,
@@ -201,25 +315,20 @@ export class ChangeProjectStatusUseCase {
     data: any,
     tx: Prisma.TransactionClient,
   ) {
-    // 1. Identificar a direção da transição
-    // Consideramos "Avanço" se o status atual for inferior à Proposta (ex: DRAFT, TECH_ANALYSIS)
     const isAdvancing =
       project.status === "DRAFT" || project.status === "TECH_ANALYSIS";
 
-    // 2. Validação condicional
     const hasServiceIds =
       data?.serviceIds &&
       Array.isArray(data.serviceIds) &&
       data.serviceIds.length > 0;
 
     if (isAdvancing && !hasServiceIds) {
-      throw new Error(
+      throw new ValidationError(
         "Para avançar para Proposta, selecione ao menos um serviço.",
       );
     }
 
-    // 3. Só processamos a atualização de serviços se eles forem enviados no 'data'
-    // No caso de um retorno, se o 'data.serviceIds' vier vazio, mantemos os atuais.
     if (hasServiceIds) {
       const currentServices =
         project.projectServices.map((service) => ({

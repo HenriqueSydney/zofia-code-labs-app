@@ -1,7 +1,9 @@
 import { getProjectsVolumeChartAction } from "@/actions/stats/getProjectsVolumeChartAction";
-import { BarChart } from "@/components/Charts/BarChart"; // Seu componente existente
+import { BarChart } from "@/components/Charts/BarChart";
+import { getTranslations } from "next-intl/server";
 
 export async function ProjectsChart() {
+  const t = await getTranslations("admin.chart.projectsVolume");
   const { data: chartData } = await getProjectsVolumeChartAction();
 
   if (!chartData) return null;
@@ -9,12 +11,12 @@ export async function ProjectsChart() {
   return (
     <div className="col-span-4">
       <BarChart
-        title="Volume de Projetos"
-        description="Novos projetos criados nos últimos 6 meses"
+        title={t("title")}
+        description={t("description")}
         data={chartData}
         indexKey="month"
         categories={[
-          { key: "projects", label: "Projetos Criados", color: "#2563eb" }, // Ajuste a cor conforme seu tema (ex: hsl(var(--primary)))
+          { key: "projects", label: t("series"), color: "#2563eb" },
         ]}
         height={350}
       />

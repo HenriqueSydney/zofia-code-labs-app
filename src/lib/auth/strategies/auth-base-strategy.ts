@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { ForbiddenError } from "@/errors";
 import { IPermissionStrategy, UserContext, Operation } from "./types";
 
 // Exige que o Asset tenha pelo menos organizationId
@@ -12,7 +12,7 @@ export abstract class AuthBasePermissionStrategy<T extends TenantAsset>
   validate(user: UserContext, asset: T, operation: Operation): void {
     // 1. Regra Global: Validação de Tenant (SaaS Isolation)
     if (asset && user.organizationId !== asset.organizationId) {
-      throw new AppError("Acesso negado: Recurso de outra organização.", 403);
+      throw new ForbiddenError("Acesso negado: Recurso de outra organização.");
     }
 
     // 2. Chama a validação específica da classe filha

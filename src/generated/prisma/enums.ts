@@ -37,14 +37,13 @@ export const MemberRole = {
 export type MemberRole = (typeof MemberRole)[keyof typeof MemberRole]
 
 
-export const TemplateType = {
-  CONTRACT: 'CONTRACT',
-  PROPOSAL: 'PROPOSAL',
-  DELIVERY_TERM: 'DELIVERY_TERM',
-  OTHER: 'OTHER'
+export const MemberStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  PENDING: 'PENDING'
 } as const
 
-export type TemplateType = (typeof TemplateType)[keyof typeof TemplateType]
+export type MemberStatus = (typeof MemberStatus)[keyof typeof MemberStatus]
 
 
 export const ClientEmployeeRole = {
@@ -79,7 +78,6 @@ export type ProposalStatus = (typeof ProposalStatus)[keyof typeof ProposalStatus
 
 
 export const ProposalSource = {
-  SYSTEM_TEMPLATE: 'SYSTEM_TEMPLATE',
   MANUAL_UPLOAD: 'MANUAL_UPLOAD'
 } as const
 
@@ -107,7 +105,6 @@ export type ContractStatus = (typeof ContractStatus)[keyof typeof ContractStatus
 
 
 export const ContractSource = {
-  SYSTEM_TEMPLATE: 'SYSTEM_TEMPLATE',
   MANUAL_UPLOAD: 'MANUAL_UPLOAD'
 } as const
 
@@ -207,6 +204,7 @@ export type ExpenseStatus = (typeof ExpenseStatus)[keyof typeof ExpenseStatus]
 
 
 export const FinancialStatus = {
+  DRAFT: 'DRAFT',
   PENDING: 'PENDING',
   PAID: 'PAID',
   OVERDUE: 'OVERDUE',
@@ -220,7 +218,8 @@ export const InternetBankingProvider = {
   CORA: 'CORA',
   PAYPAL: 'PAYPAL',
   MERCADO_PAGO: 'MERCADO_PAGO',
-  STRIPE: 'STRIPE'
+  STRIPE: 'STRIPE',
+  INTER: 'INTER'
 } as const
 
 export type InternetBankingProvider = (typeof InternetBankingProvider)[keyof typeof InternetBankingProvider]
@@ -234,6 +233,14 @@ export const PaymentType = {
 } as const
 
 export type PaymentType = (typeof PaymentType)[keyof typeof PaymentType]
+
+
+export const InvoiceChargeType = {
+  STANDARD: 'STANDARD',
+  DOWN_PAYMENT: 'DOWN_PAYMENT'
+} as const
+
+export type InvoiceChargeType = (typeof InvoiceChargeType)[keyof typeof InvoiceChargeType]
 
 
 export const JobType = {

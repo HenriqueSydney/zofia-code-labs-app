@@ -62,7 +62,6 @@ export const ModelName = {
   ServiceCategory: 'ServiceCategory',
   ServiceType: 'ServiceType',
   ServiceDefaultBacklogItem: 'ServiceDefaultBacklogItem',
-  DocumentTemplate: 'DocumentTemplate',
   Client: 'Client',
   ClientEmployees: 'ClientEmployees',
   Proposal: 'Proposal',
@@ -74,10 +73,12 @@ export const ModelName = {
   ProjectRoles: 'ProjectRoles',
   ProjectMember: 'ProjectMember',
   ProjectDocuments: 'ProjectDocuments',
+  ProjectRating: 'ProjectRating',
   ProjectServices: 'ProjectServices',
   ProjectNote: 'ProjectNote',
   Sprint: 'Sprint',
   BacklogItem: 'BacklogItem',
+  BacklogItemChecklistItem: 'BacklogItemChecklistItem',
   BudgetEntry: 'BudgetEntry',
   ExpenseCategory: 'ExpenseCategory',
   Expense: 'Expense',
@@ -146,6 +147,7 @@ export const MemberScalarFieldEnum = {
   role: 'role',
   customRoleId: 'customRoleId',
   specificPermissions: 'specificPermissions',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   removedAt: 'removedAt'
@@ -191,6 +193,8 @@ export const LoginHistoryScalarFieldEnum = {
   userAgent: 'userAgent',
   device: 'device',
   city: 'city',
+  country: 'country',
+  region: 'region',
   createdAt: 'createdAt'
 } as const
 
@@ -259,20 +263,6 @@ export const ServiceDefaultBacklogItemScalarFieldEnum = {
 export type ServiceDefaultBacklogItemScalarFieldEnum = (typeof ServiceDefaultBacklogItemScalarFieldEnum)[keyof typeof ServiceDefaultBacklogItemScalarFieldEnum]
 
 
-export const DocumentTemplateScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  title: 'title',
-  content: 'content',
-  type: 'type',
-  isSystem: 'isSystem',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type DocumentTemplateScalarFieldEnum = (typeof DocumentTemplateScalarFieldEnum)[keyof typeof DocumentTemplateScalarFieldEnum]
-
-
 export const ClientScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
@@ -284,6 +274,9 @@ export const ClientScalarFieldEnum = {
   phone: 'phone',
   address: 'address',
   logoReference: 'logoReference',
+  responsibleName: 'responsibleName',
+  responsibleEmail: 'responsibleEmail',
+  responsiblePhone: 'responsiblePhone',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -319,6 +312,8 @@ export const ProposalScalarFieldEnum = {
   createdBy: 'createdBy',
   sourceType: 'sourceType',
   downPaymentPercentage: 'downPaymentPercentage',
+  paymentGatewayId: 'paymentGatewayId',
+  paymentMethod: 'paymentMethod',
   fileKey: 'fileKey',
   fileUrl: 'fileUrl',
   projectId: 'projectId',
@@ -335,7 +330,6 @@ export type ProposalScalarFieldEnum = (typeof ProposalScalarFieldEnum)[keyof typ
 
 export const ProposalTemplateScalarFieldEnum = {
   id: 'id',
-  documentTemplateId: 'documentTemplateId',
   content: 'content',
   isDefault: 'isDefault',
   isActive: 'isActive',
@@ -386,7 +380,6 @@ export type ContractScalarFieldEnum = (typeof ContractScalarFieldEnum)[keyof typ
 
 export const ContractTemplateScalarFieldEnum = {
   id: 'id',
-  documentTemplateId: 'documentTemplateId',
   content: 'content',
   isDefault: 'isDefault',
   isActive: 'isActive',
@@ -448,14 +441,27 @@ export type ProjectMemberScalarFieldEnum = (typeof ProjectMemberScalarFieldEnum)
 
 export const ProjectDocumentsScalarFieldEnum = {
   id: 'id',
+  projectId: 'projectId',
   name: 'name',
   extension: 'extension',
-  createdAt: 'createdAt',
   documentUrlReference: 'documentUrlReference',
-  projectId: 'projectId'
+  createdAt: 'createdAt'
 } as const
 
 export type ProjectDocumentsScalarFieldEnum = (typeof ProjectDocumentsScalarFieldEnum)[keyof typeof ProjectDocumentsScalarFieldEnum]
+
+
+export const ProjectRatingScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  rating: 'rating',
+  comment: 'comment',
+  techQuality: 'techQuality',
+  communication: 'communication',
+  createdAt: 'createdAt'
+} as const
+
+export type ProjectRatingScalarFieldEnum = (typeof ProjectRatingScalarFieldEnum)[keyof typeof ProjectRatingScalarFieldEnum]
 
 
 export const ProjectServicesScalarFieldEnum = {
@@ -520,6 +526,20 @@ export const BacklogItemScalarFieldEnum = {
 export type BacklogItemScalarFieldEnum = (typeof BacklogItemScalarFieldEnum)[keyof typeof BacklogItemScalarFieldEnum]
 
 
+export const BacklogItemChecklistItemScalarFieldEnum = {
+  id: 'id',
+  description: 'description',
+  dueDate: 'dueDate',
+  clientBlocker: 'clientBlocker',
+  order: 'order',
+  backlogItemId: 'backlogItemId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BacklogItemChecklistItemScalarFieldEnum = (typeof BacklogItemChecklistItemScalarFieldEnum)[keyof typeof BacklogItemChecklistItemScalarFieldEnum]
+
+
 export const BudgetEntryScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
@@ -579,6 +599,7 @@ export const InvoiceScalarFieldEnum = {
   clientId: 'clientId',
   internetBankingProvider: 'internetBankingProvider',
   paymentType: 'paymentType',
+  chargeType: 'chargeType',
   amount: 'amount',
   dueDate: 'dueDate',
   paidAt: 'paidAt',
@@ -694,6 +715,8 @@ export type UmamiMetricSnapshotScalarFieldEnum = (typeof UmamiMetricSnapshotScal
 export const WebhookLogScalarFieldEnum = {
   id: 'id',
   provider: 'provider',
+  eventType: 'eventType',
+  documentId: 'documentId',
   eventId: 'eventId',
   payload: 'payload',
   status: 'status',

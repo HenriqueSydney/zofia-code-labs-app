@@ -1,29 +1,22 @@
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+"use client";
+
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
+import { Form } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { FormInput } from "@/components/form/FormInput";
+import { FormTextarea } from "@/components/form/FormTextarea";
 import { createServiceCategoryAction } from "@/actions/services/createServiceCategoryAction";
 import {
   createServiceCategorySchema,
   type CreateServiceCategorySchema,
 } from "@/schemas/services/createServiceCategorySchema";
-import { Button } from "@/components/ui/button";
 import { updateServiceCategoryAction } from "@/actions/services/updateServiceCategoryAction";
 import { CreateServiceCategoryDTO } from "@/repositories/IServiceCategoryRepository";
-import { FormInput } from "@/components/form/FormInput";
-import { FormTextarea } from "@/components/form/FormTextarea";
 
 export type CategoryOption = {
   id: string;
@@ -41,9 +34,10 @@ export function ServiceCategoryForm({
   serviceCategory,
   handleCloseModal,
 }: IServiceFormProps) {
+  const t = useTranslations("settings.services.category.form");
+  const tCommon = useTranslations("common");
   const [isPending, startTransition] = useTransition();
 
-  // 1. Tipagem explícita no useForm resolve o conflito do Resolver
   const form = useForm<CreateServiceCategorySchema>({
     resolver: zodResolver(createServiceCategorySchema),
     defaultValues: {
@@ -53,7 +47,6 @@ export function ServiceCategoryForm({
     },
   });
 
-  // 2. O onSubmit agora recebe o tipo correto inferido
   const onSubmit = (data: CreateServiceCategorySchema) => {
     startTransition(async () => {
       if (serviceCategory) {
@@ -64,7 +57,7 @@ export function ServiceCategoryForm({
           return;
         }
 
-        toast.success("Serviço atualizado com sucesso!");
+        toast.success(t("toastUpdateSuccess"));
         form.setValue("taxCode", data.taxCode);
         form.setValue("description", data.description);
         form.setValue("name", data.name);
@@ -79,7 +72,7 @@ export function ServiceCategoryForm({
         return;
       }
 
-      toast.success("Serviço criado com sucesso!");
+      toast.success(t("toastCreateSuccess"));
       form.reset();
       handleCloseModal();
     });
@@ -91,17 +84,16 @@ export function ServiceCategoryForm({
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-6 max-w-lg"
       >
-        {/* Nome */}
         <FormInput
-          label="Nome da Categoria de Serviço"
+          label={t("name")}
           control={form.control}
           name="name"
-          placeholder="Ex: Landing Page Express"
+          placeholder={t("namePlaceholder")}
           disabled={isPending}
         />
 
         <FormInput
-          label="Código do Imposto (NF-E)"
+          label={t("taxCode")}
           control={form.control}
           name="taxCode"
           placeholder="1.01"
@@ -109,10 +101,10 @@ export function ServiceCategoryForm({
         />
 
         <FormTextarea
-          label="Descrição"
+          label={t("description")}
           control={form.control}
           name="description"
-          placeholder="Detalhes do que está incluso..."
+          placeholder={t("descriptionPlaceholder")}
           className="resize-none"
           rows={4}
           disabled={isPending}
@@ -120,9 +112,9 @@ export function ServiceCategoryForm({
 
         <div className="w-full flex justify-end">
           <Button type="submit" disabled={isPending}>
-            {isPending && "Salvando..."}
-            {!isPending && serviceCategory && "Editar Categoria"}
-            {!isPending && !serviceCategory && "Criar Categoria"}
+            {isPending && tCommon("saving")}
+            {!isPending && serviceCategory && t("edit")}
+            {!isPending && !serviceCategory && t("create")}
           </Button>
         </div>
       </form>

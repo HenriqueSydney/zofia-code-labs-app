@@ -1,5 +1,6 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth"; // Seu setup de auth
 import { createServiceCategorySchema } from "@/schemas/services/createServiceCategorySchema";
 import { makeCreateServiceCategoryUseCase } from "@/useCases/services/factories/makeCreateServiceCategoryUseCase";
@@ -11,7 +12,7 @@ export async function createServiceCategoryAction(data: unknown) {
   if (!session?.user?.organizationId) {
     return {
       success: false,
-      message: "Sessão expirada ou usuário sem organização vinculada.",
+      message: await serverErrorMessage("sessionExpiredNoOrg"),
     };
   }
 
@@ -22,7 +23,7 @@ export async function createServiceCategoryAction(data: unknown) {
     // Retorna o primeiro erro encontrado para simplificar
     return {
       success: false,
-      message: parsed.error.issues[0].message || "Dados inválidos.",
+      message: parsed.error.issues[0].message || await serverErrorMessage("invalidData"),
     };
   }
 
@@ -35,6 +36,7 @@ export async function createServiceCategoryAction(data: unknown) {
     // 4. Execução
     await createServiceCategoryUseCase.execute({
       organizationId: session.user.organizationId, // Pega da sessão, NUNCA do form
+      userId: session.user.id,
       name,
       description,
       taxCode,
@@ -54,7 +56,7 @@ export async function createServiceCategoryAction(data: unknown) {
 
     return {
       success: false,
-      message: "Erro interno ao criar serviço.",
+      message: await serverErrorMessage("serviceCreateFailed"),
     };
   }
 }

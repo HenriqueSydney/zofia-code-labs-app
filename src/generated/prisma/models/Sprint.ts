@@ -263,7 +263,7 @@ export type SprintGroupByOutputType = {
   _max: SprintMaxAggregateOutputType | null
 }
 
-type GetSprintGroupByPayload<T extends SprintGroupByArgs> = Prisma.PrismaPromise<
+export type GetSprintGroupByPayload<T extends SprintGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<SprintGroupByOutputType, T['by']> &
       {
@@ -1644,6 +1644,11 @@ export type SprintFindManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Skip the first `n` Sprints.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Sprints.
+   */
   distinct?: Prisma.SprintScalarFieldEnum | Prisma.SprintScalarFieldEnum[]
 }
 

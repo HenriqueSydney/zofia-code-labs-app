@@ -15,6 +15,7 @@ import {
 
 import { Plus } from "lucide-react";
 import { ClientEmployeeForm } from "./ClientEmployeeForm";
+import { useTranslations } from "next-intl";
 
 interface IClientEmployeeCreateForm {
   clientSlug: string;
@@ -23,6 +24,7 @@ interface IClientEmployeeCreateForm {
 export function ClientEmployeeCreateForm({
   clientSlug,
 }: IClientEmployeeCreateForm) {
+  const t = useTranslations("clients.employees");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
@@ -35,13 +37,13 @@ export function ClientEmployeeCreateForm({
       <DialogTrigger asChild>
         <Button size="lg">
           <Plus className="h-4 w-4 mr-2" />
-          Novo Usuário
+          {t("createButton")}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Novo usuário</DialogTitle>
-          <DialogDescription>Preencha os dados do usuário</DialogDescription>
+          <DialogTitle>{t("createTitle")}</DialogTitle>
+          <DialogDescription>{t("createDescription")}</DialogDescription>
         </DialogHeader>
 
         <ClientEmployeeForm

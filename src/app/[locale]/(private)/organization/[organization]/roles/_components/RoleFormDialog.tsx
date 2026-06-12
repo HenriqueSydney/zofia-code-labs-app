@@ -30,30 +30,42 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 
-import { PERMISSIONS_MAP } from "@/constants/permissions";
+import { getPermissionsMap } from "@/constants/permissions";
 import { saveCustomRoleAction } from "@/actions/organization/saveCustomRoleAction";
 import { FormInput } from "@/components/form/FormInput";
-
-const roleSchema = z.object({
-  name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
-  description: z.string().optional(),
-  permissions: z.array(z.string()).refine((value) => value.length > 0, {
-    message: "Selecione pelo menos uma permissão.",
-  }),
-});
-
-type RoleFormData = z.infer<typeof roleSchema>;
+import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 interface RoleFormDialogProps {
   orgId: string;
   roleToEdit?: any;
+  canManage?: boolean;
 }
 
-export function RoleFormDialog({ orgId, roleToEdit }: RoleFormDialogProps) {
+export function RoleFormDialog({
+  orgId,
+  roleToEdit,
+  canManage = true,
+}: RoleFormDialogProps) {
+  const t = useTranslations("organization.roles");
+  const tPermissions = useTranslations("permissions");
+  const tCommonActions = useTranslations("common.actions");
+  const tErrors = useTranslations("errors.server");
+  const { data: session, update } = useSession();
   const [open, setOpen] = useState(false);
   const [isPending, setIsPending] = useState(false);
 
   const isEditing = !!roleToEdit;
+
+  const roleSchema = z.object({
+    name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
+    description: z.string().optional(),
+    permissions: z.array(z.string()).refine((value) => value.length > 0, {
+      message: t("validation.minPermission"),
+    }),
+  });
+
+  type RoleFormData = z.infer<typeof roleSchema>;
 
   const form = useForm<RoleFormData>({
     resolver: zodResolver(roleSchema),
@@ -64,6 +76,10 @@ export function RoleFormDialog({ orgId, roleToEdit }: RoleFormDialogProps) {
     },
   });
 
+  const permissionsMap = getPermissionsMap((key) =>
+    tPermissions(key as Parameters<typeof tPermissions>[0]),
+  );
+
   async function onSubmit(data: RoleFormData) {
     setIsPending(true);
     const result = await saveCustomRoleAction({
@@ -73,13 +89,19 @@ export function RoleFormDialog({ orgId, roleToEdit }: RoleFormDialogProps) {
     });
 
     if (result.error) {
-      toast.error(result.error);
+      toast.error(
+        typeof result.error === "string" ? result.error : tErrors("invalidData"),
+      );
       setIsPending(false);
       return;
     }
 
+    if (isEditing && roleToEdit?.id === session?.user?.customRoleId) {
+      await update();
+    }
+
     toast.success(
-      isEditing ? "Perfil atualizado!" : "Perfil criado com sucesso!",
+      isEditing ? t("toast.updated") : t("toast.created"),
     );
     setIsPending(false);
     handleOpenChange(false);
@@ -91,6 +113,10 @@ export function RoleFormDialog({ orgId, roleToEdit }: RoleFormDialogProps) {
       form.reset();
     }
   };
+
+  if (!canManage) {
+    return null;
+  }
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -106,7 +132,7 @@ export function RoleFormDialog({ orgId, roleToEdit }: RoleFormDialogProps) {
         ) : (
           <Button>
             <Plus className="mr-2 h-4 w-4" />
-            Novo Perfil
+            {t("form.newProfile")}
           </Button>
         )}
       </DialogTrigger>
@@ -115,11 +141,9 @@ export function RoleFormDialog({ orgId, roleToEdit }: RoleFormDialogProps) {
         {/* HEADER FIXO */}
         <DialogHeader className="p-6 pb-4 border-b shrink-0">
           <DialogTitle>
-            {isEditing ? "Editar Perfil" : "Novo Perfil de Acesso"}
+            {isEditing ? t("dialog.editTitle") : t("dialog.newTitle")}
           </DialogTitle>
-          <DialogDescription>
-            Defina o nome do cargo e selecione as permissões granulares abaixo.
-          </DialogDescription>
+          <DialogDescription>{t("dialog.description")}</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -131,18 +155,18 @@ export function RoleFormDialog({ orgId, roleToEdit }: RoleFormDialogProps) {
             <div className="px-6 py-6 space-y-4 shrink-0 bg-background z-10">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <FormInput
-                  label="Nome do Cargo"
+                  label={t("form.roleName")}
                   control={form.control}
                   name="name"
-                  placeholder="Ex: Gestor de Projetos"
+                  placeholder={t("form.roleNamePlaceholder")}
                 />
 
                 <div className="col-span-2">
                   <FormInput
-                    label="Descrição"
+                    label={t("form.description")}
                     control={form.control}
                     name="description"
-                    placeholder="Breve descrição..."
+                    placeholder={t("form.descriptionPlaceholder")}
                   />
                 </div>
               </div>
@@ -156,7 +180,7 @@ export function RoleFormDialog({ orgId, roleToEdit }: RoleFormDialogProps) {
               <div>
                 <h3 className="text-sm font-medium mb-4 flex items-center gap-2 text-muted-foreground">
                   <Shield className="w-4 h-4" />
-                  Permissões do Sistema
+                  {t("form.systemPermissions")}
                 </h3>
 
                 <FormField
@@ -164,7 +188,7 @@ export function RoleFormDialog({ orgId, roleToEdit }: RoleFormDialogProps) {
                   name="permissions"
                   render={() => (
                     <div className="space-y-4">
-                      {PERMISSIONS_MAP.map((category) => (
+                      {permissionsMap.map((category) => (
                         <div
                           key={category.key}
                           className="border rounded-lg p-4 bg-background shadow-sm"
@@ -238,11 +262,11 @@ export function RoleFormDialog({ orgId, roleToEdit }: RoleFormDialogProps) {
                 onClick={() => setOpen(false)}
                 disabled={isPending}
               >
-                Cancelar
+                {tCommonActions("cancel")}
               </Button>
               <Button type="submit" disabled={isPending}>
                 {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {isEditing ? "Salvar Alterações" : "Criar Perfil"}
+                {isEditing ? tCommonActions("saveChanges") : t("form.createProfile")}
               </Button>
             </DialogFooter>
           </form>

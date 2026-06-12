@@ -1,5 +1,6 @@
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError } from "@/errors";
 import { BacklogPriority } from "@/generated/prisma/enums";
+import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import {
   IServiceDefaultBacklogItemsRepository,
   ServiceDefaultBacklogItemWithDetails,
@@ -9,6 +10,7 @@ import { IServiceTypeRepository } from "@/repositories/IServiceTypeRepository";
 interface ListServiceDefaultBacklogsItemsUseCaseRequest {
   serviceId: string;
   organizationId: string;
+  userId: string;
   query?: string;
   priority?: BacklogPriority | null;
 }
@@ -21,6 +23,7 @@ export class ListServiceDefaultBacklogsItemsUseCase {
 
   async execute({
     organizationId,
+    userId,
     serviceId,
     query,
     priority,
@@ -35,8 +38,10 @@ export class ListServiceDefaultBacklogsItemsUseCase {
     );
 
     if (!serviceType) {
-      throw new AppError("Serviço não localizado");
+      throw new ResourceNotFoundError("Serviço não localizado");
     }
+
+    await checkUserPermissionForAsset("servicesBacklog", userId, serviceType, "READ");
 
     const defaultBacklogItems =
       await this.serviceDefaultBacklogItemRepository.findAll({

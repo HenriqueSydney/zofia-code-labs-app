@@ -1,8 +1,8 @@
 // @/actions/financial/createInvoiceAction.ts
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { handleErrors } from "@/errors/handleErrors";
 import { revalidatePath } from "next/cache";
 import {
   InvoiceFormData,
@@ -15,7 +15,7 @@ export async function createInvoiceAction(
   data: InvoiceFormData
 ) {
   const session = await auth();
-  if (!session?.user?.id) return { success: false, message: "Não autorizado" };
+  if (!session?.user?.id) return { success: false, message: await serverErrorMessage("unauthorized") };
 
   const validation = invoiceSchema.safeParse(data);
   if (!validation.success) {
@@ -32,8 +32,8 @@ export async function createInvoiceAction(
     });
 
     revalidatePath(`/projects/${projectSlug}/financial`);
-    return { success: true, message: "Fatura gerada com sucesso!" };
+    return { success: true, message: await resolveSuccessMessage("invoiceCreated") };
   } catch (error) {
-    return { success: false, message: handleErrors(error) };
+    return { success: false, message: await resolveActionErrorMessage(error) };
   }
 }

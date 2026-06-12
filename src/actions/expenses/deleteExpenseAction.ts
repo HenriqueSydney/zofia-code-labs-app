@@ -1,7 +1,7 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { handleErrors } from "@/errors/handleErrors";
 import { makeDeleteExpenseUseCase } from "@/useCases/expenses/factories/makeDeleteExpenseUseCase";
 import { revalidatePath } from "next/cache";
 
@@ -10,7 +10,7 @@ export async function deleteExpenseAction(
   projectSlug: string
 ) {
   const session = await auth();
-  if (!session?.user?.id) return { success: false, message: "Não autorizado" };
+  if (!session?.user?.id) return { success: false, message: await serverErrorMessage("unauthorized") };
 
   try {
     const useCase = makeDeleteExpenseUseCase();
@@ -21,8 +21,8 @@ export async function deleteExpenseAction(
     });
 
     revalidatePath(`/projects/${projectSlug}/financial`);
-    return { success: true, message: "Despesa removida." };
+    return { success: true, message: await resolveSuccessMessage("expenseRemoved") };
   } catch (error) {
-    return { success: false, message: handleErrors(error) };
+    return { success: false, message: await resolveActionErrorMessage(error) };
   }
 }

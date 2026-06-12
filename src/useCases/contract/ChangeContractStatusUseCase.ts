@@ -1,10 +1,20 @@
-import { AppError } from "@/errors/AppError";
+import {
+  ResourceNotFoundError,
+  BusinessRuleError,
+  ValidationError,
+} from "@/errors";
 import { Contract } from "@/generated/prisma/client";
 import { ContractStatus } from "@/generated/prisma/enums";
+import { sendContractReadyEmailForContract } from "@/lib/contracts/contractReadyEmail";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
+import { assertClientHasResponsible } from "@/lib/clients/assertClientHasResponsible";
 import { prisma } from "@/lib/prisma";
 import { IAuditLogRepository } from "@/repositories/IAuditLogRepository";
-import { ContractWithProjectDetails, IContractRepository } from "@/repositories/IContractRepository";
+import {
+  ContractWithProjectDetails,
+  IContractRepository,
+} from "@/repositories/IContractRepository";
+import { ProvisionClientPortalOwnerUseCase } from "../clients/ProvisionClientPortalOwnerUseCase";
 import { ChangeProjectStatusUseCase } from "../projects/ChangeProjectStatusUseCase";
 import { IS3StorageService } from "@/services/s3Client/IS3StorageService";
 import { IDocumentSignService } from "@/services/documenso/IDocumentSignService";
@@ -13,7 +23,7 @@ interface ChangeContractStatusRequest {
   contractId: string;
   newStatus: ContractStatus;
   userId: string;
-  communicationChannel?: "whatsapp" | "email";
+  communicationChannel?: "whatsapp" | "email" | "none";
 }
 
 export class ChangeContractStatusUseCase {
@@ -23,20 +33,22 @@ export class ChangeContractStatusUseCase {
     private auditLogRepository: IAuditLogRepository,
     private storageService: IS3StorageService,
     private documentSignService: IDocumentSignService,
+    private provisionClientPortalOwnerUseCase: ProvisionClientPortalOwnerUseCase,
   ) {}
 
   async execute({
     contractId,
     newStatus,
     userId,
+    communicationChannel,
   }: ChangeContractStatusRequest): Promise<ContractWithProjectDetails> {
     const contract = await this.contractRepository.findById(contractId);
 
-    if (!contract) throw new AppError("Contrato não encontrado.", 404);
+    if (!contract) throw new ResourceNotFoundError("Contrato não encontrado.");
     if (!this.isValidTransition(contract.status, newStatus)) {
-      throw new AppError(
+      throw new BusinessRuleError(
         `Transição de ${contract.status} para ${newStatus} inválida.`,
-        400,
+        { statusCode: 400 },
       );
     }
 
@@ -54,25 +66,44 @@ export class ChangeContractStatusUseCase {
 
     // --- OPERAÇÕES EXTERNAS (FORA DA TRANSAÇÃO) ---
     if (newStatus === "SENT") {
-      const fileKey = contract.fileKey;
-      if (!fileKey) throw new AppError("Arquivo do contrato não existe.");
+      const client = await prisma.client.findUnique({
+        where: { id: contract.project.client.id },
+        include: {
+          organization: { select: { name: true } },
+        },
+      });
 
-      // 1. Download do arquivo
+      if (!client) {
+        throw new ResourceNotFoundError("Cliente do contrato não encontrado.");
+      }
+
+      assertClientHasResponsible(client);
+
+      const fileKey = contract.fileKey;
+      if (!fileKey)
+        throw new ValidationError("Arquivo do contrato não existe.");
+
       const fileBuffer = await this.storageService.getFileBuffer(fileKey);
 
-      // 2. Integração com Documenso (API Externa)
+      const orgSignerEmail =
+        process.env.CONTRACT_ORG_SIGNER_EMAIL ??
+        process.env.EMAIL_FROM ??
+        "info@zofiacodelabs.com.br";
+      const orgSignerName =
+        process.env.CONTRACT_ORG_SIGNER_NAME ?? "Representante Legal";
+
       const documentId = await this.documentSignService.createDocument(
         fileBuffer,
-        `Contrato - ${contract.project.client.tradeName}`,
+        `Contrato - ${client.tradeName}`,
         [
           {
-            email: contract.project.client.email,
-            name: contract.project.client.tradeName,
+            email: client.responsibleEmail!,
+            name: client.responsibleName!,
             role: "SIGNER",
           },
           {
-            email: "henriquesydneylima@gmail.com",
-            name: "Henrique Sydney Ribeiro Lima",
+            email: orgSignerEmail,
+            name: orgSignerName,
             role: "SIGNER",
           },
         ],
@@ -80,6 +111,71 @@ export class ChangeContractStatusUseCase {
 
       await this.documentSignService.sendForSignature(documentId);
       externalSignId = String(documentId);
+
+      try {
+        await this.provisionClientPortalOwnerUseCase.execute({
+          client,
+          projectId: contract.projectId,
+          inviterUserId: userId,
+          organizationName: client.organization.name,
+        });
+      } catch (provisionError) {
+        console.error(
+          "[ChangeContractStatusUseCase] Falha ao provisionar portal do cliente:",
+          provisionError,
+        );
+
+        await this.auditLogRepository.create({
+          entityType: "Project",
+          entityId: contract.projectId,
+          action: "PORTAL_PROVISION_FAILED",
+          userId,
+          changes: {},
+          metadata: {
+            contractId: contract.id,
+            error:
+              provisionError instanceof Error
+                ? provisionError.message
+                : "unknown",
+          },
+        });
+      }
+
+      if (communicationChannel !== "none") {
+        try {
+          await sendContractReadyEmailForContract({
+            id: contract.id,
+            project: {
+              name: contract.project.name,
+              client: {
+                slug: contract.project.client.slug,
+                tradeName: contract.project.client.tradeName,
+                companyName: client.companyName,
+                email: client.email,
+                responsibleEmail: client.responsibleEmail,
+              },
+            },
+          });
+        } catch (emailError) {
+          console.error(
+            "[ChangeContractStatusUseCase] Falha ao enviar email de contrato:",
+            emailError,
+          );
+
+          await this.auditLogRepository.create({
+            entityType: "Project",
+            entityId: contract.projectId,
+            action: "CONTRACT_EMAIL_FAILED",
+            userId,
+            changes: {},
+            metadata: {
+              contractId: contract.id,
+              error:
+                emailError instanceof Error ? emailError.message : "unknown",
+            },
+          });
+        }
+      }
     }
 
     // --- TRANSAÇÃO DO BANCO (APENAS ESCRITA) ---
@@ -171,6 +267,7 @@ export class ChangeContractStatusUseCase {
       ],
 
       [ContractStatus.SENT]: [
+        ContractStatus.SIGNED,
         ContractStatus.CANCELLED,
         ContractStatus.DRAFT,
         ContractStatus.REJECTED,

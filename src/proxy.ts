@@ -5,12 +5,34 @@ import { jwtVerify } from "jose";
 import { routing } from "./i18n/routing";
 import NextAuth from "next-auth";
 import authConfig from "./lib/auth/auth.config";
+import {
+  canAccessRoute,
+  resolveRoutePermissionRule,
+} from "./lib/auth/routePermissionMap";
+import {
+  extractOrganizationIdFromPath,
+  validateOrganizationRouteAccess,
+} from "./lib/auth/organizationAccess";
+import { canAccessRouteAsPortalUser } from "./lib/auth/clientPortalRouteMap";
+import { MemberRole } from "@/generated/prisma/enums";
+import { sanitizeCallbackUrl } from "@/lib/auth/sanitizeCallbackUrl";
 
 const { auth } = NextAuth(authConfig);
 const intlMiddleware = createMiddleware(routing);
 
-const publicPages = ["/auth/login", "/auth/remember-me"];
+const publicPages = ["/auth/login", "/auth/remember-me", "/auth/invite/accept"];
 const authPages = ["/auth/login", "/auth/remember-me"];
+
+function getDefaultAppPath(user: {
+  memberRole?: MemberRole | null;
+  permissions?: string[];
+}): string {
+  const isPortalOnly =
+    user.memberRole === MemberRole.TENANT_OBSERVER &&
+    (!user.permissions || user.permissions.length === 0);
+
+  return isPortalOnly ? "/minhas-empresas" : "/dashboard";
+}
 
 export default auth(async (req) => {
   const { nextUrl } = req;
@@ -18,8 +40,9 @@ export default auth(async (req) => {
   const isApiRoute = nextUrl.pathname.startsWith("/api");
   const isAuthRoute = nextUrl.pathname.startsWith("/api/auth");
   const isDocumentSignRoute = nextUrl.pathname.includes(
-    "/document-sign/webhook"
+    "/document-sign/webhook",
   );
+  const isStripeWebhookRoute = nextUrl.pathname.includes("/api/stripe");
 
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set("x-pathname", nextUrl.pathname);
@@ -35,7 +58,7 @@ export default auth(async (req) => {
       if (!authHeader) {
         return new NextResponse(
           JSON.stringify({ error: "Unauthorized: Missing token" }),
-          { status: 401, headers: { "content-type": "application/json" } }
+          { status: 401, headers: { "content-type": "application/json" } },
         );
       }
 
@@ -44,20 +67,28 @@ export default auth(async (req) => {
       if (token !== process.env.DOCUMENSO_WEBHOOK_KEY) {
         return new NextResponse(
           JSON.stringify({ error: "Unauthorized: Invalid token" }),
-          { status: 403, headers: { "content-type": "application/json" } }
+          { status: 403, headers: { "content-type": "application/json" } },
         );
       }
 
       return NextResponse.next({
         request: { headers: requestHeaders },
       });
-    } else {
+    }
+
+    if (isStripeWebhookRoute) {
+      return NextResponse.next({
+        request: { headers: requestHeaders },
+      });
+    }
+
+    {
       const authHeader = req.headers.get("authorization");
 
       if (!authHeader || !authHeader.startsWith("Bearer ")) {
         return new NextResponse(
           JSON.stringify({ error: "Unauthorized: Missing token" }),
-          { status: 401, headers: { "content-type": "application/json" } }
+          { status: 401, headers: { "content-type": "application/json" } },
         );
       }
 
@@ -70,7 +101,7 @@ export default auth(async (req) => {
     } catch (error) {
       return new NextResponse(
         JSON.stringify({ error: "Unauthorized: Invalid token" }),
-        { status: 403, headers: { "content-type": "application/json" } }
+        { status: 403, headers: { "content-type": "application/json" } },
       );
     }
 
@@ -91,7 +122,13 @@ export default auth(async (req) => {
   const isRootPage = pathnameWithoutLocale === "/";
 
   if (isLoggedIn && isRootPage) {
-    return NextResponse.redirect(new URL("/dashboard", nextUrl));
+    const targetPath = getDefaultAppPath(req.auth!.user);
+    const targetUrl = new URL(targetPath, nextUrl);
+    const accessError = nextUrl.searchParams.get("erro");
+    if (accessError) {
+      targetUrl.searchParams.set("erro", accessError);
+    }
+    return NextResponse.redirect(targetUrl);
   }
 
   if (!isLoggedIn && isRootPage) {
@@ -99,26 +136,108 @@ export default auth(async (req) => {
   }
 
   const isAuthPage = authPages.some((page) =>
-    pathnameWithoutLocale.startsWith(page)
+    pathnameWithoutLocale.startsWith(page),
   );
 
   if (isLoggedIn && isAuthPage) {
-    return NextResponse.redirect(new URL("/dashboard", nextUrl));
+    return NextResponse.redirect(
+      new URL(getDefaultAppPath(req.auth!.user), nextUrl),
+    );
   }
 
   const isPublicPage = publicPages.some(
     (page) =>
-      pathnameWithoutLocale === page || pathnameWithoutLocale.startsWith(page)
+      pathnameWithoutLocale === page || pathnameWithoutLocale.startsWith(page),
   );
 
   if (!isLoggedIn && !isPublicPage) {
-    let callbackUrl = nextUrl.pathname;
-    if (nextUrl.search) callbackUrl += nextUrl.search;
+    const callbackUrl = sanitizeCallbackUrl(nextUrl.pathname, nextUrl.search);
 
     const loginUrl = new URL("/auth/login", nextUrl);
     loginUrl.searchParams.set("callbackUrl", callbackUrl);
 
     return NextResponse.redirect(loginUrl);
+  }
+
+  // ------------------------------------------------------------------
+  // 2.1 RBAC — bloqueio de rota por permissão (JWT, sem requisição extra)
+  // ------------------------------------------------------------------
+  if (isLoggedIn && req.auth?.user) {
+    const user = req.auth.user;
+
+    const portalCheck = canAccessRouteAsPortalUser(pathnameWithoutLocale, {
+      memberRole: user.memberRole,
+      permissions: user.permissions ?? [],
+      clientMembershipSlugs: user.clientMembershipSlugs ?? [],
+    });
+
+    if (!portalCheck.allowed) {
+      const homeUrl = new URL("/", nextUrl);
+      homeUrl.searchParams.set(
+        "erro",
+        portalCheck.messageKey
+          ? `portal.${portalCheck.messageKey}`
+          : "accessDenied",
+      );
+      return NextResponse.redirect(homeUrl);
+    }
+
+    const isPortalOnly =
+      user.memberRole === MemberRole.TENANT_OBSERVER &&
+      (!user.permissions || user.permissions.length === 0);
+
+    if (!isPortalOnly) {
+      const organizationId = extractOrganizationIdFromPath(pathnameWithoutLocale);
+
+      if (organizationId) {
+        const routeRule = resolveRoutePermissionRule(pathnameWithoutLocale);
+        const organizationAccess = validateOrganizationRouteAccess(
+          {
+            role: user.role,
+            permissions: user.permissions ?? [],
+            organizationId: user.organizationId,
+            memberRole: user.memberRole,
+          },
+          organizationId,
+          routeRule
+            ? {
+                permission: routeRule.permission,
+                permissionsAny: routeRule.permissionsAny,
+                deniedMessageKey: routeRule.messageKey,
+              }
+            : undefined,
+        );
+
+        if (!organizationAccess.allowed) {
+          const homeUrl = new URL("/", nextUrl);
+          homeUrl.searchParams.set(
+            "erro",
+            `routePermissions.${organizationAccess.messageKey ?? "organizationOverview"}`,
+          );
+          return NextResponse.redirect(homeUrl);
+        }
+      } else {
+        const routeRule = resolveRoutePermissionRule(pathnameWithoutLocale);
+
+        if (
+          routeRule &&
+          !canAccessRoute(
+            {
+              role: user.role,
+              permissions: user.permissions ?? [],
+            },
+            routeRule,
+          )
+        ) {
+          const homeUrl = new URL("/", nextUrl);
+          homeUrl.searchParams.set(
+            "erro",
+            `routePermissions.${routeRule.messageKey}`,
+          );
+          return NextResponse.redirect(homeUrl);
+        }
+      }
+    }
   }
 
   // ------------------------------------------------------------------

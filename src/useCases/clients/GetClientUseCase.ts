@@ -1,6 +1,6 @@
-import { AppError } from "@/errors/AppError";
-import { Client } from "@/generated/prisma/client";
-import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
+import { ResourceNotFoundError } from "@/errors";
+import { assertClientAccessForUser } from "@/lib/auth/resolveClientAccess";
+import { MemberRole } from "@/generated/prisma/enums";
 import {
   ClientWithStats,
   IClientsRepository,
@@ -9,21 +9,28 @@ import {
 interface GetClientUseCaseRequest {
   slug: string;
   userId: string;
+  memberRole?: MemberRole | null;
 }
 
 export class GetClientUseCase {
   constructor(private clientRepository: IClientsRepository) {}
 
-  async execute({ slug, userId }: GetClientUseCaseRequest): Promise<{
+  async execute({ slug, userId, memberRole }: GetClientUseCaseRequest): Promise<{
     client: ClientWithStats | null;
   }> {
     const client = await this.clientRepository.findBySlug(slug);
 
     if (!client) {
-      throw new AppError("Cliente não localizado");
+      throw new ResourceNotFoundError("Cliente não localizado");
     }
 
-    await checkUserPermissionForAsset("client", userId, client, "READ");
+    await assertClientAccessForUser({
+      userId,
+      memberRole,
+      clientSlug: slug,
+      client,
+      operation: "READ",
+    });
 
     return { client };
   }

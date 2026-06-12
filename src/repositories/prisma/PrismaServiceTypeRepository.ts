@@ -41,11 +41,17 @@ export class PrismaServiceTypeRepository implements IServiceTypeRepository {
     });
   }
 
-  async list(query?: string | null): Promise<FetchServiceTypeWithCategory[]> {
-    let where: Prisma.ServiceTypeWhereInput = {};
+  async list(
+    organizationId: string,
+    query?: string | null,
+  ): Promise<FetchServiceTypeWithCategory[]> {
+    let where: Prisma.ServiceTypeWhereInput = {
+      organizationId,
+    };
 
     if (query) {
       where = {
+        ...where,
         OR: [
           {
             name: {

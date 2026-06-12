@@ -5,14 +5,17 @@ import { BacklogItemWithDetails } from "@/repositories/IBacklogItemsRepository";
 import { GripVertical, Hash } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/twMerge";
 import { BacklogDetailsModal } from "./BacklogDetailsModal";
+import { useTranslations } from "next-intl";
 
 interface IKanbanCard {
   item: BacklogItemWithDetails;
+  canManageBacklog: boolean;
 }
 
-export const KanbanCard = ({ item }: IKanbanCard) => {
+export const KanbanCard = ({ item, canManageBacklog }: IKanbanCard) => {
+  const tPriority = useTranslations("projects.backlog.priorityLabels");
   const {
     attributes,
     listeners,
@@ -33,14 +36,16 @@ export const KanbanCard = ({ item }: IKanbanCard) => {
       style={style}
       className="bg-background border flex rounded-lg p-0.5 shadow-sm hover:shadow-md transition-shadow cursor-grab active:cursor-grabbing"
     >
-      <div
-        {...attributes}
-        {...listeners}
-        className="mt-1 opacity-30 hover:opacity-100 cursor-grab active:cursor-grabbing"
-      >
-        <GripVertical className="h-5 w-5 text-muted-foreground" />
-      </div>
-      <BacklogDetailsModal key={item.id} item={item}>
+      {canManageBacklog && (
+        <div
+          {...attributes}
+          {...listeners}
+          className="mt-1 opacity-30 hover:opacity-100 cursor-grab active:cursor-grabbing"
+        >
+          <GripVertical className="h-5 w-5 text-muted-foreground" />
+        </div>
+      )}
+      <BacklogDetailsModal key={item.id} item={item} canManageBacklog={canManageBacklog}>
         <button
           type="button" // Importante para não submeter formulários acidentalmente
           className={cn(
@@ -48,7 +53,7 @@ export const KanbanCard = ({ item }: IKanbanCard) => {
             "transition-all duration-300 ease-in-out",
             "hover:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.4)]",
             "hover:brightness-110",
-            "hover:-translate-y-0.5" // Levanta levemente o card
+            "hover:-translate-y-0.5", // Levanta levemente o card
           )}
         >
           <div className="flex-1 bg-background border rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
@@ -57,7 +62,9 @@ export const KanbanCard = ({ item }: IKanbanCard) => {
                 <h4 className="font-medium text-sm leading-tight">
                   {item.title}
                 </h4>
-                {getBacklogPriorityBadge(item.priority)}
+                {getBacklogPriorityBadge(item.priority, (k) =>
+                  tPriority(k as never),
+                )}
               </div>
               <p className="text-xs text-muted-foreground line-clamp-2">
                 {item.description}

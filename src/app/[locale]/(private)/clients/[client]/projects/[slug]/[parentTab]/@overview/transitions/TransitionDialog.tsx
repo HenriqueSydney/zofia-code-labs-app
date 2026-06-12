@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Dialog,
   DialogContent,
@@ -11,6 +13,7 @@ import {
   getContractNextStepLabel,
   getProposalNextStepLabel,
 } from "@/utils/getNextStageLabel";
+import { useTranslations } from "next-intl";
 
 interface Props {
   isOpen: boolean;
@@ -19,7 +22,7 @@ interface Props {
   project: ProjectWithDetails;
   currentStatusLabel: string;
   targetStatusLabel: string;
-  contextData?: any; // Dados como lista de serviços, etc.
+  contextData?: any;
 }
 
 export function ProjectTransitionDialog({
@@ -30,19 +33,30 @@ export function ProjectTransitionDialog({
   targetStatusLabel,
   contextData,
 }: Props) {
-  // 1. Descobre qual estratégia usar baseada no destino
+  const t = useTranslations("projects.transitions");
+  const tNextSteps = useTranslations("projects.transitions.nextSteps");
   const StrategyComponent = getTransitionStrategy(targetStatus);
   if (!StrategyComponent) {
-    // Retorna null ou um modal genérico de "Tem certeza?"
     return null;
   }
 
+  const translateNextStep = (key: string) =>
+    tNextSteps(key as Parameters<typeof tNextSteps>[0]);
+
+  let resolvedTargetLabel = targetStatusLabel;
+
   switch (targetStatus) {
     case "PROPOSAL_GENERATED":
-      targetStatusLabel = getProposalNextStepLabel(project.proposal);
+      resolvedTargetLabel = getProposalNextStepLabel(
+        project.proposal,
+        translateNextStep,
+      );
       break;
     case "WAITING_SIGNATURE":
-      targetStatusLabel = getContractNextStepLabel(project.contract);
+      resolvedTargetLabel = getContractNextStepLabel(
+        project.contract,
+        translateNextStep,
+      );
       break;
   }
 
@@ -50,19 +64,23 @@ export function ProjectTransitionDialog({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent
         className="sm:max-w-[800px] md:max-w-[1200px] max-h-[90vh] flex flex-col pr-0"
-        aria-describedby="Formulário de avanço de etapa"
+        aria-describedby={t("dialogDescription")}
       >
         <DialogHeader>
-          <DialogTitle>Avançar para: {targetStatusLabel}</DialogTitle>
+          <DialogTitle>
+            {t("dialogTitle", { status: resolvedTargetLabel })}
+          </DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
-          <StrategyComponent
-            project={project}
-            targetStatus={targetStatus}
-            onSuccess={() => onOpenChange(false)}
-            onCancel={() => onOpenChange(false)}
-            contextData={contextData}
-          />
+          {isOpen && (
+            <StrategyComponent
+              project={project}
+              targetStatus={targetStatus}
+              onSuccess={() => onOpenChange(false)}
+              onCancel={() => onOpenChange(false)}
+              contextData={contextData}
+            />
+          )}
         </div>
       </DialogContent>
     </Dialog>

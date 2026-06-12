@@ -1,5 +1,7 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
+import { v } from "@/schemas/validationMessages";
 import { z } from "zod";
 import { auth } from "@/auth"; // Seu Auth.js v5
 import { PrismaUsersRepository } from "@/repositories/prisma/PrismaUsersRepository";
@@ -18,11 +20,11 @@ const ACCEPTED_IMAGE_TYPES = [
 
 const uploadAvatarSchema = z.object({
   file: z
-    .instanceof(File, { message: "A imagem é obrigatória" })
-    .refine((file) => file.size <= MAX_FILE_SIZE, `O tamanho máximo é 5MB.`)
+    .instanceof(File, { message: v.imageRequired })
+    .refine((file) => file.size <= MAX_FILE_SIZE, v.fileMaxSize)
     .refine(
       (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
-      "Apenas formatos .jpg, .jpeg, .png e .webp são suportados.",
+      v.invalidFileFormat,
     ),
 });
 
@@ -41,7 +43,7 @@ export async function updateAvatarAction(
   const session = await auth();
 
   if (!session?.user?.id) {
-    return { success: false, message: "Não autorizado." };
+    return { success: false, message: await serverErrorMessage("unauthorized") };
   }
 
   // 1. Parse e Validação do Zod
@@ -53,7 +55,7 @@ export async function updateAvatarAction(
     return {
       success: false,
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Erro na validação do arquivo.",
+      message: await serverErrorMessage("fileValidationFailed"),
     };
   }
 
@@ -70,9 +72,9 @@ export async function updateAvatarAction(
 
     revalidatePath("/"); // Atualiza a UI onde a foto aparece
 
-    return { success: true, message: "Avatar atualizado com sucesso!" };
+    return { success: true, message: await resolveSuccessMessage("avatarUpdated") };
   } catch (error) {
     console.error("Erro ao atualizar avatar:", error);
-    return { success: false, message: "Erro interno ao salvar avatar." };
+    return { success: false, message: await serverErrorMessage("avatarSaveFailed") };
   }
 }

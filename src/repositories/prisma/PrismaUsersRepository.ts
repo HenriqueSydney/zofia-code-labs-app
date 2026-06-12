@@ -1,4 +1,5 @@
 import { Prisma, User } from "@/generated/prisma/client";
+import { loadUserProfileClaims } from "@/lib/auth/loadUserProfileClaims";
 import { prisma } from "@/lib/prisma";
 import {
   IUserRepository,
@@ -38,53 +39,21 @@ export class PrismaUsersRepository implements IUserRepository {
     userId: string,
     organizationId: string,
   ): Promise<UserSafeWithPermissions | null> {
-    // 1. Buscamos o usuário trazendo o relacionamento do CustomRole
     const user = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-      include: {
-        members: {
-          where: {
-            organizationId,
-          },
-          select: {
-            role: true,
-            specificPermissions: true,
-            customRole: true,
-          },
-          take: 1,
-          orderBy: {
-            createdAt: "desc",
-          },
-        },
-      },
+      where: { id: userId },
     });
 
     if (!user) return null;
 
-    // 2. Extraímos as permissões de ambas as fontes
-    const rolePermissions = user.members[0]?.customRole?.permissions || [];
-    const specificPermissions = user.members[0]?.specificPermissions || [];
-    const customRole = user.members[0]?.customRole;
-
-    // 3. "Achatamos" e removemos duplicatas usando Set
-    // O Set garante que se "project:read" existir nos dois, aparecerá apenas uma vez.
-    const uniquePermissions = Array.from(
-      new Set([...rolePermissions, ...specificPermissions]),
-    );
-
-    // 4. Mapeamos para o objeto seguro (reaproveitando lógica se possível)
-    // Como o 'user' aqui tem o 'customRole' no tipo devido ao include,
-    // precisamos ter cuidado ao passar para mappers genéricos ou fazer manualmente.
-
-    const { passwordHash, members, ...rest } = user;
+    const { passwordHash, ...rest } = user;
+    const claims = await loadUserProfileClaims(userId, organizationId);
 
     return {
       ...rest,
       hasPassword: !!passwordHash,
-      permissions: uniquePermissions, // Array unificado de strings
-      roleName: customRole?.name ?? user.members[0]?.role, // Opcional: Fallback para o role padrão se não tiver custom
+      permissions: claims.permissions,
+      roleName: claims.roleName ?? undefined,
+      memberRole: claims.memberRole,
     };
   }
 

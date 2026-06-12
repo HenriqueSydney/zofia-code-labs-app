@@ -1,5 +1,5 @@
 import { getClientAction } from "@/actions/clients/getClientAction";
-import { AppError } from "@/errors/AppError";
+import { ValidationError, ResourceNotFoundError } from "@/errors";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { cache } from "react";
 
@@ -9,13 +9,13 @@ export const getClientData = cache(async (slug: string) => {
   );
 
   if (error) {
-    throw new AppError(error.message);
+    throw new ValidationError(error.message);
   }
 
   const client = success.client;
 
   if (!client) {
-    throw new AppError("Cliente não localizado");
+    throw new ResourceNotFoundError("Cliente não localizado");
   }
   
   return client;

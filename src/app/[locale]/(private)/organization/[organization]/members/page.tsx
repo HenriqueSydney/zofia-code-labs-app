@@ -26,6 +26,8 @@ import { InviteMemberForm } from "./_components/InviteMemberForm";
 import { fetchOrganizationCustomRolesAction } from "@/actions/organization/fetchOrganizationCustomRolesAction";
 import { roleMapper } from "@/mappers/roleMapper";
 import { getPermissionInfo } from "@/constants/permissions";
+import { getOrganizationUiAccess } from "../_data/getOrganizationUiAccess";
+import { getTranslations } from "next-intl/server";
 
 interface IOrganizationMembersPage {
   params: Promise<{ organization: string }>;
@@ -33,7 +35,11 @@ interface IOrganizationMembersPage {
 export default async function OrganizationMembers({
   params,
 }: IOrganizationMembersPage) {
+  const t = await getTranslations("organization.members");
+  const tInvite = await getTranslations("organization.members.invite");
+  const tPermissions = await getTranslations("permissions");
   const { organization } = await params;
+  const { canManageMembers } = await getOrganizationUiAccess(organization);
 
   const [organizationMembers, customRoles] = await Promise.all([
     operationWrapper("action", "fetchOrganizationMembersAction", () =>
@@ -45,30 +51,54 @@ export default async function OrganizationMembers({
   ]);
 
   const [error, success] = organizationMembers;
+  const [_, customRolesSuccess] = customRoles;
+  const customRolesList = customRolesSuccess?.roles ?? [];
+
+  const inviteRoleOptions = [
+    {
+      label: tInvite("roles.adminDefault"),
+      value: "admin",
+    },
+    {
+      label: tInvite("roles.memberDefault"),
+      value: "member",
+    },
+    ...customRolesList.map((role) => ({
+      label: role.name,
+      value: role.id,
+    })),
+  ];
 
   // Reaproveitamento do Empty State
   if (error || !success?.members || success.members.length === 0) {
     return (
       <EmptyState
         icon={Users}
-        title="Sua equipe está vazia"
-        description="Adicione membros à sua organização para colaborar nos projetos."
-        action={<InviteMemberForm orgId={organization} />}
+        title={t("emptyTitle")}
+        description={t("emptyDescription")}
+        action={
+          canManageMembers ? (
+            <InviteMemberForm
+              orgId={organization}
+              roleOptions={inviteRoleOptions}
+            />
+          ) : undefined
+        }
       />
     );
   }
 
-  const [_, customRolesSuccess] = customRoles;
-  const customRolesList = customRolesSuccess?.roles ?? [];
-
   const memberStatusMapper: Record<string, { label: string; color: string }> = {
     active: {
-      label: "Ativo",
+      label: t("table.statusActive"),
       color: "bg-green-500/10 text-green-600 border-green-200",
     },
-    pending: { label: "Pendente", color: "bg-yellow-500/10 text-yellow-600" },
+    pending: {
+      label: t("table.statusPending"),
+      color: "bg-yellow-500/10 text-yellow-600",
+    },
     deactivated: {
-      label: "Removido",
+      label: t("table.statusRemoved"),
       color: "bg-red-500/10 text-red-600 border-red-200",
     },
   } as const;
@@ -78,24 +108,30 @@ export default async function OrganizationMembers({
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle>Membros da Equipe</CardTitle>
-            <CardDescription>
-              Gerencie quem tem acesso à sua organização e seus níveis de
-              permissão.
-            </CardDescription>
+            <CardTitle>{t("table.title")}</CardTitle>
+            <CardDescription>{t("table.description")}</CardDescription>
           </div>
-          <InviteMemberForm orgId={organization} />
+          {canManageMembers && (
+            <InviteMemberForm
+              orgId={organization}
+              roleOptions={inviteRoleOptions}
+            />
+          )}
         </div>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Membro</TableHead>
-              <TableHead>Perfil de Acesso</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Último Acesso</TableHead>
-              <TableHead className="text-right">Ações</TableHead>
+              <TableHead>{t("table.member")}</TableHead>
+              <TableHead>{t("table.accessProfile")}</TableHead>
+              <TableHead>{t("table.status")}</TableHead>
+              <TableHead>{t("table.lastAccess")}</TableHead>
+              {canManageMembers && (
+                <TableHead className="text-right">
+                  {t("table.actions")}
+                </TableHead>
+              )}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -109,10 +145,10 @@ export default async function OrganizationMembers({
                 member.customRole?.name || roleMapper[member.role];
 
               let memberStatusKey = "active";
-              if (member.loginHistories.length === 0) {
+              if (member.status === "PENDING") {
                 memberStatusKey = "pending";
               }
-              if (member.removedAt) {
+              if (member.status === "INACTIVE" || member.removedAt) {
                 memberStatusKey = "deactivated";
               }
 
@@ -129,7 +165,7 @@ export default async function OrganizationMembers({
                         <p className="font-medium flex items-center gap-2">
                           {member.name}
                           {isAdmin && (
-                            <Tooltip description="Dono da Conta">
+                            <Tooltip description={t("table.accountOwner")}>
                               <Crown
                                 size={14}
                                 className="text-yellow-500 fill-yellow-500/20"
@@ -150,7 +186,7 @@ export default async function OrganizationMembers({
                       <Badge
                         variant={isAdmin ? "default" : "outline"}
                         className="gap-1"
-                        title={isAdmin ? "Dono da Conta" : undefined}
+                        title={isAdmin ? t("table.accountOwner") : undefined}
                       >
                         {isAdmin && <ShieldAlert size={12} />}
                         {!isAdmin && <ShieldCheck size={12} />}
@@ -161,7 +197,7 @@ export default async function OrganizationMembers({
                           description={
                             <div className="flex flex-col gap-2">
                               <label className="font-bold">
-                                Permissões específicas:
+                                {t("table.specificPermissions")}
                               </label>
                               <ul className="list-disc ml-2">
                                 {member.specificPermissions.map(
@@ -169,7 +205,13 @@ export default async function OrganizationMembers({
                                     <li key={permission}>
                                       <strong>
                                         {
-                                          getPermissionInfo(permission).label
+                                          getPermissionInfo(permission, (key) =>
+                                            tPermissions(
+                                              key as Parameters<
+                                                typeof tPermissions
+                                              >[0],
+                                            ),
+                                          ).label
                                         }{" "}
                                       </strong>
                                       ({permission})
@@ -181,7 +223,9 @@ export default async function OrganizationMembers({
                           }
                         >
                           <span className="ml-2 text-sm text-muted-foreground">
-                            + {member.specificPermissions.length} permissão(ões)
+                            {t("table.extraPermissions", {
+                              count: member.specificPermissions.length,
+                            })}
                           </span>
                         </Tooltip>
                       )}
@@ -203,18 +247,21 @@ export default async function OrganizationMembers({
                       date(lastLogin).format("DD/MM/YYYY HH:mm")
                     ) : (
                       <span className="text-muted-foreground/50 text-xs italic">
-                        Nunca acessou
+                        {t("table.neverAccessed")}
                       </span>
                     )}
                   </TableCell>
 
-                  <TableCell className="text-right">
-                    <MemberActions
-                      orgId={organization}
-                      member={member}
-                      customRolesList={customRolesList}
-                    />
-                  </TableCell>
+                  {canManageMembers && (
+                    <TableCell className="text-right">
+                      <MemberActions
+                        orgId={organization}
+                        member={member}
+                        customRolesList={customRolesList}
+                        canManage={canManageMembers}
+                      />
+                    </TableCell>
+                  )}
                 </TableRow>
               );
             })}

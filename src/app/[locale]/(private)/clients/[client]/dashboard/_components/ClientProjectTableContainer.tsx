@@ -1,7 +1,7 @@
 import { operationWrapper } from "@/lib/operationWrapper";
 import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 import { fetchProjects } from "@/actions/projects/fetchProjects";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { ClientProjectTable } from "./ClientProjectTable";
 
 interface IClientProjectTableContainer {
@@ -29,7 +29,7 @@ export async function ClientProjectTableContainer({
   );
 
   if (fetchProjectsError) {
-    throw new AppError(fetchProjectsError.message);
+    throw new ValidationError(fetchProjectsError.message);
   }
 
   // 2. Renderiza a Tabela

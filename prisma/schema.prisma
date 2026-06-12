@@ -51,7 +51,6 @@ model Organization {
   clients                    Client[]
   projects                   Project[]
   serviceTypes               ServiceType[]
-  templates                  DocumentTemplate[]
   invoices                   Invoice[]
   availableIntegrations      OrganizationIntegration[]
   serviceCategories          ServiceCategory[]
@@ -117,6 +116,14 @@ enum MemberRole {
   @@schema("identity")
 }
 
+enum MemberStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+
+  @@schema("identity")
+}
+
 model Member {
   id String @id @default(cuid())
 
@@ -135,6 +142,8 @@ model Member {
 
   // Permissões específicas só para ESTA organização
   specificPermissions String[]
+
+  status MemberStatus @default(ACTIVE)
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -198,6 +207,8 @@ model LoginHistory {
   userAgent String? // Ex: "Mozilla/5.0 (Macintosh...)"
   device    String? // Opcional: Se você processar o userAgent depois (ex: "iPhone 13")
   city      String? // Opcional: Se usar geolocalização por IP
+  country   String? // Opcional: Se usar geolocalização por IP
+  region    String? // Opcional: Se usar geolocalização por IP
 
   createdAt DateTime @default(now())
 
@@ -296,34 +307,6 @@ model ServiceDefaultBacklogItem {
   @@schema("catalog")
 }
 
-enum TemplateType {
-  CONTRACT
-  PROPOSAL
-  DELIVERY_TERM
-  OTHER
-
-  @@schema("catalog")
-}
-
-/// Modelos de documentos HTML/Markdown
-model DocumentTemplate {
-  id             String       @id @default(cuid())
-  organizationId String       @map("organization_id")
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-
-  title             String             @db.VarChar(150)
-  content           Json               @db.JsonB
-  type              TemplateType
-  isSystem          Boolean?           @default(false)
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  proposalTemplates ProposalTemplate[]
-  contractTemplates ContractTemplate[]
-
-  @@map("document_templates")
-  @@schema("catalog")
-}
-
 // =========================================================================
 // 3. SCHEMA: CRM (Comercial)
 // =========================================================================
@@ -343,6 +326,10 @@ model Client {
   address     String? @db.Text
 
   logoReference String?
+
+  responsibleName  String? @map("responsible_name") @db.VarChar(200)
+  responsibleEmail String? @map("responsible_email") @db.VarChar(255)
+  responsiblePhone String? @map("responsible_phone") @db.VarChar(20)
 
   projects Project[]
   invoices Invoice[]
@@ -413,7 +400,6 @@ enum ProposalStatus {
 }
 
 enum ProposalSource {
-  SYSTEM_TEMPLATE
   MANUAL_UPLOAD
 
   @@schema("crm")
@@ -431,9 +417,11 @@ model Proposal {
 
   createdBy   String         @map("created_by")
   createdUser User           @relation(name: "create_user", fields: [createdBy], references: [id])
-  sourceType  ProposalSource @default(SYSTEM_TEMPLATE) @map("source_type")
+  sourceType  ProposalSource @default(MANUAL_UPLOAD) @map("source_type")
 
-  downPaymentPercentage Int @default(30) @db.SmallInt
+  downPaymentPercentage Int     @default(30) @db.SmallInt
+  paymentGatewayId      String? @map("payment_gateway_id")
+  paymentMethod         String? @map("payment_method")
 
   fileKey String? @map("file_key")
   fileUrl String? @map("file_url") // Opcional: Cache da URL pública se for bucket público
@@ -461,13 +449,11 @@ model Proposal {
   @@schema("crm")
 }
 
+/// Snapshot de conteúdo da proposta (ex.: metadados Documenso / versão editável).
 model ProposalTemplate {
   id String @id @default(cuid())
 
-  template           DocumentTemplate @relation(fields: [documentTemplateId], references: [id])
-  documentTemplateId String
-
-  content Json @db.JsonB
+  content Json? @db.JsonB
 
   isDefault Boolean @default(false) @map("is_default")
   isActive  Boolean @default(true) @map("is_active")
@@ -518,7 +504,6 @@ enum ContractStatus {
 }
 
 enum ContractSource {
-  SYSTEM_TEMPLATE
   MANUAL_UPLOAD
 
   @@schema("crm")
@@ -537,7 +522,7 @@ model Contract {
 
   createdBy   String         @map("created_by")
   createdUser User           @relation(name: "create_user", fields: [createdBy], references: [id])
-  sourceType  ContractSource @default(SYSTEM_TEMPLATE) @map("source_type")
+  sourceType  ContractSource @default(MANUAL_UPLOAD) @map("source_type")
 
   fileKey        String? @map("file_key")
   fileUrl        String? @map("file_url") // Opcional: Cache da URL pública se for bucket público
@@ -564,13 +549,11 @@ model Contract {
   @@schema("crm")
 }
 
+/// Snapshot de conteúdo do contrato (ex.: metadados Documenso / versão editável).
 model ContractTemplate {
   id String @id @default(cuid())
 
-  template           DocumentTemplate @relation(fields: [documentTemplateId], references: [id])
-  documentTemplateId String
-
-  content Json @db.JsonB
+  content Json? @db.JsonB
 
   isDefault Boolean @default(false) @map("is_default")
   isActive  Boolean @default(true) @map("is_active")
@@ -867,11 +850,31 @@ model BacklogItem {
   serviceDefaultBacklogItem   ServiceDefaultBacklogItem? @relation(fields: [serviceDefaultBacklogItemId], references: [id])
   serviceDefaultBacklogItemId String?
 
+  checklistItems BacklogItemChecklistItem[]
+
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
   deletedAt DateTime?
 
   @@map("backlog_items")
+  @@schema("projects")
+}
+
+model BacklogItemChecklistItem {
+  id            String    @id @default(cuid())
+  description   String    @db.Text
+  dueDate       DateTime? @map("due_date")
+  clientBlocker String?   @map("client_blocker") @db.Text
+  order         Float     @default(0)
+
+  backlogItemId String      @map("backlog_item_id")
+  backlogItem   BacklogItem @relation(fields: [backlogItemId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([backlogItemId])
+  @@map("backlog_item_checklist_items")
   @@schema("projects")
 }
 
@@ -995,6 +998,7 @@ enum ExpenseStatus {
 }
 
 enum FinancialStatus {
+  DRAFT
   PENDING
   PAID
   OVERDUE
@@ -1008,6 +1012,7 @@ enum InternetBankingProvider {
   PAYPAL
   MERCADO_PAGO
   STRIPE
+  INTER
 
   @@schema("financial")
 }
@@ -1017,6 +1022,13 @@ enum PaymentType {
   BOLETO
   CREDIT_CARD
   DEBIT_CARD
+
+  @@schema("financial")
+}
+
+enum InvoiceChargeType {
+  STANDARD
+  DOWN_PAYMENT
 
   @@schema("financial")
 }
@@ -1035,6 +1047,7 @@ model Invoice {
   internetBankingProvider InternetBankingProvider
 
   paymentType PaymentType
+  chargeType  InvoiceChargeType @default(STANDARD) @map("charge_type")
 
   amount  Decimal         @db.Decimal(15, 2)
   dueDate DateTime        @map("due_date")
@@ -1244,14 +1257,17 @@ model UmamiMetricSnapshot {
 }
 
 model WebhookLog {
-  id        String   @id @default(cuid())
-  provider  String // "DOCUMENSO"
-  eventId   String   @unique // ID do evento que vem no header/body
-  payload   Json
-  status    String // "PROCESSED", "FAILED"
-  error     String?
-  createdAt DateTime @default(now())
+  id         String   @id @default(cuid())
+  provider   String // "DOCUMENSO"
+  eventType  String // DOCUMENT_OPENED, DOCUMENT_COMPLETED, ...
+  documentId String? // ID externo do documento (payload.id)
+  eventId    String   @unique // Chave idempotente: provider:event:documentId:deliveredAt
+  payload    Json
+  status     String // "PROCESSED", "FAILED", "SKIPPED"
+  error      String?
+  createdAt  DateTime @default(now())
 
+  @@index([provider, documentId])
   @@map("webhook_logs")
   @@schema("integrations")
 }

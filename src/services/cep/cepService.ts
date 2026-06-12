@@ -1,3 +1,4 @@
+import { ExternalServiceError, ResourceNotFoundError } from "@/errors";
 // src/services/cep-service.ts
 
 export interface CepResult {
@@ -32,14 +33,14 @@ export async function fetchAddressByCep(cep: string): Promise<CepResult> {
   const cleanCep = cep.replace(/\D/g, "");
 
   if (cleanCep.length !== 8) {
-    throw new Error("CEP inválido");
+    throw new ExternalServiceError("CEP inválido");
   }
 
   // 1. Definição da busca na BrasilAPI
   const brasilApiPromise = fetch(
     `https://brasilapi.com.br/api/cep/v1/${cleanCep}`,
   ).then(async (res) => {
-    if (!res.ok) throw new Error("BrasilAPI Error");
+    if (!res.ok) throw new ExternalServiceError("CEP", "BrasilAPI Error");
     const data = (await res.json()) as BrasilApiResponse;
     return {
       street: data.street,
@@ -53,9 +54,9 @@ export async function fetchAddressByCep(cep: string): Promise<CepResult> {
   const viaCepPromise = fetch(
     `https://viacep.com.br/ws/${cleanCep}/json/`,
   ).then(async (res) => {
-    if (!res.ok) throw new Error("ViaCEP Error");
+    if (!res.ok) throw new ExternalServiceError("CEP", "ViaCEP Error");
     const data = (await res.json()) as ViaCepResponse;
-    if (data.erro) throw new Error("ViaCEP Not Found");
+    if (data.erro) throw new ResourceNotFoundError("ViaCEP Not Found");
     return {
       street: data.logradouro,
       neighborhood: data.bairro,
@@ -70,6 +71,6 @@ export async function fetchAddressByCep(cep: string): Promise<CepResult> {
     return result;
   } catch (error) {
     // AggregateError acontece se TODOS falharem
-    throw new Error("CEP não encontrado em nenhum serviço.");
+    throw new ResourceNotFoundError("CEP não encontrado em nenhum serviço.");
   }
 }

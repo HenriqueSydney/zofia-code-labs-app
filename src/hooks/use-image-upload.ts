@@ -1,15 +1,16 @@
+import { ValidationError } from "@/errors/ValidationError";
 import { useCallback } from "react";
 
 export const useImageUpload = () => {
   const uploadFn = useCallback(async (file: File): Promise<string> => {
     // 1. Validação Client-side
     if (!file.type.includes("image/")) {
-      throw new Error("Arquivo não é uma imagem.");
+      throw new ValidationError("Arquivo não é uma imagem.");
     }
 
     if (file.size > 5 * 1024 * 1024) {
       // 5MB limit
-      throw new Error("Imagem muito grande (max 5MB).");
+      throw new ValidationError("Imagem muito grande (max 5MB).");
     }
 
     // 2. Simulação de Upload (Substitua pela sua chamada real ao R2/S3)

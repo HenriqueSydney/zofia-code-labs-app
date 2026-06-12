@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { OrganizationMember } from "@/repositories/IOrganizationRepository";
+import { useTranslations } from "next-intl";
 
 interface RemoveMemberAlertDialogProps {
   open: boolean;
@@ -30,18 +31,17 @@ export function RemoveMemberAlertDialog({
   member,
   orgId,
 }: RemoveMemberAlertDialogProps) {
+  const t = useTranslations("organization.members.remove");
+  const tCommon = useTranslations("common.actions");
   const [confirmText, setConfirmText] = useState("");
   const [isPending, setIsPending] = useState(false);
 
-  // Fallback para e-mail caso o usuário não tenha nome cadastrado
   const validationText = member.name || member.email;
 
-  // REFATORAÇÃO: Limpa o input sempre que o modal for fechado ou aberto
   useEffect(() => {
     if (!open) setConfirmText("");
   }, [open]);
 
-  // Validação insensível a espaços extras no início/fim
   const isMatch = confirmText.trim() === validationText;
 
   async function handleRemove() {
@@ -49,13 +49,12 @@ export function RemoveMemberAlertDialog({
 
     setIsPending(true);
     try {
-      // await removeMemberAction({ memberId: member.id, orgId });
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      toast.success("Membro removido com sucesso.");
+      toast.success(t("toastSuccess"));
       onOpenChange(false);
     } catch (error) {
-      toast.error("Erro ao remover membro.");
+      toast.error(t("toastError"));
     } finally {
       setIsPending(false);
     }
@@ -67,21 +66,16 @@ export function RemoveMemberAlertDialog({
         <AlertDialogHeader>
           <div className="flex items-center gap-2 text-destructive">
             <AlertTriangle className="h-5 w-5" />
-            <AlertDialogTitle>Remover Membro</AlertDialogTitle>
+            <AlertDialogTitle>{t("title")}</AlertDialogTitle>
           </div>
           <AlertDialogDescription>
-            Esta ação removerá <strong>{validationText}</strong> da organização.
-            O usuário perderá o acesso imediatamente.
+            {t("description", { name: validationText })}
           </AlertDialogDescription>
         </AlertDialogHeader>
 
         <div className="py-2 space-y-3">
           <Label htmlFor="confirm-removal" className="text-sm font-medium">
-            Para confirmar, digite{" "}
-            <span className="font-mono bg-muted px-1 rounded select-all">
-              {validationText}
-            </span>{" "}
-            abaixo:
+            {t("confirmLabel", { name: validationText })}
           </Label>
           <Input
             id="confirm-removal"
@@ -94,7 +88,6 @@ export function RemoveMemberAlertDialog({
                 : ""
             }
             autoComplete="off"
-            // Desabilita colar formatação
             onPaste={(e) => {
               e.preventDefault();
               const text = e.clipboardData.getData("text/plain");
@@ -109,7 +102,7 @@ export function RemoveMemberAlertDialog({
             onClick={() => onOpenChange(false)}
             disabled={isPending}
           >
-            Cancelar
+            {tCommon("cancel")}
           </Button>
           <Button
             variant="destructive"
@@ -117,7 +110,7 @@ export function RemoveMemberAlertDialog({
             disabled={!isMatch || isPending}
           >
             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Confirmar Remoção
+            {t("confirmButton")}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

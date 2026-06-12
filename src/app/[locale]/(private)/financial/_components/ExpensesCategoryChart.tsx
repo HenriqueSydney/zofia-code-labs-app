@@ -1,7 +1,9 @@
 import { getExpensesByCategoryAction } from "@/actions/stats/getExpensesByCategoryAction";
 import { PieCustomChart } from "@/components/Charts/PieCustomChart";
+import { getTranslations } from "next-intl/server";
 
 export async function ExpensesCategoryChart() {
+  const t = await getTranslations("financial.charts");
   const { data } = await getExpensesByCategoryAction();
 
   if (!data) return null;
@@ -16,10 +18,10 @@ export async function ExpensesCategoryChart() {
   }));
 
   return (
-    <div className="lg:col-span-1">
+    <div className="lg:col-span-1 ">
       <PieCustomChart
         title="Despesas por Categoria"
-        description="Distribuição dos gastos pagos"
+        description={t("expensesByCategory")}
         data={chartData}
       />
     </div>

@@ -1,5 +1,6 @@
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
+import { toOrganizationAsset } from "@/lib/auth/toOrganizationAsset";
 import {
   IOrganizationsRepository,
   OrganizationMember,
@@ -26,13 +27,15 @@ export class FetchOrganizationMembersUseCase {
       await this.organizationsRepository.findById(organizationId);
 
     if (!organization) {
-      throw new AppError("Organização não localizada.");
+      throw new ResourceNotFoundError("Organização não localizada.");
     }
 
-    // 2. Verifica Permissão: O usuário logado pode ler dados desta organização?
-    // Usamos 'organization' como asset e 'READ' como operação base.
-    // Mais pra frente, você pode ter uma permissão específica 'settings:manage_users'
-    //await checkUserPermissionForAsset("client", userId, organization, "READ");
+    await checkUserPermissionForAsset(
+      "organization",
+      userId,
+      toOrganizationAsset(organization),
+      "READ",
+    );
 
     // 3. Busca os membros
     const members =

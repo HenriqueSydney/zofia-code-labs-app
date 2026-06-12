@@ -1,4 +1,8 @@
-import { AppError } from "@/errors/AppError";
+import {
+  ResourceNotFoundError,
+  BusinessRuleError,
+  ValidationError,
+} from "@/errors";
 import { Proposal } from "@/generated/prisma/client";
 import { ProposalStatus } from "@/generated/prisma/enums";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
@@ -6,12 +10,14 @@ import { prisma } from "@/lib/prisma";
 import { IAuditLogRepository } from "@/repositories/IAuditLogRepository";
 import { IProposalRepository } from "@/repositories/IProposalRepository";
 import { ChangeProjectStatusUseCase } from "../projects/ChangeProjectStatusUseCase";
+import { sendProposalToClient } from "@/email/send";
+import { IS3StorageService } from "@/services/s3Client/IS3StorageService";
 
 interface ChangeProposalStatusRequest {
   proposalId: string;
   newStatus: ProposalStatus;
   userId: string;
-  communicationChannel?: "whatsapp" | "email";
+  communicationChannel?: "whatsapp" | "email" | "none";
   rejectFormDetails?: any;
 }
 
@@ -20,6 +26,7 @@ export class ChangeProposalStatusUseCase {
     private proposalRepository: IProposalRepository,
     private chageProjectStatusUseCase: ChangeProjectStatusUseCase,
     private auditLogRepository: IAuditLogRepository,
+    private storageService: IS3StorageService,
   ) {}
 
   async execute({
@@ -32,13 +39,13 @@ export class ChangeProposalStatusUseCase {
     const proposal = await this.proposalRepository.findById(proposalId);
 
     if (!proposal) {
-      throw new AppError("Proposta não encontrada.", 404);
+      throw new ResourceNotFoundError("Proposta não encontrada.");
     }
 
     if (!this.isValidTransition(proposal.status, newStatus)) {
-      throw new AppError(
+      throw new BusinessRuleError(
         `Não é possível alterar o status de ${proposal.status} para ${newStatus}.`,
-        400,
+        { statusCode: 400 },
       );
     }
 
@@ -50,21 +57,42 @@ export class ChangeProposalStatusUseCase {
     );
 
     const updatedProposal = await prisma.$transaction(async (tx) => {
-      const proposal = await this.proposalRepository.updateStatus(
+      const updatedProposalEntity = await this.proposalRepository.updateStatus(
         proposalId,
         newStatus,
         userId,
         tx,
       );
 
-      if (newStatus === "SENT" && communicationChannel) {
-        console.log({ sent: communicationChannel });
+      if (newStatus === "SENT" && communicationChannel === "email") {
+        if (!proposal.fileKey) {
+          throw new ValidationError("Arquivo da proposta não encontrado.");
+        }
+
+        const fileBuffer = await this.storageService.getFileBuffer(
+          proposal.fileKey,
+        );
+
+        await sendProposalToClient({
+          to: proposal.project.client.email,
+          clientName: proposal.project.client.tradeName,
+          projectName: proposal.project.name,
+          totalValue: proposal.totalValue.toString(),
+          validUntil: proposal.validUntil?.toLocaleDateString() ?? "",
+          attachments: [
+            {
+              filename: `Proposta - ${proposal.project.name}.pdf`,
+              content: fileBuffer,
+              contentType: "application/pdf",
+            },
+          ],
+        });
       }
 
       if (newStatus === "ACCEPTED") {
         await this.chageProjectStatusUseCase.execute(
           {
-            projectId: proposal.projectId,
+            projectId: updatedProposalEntity.projectId,
             newStatus: "PROPOSAL_GENERATED",
             data: { observation: "Proposta aceita pelo cliente." },
             userId: userId,
@@ -76,18 +104,20 @@ export class ChangeProposalStatusUseCase {
       await this.auditLogRepository.create(
         {
           entityType: "Project",
-          entityId: proposal.projectId ?? "",
+          entityId: updatedProposalEntity.projectId ?? "",
           action: "PROPOSAL_STATUS_CHANGE",
           userId,
-          changes: { status: { from: proposal.status, to: newStatus } },
+          changes: {
+            status: { from: proposal.status, to: updatedProposalEntity.status },
+          },
           metadata: {
-            proposalId: proposal.id,
+            proposalId: updatedProposalEntity.id,
             ...rejectFormDetails,
           },
         },
         tx,
       );
-      return proposal;
+      return updatedProposalEntity;
     });
 
     return updatedProposal;

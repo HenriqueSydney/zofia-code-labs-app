@@ -34,7 +34,7 @@ export function handleErrors(
 
     if (prismaError) {
       const errorInfo = { ...prismaError, ...moreInfo };
-      if (prismaError.code === 500) {
+      if (prismaError.statusCode === 500) {
         apiLogger.error(errorInfo, prismaError.errorMessage);
         return prismaError.errorMessage;
       }

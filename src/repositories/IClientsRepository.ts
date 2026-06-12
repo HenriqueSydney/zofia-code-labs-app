@@ -10,6 +10,9 @@ export interface ICreateClientDTO {
   email: string;
   phone: string;
   organizationId: string;
+  responsibleName?: string | null;
+  responsibleEmail?: string | null;
+  responsiblePhone?: string | null;
   file?: File;
 }
 
@@ -20,6 +23,9 @@ export interface IUpdateClientDTO {
   cnpj?: string;
   email?: string;
   phone?: string;
+  responsibleName?: string | null;
+  responsibleEmail?: string | null;
+  responsiblePhone?: string | null;
   file?: File;
 }
 

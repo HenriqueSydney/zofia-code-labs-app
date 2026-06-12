@@ -1,7 +1,7 @@
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { handleErrors } from "@/errors/handleErrors";
 import { ProjectWithDetails } from "@/repositories/IProjectsRepository";
 import { updateProjectSchema } from "@/schemas/projects/updateProjectSchema";
 import { makeUpdateProjectUseCase } from "@/useCases/projects/factories/makeUpdateProjectUseCase";
@@ -10,12 +10,12 @@ import { redirect, RedirectType } from "next/navigation";
 
 export async function updateProjectAction(formData: FormData) {
   const session = await auth();
-  if (!session?.user) return { error: "Não autorizado" };
+  if (!session?.user) return { error: await serverErrorMessage("unauthorized") };
 
   const id = formData.get("id") as string;
 
   if (!id) {
-    return { error: "ID do projeto é obrigatório para atualização." };
+    return { error: await serverErrorMessage("invalidProjectId") };
   }
 
   // 1. Parse e Validação dos dados
@@ -57,7 +57,7 @@ export async function updateProjectAction(formData: FormData) {
     revalidatePath("/projects");
     revalidatePath(`/clients/${project.client.slug}/projects`);
   } catch (error) {
-    const errorMessage = handleErrors(error);
+    const errorMessage = await resolveActionErrorMessage(error);
     return { error: errorMessage };
   }
 

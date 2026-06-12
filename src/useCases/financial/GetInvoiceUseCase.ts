@@ -4,7 +4,7 @@ import {
   InvoiceWithDetails,
 } from "@/repositories/IInvoiceRepository";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError } from "@/errors";
 
 interface GetInvoiceRequest {
   id: string;
@@ -21,7 +21,7 @@ export class GetInvoiceUseCase {
     const invoice = await this.invoiceRepository.findById(id);
 
     if (!invoice) {
-      throw new AppError("Fatura não encontrada.");
+      throw new ResourceNotFoundError("Fatura não encontrada.");
     }
 
     await checkUserPermissionForAsset("invoice", userId, invoice, "READ");

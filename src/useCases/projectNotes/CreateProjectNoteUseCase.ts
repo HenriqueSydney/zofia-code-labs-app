@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IProjectNotesRepository } from "@/repositories/IProjectNotesRepository";
 import {
@@ -25,7 +25,7 @@ export class CreateProjectNoteUseCase {
   }: CreateCreateProjectNoteUseCaseRequest): Promise<ProjectWithDetails> {
     const projectExists = await this.projectRepository.findById(projectId);
 
-    if (!projectExists) throw new AppError("Projeto não localizado");
+    if (!projectExists) throw new ResourceNotFoundError("Projeto não localizado");
 
     await checkUserPermissionForAsset(
       "projectNotes",

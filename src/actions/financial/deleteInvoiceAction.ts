@@ -1,8 +1,8 @@
 // @/actions/financial/deleteInvoiceAction.ts
 "use server";
 
+import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
-import { handleErrors } from "@/errors/handleErrors";
 import { revalidatePath } from "next/cache";
 import { makeDeleteInvoiceUseCase } from "@/useCases/financial/factories/makeDeleteInvoiceUseCase";
 
@@ -11,7 +11,7 @@ export async function deleteInvoiceAction(
   projectSlug: string
 ) {
   const session = await auth();
-  if (!session?.user?.id) return { success: false, message: "Não autorizado" };
+  if (!session?.user?.id) return { success: false, message: await serverErrorMessage("unauthorized") };
 
   try {
     const useCase = makeDeleteInvoiceUseCase();
@@ -21,8 +21,8 @@ export async function deleteInvoiceAction(
     });
 
     revalidatePath(`/projects/${projectSlug}/financial`);
-    return { success: true, message: "Fatura removida com sucesso!" };
+    return { success: true, message: await resolveSuccessMessage("invoiceDeleted") };
   } catch (error) {
-    return { success: false, message: handleErrors(error) };
+    return { success: false, message: await resolveActionErrorMessage(error) };
   }
 }

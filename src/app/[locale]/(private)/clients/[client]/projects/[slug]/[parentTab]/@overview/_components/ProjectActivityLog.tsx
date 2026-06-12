@@ -11,6 +11,7 @@ import {
   CheckCircle,
   Webhook,
 } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 
 interface ActivityLog {
   id: number;
@@ -28,62 +29,65 @@ interface ActivityLog {
   user?: string;
 }
 
-const mockActivities: ActivityLog[] = [
-  {
-    id: 1,
-    type: "stage_change",
-    message: 'Projeto avançou para "Em Andamento"',
-    details: "De: Planejado",
-    timestamp: "2024-03-15T14:30:00",
-    user: "João Silva",
-  },
-  {
-    id: 2,
-    type: "email",
-    message: "Email enviado ao cliente",
-    details: "Atualização de status semanal",
-    timestamp: "2024-03-14T10:00:00",
-  },
-  {
-    id: 3,
-    type: "document",
-    message: "Documento adicionado",
-    details: "Termo de Aceite - Fase 1",
-    timestamp: "2024-03-13T16:45:00",
-    user: "Maria Santos",
-  },
-  {
-    id: 4,
-    type: "milestone",
-    message: "Marco concluído",
-    details: "Sprint 4 finalizada",
-    timestamp: "2024-03-12T18:00:00",
-  },
-  {
-    id: 5,
-    type: "integration",
-    message: "Webhook executado",
-    details: "Notificação Slack enviada",
-    timestamp: "2024-03-12T18:01:00",
-  },
-  {
-    id: 6,
-    type: "payment",
-    message: "Pagamento recebido",
-    details: "Parcela 2 de 4 - R$ 37.500,00",
-    timestamp: "2024-03-10T09:15:00",
-  },
-  {
-    id: 7,
-    type: "team",
-    message: "Membro adicionado à equipe",
-    details: "Ana Costa",
-    timestamp: "2024-03-08T11:30:00",
-    user: "João Silva",
-  },
-];
-
 const ProjectActivityLog = () => {
+  const t = useTranslations("projects.overview.activityLog");
+  const locale = useLocale();
+
+  const mockActivities: ActivityLog[] = [
+    {
+      id: 1,
+      type: "stage_change",
+      message: t("mock.stageChange.message"),
+      details: t("mock.stageChange.details"),
+      timestamp: "2024-03-15T14:30:00",
+      user: "João Silva",
+    },
+    {
+      id: 2,
+      type: "email",
+      message: t("mock.email.message"),
+      details: t("mock.email.details"),
+      timestamp: "2024-03-14T10:00:00",
+    },
+    {
+      id: 3,
+      type: "document",
+      message: t("mock.document.message"),
+      details: t("mock.document.details"),
+      timestamp: "2024-03-13T16:45:00",
+      user: "Maria Santos",
+    },
+    {
+      id: 4,
+      type: "milestone",
+      message: t("mock.milestone.message"),
+      details: t("mock.milestone.details"),
+      timestamp: "2024-03-12T18:00:00",
+    },
+    {
+      id: 5,
+      type: "integration",
+      message: t("mock.integration.message"),
+      details: t("mock.integration.details"),
+      timestamp: "2024-03-12T18:01:00",
+    },
+    {
+      id: 6,
+      type: "payment",
+      message: t("mock.payment.message"),
+      details: t("mock.payment.details"),
+      timestamp: "2024-03-10T09:15:00",
+    },
+    {
+      id: 7,
+      type: "team",
+      message: t("mock.team.message"),
+      details: t("mock.team.details"),
+      timestamp: "2024-03-08T11:30:00",
+      user: "João Silva",
+    },
+  ];
+
   const getIcon = (type: ActivityLog["type"]) => {
     switch (type) {
       case "stage_change":
@@ -133,20 +137,21 @@ const ProjectActivityLog = () => {
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
     if (days === 0) {
-      return date.toLocaleTimeString("pt-BR", {
+      return date.toLocaleTimeString(locale, {
         hour: "2-digit",
         minute: "2-digit",
       });
-    } else if (days === 1) {
-      return "Ontem";
-    } else if (days < 7) {
-      return `${days} dias atrás`;
-    } else {
-      return date.toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "short",
-      });
     }
+    if (days === 1) {
+      return t("time.yesterday");
+    }
+    if (days < 7) {
+      return t("time.daysAgo", { days });
+    }
+    return date.toLocaleDateString(locale, {
+      day: "2-digit",
+      month: "short",
+    });
   };
 
   return (
@@ -155,7 +160,7 @@ const ProjectActivityLog = () => {
         <div className="flex items-center justify-between">
           <CardTitle className="text-base flex items-center gap-2">
             <Activity className="h-4 w-4" />
-            Últimas Atualizações
+            {t("title")}
           </CardTitle>
         </div>
       </CardHeader>
@@ -163,21 +168,18 @@ const ProjectActivityLog = () => {
         <div className="space-y-3 overflow-y-auto pr-1">
           {mockActivities.map((activity, index) => (
             <div key={activity.id} className="flex gap-3 relative">
-              {/* Timeline line */}
               {index < mockActivities.length - 1 && (
                 <div className="absolute left-[13px] top-7 bottom-0 w-px bg-border" />
               )}
 
-              {/* Icon */}
               <div
                 className={`relative z-10 p-1.5 rounded-full ${getIconBg(
-                  activity.type
+                  activity.type,
                 )}`}
               >
                 {getIcon(activity.type)}
               </div>
 
-              {/* Content */}
               <div className="flex-1 min-w-0 pb-3">
                 <p className="text-sm font-medium">{activity.message}</p>
                 {activity.details && (

@@ -4,7 +4,7 @@ import {
 } from "@/generated/prisma/client";
 import { AuthBasePermissionStrategy } from "./auth-base-strategy";
 import { Operation, UserContext } from "./types";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { PERMISSIONS, PermissionString } from "@/constants/permissions";
 import { UserDoesNotHavePermissionError } from "@/errors/UserDoesNotHavePermissionError";
 
@@ -17,24 +17,25 @@ export class AuthInstanceSettingsStrategy extends AuthBasePermissionStrategy<Set
     super();
   }
 
-  private getRequiredPermission(_: Operation): PermissionString {
+  private getRequiredPermission(operation: Operation): PermissionString {
     // -------------------------------------------------------------------------
     // CONTEXTO: INTEGRAÇÕES (Slack, Stripe, HubSpot, etc.)
     // -------------------------------------------------------------------------
     if (this.context === "INTEGRATION") {
-      // Para integrações, geralmente ler/listar também é restrito a admins,
-      // pois pode expor API Keys ou status de conexão sensíveis.
+      if (operation === "READ") {
+        return PERMISSIONS.SETTINGS.READ_INTEGRATIONS;
+      }
       return PERMISSIONS.SETTINGS.MANAGE_INTEGRATIONS;
     }
 
     // -------------------------------------------------------------------------
     // CONTEXTO: CATEGORIAS DE DESPESA (Viagem, Alimentação, Software...)
     // -------------------------------------------------------------------------
-    else {
-      // Estamos usando MANAGE_BILLING como proxy para configurações financeiras.
-      // Se preferir, crie uma permissão PERMISSIONS.FINANCIAL.MANAGE_SETTINGS
-      return PERMISSIONS.SETTINGS.MANAGE_BILLING;
+    if (this.context === "EXPENSE_CATEGORY") {
+      return PERMISSIONS.SETTINGS.MANAGE_EXPENSE_CATEGORIES;
     }
+
+    throw new ValidationError("Contexto de configuração não suportado.");
   }
 
   protected validateSpecific(

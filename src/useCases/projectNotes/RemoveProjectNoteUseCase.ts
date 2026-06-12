@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError, ValidationError, BusinessRuleError } from "@/errors";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { date } from "@/lib/dayjs";
 import {
@@ -24,12 +24,10 @@ export class RemoveProjectNoteUseCase {
     const noteExists =
       await this.projectNotesRepository.findProjectNoteById(id);
 
-    if (!noteExists) throw new AppError("Observação não localizada");
+    if (!noteExists) throw new ResourceNotFoundError("Observação não localizada");
 
     if (noteExists.projectId !== projectId) {
-      throw new AppError(
-        "Ops! Um erro aparentemente ocorreu ao tentar editar a observação. Tente novamente mais tarde",
-      );
+      throw new ValidationError("Ops! Um erro aparentemente ocorreu ao tentar editar a observação. Tente novamente mais tarde");
     }
 
     const canRemove = noteExists.updatedAt
@@ -37,9 +35,7 @@ export class RemoveProjectNoteUseCase {
       : date().diff(date(noteExists.createdAt), "minute") < 30;
 
     if (!canRemove) {
-      throw new AppError(
-        "Observação não pode ser mais removida. Período para remoção já se expirou",
-      );
+      throw new BusinessRuleError("Observação não pode ser mais removida. Período para remoção já se expirou");
     }
 
     await checkUserPermissionForAsset(

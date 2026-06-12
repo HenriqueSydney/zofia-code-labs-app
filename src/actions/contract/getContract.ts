@@ -1,12 +1,12 @@
 "use server";
 
 import { auth } from "@/auth";
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { makeGetContractByIdUseCase } from "@/useCases/contract/factories/makeGetContractByIdUseCase";
 
 export async function getContractAction(contractId: string) {
   const session = await auth();
-  if (!session?.user) throw new AppError("Não autorizado");
+  if (!session?.user) throw new ValidationError("unauthorized", { statusCode: 401, severity: "low" });
 
   const useCase = makeGetContractByIdUseCase();
 
@@ -19,6 +19,6 @@ export async function getContractAction(contractId: string) {
     return contract;
   } catch (error) {
     console.error(error);
-    throw new AppError("Erro ao localizar a proposta vigente.");
+    throw new ValidationError("Erro ao localizar a proposta vigente.");
   }
 }

@@ -1,7 +1,7 @@
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IExpenseRepository } from "@/repositories/IExpenseRepository";
 import { IProjectsRepository } from "@/repositories/IProjectsRepository";
-import { AppError } from "@/errors/AppError";
+import { ResourceNotFoundError } from "@/errors";
 import { Expense } from "@/generated/prisma/client";
 
 interface ListExpensesUseCaseRequest {
@@ -33,7 +33,7 @@ export class ListExpensesUseCase {
     const project = await this.projectsRepository.findBySlug(projectSlug);
 
     if (!project) {
-      throw new AppError("Projeto não encontrado.");
+      throw new ResourceNotFoundError("Projeto não encontrado.");
     }
 
     // 2. Verifica permissão de visualização (READ)

@@ -5,7 +5,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/twMerge";
 
 interface TooltipProps {
   children: ReactNode;
@@ -24,11 +24,7 @@ export function Tooltip({
 
   return (
     <ShadnTooltip>
-      <TooltipTrigger asChild={false}>     
-        <div className="contents">
-          {children}
-        </div>
-      </TooltipTrigger>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
       <TooltipContent className={cn("max-w-2xl", className)} side={direction}>
         {/* Verifica se é string. Se for, usa o <p>. Se for ReactNode (JSX), renderiza direto. */}
         {typeof description === "string" ? (

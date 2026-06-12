@@ -1,7 +1,6 @@
 // use-cases/dashboard/GetOrganizationOverviewStatsUseCase.ts
+import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IProjectStatsRepository } from "@/repositories/IProjectStatsRepository";
-// Assumindo que você tenha um método para verificar permissão na organização ou confie no middleware
-// import { checkUserPermissionForOrganization } from "@/lib/auth/checkUserPermission";
 
 interface IGetOrganizationOverviewStatsUseCaseParams {
   organizationId: string;
@@ -15,9 +14,12 @@ export class GetOrganizationOverviewStatsUseCase {
     organizationId,
     userId,
   }: IGetOrganizationOverviewStatsUseCaseParams) {
-    // 1. Verificação de Segurança
-    // Diferente do projeto (slug), aqui geralmente validamos se o userId pertence à organizationId
-    // await checkUserPermissionForOrganization(organizationId, userId, "VIEW_DASHBOARD");
+    await checkUserPermissionForAsset(
+      "project",
+      userId,
+      { organizationId },
+      "READ",
+    );
 
     // 2. Busca dos dados
     const stats = await this.statsRepo.getDashboardStats(organizationId);
@@ -26,26 +28,25 @@ export class GetOrganizationOverviewStatsUseCase {
     // Aqui retornamos no formato que os cards do shadcn esperam
     return [
       {
-        title: "Total de Projetos",
+        titleKey: "totalProjects",
         value: stats.totalProjects.value.toString(),
         trend: `${stats.totalProjects.trend > 0 ? "+" : ""}${stats.totalProjects.trend}%`,
-        // O ícone deve ser resolvido no frontend para não quebrar a serialização do Server Component
         iconKey: "FolderKanban",
       },
       {
-        title: "Projetos Ativos",
+        titleKey: "activeProjects",
         value: stats.activeProjects.value.toString(),
         trend: `${stats.activeProjects.trend > 0 ? "+" : ""}${stats.activeProjects.trend}%`,
         iconKey: "TrendingUp",
       },
       {
-        title: "Projetos Concluídos",
+        titleKey: "completedProjects",
         value: stats.completedProjects.value.toString(),
         trend: `${stats.completedProjects.trend > 0 ? "+" : ""}${stats.completedProjects.trend}%`,
         iconKey: "CheckCircle2",
       },
       {
-        title: "Satisfação (Saúde)",
+        titleKey: "clientSatisfaction",
         value: `${stats.clientSatisfaction.value}%`,
         trend: `${stats.clientSatisfaction.trend > 0 ? "+" : ""}${stats.clientSatisfaction.trend}%`,
         iconKey: "Users",

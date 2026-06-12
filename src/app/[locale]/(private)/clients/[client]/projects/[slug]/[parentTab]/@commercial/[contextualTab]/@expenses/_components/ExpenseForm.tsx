@@ -26,6 +26,7 @@ import { FormInput } from "@/components/form/FormInput";
 import { FormSelect } from "@/components/form/FormSelect";
 import { FormNumberInput } from "@/components/form/FormNumberInput";
 import { FormDatePicker } from "@/components/form/FormDatePicker";
+import { useTranslations } from "next-intl";
 
 interface ExpenseCategorySimple {
   id: string;
@@ -53,6 +54,9 @@ export function ExpenseForm({
   expense,
   handleCloseModal,
 }: IExpenseFormProps) {
+  const t = useTranslations("projects.commercial.expenses.form");
+  const tCommon = useTranslations("common");
+  const tActions = useTranslations("common.actions");
   const [isPending, startTransition] = useTransition();
   const [categories, setCategories] = useState<ExpenseCategorySimple[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(false);
@@ -81,7 +85,7 @@ export function ExpenseForm({
         if (result.success && result.data) {
           setCategories(result.data);
         } else {
-          toast.error("Não foi possível carregar as categorias.");
+          toast.error(t("loadCategoriesError"));
         }
       } catch (error) {
         console.error(error);
@@ -117,17 +121,17 @@ export function ExpenseForm({
             <FormInput
               control={form.control}
               name="description"
-              label="Descrição da Despesa"
-              placeholder="Ex: Servidor AWS, Aluguel..."
+              label={t("description")}
+              placeholder={t("descriptionPlaceholder")}
               disabled={isPending}
             />
 
             <FormSelect
               control={form.control}
               name="expenseCategoryId"
-              label="Categoria"
+              label={t("category")}
               placeholder={
-                isLoadingCategories ? "Carregando..." : "Selecione..."
+                isLoadingCategories ? tCommon("loading") : tCommon("select")
               }
               disabled={isPending || isLoadingCategories}
               options={categories.map((c) => ({
@@ -140,7 +144,7 @@ export function ExpenseForm({
               <FormNumberInput
                 control={form.control}
                 name="amount"
-                label="Valor (R$)"
+                label={t("amount")}
                 placeholder="0.00"
                 min={0}
                 step={0.01}
@@ -152,8 +156,8 @@ export function ExpenseForm({
               <FormDatePicker
                 control={form.control}
                 name="dueDate"
-                label="Vencimento"
-                placeholder="Selecione"
+                label={t("dueDate")}
+                placeholder={tActions("select")}
                 disabled={isPending}
               />
             </div>
@@ -165,8 +169,8 @@ export function ExpenseForm({
               <FormSelect
                 control={form.control}
                 name="internetBankingProvider"
-                label="Conta de Saída"
-                placeholder="Selecione o banco"
+                label={t("outboundAccount")}
+                placeholder={t("bankPlaceholder")}
                 disabled={isPending}
                 options={BANK_PROVIDERS}
               />
@@ -174,8 +178,8 @@ export function ExpenseForm({
               <FormSelect
                 control={form.control}
                 name="paymentType"
-                label="Meio de Pagamento"
-                placeholder="Selecione"
+                label={t("paymentMethod")}
+                placeholder={tActions("select")}
                 disabled={isPending}
                 options={PAYMENT_METHODS}
               />
@@ -185,14 +189,14 @@ export function ExpenseForm({
 
             <div className="space-y-3">
               <h3 className="text-sm font-semibold flex items-center gap-2 text-muted-foreground">
-                <FileText className="w-4 h-4" /> Comprovantes e Fiscal
+                <FileText className="w-4 h-4" /> {t("receiptsSection")}
               </h3>
 
               <FormInput
                 control={form.control}
                 name="invoiceNumber"
-                label="Número da Nota (NF)"
-                placeholder="Ex: 000.456.789"
+                label={t("invoiceNumber")}
+                placeholder={t("invoiceNumberPlaceholder")}
                 disabled={isPending}
               />
 
@@ -200,8 +204,8 @@ export function ExpenseForm({
                 control={form.control}
                 name="receiptLink"
                 type="url"
-                label="Link do Comprovante"
-                placeholder="https://..."
+                label={t("receiptLink")}
+                placeholder={t("receiptLinkPlaceholder")}
                 disabled={isPending}
               />
             </div>
@@ -216,14 +220,14 @@ export function ExpenseForm({
             onClick={handleCloseModal}
             disabled={isPending}
           >
-            Cancelar
+            {tActions("cancel")}
           </Button>
           <Button type="submit" disabled={isPending} variant="destructive">
             {isPending
-              ? "Processando..."
+              ? tCommon("processing")
               : expense
-                ? "Atualizar Despesa"
-                : "Registrar Despesa"}
+                ? t("update")
+                : t("register")}
           </Button>
         </div>
       </form>

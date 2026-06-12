@@ -1,18 +1,17 @@
+import { v } from "@/schemas/validationMessages";
 import z from "zod";
 
 export const createServiceTypeSchema = z.object({
   organizationId: z.cuid().optional(),
-  categoryId: z
-    .string({ error: "A Categoria é obrigatória." })
-    .min(1, "Selecione uma categoria."),
+  categoryId: z.string({ error: v.selectCategory }).min(1, v.selectCategory),
   name: z
-    .string({ error: "O nome do serviço é obrigatório." })
-    .min(3, "O nome deve ter pelo menos 3 caracteres.")
-    .max(150, "O nome deve ter no máximo 150 caracteres."),
+    .string({ error: v.serviceNameRequired })
+    .min(3, v.nameMinLength)
+    .max(150, v.nameMaxLength),
   description: z.string().optional().nullable(),
   basePrice: z
-    .number({ error: "O preço deve ser um número válido." })
-    .min(0, "O preço não pode ser negativo.")
+    .number({ error: v.priceInvalid })
+    .min(0, v.priceNonNegative)
     .optional(),
   active: z.boolean().default(true).optional(),
 });

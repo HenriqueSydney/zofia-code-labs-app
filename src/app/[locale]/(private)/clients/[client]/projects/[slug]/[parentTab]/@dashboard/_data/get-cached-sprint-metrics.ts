@@ -1,4 +1,4 @@
-import { AppError } from "@/errors/AppError";
+import { ValidationError } from "@/errors";
 import { cache } from "react";
 import { operationWrapper } from "@/lib/operationWrapper";
 import { getSprintMetricsAction } from "@/actions/sprint/getSprintMetricsAction";
@@ -14,9 +14,7 @@ export const getCachedSprintMetrics = cache(async (slug: string) => {
   });
 
   if (error || !success?.success || !success?.data) {
-    throw new AppError(
-      success?.message || "Não foi possível recuperar as métricas de sprint"
-    );
+    throw new ValidationError(success?.message || "Não foi possível recuperar as métricas de sprint");
   }
 
   return success.data;

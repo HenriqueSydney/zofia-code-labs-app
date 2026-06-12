@@ -238,7 +238,7 @@ export type ServiceDefaultBacklogItemGroupByOutputType = {
   _max: ServiceDefaultBacklogItemMaxAggregateOutputType | null
 }
 
-type GetServiceDefaultBacklogItemGroupByPayload<T extends ServiceDefaultBacklogItemGroupByArgs> = Prisma.PrismaPromise<
+export type GetServiceDefaultBacklogItemGroupByPayload<T extends ServiceDefaultBacklogItemGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ServiceDefaultBacklogItemGroupByOutputType, T['by']> &
       {
@@ -1701,6 +1701,11 @@ export type ServiceDefaultBacklogItemFindManyArgs<ExtArgs extends runtime.Types.
    * Skip the first `n` ServiceDefaultBacklogItems.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of ServiceDefaultBacklogItems.
+   */
   distinct?: Prisma.ServiceDefaultBacklogItemScalarFieldEnum | Prisma.ServiceDefaultBacklogItemScalarFieldEnum[]
 }
 

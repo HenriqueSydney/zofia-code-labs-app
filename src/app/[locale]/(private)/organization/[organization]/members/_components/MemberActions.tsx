@@ -8,6 +8,7 @@ import {
   Shield,
   LucideIcon,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 
@@ -25,13 +26,17 @@ interface MemberActionsProps {
   orgId: string;
   customRolesList: CustomRoleWithUsage[];
   member: any; // Substituir pela tipagem correta (Prisma/Types)
+  canManage?: boolean;
 }
 
 export function MemberActions({
   orgId,
   member,
   customRolesList,
+  canManage = true,
 }: MemberActionsProps) {
+  const t = useTranslations("organization.members.actions");
+  const tCommon = useTranslations("common.actions");
   const [isEditRoleOpen, setIsEditRoleOpen] = useState(false);
   const [isRemoveOpen, setIsRemoveOpen] = useState(false);
   const [isPermissionsOpen, setIsPermissionsOpen] = useState(false);
@@ -40,13 +45,13 @@ export function MemberActions({
   const menuItems: DrowpdownMenuItemsType[] = [
     {
       type: "action",
-      label: "Alterar Perfil/Cargo",
+      label: t("changeRole"),
       icon: UserCog,
       onClick: () => setIsEditRoleOpen(true),
     },
     {
       type: "action",
-      label: "Conceder Permissões", // Item solicitado
+      label: t("grantPermissions"),
       icon: Shield,
       onClick: () => setIsPermissionsOpen(true),
     },
@@ -55,16 +60,20 @@ export function MemberActions({
     },
     {
       type: "action",
-      label: "Remover da Equipe",
+      label: t("removeFromTeam"),
       icon: Trash2,
       onClick: () => setIsRemoveOpen(true),
       className: "text-destructive focus:text-destructive",
     },
   ];
 
+  if (!canManage) {
+    return null;
+  }
+
   return (
     <>
-      <DropdownMenu label="Ações" menuItems={menuItems} />
+      <DropdownMenu label={tCommon("label")} menuItems={menuItems} />
 
       {/* Renderização dos Modais */}
       <EditMemberRoleDialog

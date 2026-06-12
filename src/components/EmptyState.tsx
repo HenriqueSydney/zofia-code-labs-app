@@ -1,5 +1,5 @@
-import { AppError } from "@/errors/AppError";
-import { cn } from "@/lib/utils";
+import { ValidationError } from "@/errors";
+import { cn } from "@/utils/twMerge";
 import { LucideIcon } from "lucide-react";
 import Image from "next/image";
 import React from "react";
@@ -22,7 +22,7 @@ export function EmptyState({
   className,
 }: IEmptyState) {
   if (!image && !Icon) {
-    throw new AppError("Forneça uma Imagem ou um Icon para o EmptyState");
+    throw new ValidationError("Provide an image or icon for EmptyState");
   }
 
   return (
