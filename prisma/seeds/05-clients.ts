@@ -41,6 +41,8 @@ export async function seedClients(
 ): Promise<void> {
   log("🏢 Sincronizando clientes...");
 
+  return;
+
   for (const client of clients) {
     const existing = await prisma.client.findFirst({
       where: { organizationId, companyName: client.companyName },

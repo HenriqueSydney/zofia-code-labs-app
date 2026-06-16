@@ -9,15 +9,15 @@ import { SectionHeading } from "@/components/SectionHeading"; // Assumindo exist
 import { StatsCard } from "@/components/StatsCard"; // Assumindo existência
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { operationWrapper } from "@/lib/operationWrapper";
-import { ValidationError } from "@/errors";
-import { Button } from "@/components/ui/button";
+import { ForbiddenError, ValidationError } from "@/errors";
 import { OrganizationTabs } from "./_components/OrganizationTabs";
 import { GoBackButton } from "@/components/GoBackButton"; // Assumindo existência
 import { mask } from "@/utils/mask";
 import { getOrganizationAction } from "@/actions/organization/getOrganizationAction";
 import { date } from "@/lib/dayjs";
-import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
+import { auth } from "@/auth";
+import { MemberRole, Role } from "@/generated/prisma/client";
 
 interface IOrganizationLayout {
   children: React.ReactNode;
@@ -28,6 +28,13 @@ export default async function OrganizationLayout({
   children,
   params,
 }: IOrganizationLayout) {
+  const session = await auth();
+  if (session?.user.memberRole === MemberRole.TENANT_ADMIN) {
+    throw new ForbiddenError(
+      "Acesso negado. Apenas administradores do tenant podem acessar a organização.",
+    );
+  }
+
   const { organization } = await params;
   const t = await getTranslations("organization.overview");
 

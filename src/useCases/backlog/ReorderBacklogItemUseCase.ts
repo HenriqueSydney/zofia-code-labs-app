@@ -2,6 +2,7 @@ import { ResourceNotFoundError } from "@/errors";
 import { BacklogStatus } from "@/generated/prisma/enums";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { IBacklogItemsRepository } from "@/repositories/IBacklogItemsRepository";
+import { IProjectsRepository } from "@/repositories/IProjectsRepository";
 
 type ReorderBacklogItemParams = {
   id: string;
@@ -12,7 +13,10 @@ type ReorderBacklogItemParams = {
 };
 
 export class ReorderBacklogItemUseCase {
-  constructor(private backlogItemsRepository: IBacklogItemsRepository) {}
+  constructor(
+    private backlogItemsRepository: IBacklogItemsRepository,
+    private projectsRepository: IProjectsRepository,
+  ) {}
 
   async execute({
     id,
@@ -20,7 +24,10 @@ export class ReorderBacklogItemUseCase {
     allSortedIds,
     userId,
     status,
-  }: ReorderBacklogItemParams): Promise<void> {
+  }: ReorderBacklogItemParams): Promise<{
+    slug: string;
+    clientSlug: string;
+  }> {
     const itemExists = await this.backlogItemsRepository.findById(id);
 
     if (!itemExists) {
@@ -35,5 +42,16 @@ export class ReorderBacklogItemUseCase {
       allSortedIds,
       status,
     );
+
+    const project = await this.projectsRepository.findById(itemExists.projectId);
+
+    if (!project) {
+      throw new ResourceNotFoundError("Projeto não encontrado.");
+    }
+
+    return {
+      slug: project.slug,
+      clientSlug: project.client.slug,
+    };
   }
 }

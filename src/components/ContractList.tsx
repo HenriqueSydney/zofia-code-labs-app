@@ -24,30 +24,49 @@ export function ContractList({ contracts, totalOfRegister }: IContractList) {
   // Estado para acumular todos os contratos carregados
   const [accumulatedContracts, setAccumulatedContracts] =
     useState<ContractWithDetails[]>(contracts);
+  const [reachedEnd, setReachedEnd] = useState(false);
   const observerTarget = useRef<HTMLDivElement>(null);
+  const isLoadingMoreRef = useRef(false);
 
   const currentPage = Number(searchParams.get("page")) || 1;
   const ITEMS_PER_PAGE = 10;
-  const hasMore = accumulatedContracts.length < totalOfRegister;
+  const hasMore =
+    !reachedEnd && accumulatedContracts.length < totalOfRegister;
 
   // Sincroniza os contratos que vêm do servidor (SSR/Server Action) com o estado local
   useEffect(() => {
+    isLoadingMoreRef.current = false;
+
     if (currentPage === 1) {
+      setReachedEnd(false);
       setAccumulatedContracts(contracts);
-    } else {
-      setAccumulatedContracts((prev) => {
-        // Evita duplicatas caso o useEffect dispare duas vezes em Strict Mode
-        const newContracts = contracts.filter(
-          (newContract) =>
-            !prev.some((prevContract) => prevContract.id === newContract.id),
-        );
-        return [...prev, ...newContracts];
-      });
+      return;
     }
+
+    if (contracts.length === 0) {
+      setReachedEnd(true);
+      return;
+    }
+
+    setAccumulatedContracts((prev) => {
+      const newContracts = contracts.filter(
+        (newContract) =>
+          !prev.some((prevContract) => prevContract.id === newContract.id),
+      );
+
+      if (newContracts.length === 0) {
+        setReachedEnd(true);
+        return prev;
+      }
+
+      return [...prev, ...newContracts];
+    });
   }, [contracts, currentPage]);
 
   const loadMore = () => {
-    if (!hasMore) return;
+    if (!hasMore || isLoadingMoreRef.current) return;
+
+    isLoadingMoreRef.current = true;
 
     const nextPage = currentPage + 1;
     const params = new URLSearchParams(searchParams.toString());
@@ -61,7 +80,11 @@ export function ContractList({ contracts, totalOfRegister }: IContractList) {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasMore) {
+        if (
+          entries[0].isIntersecting &&
+          hasMore &&
+          !isLoadingMoreRef.current
+        ) {
           loadMore();
         }
       },
@@ -73,7 +96,7 @@ export function ContractList({ contracts, totalOfRegister }: IContractList) {
     }
 
     return () => observer.disconnect();
-  }, [hasMore, searchParams]); // Monitora searchParams para reagir à mudança de página
+  }, [hasMore, currentPage]);
 
   return (
     <div className="space-y-4">

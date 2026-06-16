@@ -287,6 +287,7 @@ export async function triggerDigitalBankIntegration(contractId: string) {
       const customer = await bankingService.createCustomer(
         customerEmail,
         contract.project.client.tradeName,
+        contract.project.organizationId,
       );
       customerId = customer.gatewayCustomerId ?? undefined;
     }

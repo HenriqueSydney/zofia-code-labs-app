@@ -121,6 +121,9 @@ export class PrismaOrganizationsRepository implements IOrganizationsRepository {
     const rawMembers = await prisma.member.findMany({
       where: {
         organizationId,
+        role: {
+          in: [MemberRole.TENANT_ADMIN, MemberRole.TENANT_MEMBER],
+        },
       },
       include: {
         customRole: true,

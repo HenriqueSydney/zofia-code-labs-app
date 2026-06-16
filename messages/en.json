@@ -650,6 +650,72 @@
     "back": "Go Back",
     "help": "If you believe this is an error, please contact us."
   },
+  "invoices": {
+    "paymentConfirmation": {
+      "metadata": {
+        "notFoundTitle": "Invoice not found",
+        "notFoundDescription": "We could not find the details for this invoice.",
+        "title": {
+          "success": "Payment confirmed",
+          "processing": "Payment processing",
+          "cancelled": "Payment not completed"
+        },
+        "description": {
+          "success": "Your payment for {clientName} was received successfully.",
+          "processing": "We are confirming the payment for {clientName}.",
+          "cancelled": "The payment for {clientName} was not completed."
+        }
+      },
+      "badge": {
+        "success": "Payment approved",
+        "processing": "Awaiting confirmation",
+        "cancelled": "Payment cancelled"
+      },
+      "title": {
+        "success": "Payment confirmed!",
+        "processing": "Almost there! We are confirming your payment",
+        "cancelled": "Payment not completed"
+      },
+      "description": {
+        "success": "Thank you, {clientName}. We received your payment and are already moving your project forward.",
+        "processing": "We received your payment attempt, {clientName}. Confirmation will update automatically in a moment.",
+        "cancelled": "No worries, {clientName}. You can try again using the link sent to your email."
+      },
+      "receipt": {
+        "title": "Payment summary",
+        "cancelledTitle": "Payment not completed",
+        "downPayment": "Contract down payment",
+        "standard": "Project invoice",
+        "amountPaid": "Amount paid",
+        "amountDue": "Amount due",
+        "project": "Project",
+        "client": "Client",
+        "method": "Payment method",
+        "date": "Payment date",
+        "datePending": "Pending confirmation",
+        "dateNotCompleted": "Not completed",
+        "services": "Description",
+        "transactionId": "Transaction reference"
+      },
+      "paymentMethods": {
+        "PIX": "Pix",
+        "BOLETO": "Bank slip",
+        "CREDIT_CARD": "Credit card",
+        "DEBIT_CARD": "Debit card"
+      },
+      "actions": {
+        "viewPayments": "View project payments",
+        "goToLogin": "Go to dashboard",
+        "goToLoginCancelled": "Back to dashboard"
+      },
+      "cancelled": {
+        "helpTitle": "Want to try again?",
+        "helpDescription": "The payment was cancelled or interrupted. Use the payment link sent to your email to complete the transaction.",
+        "footer": "If you cannot find the email, check your spam folder or contact our team."
+      },
+      "footer": "If you need help, reply to the confirmation email or contact our team."
+    }
+  },
   "auth": {
     "login": "Sign In",
     "loginDescription": "Login with your credentials do begin",

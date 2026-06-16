@@ -25,6 +25,10 @@ export interface IClientEmployeesRepository {
     clientId: string,
     userId: string
   ): Promise<ClientEmployees | null>;
+  findByClientAndUserIncludingInactive(
+    clientId: string,
+    userId: string
+  ): Promise<ClientEmployees | null>;
   findByClientAndEmail(
     clientId: string,
     email: string

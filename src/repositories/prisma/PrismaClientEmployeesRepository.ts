@@ -55,6 +55,15 @@ export class PrismaClientEmployeesRepository
     });
   }
 
+  async findByClientAndUserIncludingInactive(
+    clientId: string,
+    userId: string,
+  ): Promise<ClientEmployees | null> {
+    return await prisma.clientEmployees.findFirst({
+      where: { clientId, userId },
+    });
+  }
+
   async findByClientAndEmail(
     clientId: string,
     email: string,

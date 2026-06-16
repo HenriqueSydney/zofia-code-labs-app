@@ -76,7 +76,7 @@ export async function ContractSigningContainer({
 
   const signingToken = document.recipients.find(
     (recipient) =>
-      recipient.email === authData?.user.email &&
+      recipient.email !== authData?.user.email &&
       recipient.role === "SIGNER" &&
       recipient.signingStatus === "NOT_SIGNED",
   );

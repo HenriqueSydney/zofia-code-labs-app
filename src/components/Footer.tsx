@@ -15,7 +15,7 @@ const Footer = () => {
       <div className="relative md:absolute md:left-6 flex items-center">
         <Image
           src="/zofia-logo.webp"
-          alt="Zofia Code Lab Logo"
+          alt="Zofia Code Labs"
           width={677}
           height={369}
           className="h-16 w-auto"

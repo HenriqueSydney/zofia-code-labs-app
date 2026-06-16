@@ -24,4 +24,13 @@ describe("getPaginationQuery", () => {
 
     expect(result).toEqual({ skip: 15, take: 15 });
   });
+
+  it("deve converter page e numberPerPage vindos como string (query params)", () => {
+    const result = getPaginationQuery({
+      page: "2" as unknown as number,
+      numberPerPage: "10" as unknown as number,
+    });
+
+    expect(result).toEqual({ skip: 10, take: 10 });
+  });
 });

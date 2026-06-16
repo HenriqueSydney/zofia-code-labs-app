@@ -61,6 +61,10 @@ export function canAccessOrganizationArea(
     return false;
   }
 
+  if (subject.memberRole === MemberRole.TENANT_MEMBER) {
+    return false;
+  }
+
   if (!isOrganizationStaffMember(subject)) {
     return false;
   }
@@ -166,10 +170,7 @@ export function validateOrganizationRouteAccess(
     return { allowed: true };
   }
 
-  if (
-    options?.permission &&
-    !hasPermission(subject, options.permission)
-  ) {
+  if (options?.permission && !hasPermission(subject, options.permission)) {
     return {
       allowed: false,
       messageKey:
@@ -181,9 +182,7 @@ export function validateOrganizationRouteAccess(
   return { allowed: true };
 }
 
-function permissionToRouteMessageKey(
-  permission: PermissionString,
-): string {
+function permissionToRouteMessageKey(permission: PermissionString): string {
   const map: Partial<Record<PermissionString, string>> = {
     [PERMISSIONS.SETTINGS.MANAGE_MEMBERS]: "organizationMembers",
     [PERMISSIONS.SETTINGS.MANAGE_BILLING]: "organizationBilling",

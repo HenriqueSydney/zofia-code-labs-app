@@ -140,7 +140,11 @@ export class InterService
   // Customer — Inter não tem conceito de customer, igual ao MP
   // ------------------------------------------------------------------
 
-  async createCustomer(email: string, name: string): Promise<CustomerResult> {
+  async createCustomer(
+    email: string,
+    name: string,
+    _organizationId?: string,
+  ): Promise<CustomerResult> {
     return {
       gatewayCustomerId: null,
       email: email,

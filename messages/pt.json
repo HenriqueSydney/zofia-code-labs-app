@@ -650,6 +650,72 @@
     "back": "Voltar",
     "help": "Se você acredita que isso é um erro, entre em contato conosco."
   },
+  "invoices": {
+    "paymentConfirmation": {
+      "metadata": {
+        "notFoundTitle": "Fatura não encontrada",
+        "notFoundDescription": "Não foi possível localizar os dados desta fatura.",
+        "title": {
+          "success": "Pagamento confirmado",
+          "processing": "Pagamento em processamento",
+          "cancelled": "Pagamento não concluído"
+        },
+        "description": {
+          "success": "Seu pagamento para {clientName} foi recebido com sucesso.",
+          "processing": "Estamos confirmando o pagamento de {clientName}.",
+          "cancelled": "O pagamento de {clientName} não foi finalizado."
+        }
+      },
+      "badge": {
+        "success": "Pagamento aprovado",
+        "processing": "Aguardando confirmação",
+        "cancelled": "Pagamento cancelado"
+      },
+      "title": {
+        "success": "Pagamento confirmado!",
+        "processing": "Quase lá! Estamos confirmando seu pagamento",
+        "cancelled": "Pagamento não concluído"
+      },
+      "description": {
+        "success": "Obrigado, {clientName}. Recebemos seu pagamento e já estamos dando sequência ao seu projeto.",
+        "processing": "Recebemos sua tentativa de pagamento, {clientName}. Em instantes a confirmação será atualizada automaticamente.",
+        "cancelled": "Não se preocupe, {clientName}. Você pode tentar novamente pelo link enviado no seu e-mail."
+      },
+      "receipt": {
+        "title": "Resumo do pagamento",
+        "cancelledTitle": "Pagamento não finalizado",
+        "downPayment": "Entrada do contrato",
+        "standard": "Fatura do projeto",
+        "amountPaid": "Valor pago",
+        "amountDue": "Valor pendente",
+        "project": "Projeto",
+        "client": "Cliente",
+        "method": "Forma de pagamento",
+        "date": "Data do pagamento",
+        "datePending": "Em confirmação",
+        "dateNotCompleted": "Não concluído",
+        "services": "Descrição",
+        "transactionId": "Referência da transação"
+      },
+      "paymentMethods": {
+        "PIX": "Pix",
+        "BOLETO": "Boleto",
+        "CREDIT_CARD": "Cartão de crédito",
+        "DEBIT_CARD": "Cartão de débito"
+      },
+      "actions": {
+        "viewPayments": "Ver pagamentos do projeto",
+        "goToLogin": "Acessar o painel",
+        "goToLoginCancelled": "Voltar ao painel"
+      },
+      "cancelled": {
+        "helpTitle": "Quer tentar novamente?",
+        "helpDescription": "O pagamento foi cancelado ou interrompido. Use o link de pagamento enviado ao seu e-mail para concluir a transação.",
+        "footer": "Se não encontrar o e-mail, verifique a caixa de spam ou fale com nosso time."
+      },
+      "footer": "Se precisar de ajuda, responda ao e-mail de confirmação ou fale com nosso time."
+    }
+  },
   "auth": {
     "login": "Entrar",
     "loginDescription": "Entre com suas credenciais para acessar o painel",

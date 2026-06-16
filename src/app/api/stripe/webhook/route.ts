@@ -7,9 +7,10 @@ import {
   buildStripeWebhookEventId,
   extractStripeInvoiceId,
   peekStripeOrganizationId,
+  verifyStripeWebhookEvent,
 } from "@/lib/stripe/webhookEvent";
-import { resolveStripeWebhookSecret } from "@/lib/stripe/resolveStripeWebhookSecret";
 import { maybeSendWelcomeClientEmailOnFirstDownPayment } from "@/lib/stripe/welcomeClientOnFirstDownPayment";
+import { maybeAdvanceProjectToPlannedOnDownPaymentPaid } from "@/lib/invoices/advanceProjectToPlannedOnDownPaymentPaid";
 import { maybeSendPaymentReceivedEmail } from "@/lib/invoices/invoicePaymentEmails";
 import { makeInvoiceRepository } from "@/repositories/factories/makeInvoiceRepository";
 
@@ -47,12 +48,19 @@ async function markInvoiceAsPaid(
   return { success: true, wasNewlyPaid: true };
 }
 
-async function handleInvoicePaid(invoiceId: string, paidAt: Date): Promise<void> {
+async function handleInvoicePaid(
+  invoiceId: string,
+  paidAt: Date,
+): Promise<void> {
   const result = await markInvoiceAsPaid(invoiceId, paidAt);
 
   if (result.wasNewlyPaid) {
     await maybeSendWelcomeClientEmailOnFirstDownPayment(invoiceId);
     await maybeSendPaymentReceivedEmail(invoiceId, paidAt);
+  }
+
+  if (result.success) {
+    await maybeAdvanceProjectToPlannedOnDownPaymentPaid(invoiceId);
   }
 }
 
@@ -103,16 +111,9 @@ export async function POST(request: Request) {
       { status: 400 },
     );
   }
-
   try {
+    stripeEvent = await verifyStripeWebhookEvent(body, signature);
     const organizationId = peekStripeOrganizationId(body);
-    const webhookSecret = await resolveStripeWebhookSecret(organizationId);
-
-    stripeEvent = Stripe.webhooks.constructEvent(
-      body,
-      signature,
-      webhookSecret,
-    ) as Stripe.Event;
 
     eventId = buildStripeWebhookEventId(stripeEvent);
     const payload = stripeEvent as unknown as Prisma.InputJsonValue;
@@ -201,7 +202,10 @@ export async function POST(request: Request) {
       }
 
       default:
-        apiLogger.info({ eventType: stripeEvent.type }, "Evento Stripe ignorado");
+        apiLogger.info(
+          { eventType: stripeEvent.type },
+          "Evento Stripe ignorado",
+        );
     }
 
     await persistWebhookLog({
@@ -214,7 +218,8 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ received: true });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Erro desconhecido";
+    const message =
+      error instanceof Error ? error.message : "Erro desconhecido";
     apiLogger.error({ err: error, eventId }, "Erro no webhook Stripe");
 
     if (eventId && stripeEvent) {
@@ -228,7 +233,10 @@ export async function POST(request: Request) {
           error: message,
         });
       } catch (logError) {
-        apiLogger.error({ err: logError }, "Falha ao persistir log do webhook Stripe");
+        apiLogger.error(
+          { err: logError },
+          "Falha ao persistir log do webhook Stripe",
+        );
       }
     }
 

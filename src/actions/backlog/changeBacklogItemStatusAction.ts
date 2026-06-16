@@ -39,7 +39,7 @@ export async function changeBacklogStatusAction(data: unknown) {
       newStatus: status,
     });
 
-    revalidatePath(`/clients/${clientSlug}/projects/${slug}/backlogs`);
+    revalidatePath(`/clients/${clientSlug}/projects/${slug}/backlog`);
 
     return { success: true };
   } catch (error) {

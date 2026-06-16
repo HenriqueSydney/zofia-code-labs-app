@@ -3,17 +3,24 @@ import { Pagination } from "../@types/Pagination";
 export function getPaginationQuery(pagination?: Pagination) {
   let paginationQuery = {};
   if (pagination) {
-    if (pagination.page) {
+    const page =
+      pagination.page !== undefined ? Number(pagination.page) : undefined;
+    const numberPerPage =
+      pagination.numberPerPage !== undefined
+        ? Number(pagination.numberPerPage)
+        : undefined;
+
+    if (page) {
       paginationQuery = {
-        skip: (pagination.page - 1) * (pagination.numberPerPage ?? 10),
-        take: pagination.numberPerPage,
+        skip: (page - 1) * (numberPerPage ?? 10),
+        take: numberPerPage,
       };
     }
 
-    if (pagination.numberPerPage) {
+    if (numberPerPage) {
       paginationQuery = {
-        skip: ((pagination.page ?? 1) - 1) * pagination.numberPerPage,
-        take: pagination.numberPerPage,
+        skip: ((page ?? 1) - 1) * numberPerPage,
+        take: numberPerPage,
       };
     }
   }

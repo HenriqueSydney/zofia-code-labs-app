@@ -38,16 +38,15 @@ export async function reorderBacklogItemAction(data: ReorderBacklogItemType) {
 
     // 4. Execução
     // O UseCase deve verificar se o backlog pertence à organizationId antes de atualizar
-    await reorderBacklogUseCase.execute({
+    const { slug, clientSlug } = await reorderBacklogUseCase.execute({
       allSortedIds,
       id,
       newPositionIndex,
       userId: session.user.id,
-      status
+      status,
     });
 
-    // 5. Revalidação
-    revalidatePath("/dashboard/backlogs");
+    revalidatePath(`/clients/${clientSlug}/projects/${slug}/backlog`);
 
     return { success: true };
   } catch (error) {

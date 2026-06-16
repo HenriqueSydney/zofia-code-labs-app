@@ -29,30 +29,48 @@ export function ProjectList({ projects, totalOfRegister }: IProjectList) {
   // Estado para acumular os projetos conforme as páginas mudam na URL
   const [displayedProjects, setDisplayedProjects] =
     useState<ProjectListType[]>(projects);
+  const [reachedEnd, setReachedEnd] = useState(false);
   const observerTarget = useRef<HTMLDivElement>(null);
+  const isLoadingMoreRef = useRef(false);
 
   const currentPage = Number(searchParams.get("page")) || 1;
   const ITEMS_PER_PAGE = 10;
-  const hasMore = displayedProjects.length < totalOfRegister;
+  const hasMore =
+    !reachedEnd && displayedProjects.length < totalOfRegister;
 
   // Sincroniza o array acumulado com os novos dados vindos do Server Component
   useEffect(() => {
+    isLoadingMoreRef.current = false;
+
     if (currentPage === 1) {
-      // Se voltamos para a página 1 (ex: filtro resetado), reinicia a lista
+      setReachedEnd(false);
       setDisplayedProjects(projects);
-    } else {
-      // Se for uma página nova, anexa os itens evitando duplicatas
-      setDisplayedProjects((prev) => {
-        const newItems = projects.filter(
-          (p) => !prev.some((existing) => existing.id === p.id),
-        );
-        return [...prev, ...newItems];
-      });
+      return;
     }
+
+    if (projects.length === 0) {
+      setReachedEnd(true);
+      return;
+    }
+
+    setDisplayedProjects((prev) => {
+      const newItems = projects.filter(
+        (p) => !prev.some((existing) => existing.id === p.id),
+      );
+
+      if (newItems.length === 0) {
+        setReachedEnd(true);
+        return prev;
+      }
+
+      return [...prev, ...newItems];
+    });
   }, [projects, currentPage]);
 
   const loadMore = () => {
-    if (!hasMore) return;
+    if (!hasMore || isLoadingMoreRef.current) return;
+
+    isLoadingMoreRef.current = true;
 
     const nextPage = currentPage + 1;
     const params = new URLSearchParams(searchParams.toString());
@@ -66,7 +84,11 @@ export function ProjectList({ projects, totalOfRegister }: IProjectList) {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasMore) {
+        if (
+          entries[0].isIntersecting &&
+          hasMore &&
+          !isLoadingMoreRef.current
+        ) {
           loadMore();
         }
       },
@@ -78,7 +100,7 @@ export function ProjectList({ projects, totalOfRegister }: IProjectList) {
     }
 
     return () => observer.disconnect();
-  }, [hasMore, searchParams]);
+  }, [hasMore, currentPage]);
 
   return (
     <div className="space-y-4">

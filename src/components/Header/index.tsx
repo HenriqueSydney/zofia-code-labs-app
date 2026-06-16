@@ -33,7 +33,7 @@ const Header = () => {
         <Link href="/" className="flex items-center gap-3">
           <Image
             src="/zofia-logo.webp"
-            alt="Sophia Code Labs Logo"
+            alt="Zofia Code Labs"
             width={677}
             height={369}
             className="h-14 w-auto"

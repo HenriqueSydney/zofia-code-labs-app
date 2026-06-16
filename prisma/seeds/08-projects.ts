@@ -8,6 +8,7 @@ export async function seedProjects(
   organizationId: string,
   createdByUserId: string,
 ): Promise<void> {
+  return;
   log("📁 Sincronizando projetos de clientes...");
 
   const acolheKids = await prisma.client.findFirst({

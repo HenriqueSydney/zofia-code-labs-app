@@ -181,6 +181,65 @@ describe("CreateClientEmployeeUseCase", () => {
     ).rejects.toBeInstanceOf(ValidationError);
   });
 
+  it("deve reativar funcionário desativado e enviar novo convite", async () => {
+    const { sendClientPortalInvite } = await import(
+      "@/email/send/sendClientPortalInvite"
+    );
+    const organizationId = randomUUID();
+    const authenticatedUserId = randomUUID();
+
+    const client = await clientsRepository.create({
+      organizationId,
+      companyName: "Empresa LTDA",
+      tradeName: "Empresa",
+      slug: "empresa",
+      cnpj: "12345678000199",
+      email: "contato@empresa.com",
+      phone: "11999999999",
+    });
+
+    const user = await userRepository.create({
+      email: "joao@empresa.com",
+      organizationId,
+      name: "João",
+      role: "USER",
+      passwordHash: "hash",
+    });
+
+    const inactiveEmployee = await clientEmployeesRepository.create({
+      organizationId,
+      clientId: client.id,
+      userId: user.id,
+      permissionRole: ClientEmployeeRole.VIEWER,
+      jobTitle: "Antigo cargo",
+      status: "INACTIVE",
+    });
+
+    await clientEmployeesRepository.delete(inactiveEmployee.id);
+
+    const result = await sut.execute({
+      authenticatedUserId,
+      clientSlug: client.slug,
+      name: "João Silva",
+      email: "joao@empresa.com",
+      permissionRole: ClientEmployeeRole.ADMIN,
+      jobTitle: "Gerente",
+    });
+
+    expect(result.id).toBe(inactiveEmployee.id);
+    expect(result.deletedAt).toBeNull();
+    expect(result.status).toBe("PENDING");
+    expect(result.permissionRole).toBe(ClientEmployeeRole.ADMIN);
+    expect(result.jobTitle).toBe("Gerente");
+    expect(sendClientPortalInvite).toHaveBeenCalledWith(
+      expect.objectContaining({
+        email: "joao@empresa.com",
+        roleLabel: "Administrador",
+      }),
+    );
+    expect(clientEmployeesRepository.items).toHaveLength(1);
+  });
+
   it("deve criar funcionário quando usuário do portal tem permissão", async () => {
     const { assertClientEmployeePermission } = await import(
       "@/lib/auth/assertClientEmployeePermission"

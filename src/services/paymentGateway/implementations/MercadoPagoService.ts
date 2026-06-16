@@ -1,3 +1,4 @@
+import { envVariables } from "@/env";
 import {
   MercadoPagoConfig as MPConfig,
   Payment,
@@ -58,7 +59,11 @@ export class MercadoPagoService
     }
   }
 
-  async createCustomer(email: string, name: string): Promise<CustomerResult> {
+  async createCustomer(
+    email: string,
+    name: string,
+    _organizationId?: string,
+  ): Promise<CustomerResult> {
     return {
       gatewayCustomerId: null,
       email: email,
@@ -105,12 +110,12 @@ export class MercadoPagoService
                 : undefined,
           },
           back_urls: {
-            success: `${process.env.APP_URL}/invoices/${data.invoiceId}?paid=true`,
-            failure: `${process.env.APP_URL}/invoices/${data.invoiceId}?error=true`,
-            pending: `${process.env.APP_URL}/invoices/${data.invoiceId}?pending=true`,
+            success: `${envVariables.BASE_URL}/invoices/${data.invoiceId}?paid=true`,
+            failure: `${envVariables.BASE_URL}/invoices/${data.invoiceId}?error=true`,
+            pending: `${envVariables.BASE_URL}/invoices/${data.invoiceId}?pending=true`,
           },
           auto_return: "approved",
-          notification_url: `${process.env.APP_URL}/webhooks/mercadopago`,
+          notification_url: `${envVariables.BASE_URL}/webhooks/mercadopago`,
           external_reference: data.invoiceId, // chave de reconciliação no webhook
           expiration_date_to: new Date(
             Date.now() + 7 * 24 * 60 * 60 * 1000,

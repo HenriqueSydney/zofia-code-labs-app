@@ -126,7 +126,11 @@ export interface CustomerResult {
 export interface IPaymentGatewayService {
   healthCheck(): Promise<{ status: "up" | "down"; latency: number }>;
 
-  createCustomer(email: string, name: string): Promise<CustomerResult>;
+  createCustomer(
+    email: string,
+    name: string,
+    organizationId?: string,
+  ): Promise<CustomerResult>;
 
   createCheckoutSession(data: PaymentMethods): Promise<PaymentIntentResult>;
 

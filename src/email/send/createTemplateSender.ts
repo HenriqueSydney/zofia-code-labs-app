@@ -17,7 +17,6 @@ export function createTemplateSender<P extends Record<string, unknown>>(
 ) {
   return async (params: P & SendEmailBaseParams) => {
     const { to, emailSubject, attachments, ...templateProps } = params;
-    console.log("Email sent:", { emailSubject, to });
 
     return renderEmailTemplate({
       to:

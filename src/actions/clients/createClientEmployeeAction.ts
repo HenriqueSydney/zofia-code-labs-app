@@ -1,6 +1,6 @@
 "use server";
 
-import { resolveActionErrorMessage, resolveSuccessMessage, serverErrorMessage } from "@/errors/resolveActionErrorMessage";
+import { resolveActionErrorMessage, resolveSuccessMessage } from "@/errors/resolveActionErrorMessage";
 import { auth } from "@/auth";
 import { ValidationError } from "@/errors";
 import { employeeSchema } from "@/schemas/clients/employeeSchema";
@@ -32,7 +32,9 @@ export async function createClientEmployeeAction(formData: FormData) {
     revalidatePath(`/clients/${clientSlug}`);
     return { success: true, message: await resolveSuccessMessage("employeeInvited") };
   } catch (error) {
-    await resolveActionErrorMessage(error);
-    return { success: false, message: await serverErrorMessage("employeeCreateFailed") };
+    return {
+      success: false,
+      message: await resolveActionErrorMessage(error),
+    };
   }
 }

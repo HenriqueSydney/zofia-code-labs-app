@@ -20,7 +20,12 @@ import { sanitizeCallbackUrl } from "@/lib/auth/sanitizeCallbackUrl";
 const { auth } = NextAuth(authConfig);
 const intlMiddleware = createMiddleware(routing);
 
-const publicPages = ["/auth/login", "/auth/remember-me", "/auth/invite/accept"];
+const publicPages = [
+  "/auth/login",
+  "/auth/remember-me",
+  "/auth/invite/accept",
+  "/invoices",
+];
 const authPages = ["/auth/login", "/auth/remember-me"];
 
 function getDefaultAppPath(user: {
@@ -162,7 +167,7 @@ export default auth(async (req) => {
   // ------------------------------------------------------------------
   // 2.1 RBAC — bloqueio de rota por permissão (JWT, sem requisição extra)
   // ------------------------------------------------------------------
-  if (isLoggedIn && req.auth?.user) {
+  if (isLoggedIn && req.auth?.user && !isPublicPage) {
     const user = req.auth.user;
 
     const portalCheck = canAccessRouteAsPortalUser(pathnameWithoutLocale, {
@@ -251,7 +256,7 @@ export default auth(async (req) => {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:ico|png|jpg|jpeg|gif|svg|webp|css|js|woff|woff2|ttf|eot|xml|txt|map)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:ico|png|jpg|jpeg|gif|svg|webp|avif|css|js|woff|woff2|ttf|eot|xml|txt|map)$).*)",
     "/",
     "/(pt|en)/:path*",
   ],

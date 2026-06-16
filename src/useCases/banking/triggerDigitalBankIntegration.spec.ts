@@ -285,6 +285,7 @@ describe("triggerDigitalBankIntegration", () => {
     expect(mockCreateCustomer).toHaveBeenCalledWith(
       "financeiro@acme.com",
       "Acme Corp",
+      organizationId,
     );
     expect(mockCreatePaymentIntent).toHaveBeenCalledWith(
       expect.objectContaining({

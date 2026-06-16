@@ -96,10 +96,7 @@ const settingsMenuItems: MenuItem[] = [
     titleKey: "integrationsConfig",
     url: "/settings/integrations/config",
     icon: Key,
-    permissionsAny: [
-      PERMISSIONS.SETTINGS.READ_INTEGRATIONS,
-      PERMISSIONS.SETTINGS.MANAGE_INTEGRATIONS,
-    ],
+    permissionsAny: [PERMISSIONS.SETTINGS.READ_INTEGRATIONS],
   },
 ];
 

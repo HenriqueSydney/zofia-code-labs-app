@@ -43,6 +43,7 @@ export async function seedUsersAndMembers(
     {
       email: "mcristinaas.cruz@gmail.com",
       name: "Maria Cristina Araújo Silva Cruz",
+      passwordHash,
       role: Role.OWNER,
       memberRole: MemberRole.TENANT_ADMIN,
       customRoleKey: "admin",

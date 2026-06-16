@@ -1,4 +1,8 @@
-import { ClientEmployeeRole, Role } from "@/generated/prisma/enums";
+import {
+  ClientEmployeeRole,
+  ClientEmployeeStatus,
+  Role,
+} from "@/generated/prisma/enums";
 import { assertClientEmployeePermission } from "@/lib/auth/assertClientEmployeePermission";
 import { checkUserPermissionForAsset } from "@/lib/auth/checkUserPermissionForAsset";
 import { ensureTenantObserverMember } from "@/lib/auth/ensureTenantObserverMember";
@@ -70,14 +74,55 @@ export class CreateClientEmployeeUseCase {
     const userExists = await this.userRepository.findUserByEmail(normalizedEmail);
 
     if (userExists) {
-      const alreadyMember =
-        await this.clientEmployeesRepository.findByClientAndUser(
+      const existingEmployee =
+        await this.clientEmployeesRepository.findByClientAndUserIncludingInactive(
           client.id,
           userExists.id,
         );
 
-      if (alreadyMember) {
+      if (existingEmployee?.deletedAt === null) {
         throw new ValidationError("Este usuário já está vinculado a este cliente.");
+      }
+
+      if (existingEmployee) {
+        const inviter = await this.userRepository.findUserById(
+          authenticatedUserId,
+          client.organizationId,
+        );
+
+        await prisma.$transaction(async (tx) => {
+          await ensureTenantObserverMember(
+            tx,
+            userExists.id,
+            client.organizationId,
+          );
+        });
+
+        const reactivated = await this.clientEmployeesRepository.update(
+          existingEmployee.id,
+          {
+            deletedAt: null,
+            status: ClientEmployeeStatus.PENDING,
+            permissionRole,
+            jobTitle,
+          },
+        );
+
+        await sendClientPortalInvite({
+          email: normalizedEmail,
+          inviteeName: name,
+          inviterName: inviter?.name ?? "Equipe Zofia Code Labs",
+          organizationName: client.tradeName,
+          clientName: client.tradeName || client.companyName,
+          roleLabel:
+            permissionRole === ClientEmployeeRole.ADMIN
+              ? "Administrador"
+              : permissionRole === ClientEmployeeRole.USER
+                ? "Colaborador"
+                : "Visualizador",
+        });
+
+        return reactivated;
       }
     }
 

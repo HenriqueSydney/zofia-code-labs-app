@@ -119,6 +119,17 @@ export class InMemoryClientEmployeesRepository
     );
   }
 
+  async findByClientAndUserIncludingInactive(
+    clientId: string,
+    userId: string,
+  ): Promise<ClientEmployees | null> {
+    return (
+      this.items.find(
+        (item) => item.clientId === clientId && item.userId === userId,
+      ) ?? null
+    );
+  }
+
   async findByClientAndEmail(
     clientId: string,
     email: string,

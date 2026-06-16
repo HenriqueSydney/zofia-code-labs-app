@@ -215,7 +215,10 @@ export class PrismaBacklogItemsRepository implements IBacklogItemsRepository {
 
     await prisma.backlogItem.update({
       where: { id: itemId },
-      data: { order: newOrderValue, status },
+      data: {
+        order: newOrderValue,
+        ...(status !== undefined ? { status } : {}),
+      },
     });
   }
 

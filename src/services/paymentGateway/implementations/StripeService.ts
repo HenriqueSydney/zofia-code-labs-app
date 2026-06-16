@@ -1,3 +1,4 @@
+import { envVariables } from "@/env";
 import Stripe from "stripe";
 import { IntegrationBase } from "../../IntegrationBase";
 import {
@@ -44,9 +45,19 @@ export class StripeService
     }
   }
 
-  async createCustomer(email: string, name: string): Promise<CustomerResult> {
+  async createCustomer(
+    email: string,
+    name: string,
+    organizationId?: string,
+  ): Promise<CustomerResult> {
     try {
-      const customer = await this.client.customers.create({ email, name });
+      const customer = await this.client.customers.create({
+        email,
+        name,
+        ...(organizationId
+          ? { metadata: { organizationId } }
+          : {}),
+      });
       return {
         gatewayCustomerId: customer.id,
         email: customer.email ?? email,
@@ -78,9 +89,10 @@ export class StripeService
         ],
         payment_method_types: ["card"],
         customer_email: data.customerId ? undefined : data.customerEmail,
-        success_url: `${process.env.APP_URL}/invoices/${data.invoiceId}?paid=true`,
-        cancel_url: `${process.env.APP_URL}/invoices/${data.invoiceId}`,
-        expires_at: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
+        success_url: `${envVariables.BASE_URL}/invoices/${data.invoiceId}?paid=true`,
+        cancel_url: `${envVariables.BASE_URL}/invoices/${data.invoiceId}?paid=false`,
+        // Stripe Checkout: expires_at máximo de 24h após a criação
+        expires_at: Math.floor(Date.now() / 1000) + 60 * 60 * 24 - 60,
         metadata: {
           invoiceId: data.invoiceId,
           organizationId: data.organizationId,

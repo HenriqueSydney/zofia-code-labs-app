@@ -8,6 +8,7 @@ import { seedExpenseCategories } from "./06-expense-categories";
 import { seedIntegrationTypes } from "./07-integration-types";
 import { seedProjects } from "./08-projects";
 import { seedZofiaErpProject } from "./09-zofia-erp";
+import { seedMockData } from "./10-mock-data";
 import type { SeedContext } from "./types";
 
 export async function runSeeds(prisma: PrismaClient): Promise<SeedContext> {
@@ -23,6 +24,7 @@ export async function runSeeds(prisma: PrismaClient): Promise<SeedContext> {
   await seedIntegrationTypes(prisma);
   await seedProjects(prisma, organizationId, users.cristina);
   await seedZofiaErpProject(prisma, organizationId, users.henrique);
+  await seedMockData(prisma, organizationId, users);
 
   console.log("🏁 Seed Zofia Code Labs finalizado!");
 

@@ -56,6 +56,14 @@ export class ResendMailer implements IMailer {
     html,
     attachments = [],
   }: SendEmailOptions): Promise<SentMessageInfo> {
+    if (envVariables.NODE_ENV !== "development") {
+      return {
+        messageId: "1234567890",
+        accepted: [to],
+        response: "DISABLED IN PRODUCTION",
+      };
+    }
+
     const resendAttachments = toResendAttachments(attachments);
 
     const response = await fetch("https://api.resend.com/emails", {
