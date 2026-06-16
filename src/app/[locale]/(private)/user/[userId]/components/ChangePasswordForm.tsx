@@ -96,8 +96,7 @@ export function ChangePasswordForm({
 
         if (!invitePasswordSetup) {
           const updateState = state as UpdatePasswordState;
-          const currentPasswordError =
-            updateState.errors?.currentPassword?.[0];
+          const currentPasswordError = updateState.errors?.currentPassword?.[0];
 
           if (currentPasswordError) {
             form.setError("currentPassword", {
@@ -110,18 +109,20 @@ export function ChangePasswordForm({
   }, [state, form]);
 
   const onSubmit = (data: FormSchema) => {
-    const formData = new FormData();
+    toast.error("Desativado temporariamente para teste");
 
-    if (!invitePasswordSetup && data.currentPassword) {
-      formData.append("currentPassword", data.currentPassword);
-    }
+    // const formData = new FormData();
 
-    formData.append("newPassword", data.newPassword);
-    formData.append("confirmPassword", data.confirmPassword);
+    // if (!invitePasswordSetup && data.currentPassword) {
+    //   formData.append("currentPassword", data.currentPassword);
+    // }
 
-    startTransition(() => {
-      formAction(formData);
-    });
+    // formData.append("newPassword", data.newPassword);
+    // formData.append("confirmPassword", data.confirmPassword);
+
+    // startTransition(() => {
+    //   formAction(formData);
+    // });
   };
 
   const handleOpenChange = (open: boolean) => {
@@ -141,6 +142,7 @@ export function ChangePasswordForm({
     <>
       <Button
         variant="outline"
+        disabled={true}
         onClick={() => setIsModalOpen(true)}
         className="gap-2 cursor-pointer"
       >
