@@ -75,12 +75,15 @@ export function ProposalCreationForm({
       downPaymentPercentage: 30,
       paymentGatewayId: "cash",
       paymentMethod: "pix",
-      items: project.projectServices.map((s: { serviceTypeId: string; serviceType: { name: string; basePrice: number } }) => ({
+      items: project.projectServices.map((s) => ({
         serviceTypeId: s.serviceTypeId,
         serviceName: s.serviceType.name,
         discountType: "PERCENTAGE" as const,
         discount: 0,
-        basePrice: s.serviceType.basePrice,
+        basePrice:
+          s.serviceType.basePrice != null
+            ? Number(s.serviceType.basePrice)
+            : undefined,
       })),
     },
   });
@@ -92,7 +95,7 @@ export function ProposalCreationForm({
   const calculatedTotal =
     watchedItems?.reduce((acc, item) => {
       const originalService = project.projectServices.find(
-        (s: { serviceTypeId: string }) => s.serviceTypeId === item.serviceTypeId,
+        (s) => s.serviceTypeId === item.serviceTypeId,
       );
       const basePrice = originalService?.serviceType?.basePrice || 0;
       return (

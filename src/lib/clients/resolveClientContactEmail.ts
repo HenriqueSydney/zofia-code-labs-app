@@ -1,9 +1,8 @@
 import { Client } from "@/generated/prisma/client";
 
-export type ClientContactEmailSource = Pick<
-  Client,
-  "email" | "responsibleEmail"
->;
+export type ClientContactEmailSource = Pick<Client, "email"> & {
+  responsibleEmail?: string | null;
+};
 
 export function resolveClientContactEmail(
   client: ClientContactEmailSource,

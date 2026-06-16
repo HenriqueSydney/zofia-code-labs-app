@@ -9,6 +9,7 @@ import { date } from "@/lib/dayjs";
 import {
   IOrganizationIntegrationRepository,
   OrganizationIntegrationWithDetails,
+  OrganizationIntegrationWithSafeInformation,
 } from "../IOrganizationIntegrationRepository";
 
 export class InMemoryOrganizationIntegrationRepository
@@ -186,6 +187,42 @@ export class InMemoryOrganizationIntegrationRepository
 
   async delete(id: string): Promise<void> {
     this.items = this.items.filter((item) => item.id !== id);
+  }
+
+  async findManyByTags(
+    organizationId: string,
+    tags: string[] | string,
+  ): Promise<OrganizationIntegrationWithSafeInformation[]> {
+    const tagList = Array.isArray(tags) ? tags : [tags];
+
+    return this.items
+      .filter((item) => item.organizationId === organizationId)
+      .map((item) => {
+        const integrationType = this.integrationTypes.find(
+          (type) => type.id === item.integrationTypeId,
+        );
+        return { item, integrationType };
+      })
+      .filter(
+        ({ integrationType }) =>
+          integrationType != null && integrationType.deletedAt == null,
+      )
+      .filter(({ integrationType }) => {
+        const fieldsSchema = JSON.stringify(integrationType?.fieldsSchema);
+        return tagList.some((tag) => fieldsSchema.includes(tag));
+      })
+      .map(({ item, integrationType }) => ({
+        id: item.id,
+        organizationId: item.organizationId,
+        integrationTypeId: item.integrationTypeId,
+        healthStatus: item.healthStatus,
+        enabled: item.enabled,
+        integrationType: {
+          name: integrationType?.name ?? "",
+          slug: integrationType?.slug ?? "",
+          logo: integrationType?.logo ?? null,
+        },
+      }));
   }
 
   private extractScalarUpdates(

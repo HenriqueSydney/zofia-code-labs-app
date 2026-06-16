@@ -158,6 +158,12 @@ export class InterService
   // Cobrança (Boleto + Pix)
   // ------------------------------------------------------------------
 
+  async createCheckoutSession(
+    data: PaymentMethods,
+  ): Promise<PaymentIntentResult> {
+    return this.createPaymentIntent(data);
+  }
+
   /**
    * Cria uma cobrança no Inter.
    * Para Pix: usa a API de Pix Cobrança (cob).

@@ -29,6 +29,7 @@ type ContractProjectRef = {
 type ContractClientRef = {
   id: string;
   tradeName: string;
+  companyName?: string;
   email: string;
   slug: string;
   responsibleName?: string | null;
@@ -286,6 +287,7 @@ export class InMemoryContractRepository implements IContractRepository {
         client: {
           id: client?.id ?? "",
           tradeName: client?.tradeName ?? "",
+          companyName: client?.companyName ?? "",
           email: client?.email ?? "",
           slug: client?.slug ?? "",
           responsibleName: client?.responsibleName ?? null,

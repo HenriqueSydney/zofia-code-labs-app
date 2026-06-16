@@ -36,8 +36,10 @@ const COLUMN_KEYS = [
   "CANCELED",
 ] as const satisfies readonly BacklogStatus[];
 
-function isColumnKey(id: string): id is BacklogStatus {
-  return COLUMN_KEYS.includes(id as BacklogStatus);
+type KanbanColumnKey = (typeof COLUMN_KEYS)[number];
+
+function isColumnKey(id: string): id is KanbanColumnKey {
+  return (COLUMN_KEYS as readonly string[]).includes(id);
 }
 
 export function BacklogKanban({ backlog, canManageBacklog }: IBacklogKanban) {
@@ -276,7 +278,7 @@ export function BacklogKanban({ backlog, canManageBacklog }: IBacklogKanban) {
       (item) => item.status === activeItem.status,
     );
     let allSortedIds = targetColumnItems.map((i) => i.id);
-    let newPositionIndex = allSortedIds.findIndex((i) => i.id === activeId);
+    let newPositionIndex = allSortedIds.findIndex((i) => i === activeId);
 
     if (newPositionIndex < 0) {
       allSortedIds = [activeId, ...allSortedIds];

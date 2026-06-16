@@ -80,6 +80,8 @@ export class InMemoryProposalRepository implements IProposalRepository {
       downPaymentPercentage: 30,
       fileKey: data.fileStorageKey ?? null,
       fileUrl: null,
+      paymentGatewayId: data.paymentGatewayId ?? null,
+      paymentMethod: data.paymentMethod ?? null,
       projectId: data.projectId,
       reviewedAt: null,
       reviewedBy: null,
@@ -148,6 +150,14 @@ export class InMemoryProposalRepository implements IProposalRepository {
           : current.totalValue,
       fileKey:
         data.fileStorageKey !== undefined ? data.fileStorageKey : current.fileKey,
+      paymentGatewayId:
+        data.paymentGatewayId !== undefined
+          ? data.paymentGatewayId
+          : current.paymentGatewayId,
+      paymentMethod:
+        data.paymentMethod !== undefined
+          ? data.paymentMethod
+          : current.paymentMethod,
       updatedAt: date().toDate(),
     };
 

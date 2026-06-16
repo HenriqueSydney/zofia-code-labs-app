@@ -9,7 +9,7 @@ export async function seedProjects(
   createdByUserId: string,
 ): Promise<void> {
   return;
-  log("📁 Sincronizando projetos de clientes...");
+  /*log("📁 Sincronizando projetos de clientes...");
 
   const acolheKids = await prisma.client.findFirst({
     where: {
@@ -140,5 +140,5 @@ export async function seedProjects(
         log(`      🔗 Vinculado ao serviço: ${serviceName}`);
       }
     }
-  }
+  }*/
 }

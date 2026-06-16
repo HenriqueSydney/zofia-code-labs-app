@@ -199,6 +199,7 @@ export class InMemoryUsersRepository implements IUserRepository {
       return {
         permissions: [] as string[],
         roleName: null as string | null,
+        memberRole: null,
       };
     }
 
@@ -215,6 +216,7 @@ export class InMemoryUsersRepository implements IUserRepository {
     return {
       permissions,
       roleName: customRole?.name ?? member.role,
+      memberRole: member.role,
     };
   }
 }

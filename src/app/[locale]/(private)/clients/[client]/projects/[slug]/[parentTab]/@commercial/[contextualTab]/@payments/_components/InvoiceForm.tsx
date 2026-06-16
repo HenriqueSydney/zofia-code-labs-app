@@ -13,11 +13,11 @@ import { Separator } from "@/components/ui/separator";
 import {
   invoiceSchema,
   InvoiceFormData,
+  toInvoiceFormStatus,
 } from "@/schemas/financial/invoiceSchema";
 import { createInvoiceAction } from "@/actions/financial/createInvoiceAction";
 import { updateInvoiceAction } from "@/actions/financial/updateInvoiceAction";
 import {
-  FinancialStatus,
   InternetBankingProvider,
   PaymentType,
 } from "@/generated/prisma/enums";
@@ -63,7 +63,7 @@ export function InvoiceForm({
       internetBankingProvider:
         (invoice?.internetBankingProvider as InternetBankingProvider) ?? "CORA",
       paymentType: (invoice?.paymentType as PaymentType) ?? "PIX",
-      status: (invoice?.status as FinancialStatus) ?? "PENDING",
+      status: toInvoiceFormStatus(invoice?.status),
       nfseNumber: invoice?.nfseNumber ?? "",
       nfseLink: invoice?.nfseLink ?? "",
     },
